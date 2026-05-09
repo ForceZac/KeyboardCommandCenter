@@ -33,45 +33,59 @@ Task IDs are monotonic. The Project Manager picks the next number.
 
 _(Project Manager keeps 2–3 tasks here at all times.)_
 
-
-### TASK-0004: Homepage & Global Search UI
-- **Goal:** Goal 2 — Web Search & Browse Interface
-- **PRD:** research/agents/prds/goal-02-web-search-browse.md
-- **Scope:** Build the Next.js homepage in `packages/web/app/`: prominent search bar with debounced full-text search hitting `GET /api/shortcuts/search`, inline search result previews (shortcut command, key combo, app name, platform badges) with "View all shortcuts for [App]" links, category grid linking to category browse pages. Include dark mode (default) with light mode toggle, mobile-responsive layout (320px+), and SEO meta tags. NOT in scope: per-app shortcut pages, category listing pages, platform toggle, in-app shortcut filtering, user accounts, admin panel.
+### TASK-0006: Electron App Shell — Tray Icon + Global Hotkey + Panel Window
+- **Goal:** Goal 3 — Desktop App Shell (Electron + Tray)
+- **PRD:** research/agents/prds/goal-03-desktop-app-shell.md
+- **Scope:** Scaffold the Electron app in `packages/desktop` with main + renderer process model. System tray icon with platform-appropriate context menu ("Open Keyboard Command Center", "Quit"). Global hotkey (default Ctrl+Shift+Space on Windows, Cmd+Shift+Space on Mac) toggles a frameless floating BrowserWindow positioned center-screen (top-third offset). Panel shows placeholder content (search bar stub — real shortcut UI is Goal 5). Panel dismisses on Escape key or focus loss. Memory optimizations: `app.disableHardwareAcceleration()` at startup, lazy BrowserWindow creation (create on first hotkey press, hide/show thereafter), single renderer process. Import shared types from `packages/core`. NOT in scope: login startup registration, settings UI/persistence, CI build pipeline, real shortcut content, process detection, overlay, code signing, installer UX, Linux.
 - **Acceptance:**
-  - Homepage renders with search bar and category grid
-  - Typing in search bar triggers debounced API call and displays inline results
-  - Search results show command description, key combo, app name, and platform badges
-  - Each result links to the app's shortcut page (route exists even if page is built in a later task)
-  - Category tiles link to `/categories/[slug]` routes
-  - Dark mode renders by default; light mode toggle switches theme
-  - Layout is usable on 320px-wide screens
-  - Homepage LCP <1.5s on local dev server
+  - `npm run dev` in `packages/desktop` launches Electron app that settles into system tray with no visible main window
+  - Tray icon renders correctly on Windows (system tray) and macOS (menu bar)
+  - Right-click (Win) or click (Mac) on tray shows context menu with "Open" and "Quit" options
+  - Global hotkey (Ctrl+Shift+Space / Cmd+Shift+Space) opens a frameless floating panel
+  - Panel dismisses on Escape key press
+  - Panel dismisses on focus loss (clicking outside)
+  - Subsequent hotkey presses toggle panel visibility (show/hide)
+  - App uses <50MB RAM when idle (panel hidden) — measured via `process.memoryUsage()`
+  - TypeScript compiles cleanly with shared types from `@kcc/core`
 - **PR:**
 - **Branch:**
 - **TRD:**
-- **Notes:** Depends on TASK-0003 (API routes must exist for search to function). Second frontend task for Goal 2. Per-app pages and category pages will be a separate task.
+- **Notes:** Goal 3 depends on Goal 1 (shipped). Independent of Goal 2 — can be worked in parallel once Goal 2 frontend tasks clear. First desktop task.
 
-### TASK-0005: Per-App Shortcut Pages, Category Browse Pages & Platform Toggle
+### TASK-0004: Homepage with Search Bar & Category Grid
 - **Goal:** Goal 2 — Web Search & Browse Interface
 - **PRD:** research/agents/prds/goal-02-web-search-browse.md
-- **Scope:** Build the remaining Goal 2 frontend pages in `packages/web/app/`: (1) Per-app shortcut page at `/apps/[slug]` — fetches `GET /api/apps/[slug]`, displays all shortcuts grouped by context/scope, includes in-app search/filter, keyboard key styling (visual key caps), and platform filter toggle (Win/Mac/Linux). (2) Category browse page at `/categories/[slug]` — fetches `GET /api/categories` and `GET /api/apps?category=`, displays grid of apps in the selected category. (3) Persistent platform toggle component — defaults to user's detected OS, persists selection across navigation (localStorage), switches displayed modifier keys (Cmd vs Ctrl). All pages must be dark-mode compatible, mobile-responsive (320px+), and include SEO meta tags. NOT in scope: user accounts, favorites, community submissions, admin panel, SSR of search results, analytics.
+- **Scope:** Build the homepage in `packages/web/app/page.tsx`: prominent search bar with debounced full-text search (calls `GET /api/shortcuts/search`), search results displayed inline with shortcut command, key combo, app name, and platform badges, and a category grid below the search bar linking to `/categories/[slug]`. Include dark mode (default) with light mode toggle persisted in localStorage. Mobile-responsive layout down to 320px. NOT in scope: category listing pages, per-app shortcut pages, platform toggle, SEO meta tags, Vercel deployment, analytics.
 - **Acceptance:**
-  - `/apps/[slug]` renders all shortcuts for the given app, grouped by context
-  - Shortcuts display styled keyboard key caps (visual rendering of key combos)
-  - Platform toggle on app page filters shortcuts to selected OS and shows correct modifiers
-  - Platform selection persists in localStorage and carries across page navigations
-  - In-app search/filter narrows displayed shortcuts client-side in real time
-  - `/categories/[slug]` renders a grid of apps in that category with correct counts
-  - Category page app tiles link to `/apps/[slug]`
-  - Both pages render correctly in dark and light mode
-  - Both pages are usable on 320px-wide screens
-  - App pages include semantic HTML and meta tags for SEO
+  - Homepage renders search bar and category grid
+  - Typing in search bar triggers debounced API call and displays results inline
+  - Each search result shows command description, key combo, app name, platform badges
+  - Category tiles link to `/categories/[slug]`
+  - Dark/light mode toggle works and persists across page loads
+  - Layout is responsive and usable at 320px width
+  - No layout shift on search result updates
 - **PR:**
 - **Branch:**
 - **TRD:**
-- **Notes:** Depends on TASK-0003 (API routes) and TASK-0004 (shared layout, theme toggle, search bar). Final frontend task for Goal 2 — completing this task finishes the Goal 2 definition of done.
+- **Notes:** Depends on TASK-0003 (API routes must exist). Second frontend task for Goal 2.
 
+### TASK-0005: Category Browse & App Shortcut Pages
+- **Goal:** Goal 2 — Web Search & Browse Interface
+- **PRD:** research/agents/prds/goal-02-web-search-browse.md
+- **Scope:** Build two page types: (1) Category page at `/categories/[slug]` showing a grid of apps in that category (data from `GET /api/apps?category=`), and (2) App shortcut page at `/apps/[slug]` showing all shortcuts for one app grouped by context/scope with a platform toggle (Win/Mac/Linux) that filters key combos and an in-app search/filter. Shortcuts displayed with visual key cap styling. Platform toggle defaults to detected OS and persists across navigation. SEO meta tags on all pages. NOT in scope: homepage, global search, user accounts, favorites, admin panel, community submissions.
+- **Acceptance:**
+  - `/categories/[slug]` renders app grid for the given category
+  - `/apps/[slug]` renders all shortcuts grouped by context/scope
+  - Platform toggle switches displayed key combos between Win/Mac/Linux
+  - Platform toggle defaults to user's OS and persists
+  - In-app search filters shortcuts within the current app
+  - Key combos styled as visual key caps (keyboard key appearance)
+  - Pages have appropriate SEO meta tags (title, description)
+  - Both pages are mobile-responsive
+- **PR:**
+- **Branch:**
+- **TRD:**
+- **Notes:** Depends on TASK-0003 (API routes) and TASK-0004 (shared layout/theme). Final frontend task for Goal 2.
 
 ## In Progress
 
@@ -81,22 +95,9 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
 
 _(Developer moves tasks here when the draft PR is marked ready.)_
 
-### TASK-0003: API Routes for Shortcut Data
-- **Goal:** Goal 2 — Web Search & Browse Interface
-- **PRD:** research/agents/prds/goal-02-web-search-browse.md
-- **Scope:** Build the four Next.js API route handlers in `packages/web/app/api/`: `GET /api/shortcuts/search?q=&platform=` (full-text search with Prisma, debounce-friendly), `GET /api/apps` (list all apps, filterable by category), `GET /api/apps/[slug]` (single app with all shortcuts grouped by context), `GET /api/categories` (list categories with app counts). Use shared types from `packages/core`. All endpoints are public read-only — no auth. NOT in scope: frontend UI, SSR, pagination, rate limiting, admin endpoints, Express migration.
-- **Acceptance:**
-  - All four API routes return correct JSON responses against the seeded database
-  - `GET /api/shortcuts/search?q=undo` returns matching shortcuts across apps in <200ms
-  - `GET /api/apps` supports optional `?category=` filter parameter
-  - `GET /api/apps/[slug]` returns shortcuts grouped by context/scope
-  - `GET /api/categories` returns category names with app counts
-  - Responses use shared TypeScript types from `packages/core`
-  - API routes have basic error handling (400 for bad params, 404 for unknown slug)
-- **PR:** #3
-- **Branch:** goals/3-api-routes
-- **TRD:** research/plans/goals/3-api-routes-trd.md — approved
-- **Notes:** Round 1 feedback addressed — catch logging added, "save" test assertion relaxed. Re-review requested.
+## Pending Human
+
+_(Reviewer found no code issues but needs human action before approval can proceed.)_
 
 ## Changes Requested
 
@@ -110,13 +111,33 @@ _(TRD Watcher moves tasks here when a TRD needs rework.)_
 
 _(Reviewer moves tasks here after approving the PR. You merge to main, then move to Shipped.)_
 
+### TASK-0003: API Routes for Shortcut Data
+- **Goal:** Goal 2 — Web Search & Browse Interface
+- **PRD:** research/agents/prds/goal-02-web-search-browse.md
+- **PR:** #3
+- **Branch:** goals/3-api-routes
+- **TRD:** research/plans/goals/3-api-routes-trd.md — approved
+- **Notes:** Round 2 approved 2026-05-09. Both round-1 issues addressed. Integration tests require Docker — pending Zach's env. Non-blocking carry-forward: introduce `env.ts` config module in TASK-0004/0005.
+
+## Shipped
+
+_(You move tasks here after merging to main.)_
+
 ### TASK-0002: Seed Script & Data for 50+ Applications
 - **Goal:** Goal 1 — Shortcut Data Schema & Seed Database
 - **PRD:** research/agents/prds/goal-01-shortcut-data-schema.md
+- **Scope:** Create static JSON seed files in `database/seeds/` for 50+ popular applications across all categories defined in the PRD (Creative, Developer, Productivity, Gaming, Music, System, Browsers). Build a TypeScript seed script that reads these files and populates the database via Prisma. Add full-text search index on command descriptions and app names. NOT in scope: web UI, API endpoints, community submissions, desktop app integration.
+- **Acceptance:**
+  - Seed script completes without errors on a fresh database with the TASK-0001 schema
+  - 50+ applications seeded across all PRD-specified categories
+  - Each application has at least 10 verified shortcuts
+  - Full-text search index exists on command descriptions and app names
+  - Full-text search query returns results in <100ms on seeded data
+  - Seed files are static JSON, versionable, and reviewable
 - **PR:** #2
 - **Branch:** goals/2-seed-script
 - **TRD:** research/plans/goals/2-seed-script-trd.md — approved
-- **Notes:** Static checks passed. Integration tests deferred — run `docker compose up -d` + `npm test -w database` when ready.
+- **Notes:** Shipped 2026-05-09. PR #2 merged to main.
 
 ### TASK-0001: Define Prisma Schema for Shortcut Database
 - **Goal:** Goal 1 — Shortcut Data Schema & Seed Database
@@ -133,19 +154,7 @@ _(Reviewer moves tasks here after approving the PR. You merge to main, then move
 - **PR:** #1
 - **Branch:** goals/1-prisma-schema
 - **TRD:** research/plans/goals/1-prisma-schema-trd.md — approved
-- **Notes:** Foundation task — nothing else can proceed until this ships. See PRD open questions for schema design decisions (structured vs string key combos, modal shortcut handling).
-
-## Shipped
-
-_(You move tasks here after merging to main.)_
-
-### TASK-0001: Define Prisma Schema for Shortcut Database
-- **Goal:** Goal 1 — Shortcut Data Schema & Seed Database
-- **PRD:** research/agents/prds/goal-01-shortcut-data-schema.md
-- **PR:** #1
-- **Branch:** goals/1-prisma-schema
-- **TRD:** research/plans/goals/1-prisma-schema-trd.md — approved
-- **Merged:** 2026-05-09
+- **Notes:** Foundation task — shipped 2026-05-09. PR #1 merged to main.
 
 ## Blocked
 
