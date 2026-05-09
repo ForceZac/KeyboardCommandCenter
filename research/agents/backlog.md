@@ -86,8 +86,8 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
   - Seed files are static JSON, versionable, and reviewable
 - **PR:** #2
 - **Branch:** goals/2-seed-script
-- **TRD:** research/plans/goals/2-seed-script-trd.md — awaiting-review
-- **Notes:** Depends on TASK-0001 (schema must exist before seeding). Build phase blocked until TASK-0001 is merged to main. Seed data should be sourced from official documentation where possible.
+- **TRD:** research/plans/goals/2-seed-script-trd.md — approved
+- **Notes:** Build phase complete (2026-05-09): 50 JSON seed files, seed.ts, FTS migration, integration tests committed to PR #2. Integration tests blocked pending TASK-0001 (PR #1) merge — Prisma client cannot be generated until schema is on main. Once PR #1 merges: rebase this branch, run prisma generate + migrate deploy + npm run seed, then run tests and mark PR ready.
 
 ## In Review
 
