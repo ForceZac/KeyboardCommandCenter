@@ -441,6 +441,7 @@
 
 ## 2026-05-09 17:40 ET DEVELOPER
 - did: started run — claimed DEV_LOCK
+<<<<<<< HEAD
 - task: TASK-0004 (checkpoint)
 - status: in-progress (checkpoint)
 
@@ -468,3 +469,29 @@
 - tests: tsc clean, lint (web) clean, E2E cannot run locally (no browser/DB in CI agent env — CI gate)
 - metrics: run_type=productive | commits=0 (all code in prev run) | tests_added=7 | trd_cycles=0
 - next: Reviewer picks up PR #5 (goals/4-homepage-search) for review
+=======
+- task: TASK-0006 (fix-up changes-requested on PR #4)
+- status: in-progress
+
+## 2026-05-09 18:07 ET MERGE-WATCHER
+- did: logged PR #4 merge to velocity.md, synced branches (goals/4-homepage-search already up to date), no blocked tasks
+- unblocked: 0 task(s)
+- synced: 1 branch (0 conflicts)
+- merged: PR #4 (goals/6-electron-app-shell → main)
+>>>>>>> origin/main
+
+## 2026-05-09 18:11 ET DEVELOPER
+- did: DEV_LOCK held — another instance is mid-run (lock is ~3 min old, TASK-0006)
+- task: n/a
+- PR: n/a
+- trd: n/a
+- tests: n/a
+- metrics: run_type=no-op | reason=DEV_LOCK held | dev_idle=1
+- next: lock will expire after 25 min if stale; next run will proceed
+
+## 2026-05-09 18:11 ET REVIEWER
+- did: reviewed PR #5 (TASK-0004) — round 2
+- decision: changes-requested
+- standards checked: frontend (SearchSection.tsx guard, TanStack Query isLoading pattern), testing (Playwright anti-patterns, observable-state vs waitForTimeout)
+- metrics: run_type=productive | pr=PR-5 | round=2 | decision=changes-requested | tests_run=build-pass/ts-pass/lint-pass/e2e-skip (no dev server)
+- next: developer must fix two one-liners from round 1 — SearchSection.tsx results guard + homepage.spec.ts waitForTimeout — then push; round 3 should approve

@@ -61,6 +61,10 @@ _(Project Manager keeps 2–3 tasks here at all times.)_
 
 _(Developer moves tasks here when the draft PR is marked ready.)_
 
+## Changes Requested
+
+_(Reviewer moves tasks here when a PR needs rework.)_
+
 ### TASK-0004: Homepage & Global Search UI
 - **Goal:** Goal 2 — Web Search & Browse Interface
 - **PRD:** research/agents/prds/goal-02-web-search-browse.md
@@ -77,11 +81,7 @@ _(Developer moves tasks here when the draft PR is marked ready.)_
 - **PR:** #5
 - **Branch:** goals/4-homepage-search
 - **TRD:** research/plans/goals/4-homepage-search-trd.md — approved
-- **Notes:** Depends on TASK-0003 (API routes must exist for search to function). Second frontend task for Goal 2. Per-app pages and category pages will be a separate task.
-
-## Changes Requested
-
-_(Reviewer moves tasks here when a PR needs rework.)_
+- **Notes:** Round 2 review 2026-05-09 — both Round 1 issues still unresolved: (1) `SearchSection.tsx` line 21 missing `results !== undefined` guard — "No shortcuts found" flashes on initial search. (2) `homepage.spec.ts` line 42 still uses `waitForTimeout(500)` — replace with observable-state expect. Both are one-line fixes. Build/TS/lint clean.
 
 ## TRD Changes Requested
 

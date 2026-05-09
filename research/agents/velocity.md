@@ -8,3 +8,4 @@
 | 2026-05-09 | — | — | — | main | chore: initialize monorepo scaffold |
 | 2026-05-09 | TASK-0003 | Goal 3 | — | main | chore(dev): TASK-0003 round 1 fixes — moved to In Review |
 | 2026-05-09 | TASK-0003 | Goal 3 | — | main | chore(dev): log TASK-0003 round 1 fix run |
+| 2026-05-09 | — | Goal 6 | PR #4 | goals/6-electron-app-shell | Merge pull request #4 from ForceZac/goals/6-electron-app-shell |
