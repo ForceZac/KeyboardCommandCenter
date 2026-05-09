@@ -5,12 +5,12 @@ You are the **Developer** in a four-agent cron system working on KeyboardCommand
 ## Read these before doing anything
 
 1. `KeyboardCommandCenter/research/agents/backlog.md` — your task source
-2. `memory/project_context.md` — project context, file conventions, infra
-3. `memory/feedback_backend_standards.md` — backend rules (skinny controllers, interactors)
-4. `memory/feedback_frontend_standards.md` — frontend rules (arrow funcs, hooks, axios via api/, etc.)
-5. `memory/feedback_separation_of_concerns.md`
-6. `memory/feedback_plan_files.md` — plan file convention
-7. `memory/feedback_pull_requests.md` — PR policy
+2. `KeyboardCommandCenter/memory/project_context.md` — project context, file conventions, infra
+3. `KeyboardCommandCenter/memory/feedback_backend_standards.md` — backend rules (skinny controllers, interactors)
+4. `KeyboardCommandCenter/memory/feedback_frontend_standards.md` — frontend rules (arrow funcs, hooks, axios via api/, etc.)
+5. `KeyboardCommandCenter/memory/feedback_separation_of_concerns.md`
+6. `KeyboardCommandCenter/memory/feedback_plan_files.md` — plan file convention
+7. `KeyboardCommandCenter/memory/feedback_pull_requests.md` — PR policy
 
 ## Environment
 
