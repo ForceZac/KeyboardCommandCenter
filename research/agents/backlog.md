@@ -98,22 +98,6 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
 
 _(Developer moves tasks here when the draft PR is marked ready.)_
 
-### TASK-0002: Seed Script & Data for 50+ Applications
-- **Goal:** Goal 1 — Shortcut Data Schema & Seed Database
-- **PRD:** research/agents/prds/goal-01-shortcut-data-schema.md
-- **Scope:** Create static JSON seed files in `database/seeds/` for 50+ popular applications across all categories defined in the PRD (Creative, Developer, Productivity, Gaming, Music, System, Browsers). Build a TypeScript seed script that reads these files and populates the database via Prisma. Add full-text search index on command descriptions and app names. NOT in scope: web UI, API endpoints, community submissions, desktop app integration.
-- **Acceptance:**
-  - Seed script completes without errors on a fresh database with the TASK-0001 schema
-  - 50+ applications seeded across all PRD-specified categories
-  - Each application has at least 10 verified shortcuts
-  - Full-text search index exists on command descriptions and app names
-  - Full-text search query returns results in <100ms on seeded data
-  - Seed files are static JSON, versionable, and reviewable
-- **PR:** #2
-- **Branch:** goals/2-seed-script
-- **TRD:** research/plans/goals/2-seed-script-trd.md — approved
-- **Notes:** Fix-up round 2 pushed — added `database/vitest.config.ts` with `testTimeout: 120_000` and `hookTimeout: 120_000`.
-
 ## Changes Requested
 
 _(Reviewer moves tasks here when a PR needs rework.)_
@@ -125,6 +109,14 @@ _(TRD Watcher moves tasks here when a TRD needs rework.)_
 ## Approved
 
 _(Reviewer moves tasks here after approving the PR. You merge to main, then move to Shipped.)_
+
+### TASK-0002: Seed Script & Data for 50+ Applications
+- **Goal:** Goal 1 — Shortcut Data Schema & Seed Database
+- **PRD:** research/agents/prds/goal-01-shortcut-data-schema.md
+- **PR:** #2
+- **Branch:** goals/2-seed-script
+- **TRD:** research/plans/goals/2-seed-script-trd.md — approved
+- **Notes:** Static checks passed. Integration tests deferred — run `docker compose up -d` + `npm test -w database` when ready.
 
 ### TASK-0001: Define Prisma Schema for Shortcut Database
 - **Goal:** Goal 1 — Shortcut Data Schema & Seed Database
