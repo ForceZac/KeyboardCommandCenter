@@ -74,6 +74,18 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
 
 _(Developer moves tasks here when the draft PR is marked ready.)_
 
+## Changes Requested
+
+_(Reviewer moves tasks here when a PR needs rework.)_
+
+## TRD Changes Requested
+
+_(TRD Watcher moves tasks here when a TRD needs rework.)_
+
+## Approved
+
+_(Reviewer moves tasks here after approving the PR. You merge to main, then move to Shipped.)_
+
 ### TASK-0001: Define Prisma Schema for Shortcut Database
 - **Goal:** Goal 1 — Shortcut Data Schema & Seed Database
 - **PRD:** research/agents/prds/goal-01-shortcut-data-schema.md
@@ -90,18 +102,6 @@ _(Developer moves tasks here when the draft PR is marked ready.)_
 - **Branch:** goals/1-prisma-schema
 - **TRD:** research/plans/goals/1-prisma-schema-trd.md — approved
 - **Notes:** Foundation task — nothing else can proceed until this ships. See PRD open questions for schema design decisions (structured vs string key combos, modal shortcut handling).
-
-## Changes Requested
-
-_(Reviewer moves tasks here when a PR needs rework.)_
-
-## TRD Changes Requested
-
-_(TRD Watcher moves tasks here when a TRD needs rework.)_
-
-## Approved
-
-_(Reviewer moves tasks here after approving the PR. You merge to main, then move to Shipped.)_
 
 ## Shipped
 
