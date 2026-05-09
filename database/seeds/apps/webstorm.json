@@ -1,0 +1,98 @@
+{
+  "name": "WebStorm",
+  "slug": "webstorm",
+  "description": "The smartest JavaScript and TypeScript IDE by JetBrains",
+  "category": "developer-tools",
+  "shortcuts": [
+    {
+      "command": "Open Recent Files",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+E", "key": "e", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+E", "key": "e", "modifiers": ["Cmd"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+E", "key": "e", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Go to File",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+N", "key": "n", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+O", "key": "o", "modifiers": ["Cmd", "Shift"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+Shift+N", "key": "n", "modifiers": ["Ctrl", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Reformat Code",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Alt+L", "key": "l", "modifiers": ["Ctrl", "Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Option+L", "key": "l", "modifiers": ["Cmd", "Option"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+Alt+L", "key": "l", "modifiers": ["Ctrl", "Alt"] }] }
+      }
+    },
+    {
+      "command": "Rename",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Shift+F6", "key": "F6", "modifiers": ["Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Shift+F6", "key": "F6", "modifiers": ["Shift"] }] },
+        "linux": { "steps": [{ "keyCombo": "Shift+F6", "key": "F6", "modifiers": ["Shift"] }] }
+      }
+    },
+    {
+      "command": "Find in Path",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+F", "key": "f", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+F", "key": "f", "modifiers": ["Cmd", "Shift"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+Shift+F", "key": "f", "modifiers": ["Ctrl", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Extract Variable",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Alt+V", "key": "v", "modifiers": ["Ctrl", "Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Option+V", "key": "v", "modifiers": ["Cmd", "Option"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+Alt+V", "key": "v", "modifiers": ["Ctrl", "Alt"] }] }
+      }
+    },
+    {
+      "command": "Surround with…",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Alt+T", "key": "t", "modifiers": ["Ctrl", "Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Option+T", "key": "t", "modifiers": ["Cmd", "Option"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+Alt+T", "key": "t", "modifiers": ["Ctrl", "Alt"] }] }
+      }
+    },
+    {
+      "command": "Complete Current Statement",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+Enter", "key": "Enter", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+Enter", "key": "Enter", "modifiers": ["Cmd", "Shift"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+Shift+Enter", "key": "Enter", "modifiers": ["Ctrl", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Open Terminal",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Alt+F12", "key": "F12", "modifiers": ["Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Option+F12", "key": "F12", "modifiers": ["Option"] }] },
+        "linux": { "steps": [{ "keyCombo": "Alt+F12", "key": "F12", "modifiers": ["Alt"] }] }
+      }
+    },
+    {
+      "command": "Quick Documentation",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Q", "key": "q", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Ctrl+J", "key": "j", "modifiers": ["Ctrl"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+Q", "key": "q", "modifiers": ["Ctrl"] }] }
+      }
+    }
+  ]
+}

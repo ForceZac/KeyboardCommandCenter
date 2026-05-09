@@ -1,0 +1,88 @@
+{
+  "name": "Trello",
+  "slug": "trello",
+  "description": "Visual project management with boards, lists, and cards",
+  "category": "productivity",
+  "shortcuts": [
+    {
+      "command": "Open Card",
+      "context": "Board",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Enter", "key": "Enter", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "Enter", "key": "Enter", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Archive Card",
+      "context": "Card",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "c", "key": "c", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "c", "key": "c", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Assign Self",
+      "context": "Card",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Space", "key": " ", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "Space", "key": " ", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Due Date",
+      "context": "Card",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "d", "key": "d", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "d", "key": "d", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Add Label",
+      "context": "Card",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "l", "key": "l", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "l", "key": "l", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Move Card",
+      "context": "Card",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "m", "key": "m", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "m", "key": "m", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Edit Title",
+      "context": "Card",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "e", "key": "e", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "e", "key": "e", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Search",
+      "context": "Board",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "/", "key": "/", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "/", "key": "/", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Navigate Cards Down",
+      "context": "Board",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "j", "key": "j", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "j", "key": "j", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Navigate Cards Up",
+      "context": "Board",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "k", "key": "k", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "k", "key": "k", "modifiers": [] }] }
+      }
+    }
+  ]
+}

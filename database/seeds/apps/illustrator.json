@@ -1,0 +1,96 @@
+{
+  "name": "Illustrator",
+  "slug": "illustrator",
+  "description": "Adobe's vector graphics software",
+  "category": "creative",
+  "shortcuts": [
+    {
+      "command": "Select Tool",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "V", "key": "v", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "V", "key": "v", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Direct Selection Tool",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "A", "key": "a", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "A", "key": "a", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Pen Tool",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "P", "key": "p", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "P", "key": "p", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Type Tool",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "T", "key": "t", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "T", "key": "t", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Outline View",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Y", "key": "y", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Y", "key": "y", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Lock Object",
+      "context": "Canvas",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+2", "key": "2", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+2", "key": "2", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Unlock All",
+      "context": "Canvas",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Alt+2", "key": "2", "modifiers": ["Ctrl", "Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Option+2", "key": "2", "modifiers": ["Cmd", "Option"] }] }
+      }
+    },
+    {
+      "command": "Group",
+      "context": "Canvas",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+G", "key": "g", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+G", "key": "g", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Ungroup",
+      "context": "Canvas",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+G", "key": "g", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+G", "key": "g", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Join Paths",
+      "context": "Canvas",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+J", "key": "j", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+J", "key": "j", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Zoom to Fit",
+      "context": "Canvas",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+0", "key": "0", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+0", "key": "0", "modifiers": ["Cmd"] }] }
+      }
+    }
+  ]
+}

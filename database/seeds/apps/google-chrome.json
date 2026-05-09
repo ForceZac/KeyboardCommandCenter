@@ -1,0 +1,98 @@
+{
+  "name": "Google Chrome",
+  "slug": "google-chrome",
+  "description": "Google's web browser",
+  "category": "browsers",
+  "shortcuts": [
+    {
+      "command": "New Tab",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+T", "key": "t", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+T", "key": "t", "modifiers": ["Cmd"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+T", "key": "t", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "New Incognito Window",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+N", "key": "n", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+N", "key": "n", "modifiers": ["Cmd", "Shift"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+Shift+N", "key": "n", "modifiers": ["Ctrl", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Open Developer Tools",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "F12", "key": "F12", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Option+I", "key": "i", "modifiers": ["Cmd", "Option"] }] },
+        "linux": { "steps": [{ "keyCombo": "F12", "key": "F12", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Address Bar Focus",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+L", "key": "l", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+L", "key": "l", "modifiers": ["Cmd"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+L", "key": "l", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Reload Page",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+R", "key": "r", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+R", "key": "r", "modifiers": ["Cmd"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+R", "key": "r", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Hard Reload (Clear Cache)",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+R", "key": "r", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+R", "key": "r", "modifiers": ["Cmd", "Shift"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+Shift+R", "key": "r", "modifiers": ["Ctrl", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Find in Page",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+F", "key": "f", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+F", "key": "f", "modifiers": ["Cmd"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+F", "key": "f", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "View Page Source",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+U", "key": "u", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Option+U", "key": "u", "modifiers": ["Cmd", "Option"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+U", "key": "u", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Close Tab",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+W", "key": "w", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+W", "key": "w", "modifiers": ["Cmd"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+W", "key": "w", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Reopen Closed Tab",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+T", "key": "t", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+T", "key": "t", "modifiers": ["Cmd", "Shift"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+Shift+T", "key": "t", "modifiers": ["Ctrl", "Shift"] }] }
+      }
+    }
+  ]
+}

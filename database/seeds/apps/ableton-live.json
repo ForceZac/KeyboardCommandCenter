@@ -1,0 +1,88 @@
+{
+  "name": "Ableton Live",
+  "slug": "ableton-live",
+  "description": "Digital audio workstation for live performances and music production",
+  "category": "music",
+  "shortcuts": [
+    {
+      "command": "Play",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Space", "key": " ", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "Space", "key": " ", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Stop",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "F8", "key": "F8", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "F8", "key": "F8", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Record",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "F9", "key": "F9", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "F9", "key": "F9", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Undo",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Z", "key": "z", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Z", "key": "z", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Toggle Session / Arrangement View",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Tab", "key": "Tab", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "Tab", "key": "Tab", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Loop On / Off",
+      "context": "Arrangement",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+L", "key": "l", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+L", "key": "l", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Duplicate Track",
+      "context": "Arrangement",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+D", "key": "d", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+D", "key": "d", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Open Browser",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Alt+B", "key": "b", "modifiers": ["Ctrl", "Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Option+B", "key": "b", "modifiers": ["Cmd", "Option"] }] }
+      }
+    },
+    {
+      "command": "Consolidate Selection",
+      "context": "Arrangement",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+J", "key": "j", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+J", "key": "j", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Rename Track",
+      "context": "Arrangement",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+R", "key": "r", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+R", "key": "r", "modifiers": ["Cmd"] }] }
+      }
+    }
+  ]
+}

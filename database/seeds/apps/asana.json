@@ -1,0 +1,88 @@
+{
+  "name": "Asana",
+  "slug": "asana",
+  "description": "Work management platform for teams",
+  "category": "productivity",
+  "shortcuts": [
+    {
+      "command": "Quick Add Task",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Q", "key": "q", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "Q", "key": "q", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "My Tasks",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Alt+M", "key": "m", "modifiers": ["Ctrl", "Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Option+M", "key": "m", "modifiers": ["Cmd", "Option"] }] }
+      }
+    },
+    {
+      "command": "Create Task",
+      "context": "Project",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Enter", "key": "Enter", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "Enter", "key": "Enter", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Assign to Me",
+      "context": "Task",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Tab+M", "key": "m", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "Tab+M", "key": "m", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Set Due Date",
+      "context": "Task",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Tab+D", "key": "d", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "Tab+D", "key": "d", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Mark Complete",
+      "context": "Task",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Tab+C", "key": "c", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "Tab+C", "key": "c", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Search",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+/", "key": "/", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+/", "key": "/", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Board View",
+      "context": "Project",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+B", "key": "b", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+B", "key": "b", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    },
+    {
+      "command": "List View",
+      "context": "Project",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+L", "key": "l", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+L", "key": "l", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Open Inbox",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Alt+I", "key": "i", "modifiers": ["Ctrl", "Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Option+I", "key": "i", "modifiers": ["Cmd", "Option"] }] }
+      }
+    }
+  ]
+}

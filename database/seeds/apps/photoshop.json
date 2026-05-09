@@ -1,0 +1,96 @@
+{
+  "name": "Photoshop",
+  "slug": "photoshop",
+  "description": "Adobe's professional image editing software",
+  "category": "creative",
+  "shortcuts": [
+    {
+      "command": "Save for Web",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+Alt+S", "key": "s", "modifiers": ["Ctrl", "Shift", "Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+Option+S", "key": "s", "modifiers": ["Cmd", "Shift", "Option"] }] }
+      }
+    },
+    {
+      "command": "New Layer",
+      "context": "Layers",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+N", "key": "n", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+N", "key": "n", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Merge Visible",
+      "context": "Layers",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+E", "key": "e", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+E", "key": "e", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Free Transform",
+      "context": "Canvas",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+T", "key": "t", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+T", "key": "t", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Deselect",
+      "context": "Canvas",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+D", "key": "d", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+D", "key": "d", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Invert Selection",
+      "context": "Canvas",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+I", "key": "i", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+I", "key": "i", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Fill Layer",
+      "context": "Canvas",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Shift+F5", "key": "F5", "modifiers": ["Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Shift+F5", "key": "F5", "modifiers": ["Shift"] }] }
+      }
+    },
+    {
+      "command": "Levels Adjustment",
+      "context": "Canvas",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+L", "key": "l", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+L", "key": "l", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Curves Adjustment",
+      "context": "Canvas",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+M", "key": "m", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+M", "key": "m", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Hue/Saturation Adjustment",
+      "context": "Canvas",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+U", "key": "u", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+U", "key": "u", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Flatten Image",
+      "context": "Layers",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+Alt+E", "key": "e", "modifiers": ["Ctrl", "Shift", "Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+Option+E", "key": "e", "modifiers": ["Cmd", "Shift", "Option"] }] }
+      }
+    }
+  ]
+}

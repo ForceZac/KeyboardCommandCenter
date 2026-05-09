@@ -1,0 +1,85 @@
+{
+  "name": "Windows Explorer",
+  "slug": "windows-explorer",
+  "description": "File manager built into Windows operating system",
+  "category": "system",
+  "shortcuts": [
+    {
+      "command": "Open New Window",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+N", "key": "n", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Go Up One Level",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Alt+Up", "key": "ArrowUp", "modifiers": ["Alt"] }] }
+      }
+    },
+    {
+      "command": "Address Bar",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Alt+D", "key": "d", "modifiers": ["Alt"] }] }
+      }
+    },
+    {
+      "command": "Search Box",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+E", "key": "e", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Toggle Preview Pane",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Alt+P", "key": "p", "modifiers": ["Alt"] }] }
+      }
+    },
+    {
+      "command": "Properties",
+      "context": "File",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Alt+Enter", "key": "Enter", "modifiers": ["Alt"] }] }
+      }
+    },
+    {
+      "command": "Rename File",
+      "context": "File",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "F2", "key": "F2", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Delete Permanently",
+      "context": "File",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Shift+Delete", "key": "Delete", "modifiers": ["Shift"] }] }
+      }
+    },
+    {
+      "command": "Copy File Path",
+      "context": "File",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+C", "key": "c", "modifiers": ["Ctrl", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Select All",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+A", "key": "a", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Refresh",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "F5", "key": "F5", "modifiers": [] }] }
+      }
+    }
+  ]
+}

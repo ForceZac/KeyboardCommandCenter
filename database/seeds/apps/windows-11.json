@@ -1,0 +1,92 @@
+{
+  "name": "Windows 11",
+  "slug": "windows-11",
+  "description": "Microsoft Windows 11 operating system shortcuts",
+  "category": "system",
+  "shortcuts": [
+    {
+      "command": "Open Start Menu",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Win", "key": "Meta", "modifiers": ["Win"] }] }
+      }
+    },
+    {
+      "command": "Open Action Center",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Win+A", "key": "a", "modifiers": ["Win"] }] }
+      }
+    },
+    {
+      "command": "Open Settings",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Win+I", "key": "i", "modifiers": ["Win"] }] }
+      }
+    },
+    {
+      "command": "Task View (Virtual Desktops)",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Win+Tab", "key": "Tab", "modifiers": ["Win"] }] }
+      }
+    },
+    {
+      "command": "Snap Window Left",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Win+Left", "key": "ArrowLeft", "modifiers": ["Win"] }] }
+      }
+    },
+    {
+      "command": "Snap Window Right",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Win+Right", "key": "ArrowRight", "modifiers": ["Win"] }] }
+      }
+    },
+    {
+      "command": "Lock Screen",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Win+L", "key": "l", "modifiers": ["Win"] }] }
+      }
+    },
+    {
+      "command": "Open File Explorer",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Win+E", "key": "e", "modifiers": ["Win"] }] }
+      }
+    },
+    {
+      "command": "Open Run Dialog",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Win+R", "key": "r", "modifiers": ["Win"] }] }
+      }
+    },
+    {
+      "command": "Search",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Win+S", "key": "s", "modifiers": ["Win"] }] }
+      }
+    },
+    {
+      "command": "New Virtual Desktop",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Win+Ctrl+D", "key": "d", "modifiers": ["Win", "Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Switch to Next Virtual Desktop",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Win+Ctrl+Right", "key": "ArrowRight", "modifiers": ["Win", "Ctrl"] }] }
+      }
+    }
+  ]
+}

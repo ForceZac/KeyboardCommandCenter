@@ -1,0 +1,88 @@
+{
+  "name": "Linear",
+  "slug": "linear",
+  "description": "Modern project management tool for software teams",
+  "category": "productivity",
+  "shortcuts": [
+    {
+      "command": "Command Menu",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+K", "key": "k", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+K", "key": "k", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Create Issue",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "C", "key": "c", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "C", "key": "c", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "My Issues",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "G M", "key": "m", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "G M", "key": "m", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "All Issues",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "G A", "key": "a", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "G A", "key": "a", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Search",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+F", "key": "f", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+F", "key": "f", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Assign Issue",
+      "context": "Issue",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "A", "key": "a", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "A", "key": "a", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Set Priority",
+      "context": "Issue",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "P", "key": "p", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "P", "key": "p", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Set Status",
+      "context": "Issue",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "S", "key": "s", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "S", "key": "s", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Set Milestone",
+      "context": "Issue",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Shift+M", "key": "m", "modifiers": ["Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Shift+M", "key": "m", "modifiers": ["Shift"] }] }
+      }
+    },
+    {
+      "command": "Archive Issue",
+      "context": "Issue",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Backspace", "key": "Backspace", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Backspace", "key": "Backspace", "modifiers": ["Cmd"] }] }
+      }
+    }
+  ]
+}

@@ -1,0 +1,96 @@
+{
+  "name": "Microsoft Excel",
+  "slug": "microsoft-excel",
+  "description": "Spreadsheet application by Microsoft, part of Office suite",
+  "category": "productivity",
+  "shortcuts": [
+    {
+      "command": "Sum Selected Range",
+      "context": "Spreadsheet",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Alt+=", "key": "=", "modifiers": ["Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+T", "key": "t", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Fill Down",
+      "context": "Spreadsheet",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+D", "key": "d", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Ctrl+D", "key": "d", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Insert Cells",
+      "context": "Spreadsheet",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift++", "key": "+", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Ctrl+Shift+=", "key": "=", "modifiers": ["Ctrl", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Delete Cells",
+      "context": "Spreadsheet",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+-", "key": "-", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Ctrl+-", "key": "-", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Format Cells Dialog",
+      "context": "Spreadsheet",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+1", "key": "1", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+1", "key": "1", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Apply Currency Format",
+      "context": "Spreadsheet",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+$", "key": "$", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Ctrl+Shift+$", "key": "$", "modifiers": ["Ctrl", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Apply Percentage Format",
+      "context": "Spreadsheet",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+%", "key": "%", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Ctrl+Shift+%", "key": "%", "modifiers": ["Ctrl", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Create Table",
+      "context": "Spreadsheet",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+T", "key": "t", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+T", "key": "t", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Toggle AutoFilter",
+      "context": "Spreadsheet",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+L", "key": "l", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+L", "key": "l", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Go To (Name Box)",
+      "context": "Spreadsheet",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+G", "key": "g", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Ctrl+G", "key": "g", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Calculate Workbook Now",
+      "context": "Spreadsheet",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "F9", "key": "F9", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+=", "key": "=", "modifiers": ["Cmd"] }] }
+      }
+    }
+  ]
+}

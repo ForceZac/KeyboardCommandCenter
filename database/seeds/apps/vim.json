@@ -1,0 +1,116 @@
+{
+  "name": "Vim",
+  "slug": "vim",
+  "description": "Highly configurable modal text editor",
+  "category": "developer-tools",
+  "shortcuts": [
+    {
+      "command": "Enter Normal Mode",
+      "context": "Insert Mode",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Esc", "key": "Escape", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "Esc", "key": "Escape", "modifiers": [] }] },
+        "linux": { "steps": [{ "keyCombo": "Esc", "key": "Escape", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Save File",
+      "context": "Normal Mode",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": ":w", "key": "w", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": ":w", "key": "w", "modifiers": [] }] },
+        "linux": { "steps": [{ "keyCombo": ":w", "key": "w", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Quit",
+      "context": "Normal Mode",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": ":q", "key": "q", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": ":q", "key": "q", "modifiers": [] }] },
+        "linux": { "steps": [{ "keyCombo": ":q", "key": "q", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Enter Insert Mode",
+      "context": "Normal Mode",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "i", "key": "i", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "i", "key": "i", "modifiers": [] }] },
+        "linux": { "steps": [{ "keyCombo": "i", "key": "i", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Enter Visual Mode",
+      "context": "Normal Mode",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "v", "key": "v", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "v", "key": "v", "modifiers": [] }] },
+        "linux": { "steps": [{ "keyCombo": "v", "key": "v", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Undo",
+      "context": "Normal Mode",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "u", "key": "u", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "u", "key": "u", "modifiers": [] }] },
+        "linux": { "steps": [{ "keyCombo": "u", "key": "u", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Redo",
+      "context": "Normal Mode",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+r", "key": "r", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Ctrl+r", "key": "r", "modifiers": ["Ctrl"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+r", "key": "r", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Search Forward",
+      "context": "Normal Mode",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "/", "key": "/", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "/", "key": "/", "modifiers": [] }] },
+        "linux": { "steps": [{ "keyCombo": "/", "key": "/", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Yank (Copy) Line",
+      "context": "Normal Mode",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "yy", "key": "y", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "yy", "key": "y", "modifiers": [] }] },
+        "linux": { "steps": [{ "keyCombo": "yy", "key": "y", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Paste",
+      "context": "Normal Mode",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "p", "key": "p", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "p", "key": "p", "modifiers": [] }] },
+        "linux": { "steps": [{ "keyCombo": "p", "key": "p", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Delete Line",
+      "context": "Normal Mode",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "dd", "key": "d", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "dd", "key": "d", "modifiers": [] }] },
+        "linux": { "steps": [{ "keyCombo": "dd", "key": "d", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Go to End of File",
+      "context": "Normal Mode",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "G", "key": "g", "modifiers": ["Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "G", "key": "g", "modifiers": ["Shift"] }] },
+        "linux": { "steps": [{ "keyCombo": "G", "key": "g", "modifiers": ["Shift"] }] }
+      }
+    }
+  ]
+}

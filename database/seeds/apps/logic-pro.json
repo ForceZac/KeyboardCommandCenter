@@ -1,0 +1,85 @@
+{
+  "name": "Logic Pro",
+  "slug": "logic-pro",
+  "description": "Professional digital audio workstation by Apple",
+  "category": "music",
+  "shortcuts": [
+    {
+      "command": "Play / Stop",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Space", "key": " ", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Record",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "R", "key": "r", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Go to Beginning",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Return", "key": "Enter", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Toggle Loop",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "C", "key": "c", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Open Piano Roll",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+6", "key": "6", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Open Mixer",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+2", "key": "2", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Bounce",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+B", "key": "b", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Split Track",
+      "context": "Arrangement",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+T", "key": "t", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Quantize",
+      "context": "Piano Roll",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+Q", "key": "q", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Smart Controls",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "B", "key": "b", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Full Screen",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Ctrl+Cmd+F", "key": "f", "modifiers": ["Ctrl", "Cmd"] }] }
+      }
+    }
+  ]
+}

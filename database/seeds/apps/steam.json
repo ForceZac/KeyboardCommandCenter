@@ -1,0 +1,98 @@
+{
+  "name": "Steam",
+  "slug": "steam",
+  "description": "Digital game distribution platform by Valve",
+  "category": "gaming",
+  "shortcuts": [
+    {
+      "command": "Open Steam Overlay",
+      "context": "In-Game",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Shift+Tab", "key": "Tab", "modifiers": ["Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Shift+Tab", "key": "Tab", "modifiers": ["Shift"] }] },
+        "linux": { "steps": [{ "keyCombo": "Shift+Tab", "key": "Tab", "modifiers": ["Shift"] }] }
+      }
+    },
+    {
+      "command": "Take Screenshot",
+      "context": "In-Game",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "F12", "key": "F12", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "F12", "key": "F12", "modifiers": [] }] },
+        "linux": { "steps": [{ "keyCombo": "F12", "key": "F12", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Open In-Game Chat",
+      "context": "In-Game (Overlay)",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Shift+Tab", "key": "Tab", "modifiers": ["Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Shift+Tab", "key": "Tab", "modifiers": ["Shift"] }] },
+        "linux": { "steps": [{ "keyCombo": "Shift+Tab", "key": "Tab", "modifiers": ["Shift"] }] }
+      }
+    },
+    {
+      "command": "Jump to Game Library",
+      "context": "Steam Client",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+1", "key": "1", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+1", "key": "1", "modifiers": ["Cmd", "Shift"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+Shift+1", "key": "1", "modifiers": ["Ctrl", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Open Store",
+      "context": "Steam Client",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+2", "key": "2", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+2", "key": "2", "modifiers": ["Cmd", "Shift"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+Shift+2", "key": "2", "modifiers": ["Ctrl", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Go Back",
+      "context": "Steam Client",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Alt+Left", "key": "ArrowLeft", "modifiers": ["Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+[", "key": "[", "modifiers": ["Cmd"] }] },
+        "linux": { "steps": [{ "keyCombo": "Alt+Left", "key": "ArrowLeft", "modifiers": ["Alt"] }] }
+      }
+    },
+    {
+      "command": "Go Forward",
+      "context": "Steam Client",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Alt+Right", "key": "ArrowRight", "modifiers": ["Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+]", "key": "]", "modifiers": ["Cmd"] }] },
+        "linux": { "steps": [{ "keyCombo": "Alt+Right", "key": "ArrowRight", "modifiers": ["Alt"] }] }
+      }
+    },
+    {
+      "command": "Friends List",
+      "context": "Steam Client",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+F", "key": "f", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+F", "key": "f", "modifiers": ["Cmd", "Shift"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+Shift+F", "key": "f", "modifiers": ["Ctrl", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Settings",
+      "context": "Steam Client",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+,", "key": ",", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+,", "key": ",", "modifiers": ["Cmd"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+,", "key": ",", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Search Store",
+      "context": "Steam Client",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+F", "key": "f", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+F", "key": "f", "modifiers": ["Cmd"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+F", "key": "f", "modifiers": ["Ctrl"] }] }
+      }
+    }
+  ]
+}

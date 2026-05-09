@@ -1,0 +1,107 @@
+{
+  "name": "Figma",
+  "slug": "figma",
+  "description": "Collaborative interface design tool",
+  "category": "creative",
+  "shortcuts": [
+    {
+      "command": "Select All",
+      "context": "Canvas",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+A", "key": "a", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+A", "key": "a", "modifiers": ["Cmd"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+A", "key": "a", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Group Selection",
+      "context": "Canvas",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+G", "key": "g", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+G", "key": "g", "modifiers": ["Cmd"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+G", "key": "g", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Ungroup",
+      "context": "Canvas",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+G", "key": "g", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+G", "key": "g", "modifiers": ["Cmd", "Shift"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+Shift+G", "key": "g", "modifiers": ["Ctrl", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Create Component",
+      "context": "Canvas",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Alt+K", "key": "k", "modifiers": ["Ctrl", "Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Option+K", "key": "k", "modifiers": ["Cmd", "Option"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+Alt+K", "key": "k", "modifiers": ["Ctrl", "Alt"] }] }
+      }
+    },
+    {
+      "command": "Flip Horizontal",
+      "context": "Canvas",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Shift+H", "key": "h", "modifiers": ["Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Shift+H", "key": "h", "modifiers": ["Shift"] }] },
+        "linux": { "steps": [{ "keyCombo": "Shift+H", "key": "h", "modifiers": ["Shift"] }] }
+      }
+    },
+    {
+      "command": "Flip Vertical",
+      "context": "Canvas",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Shift+V", "key": "v", "modifiers": ["Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Shift+V", "key": "v", "modifiers": ["Shift"] }] },
+        "linux": { "steps": [{ "keyCombo": "Shift+V", "key": "v", "modifiers": ["Shift"] }] }
+      }
+    },
+    {
+      "command": "Zoom to Fit",
+      "context": "Canvas",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Shift+1", "key": "1", "modifiers": ["Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Shift+1", "key": "1", "modifiers": ["Shift"] }] },
+        "linux": { "steps": [{ "keyCombo": "Shift+1", "key": "1", "modifiers": ["Shift"] }] }
+      }
+    },
+    {
+      "command": "Toggle Layers Panel",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+\\", "key": "\\", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+\\", "key": "\\", "modifiers": ["Cmd"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+\\", "key": "\\", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Flatten",
+      "context": "Canvas",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+E", "key": "e", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+E", "key": "e", "modifiers": ["Cmd"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+E", "key": "e", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Frame Selection",
+      "context": "Canvas",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Alt+G", "key": "g", "modifiers": ["Ctrl", "Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Option+G", "key": "g", "modifiers": ["Cmd", "Option"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+Alt+G", "key": "g", "modifiers": ["Ctrl", "Alt"] }] }
+      }
+    },
+    {
+      "command": "Add Auto Layout",
+      "context": "Canvas",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Shift+A", "key": "a", "modifiers": ["Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Shift+A", "key": "a", "modifiers": ["Shift"] }] },
+        "linux": { "steps": [{ "keyCombo": "Shift+A", "key": "a", "modifiers": ["Shift"] }] }
+      }
+    }
+  ]
+}

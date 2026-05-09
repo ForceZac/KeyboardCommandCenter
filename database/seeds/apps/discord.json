@@ -1,0 +1,88 @@
+{
+  "name": "Discord",
+  "slug": "discord",
+  "description": "Voice, video, and text communication platform",
+  "category": "gaming",
+  "shortcuts": [
+    {
+      "command": "Toggle Mute",
+      "context": "Voice Channel",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+M", "key": "m", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+M", "key": "m", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Toggle Deafen",
+      "context": "Voice Channel",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+D", "key": "d", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+D", "key": "d", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Quick Switcher",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+K", "key": "k", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+K", "key": "k", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Mark Channel as Read",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Esc", "key": "Escape", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "Esc", "key": "Escape", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Mark Server as Read",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Shift+Esc", "key": "Escape", "modifiers": ["Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Shift+Esc", "key": "Escape", "modifiers": ["Shift"] }] }
+      }
+    },
+    {
+      "command": "Navigate to Previous Text Channel",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Alt+Up", "key": "ArrowUp", "modifiers": ["Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Option+Up", "key": "ArrowUp", "modifiers": ["Option"] }] }
+      }
+    },
+    {
+      "command": "Toggle Overlay",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Shift+`", "key": "`", "modifiers": ["Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Shift+`", "key": "`", "modifiers": ["Shift"] }] }
+      }
+    },
+    {
+      "command": "Focus Text Box",
+      "context": "Channel",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "A", "key": "a", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "A", "key": "a", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Emoji Picker",
+      "context": "Message Input",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+E", "key": "e", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Ctrl+Cmd+Space", "key": " ", "modifiers": ["Ctrl", "Cmd"] }] }
+      }
+    },
+    {
+      "command": "Upload File",
+      "context": "Message Input",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+U", "key": "u", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+U", "key": "u", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "name": "OBS Studio",
+  "slug": "obs-studio",
+  "description": "Free and open-source software for video recording and live streaming",
+  "category": "gaming",
+  "shortcuts": [
+    {
+      "command": "Start / Stop Streaming",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+S", "key": "s", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+S", "key": "s", "modifiers": ["Cmd", "Shift"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+Shift+S", "key": "s", "modifiers": ["Ctrl", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Start / Stop Recording",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+R", "key": "r", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+R", "key": "r", "modifiers": ["Cmd", "Shift"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+Shift+R", "key": "r", "modifiers": ["Ctrl", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Toggle Mute (Desktop Audio)",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+M", "key": "m", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+M", "key": "m", "modifiers": ["Cmd", "Shift"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+Shift+M", "key": "m", "modifiers": ["Ctrl", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Scene 1",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+F1", "key": "F1", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+F1", "key": "F1", "modifiers": ["Cmd", "Shift"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+Shift+F1", "key": "F1", "modifiers": ["Ctrl", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Scene 2",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+F2", "key": "F2", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+F2", "key": "F2", "modifiers": ["Cmd", "Shift"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+Shift+F2", "key": "F2", "modifiers": ["Ctrl", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Studio Mode Toggle",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+T", "key": "t", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+T", "key": "t", "modifiers": ["Cmd", "Shift"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+Shift+T", "key": "t", "modifiers": ["Ctrl", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Pause Recording",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+P", "key": "p", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+P", "key": "p", "modifiers": ["Cmd", "Shift"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+Shift+P", "key": "p", "modifiers": ["Ctrl", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Virtual Camera Toggle",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+V", "key": "v", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+V", "key": "v", "modifiers": ["Cmd", "Shift"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+Shift+V", "key": "v", "modifiers": ["Ctrl", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Settings",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+,", "key": ",", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+,", "key": ",", "modifiers": ["Cmd"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+,", "key": ",", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Transition to Scene",
+      "context": "Studio Mode",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+T", "key": "t", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+T", "key": "t", "modifiers": ["Cmd"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+T", "key": "t", "modifiers": ["Ctrl"] }] }
+      }
+    }
+  ]
+}

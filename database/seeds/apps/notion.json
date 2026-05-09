@@ -1,0 +1,88 @@
+{
+  "name": "Notion",
+  "slug": "notion",
+  "description": "All-in-one workspace for notes, docs, wikis, and databases",
+  "category": "productivity",
+  "shortcuts": [
+    {
+      "command": "Quick Find",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+P", "key": "p", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+P", "key": "p", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "New Page",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+N", "key": "n", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+N", "key": "n", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Toggle Sidebar",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+\\", "key": "\\", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+\\", "key": "\\", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Toggle Dark Mode",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+L", "key": "l", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+L", "key": "l", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Insert Inline Code",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+E", "key": "e", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+E", "key": "e", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Turn Into Heading 1",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+1", "key": "1", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Option+1", "key": "1", "modifiers": ["Cmd", "Option"] }] }
+      }
+    },
+    {
+      "command": "Turn Into Toggle",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+7", "key": "7", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Option+7", "key": "7", "modifiers": ["Cmd", "Option"] }] }
+      }
+    },
+    {
+      "command": "Turn Into Bulleted List",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+8", "key": "8", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Option+8", "key": "8", "modifiers": ["Cmd", "Option"] }] }
+      }
+    },
+    {
+      "command": "Turn Into Numbered List",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+9", "key": "9", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Option+9", "key": "9", "modifiers": ["Cmd", "Option"] }] }
+      }
+    },
+    {
+      "command": "Create Comment",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+M", "key": "m", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+M", "key": "m", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    }
+  ]
+}

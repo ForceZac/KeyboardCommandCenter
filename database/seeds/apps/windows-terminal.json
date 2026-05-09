@@ -1,0 +1,92 @@
+{
+  "name": "Windows Terminal",
+  "slug": "windows-terminal",
+  "description": "Modern terminal application for Windows",
+  "category": "developer-tools",
+  "shortcuts": [
+    {
+      "command": "New Tab",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+T", "key": "t", "modifiers": ["Ctrl", "Shift"] }] }
+      }
+    },
+    {
+      "command": "New Window",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+N", "key": "n", "modifiers": ["Ctrl", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Close Tab",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+W", "key": "w", "modifiers": ["Ctrl", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Split Pane Horizontally",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Alt+Shift+Plus", "key": "+", "modifiers": ["Alt", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Split Pane Vertically",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Alt+Shift+Minus", "key": "-", "modifiers": ["Alt", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Find",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+F", "key": "f", "modifiers": ["Ctrl", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Next Tab",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Tab", "key": "Tab", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Previous Tab",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+Tab", "key": "Tab", "modifiers": ["Ctrl", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Open Settings",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+,", "key": ",", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Toggle Fullscreen",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Alt+Enter", "key": "Enter", "modifiers": ["Alt"] }] }
+      }
+    },
+    {
+      "command": "Copy",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+C", "key": "c", "modifiers": ["Ctrl", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Paste",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+V", "key": "v", "modifiers": ["Ctrl", "Shift"] }] }
+      }
+    }
+  ]
+}
