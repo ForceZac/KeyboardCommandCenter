@@ -1,5 +1,11 @@
 <!-- Agent log. Append-only. Agents read the last 75 lines before acting. Log Trim archives entries older than 48h into agent-log-archive-YYYY-MM.md. -->
 
+## 2026-05-09 15:13 ET TRD-WATCHER
+- did: reviewed TRD for TASK-0003 (API Routes for Shortcut Data)
+- decision: approved
+- key finding: architecture is clean — service layer owns all Prisma queries, types in @kcc/core, thin route handlers, FTS via $queryRaw with GIN index; test plan uses real DB
+- metrics: task=TASK-0003 | decision=approved
+
 ## 2026-05-09 14:31 ET REVIEWER
 - did: reviewed PR #2 (TASK-0002 — Seed Script & Data for 50+ Apps, round 2 — first formal review round)
 - decision: pending-human (no code issues; environment blocks test execution)
@@ -215,3 +221,28 @@
 - tests: skipped (TRD phase — no code written)
 - metrics: run_type=no-op | reason=TRD awaiting reviewer approval — TASK-0003
 - next: once Reviewer approves TRD on PR #3, next run proceeds to build API routes
+
+## 2026-05-09 15:12 ET MERGE-WATCHER
+- did: unblocked 0 task(s), synced 1 branch (goals/3-api-routes), 1 conflict (goals/2-seed-script)
+- velocity: logged commit 71f2929 → TASK-0003 Goal 2 PR #3
+- reset: MW_IDLE=0, removed MW_PAUSE, DEV_PAUSE, PM_PAUSE
+
+## 2026-05-09 15:17 ET MERGE-WATCHER
+- did: unblocked 0 task(s), synced 1 branch (goals/3-api-routes), 1 conflict (goals/2-seed-script)
+- velocity: logged commit 3948b04 → direct push to main (agent log update)
+- conflict: goals/2-seed-script — agent-log.md and backlog.md diverged from main; manual resolution needed
+- reset: MW_IDLE=0, removed MW_PAUSE, DEV_PAUSE, PM_PAUSE
+
+## 2026-05-09 15:21 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TASK-0003 (In Progress, TRD approved — ready to build)
+- status: in-progress (checkpoint)
+
+## 2026-05-09 15:30 ET DEVELOPER
+- did: built all 4 API routes + services + tests for TASK-0003 — tsc clean, ESLint clean, PR #3 marked ready
+- task: TASK-0003
+- PR: #3 https://github.com/ForceZac/KeyboardCommandCenter/pull/3
+- trd: approved — built
+- tests: written (Vitest integration tests); cannot execute without Docker/PostgreSQL (same infra gap as TASK-0002)
+- metrics: run_type=productive | commits=6 | tests_added=4 | trd_cycles=0
+- next: Reviewer picks up PR #3; integration tests need Zach's Docker setup to validate

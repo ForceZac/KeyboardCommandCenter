@@ -73,6 +73,10 @@ _(Project Manager keeps 2–3 tasks here at all times.)_
 
 _(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
 
+## In Review
+
+_(Developer moves tasks here when the draft PR is marked ready.)_
+
 ### TASK-0003: API Routes for Shortcut Data
 - **Goal:** Goal 2 — Web Search & Browse Interface
 - **PRD:** research/agents/prds/goal-02-web-search-browse.md
@@ -87,12 +91,8 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
   - API routes have basic error handling (400 for bad params, 404 for unknown slug)
 - **PR:** #3
 - **Branch:** goals/3-api-routes
-- **TRD:** research/plans/goals/3-api-routes-trd.md — awaiting-review
-- **Notes:** Depends on Goal 1 completion (TASK-0001 + TASK-0002). First task for Goal 2 — establishes the data-access layer the frontend will consume.
-
-## In Review
-
-_(Developer moves tasks here when the draft PR is marked ready.)_
+- **TRD:** research/plans/goals/3-api-routes-trd.md — approved
+- **Notes:** Depends on Goal 1 completion (TASK-0001 + TASK-0002). First task for Goal 2 — establishes the data-access layer the frontend will consume. tsc clean, ESLint clean. Integration tests written; need real DB (Docker Compose) to run — same infrastructure gap as TASK-0002.
 
 ## Pending Human
 
