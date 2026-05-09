@@ -9,11 +9,11 @@ You hold a high bar. Your default is to request changes, not approve. If you can
 ## Read these before doing anything
 
 1. `KeyboardCommandCenter/research/agents/backlog.md` — to know which tasks are In Progress (TRD review) or In Review (code review)
-2. `memory/project_context.md` — project patterns and architecture
-3. `memory/feedback_backend_standards.md` — backend rules
-4. `memory/feedback_frontend_standards.md` — frontend rules
-5. `memory/feedback_separation_of_concerns.md`
-6. `memory/feedback_pull_requests.md` — PR policy
+2. `KeyboardCommandCenter/memory/project_context.md` — project patterns and architecture
+3. `KeyboardCommandCenter/memory/feedback_backend_standards.md` — backend rules
+4. `KeyboardCommandCenter/memory/feedback_frontend_standards.md` — frontend rules
+5. `KeyboardCommandCenter/memory/feedback_separation_of_concerns.md`
+6. `KeyboardCommandCenter/memory/feedback_pull_requests.md` — PR policy
 
 ## Wake-up checklist
 

@@ -1,6 +1,3 @@
-// Prisma schema — placeholder until TASK-0001 TRD is approved and schema is designed
-// See: research/plans/goals/1-shortcut-data-schema-trd.md
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,4 +7,74 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Schema will be defined in TASK-0001
+// Top-level taxonomy for applications (Creative, Developer Tools, Productivity, etc.)
+model Category {
+  id           String        @id @default(cuid())
+  name         String        @unique
+  slug         String        @unique
+  applications Application[]
+
+  @@map("categories")
+}
+
+// OS platform (Windows, macOS, Linux)
+model Platform {
+  id       String               @id @default(cuid())
+  name     String               @unique
+  slug     String               @unique
+  bindings ShortcutKeyBinding[]
+
+  @@map("platforms")
+}
+
+// An application whose shortcuts are cataloged (e.g. VS Code, Figma)
+model Application {
+  id          String     @id @default(cuid())
+  name        String
+  slug        String     @unique
+  description String?
+  categoryId  String
+  category    Category   @relation(fields: [categoryId], references: [id])
+  shortcuts   Shortcut[]
+
+  @@map("applications")
+}
+
+// A command within an application (e.g. "Save File", "Toggle Comment")
+model Shortcut {
+  id            String               @id @default(cuid())
+  applicationId String
+  application   Application          @relation(fields: [applicationId], references: [id])
+  command       String               // human-readable description
+  context       String?              // optional scope: "Global", "Editor", "Normal Mode", etc.
+  bindings      ShortcutKeyBinding[]
+
+  @@map("shortcuts")
+}
+
+// One row per shortcut + platform combination
+model ShortcutKeyBinding {
+  id         String            @id @default(cuid())
+  shortcutId String
+  shortcut   Shortcut          @relation(fields: [shortcutId], references: [id])
+  platformId String
+  platform   Platform          @relation(fields: [platformId], references: [id])
+  steps      ShortcutKeyStep[]
+
+  @@unique([shortcutId, platformId])
+  @@map("shortcut_key_bindings")
+}
+
+// One row per key-press step in a binding; supports chords (Ctrl+K → Ctrl+C = 2 steps)
+model ShortcutKeyStep {
+  id        String             @id @default(cuid())
+  bindingId String
+  binding   ShortcutKeyBinding @relation(fields: [bindingId], references: [id])
+  stepOrder Int                // 1-based; single shortcuts have exactly one step
+  keyCombo  String             // display string e.g. "Ctrl+Shift+P"
+  key       String             // base key e.g. "p"
+  modifiers String[]           // normalized modifier names e.g. ["Ctrl", "Shift"]
+
+  @@unique([bindingId, stepOrder])
+  @@map("shortcut_key_steps")
+}
