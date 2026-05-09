@@ -94,6 +94,10 @@ _(Project Manager keeps 2–3 tasks here at all times.)_
 
 _(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
 
+## In Review
+
+_(Developer moves tasks here when the draft PR is marked ready.)_
+
 ### TASK-0002: Seed Script & Data for 50+ Applications
 - **Goal:** Goal 1 — Shortcut Data Schema & Seed Database
 - **PRD:** research/agents/prds/goal-01-shortcut-data-schema.md
@@ -108,11 +112,7 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
 - **PR:** #2
 - **Branch:** goals/2-seed-script
 - **TRD:** research/plans/goals/2-seed-script-trd.md — approved
-- **Notes:** Build phase complete (2026-05-09): 50 JSON seed files, seed.ts, FTS migration, integration tests committed to PR #2. Integration tests blocked pending TASK-0001 (PR #1) merge — Prisma client cannot be generated until schema is on main. Once PR #1 merges: rebase this branch, run prisma generate + migrate deploy + npm run seed, then run tests and mark PR ready.
-
-## In Review
-
-_(Developer moves tasks here when the draft PR is marked ready.)_
+- **Notes:** Build complete. Merged origin/main (PR #1 schema) into branch. TypeScript clean, Prisma schema valid, all 50 apps verified 10+ shortcuts each, category slugs valid. Integration tests written (seed.test.ts) — require live PostgreSQL to run (CI will validate).
 
 ## Changes Requested
 
