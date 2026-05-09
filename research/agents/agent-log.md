@@ -494,3 +494,48 @@
 - standards checked: frontend (SearchSection.tsx guard, TanStack Query isLoading pattern), testing (Playwright anti-patterns, observable-state vs waitForTimeout)
 - metrics: run_type=productive | pr=PR-5 | round=2 | decision=changes-requested | tests_run=build-pass/ts-pass/lint-pass/e2e-skip (no dev server)
 - next: developer must fix two one-liners from round 1 — SearchSection.tsx results guard + homepage.spec.ts waitForTimeout — then push; round 3 should approve
+
+## 2026-05-09 18:20 ET DEVELOPER
+- did: no-op — DEV_LOCK held by prior run (age ~13 min, task TASK-0006)
+- task: N/A
+- metrics: run_type=no-op | reason=DEV_LOCK held
+- next: retry next cron fire; lock will expire in ~12 min if that run timed out
+
+## 2026-05-09 18:31 ET DEVELOPER
+- did: DEV_LOCK held — another instance is mid-run (lock is ~23 min old, TASK-0006)
+- task: n/a
+- PR: n/a
+- trd: n/a
+- tests: n/a
+- metrics: run_type=no-op | reason=DEV_LOCK held | dev_idle=3
+- next: lock expires in ~2 min if stale (25-min threshold); next run will override if still held
+
+## 2026-05-09 18:34 ET PROJECT-MANAGER
+- did: retroactively added TASK-0006 to Shipped (Goal 3 Electron App Shell — PR #4 merged outside backlog flow), filed PROP-0001 for process bypass
+- created: TASK-0006 (retroactive — shipped entry only)
+- moved: none
+- prd gaps: Goal 3 (urgent — work already shipped without PRD), Goals 4–10 (upcoming)
+- roadmap check: skipped (done last run)
+- proposals added: 1 (PROP-0001 — Goal 3 process bypass)
+- note: Ready has 1 task (TASK-0005) — below target of 2–3, but no PRDs exist for Goals 3+ so no new tasks can be created
+- note: project_context.md still stale — says "Pre-development — awaiting first PRD" but Goal 1 shipped, Goal 2 mid-flight, Goal 3 partially shipped (flagged 3 runs in a row)
+- note: TASK-0004 in Changes Requested since 18:11 ET today — not stale yet, two one-line fixes pending
+- metrics: tasks_created=1 (retroactive) | tasks_moved=0 | prd_gaps=8 | roadmap_issues=0 | proposals_added=1
+- next: once Goal 3 PRD lands, audit PR #4 against it and determine if additional Goal 3 tasks are needed. Product Manager needs to prioritize goal-03 PRD immediately — work has shipped without one.
+
+## 2026-05-09 18:35 ET PROJECT-MANAGER (addendum)
+- discord: failed to post summary — #standup and #main channels not allowlisted. Summary logged above. Owner needs to run /discord:access to allowlist channels.
+
+## 2026-05-09 18:40 ET DEVELOPER
+- did: started run — overrode stale DEV_LOCK (was 33 min old, TASK-0006), claimed new lock for TASK-0004
+- task: TASK-0004 (fix-up — Changes Requested on PR #5)
+- status: in-progress (checkpoint)
+
+## 2026-05-09 18:42 ET DEVELOPER
+- did: fix-up TASK-0004 round 2 — added results !== undefined guard in SearchSection.tsx; replaced waitForTimeout(500) with observable-state expect in homepage.spec.ts; PR comment posted; moved task to In Review
+- task: TASK-0004
+- PR: #5 https://github.com/ForceZac/KeyboardCommandCenter/pull/5
+- trd: approved — fix-up complete (round 3 ready)
+- tests: tsc clean ✅ | lint clean ✅ | E2E skipped (no dev server/DB in agent env)
+- metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=0
+- next: Reviewer picks up PR #5 for round 3 (scope: two one-liner fixes only)

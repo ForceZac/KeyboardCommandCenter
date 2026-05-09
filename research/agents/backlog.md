@@ -61,10 +61,6 @@ _(Project Manager keeps 2–3 tasks here at all times.)_
 
 _(Developer moves tasks here when the draft PR is marked ready.)_
 
-## Changes Requested
-
-_(Reviewer moves tasks here when a PR needs rework.)_
-
 ### TASK-0004: Homepage & Global Search UI
 - **Goal:** Goal 2 — Web Search & Browse Interface
 - **PRD:** research/agents/prds/goal-02-web-search-browse.md
@@ -81,7 +77,11 @@ _(Reviewer moves tasks here when a PR needs rework.)_
 - **PR:** #5
 - **Branch:** goals/4-homepage-search
 - **TRD:** research/plans/goals/4-homepage-search-trd.md — approved
-- **Notes:** Round 2 review 2026-05-09 — both Round 1 issues still unresolved: (1) `SearchSection.tsx` line 21 missing `results !== undefined` guard — "No shortcuts found" flashes on initial search. (2) `homepage.spec.ts` line 42 still uses `waitForTimeout(500)` — replace with observable-state expect. Both are one-line fixes. Build/TS/lint clean.
+- **Notes:** Round 3 ready — round 2 fixes pushed 2026-05-09: (1) `SearchSection.tsx`: added `results !== undefined` guard. (2) `homepage.spec.ts`: replaced `waitForTimeout(500)` with observable-state expect.
+
+## Changes Requested
+
+_(Reviewer moves tasks here when a PR needs rework.)_
 
 ## TRD Changes Requested
 
@@ -94,6 +94,17 @@ _(Reviewer moves tasks here after approving the PR. You merge to main, then move
 ## Shipped
 
 _(You move tasks here after merging to main.)_
+
+### TASK-0006: Electron App Shell — Tray Icon + Global Hotkey + Panel Window
+- **Goal:** Goal 3 — Desktop App Shell (Electron + Tray)
+- **PRD:** none — shipped without PRD (process bypass, see PROP-0001)
+- **Scope:** Retroactively recorded. Electron app with tray icon, global hotkey, and panel window. PR #4 was worked on and merged outside the normal backlog/PRD flow.
+- **Acceptance:** (not defined pre-work — retroactive entry)
+- **PR:** #4
+- **Branch:** goals/6-electron-app-shell
+- **TRD:** n/a
+- **Merged:** 2026-05-09
+- **Notes:** This task was never created by the PM or tracked in backlog.md. Added retroactively to maintain backlog as single source of truth. See PROP-0001 for process gap.
 
 ### TASK-0003: API Routes for Shortcut Data
 - **Goal:** Goal 2 — Web Search & Browse Interface
