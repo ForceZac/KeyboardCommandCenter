@@ -1,5 +1,18 @@
 <!-- Agent log. Append-only. Agents read the last 75 lines before acting. Log Trim archives entries older than 48h into agent-log-archive-YYYY-MM.md. -->
 
+## 2026-05-09 14:31 ET REVIEWER
+- did: reviewed PR #2 (TASK-0002 — Seed Script & Data for 50+ Apps, round 2 — first formal review round)
+- decision: pending-human (no code issues; environment blocks test execution)
+- standards checked: feedback_backend_standards, feedback_frontend_standards, feedback_separation_of_concerns, feedback_pull_requests, TRD match
+- static checks: tsc --noEmit=pass (seed.ts + seed.test.ts) | 50 JSON files validated (categories, platforms, modifiers all correct per packages/core types) | 530 shortcuts, all apps ≥10 | chord shortcuts present | upsert patterns match schema unique constraints | migration SQL correct (GIN IF NOT EXISTS, quoted camelCase columns)
+- blocker: Docker not installed in reviewer env — integration tests require live PostgreSQL; cannot satisfy hard rule "never approve without running tests"
+- action: posted comment on PR #2 with full findings + manual test instructions for Zach
+- backlog: moved TASK-0002 from In Review → Pending Human
+- metrics: run_type=productive | pr=PR-2 | round=2 | decision=pending-human | tests_run=static-only
+- next: re-review PR #2 after Zach confirms tests pass (or once Docker is available in reviewer env)
+
+## 2026-05-09 14:10 ET REVIEWER
+- did: reviewed PR #2 (TASK-0002 — Seed Script & Data for 50+ Apps, round 1)
 ## 2026-05-09 12:48 ET REVIEWER
 - did: reviewed PR #1 (TASK-0001 — Prisma schema, round 1)
 - decision: changes-requested
@@ -117,4 +130,49 @@
 ## 2026-05-09 13:00 ET DEVELOPER
 - did: started run — claimed DEV_LOCK
 - task: TBD (determining — no In Progress or Changes Requested tasks)
+- status: in-progress
+
+## 2026-05-09 14:20 ET DEVELOPER
+- did: fix-up TASK-0002 — added database/vitest.config.ts with testTimeout/hookTimeout 120_000; pushed; PR comment posted; moved back to In Review
+- task: TASK-0002
+- PR: #2 https://github.com/ForceZac/KeyboardCommandCenter/pull/2
+- trd: approved — fix-up complete (round 2)
+- tests: tsc not re-run (pure config file addition — no logic change)
+- metrics: run_type=productive | commits=2 | tests_added=0 | trd_cycles=0
+- next: Reviewer re-reviews PR #2 (scope: vitest.config.ts only)
+
+## 2026-05-09 14:33 ET PROJECT-MANAGER
+- did: no-op — Ready at 3 tasks (TASK-0003/0004/0005), no tasks to create or move
+- created: none
+- moved: none
+- prd gaps: Goals 3–10 (8 goals); next two needed: Goal 3 (Desktop App Shell) and Goal 4 (Process Detection)
+- roadmap check: skipped (ran last cycle)
+- proposals added: 0
+- note: TASK-0002 in Pending Human — awaiting Zach to run integration tests with Docker; Developer blocked by in-flight cap until PR #2 merges
+- note: project_context.md still stale (flagged last run) — says Goal 1 pre-dev but Goal 1 is nearly done and Goal 2 tasks are queued
+- metrics: tasks_created=0 | tasks_moved=0 | prd_gaps=8 | roadmap_issues=0
+- idle: PM_IDLE incremented to 2
+- next: once TASK-0002 merges and Developer starts TASK-0003, Ready drops to 2 — will need Goal 3 PRD before more tasks can be created
+
+## 2026-05-09 14:42 ET DEVELOPER
+- did: DEV_LOCK held — another instance mid-run (lock age ~10 min, task TBD)
+- task: none
+- PR: n/a
+- trd: n/a
+- tests: n/a
+- metrics: run_type=no-op | reason=DEV_LOCK held (10 min old, <25 min threshold)
+- next: lock will auto-expire at 25 min; next run should either find it released or override as stale
+
+## 2026-05-09 14:51 ET DEVELOPER
+- did: DEV_LOCK held — another instance mid-run (lock age ~20 min, task TBD — lock content shows "TBD")
+- task: none
+- PR: n/a
+- trd: n/a
+- tests: n/a
+- metrics: run_type=no-op | reason=DEV_LOCK held (~20 min old, <25 min threshold)
+- next: lock will auto-expire at 25 min; next run should either find it released or override as stale (DEV_IDLE now at 2)
+
+## 2026-05-09 15:01 ET DEVELOPER
+- did: started run — overrode stale DEV_LOCK (was 30 min old, TBD), claimed new lock
+- task: TBD (determining next task)
 - status: in-progress
