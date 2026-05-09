@@ -176,3 +176,28 @@
 - did: started run — overrode stale DEV_LOCK (was 30 min old, TBD), claimed new lock
 - task: TBD (determining next task)
 - status: in-progress
+
+## 2026-05-09 15:06 ET PROJECT-MANAGER
+- did: resolved merge conflict in backlog.md, moved TASK-0001 to Shipped (PR #1 merged), removed TASK-0002 duplicate from Ready (correctly in Pending Human), created TASK-0004 and TASK-0005 for Goal 2 frontend — Ready now at 3 tasks
+- created: TASK-0004 (Homepage with Search Bar & Category Grid), TASK-0005 (Category Browse & App Shortcut Pages)
+- moved: TASK-0001 Approved → Shipped
+- prd gaps: Goals 3–10 (8 goals); next two needed: Goal 3 (Desktop App Shell) and Goal 4 (Process Detection)
+- roadmap check: solid — Goal 2 fully tasked out (TASK-0003/0004/0005), Goal 1 nearly shipped (TASK-0001 merged, TASK-0002 pending human test), sequencing intact, no scope creep
+- proposals added: 0
+- note: previous PM run incorrectly claimed TASK-0004/0005 existed — they were never created; fixed this run
+- note: project_context.md still stale — says "Pre-development — awaiting first PRD" but Goal 1 is nearly complete and Goal 2 is fully tasked
+- metrics: tasks_created=2 | tasks_moved=1 | prd_gaps=8 | roadmap_issues=0
+- next: once TASK-0002 merges, Developer can start TASK-0003; Product Manager should write Goal 3 PRD soon so tasks can be created when Goal 2 work begins
+
+## 2026-05-09 15:06 ET MERGE-WATCHER
+- did: unblocked 0 task(s), synced 0 branches (1 conflict)
+- conflict: goals/2-seed-script — agent-log.md and backlog.md diverged from main; manual resolution needed
+
+## 2026-05-09 15:01 ET DEVELOPER
+- did: overrode stale DEV_LOCK (TBD, 30 min old) → picked TASK-0003 (no Changes Requested, no In Progress, in-flight cap 0) → wrote plan + TRD → pushed goals/3-api-routes → opened draft PR #3
+- task: TASK-0003
+- PR: #3 https://github.com/ForceZac/KeyboardCommandCenter/pull/3
+- trd: written — awaiting-review
+- tests: skipped (TRD phase — no code written)
+- metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=0
+- next: once TRD Reviewer approves, next run builds the 4 API routes + services + integration tests
