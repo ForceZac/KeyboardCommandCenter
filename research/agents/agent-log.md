@@ -1,5 +1,10 @@
 <!-- Agent log. Append-only. Agents read the last 75 lines before acting. Log Trim archives entries older than 48h into agent-log-archive-YYYY-MM.md. -->
 
+## 2026-05-09 19:00 ET DEVELOPER
+- did: woke up — DEV_LOCK held by another instance (age=161s, task=TASK-0005) — exiting immediately
+- task: N/A
+- metrics: run_type=no-op | reason=DEV_LOCK held
+
 ## 2026-05-09 16:40 ET REVIEWER
 - did: reviewed PR #4 (TASK-0006 — Electron App Shell, round 1)
 - decision: changes-requested
@@ -431,3 +436,65 @@
 - task: TBD (TASK-0005 likely — checking backlog)
 - status: in-progress
 
+
+## 2026-05-09 19:04 ET PROJECT-MANAGER
+- did: moved TASK-0004 to Shipped (PR #5 merged), moved TASK-0007 from Ready to Blocked (Goal 3 PRD missing), roadmap health check
+- created: none
+- moved: TASK-0004 Approved→Shipped, TASK-0007 Ready→Blocked
+- prd gaps: Goal 3 (urgent — TASK-0007 blocked, PROP-0001 still open), Goals 4–10 (upcoming)
+- roadmap check: Goal 2 nearly done (TASK-0005 in progress, final task). Goal 3 partially shipped but no PRD — remaining DoD items (configurable hotkey, <50MB RAM, CI builds) unclear whether PR #4 covered them. Goals 4+ sequencing looks correct. No scope creep or stale goals detected. Upcoming PRD gap: Goals 3 and 4 both need PRDs before PM can queue tasks.
+- proposals added: 0
+- note: Ready is now empty — cannot stock it without PRDs for Goals 3+. Product Manager is the bottleneck. Goal 3 PRD is the single most urgent deliverable for unblocking the pipeline.
+- note: project_context.md still stale (flagged 4th consecutive run) — says "Pre-development — awaiting first PRD" but Goals 1+2 nearly shipped, Goal 3 partially shipped.
+- metrics: tasks_created=0 | tasks_moved=2 | prd_gaps=8 | roadmap_issues=0
+- next: once Goal 3 PRD lands, unblock TASK-0007 and move to Ready. If Goal 2 TASK-0005 ships, verify Goal 2 DoD is met and update project context.
+
+## 2026-05-09 19:04 ET PROJECT-MANAGER (addendum)
+- discord: failed to post summary — #standup and #main channels not allowlisted (same as last run). Summary logged above. Owner needs to run /discord:access to allowlist channels.
+
+## 2026-05-09 19:11 ET DEVELOPER
+- did: no-op — DEV_LOCK held by prior run (age ~13 min, task TASK-0005)
+- task: N/A
+- PR: n/a
+- trd: n/a
+- tests: n/a
+- metrics: run_type=no-op | reason=DEV_LOCK held | dev_idle=2
+- next: retry next cron fire; if lock is stale (>25 min), next run will override
+
+## 2026-05-09 19:21 ET DEVELOPER
+- did: no-op — DEV_LOCK held by prior run (age ~23 min, TASK-0005 — within 25-min threshold)
+- task: N/A
+- PR: n/a
+- trd: n/a
+- tests: n/a
+- metrics: run_type=no-op | reason=DEV_LOCK held | dev_idle=3
+- next: retry next cron fire; if lock is still held at >25 min, next run will override
+
+## 2026-05-09 19:30 ET DEVELOPER
+- did: started run — overrode stale DEV_LOCK (was 32 min old, TASK-0005), claimed new lock; merged main into feature branch to pick up TASK-0004 foundation
+- task: TASK-0005 (building feature — TRD approved)
+- status: in-progress (checkpoint)
+
+## 2026-05-09 19:36 ET PROJECT-MANAGER
+- did: verified backlog state after merge conflict resolution — TASK-0005 in progress (DRAFT PR #6), TASK-0007 correctly blocked (no Goal 3 PRD), Ready empty; ran roadmap health check
+- created: none
+- moved: none
+- prd gaps: Goals 3–10 (8 goals); Goal 3 most urgent — work shipped without PRD (PROP-0001 still open)
+- roadmap check: solid — Goal 2 one task from completion (TASK-0005), Goal 3 shell shipped, sequencing intact, no scope creep or stale goals. PRD gap for Goals 3–4 remains the primary blocker for new task creation.
+- proposals added: 0
+- note: Ready at 0 tasks — below target of 2–3. Cannot create new tasks until Product Manager writes Goal 3 PRD. This has been flagged for 4 consecutive PM runs.
+- note: TASK-0005 PR field is empty in backlog but DRAFT PR #6 exists — Developer should update
+- note: project_context.md still stale (flagged 4 runs now) — says "Pre-development" but Goal 1 shipped, Goal 2 nearly done, Goal 3 partially shipped
+- metrics: tasks_created=0 | tasks_moved=0 | prd_gaps=8 | roadmap_issues=0
+- idle: PM_IDLE incremented to 1
+- next: once Goal 3 PRD lands, create 1–2 Goal 3 tasks and unblock TASK-0007. Product Manager needs to prioritize goal-03 PRD immediately.
+- discord: failed — #standup and #main channels not allowlisted. Owner needs to run /discord:access to allowlist channels. (Same issue every PM run since 12:03 ET.)
+
+## 2026-05-09 19:31 ET DEVELOPER
+- did: built TASK-0005 in full — all 10 acceptance criteria met; TSC clean; lint clean; E2E tests written (skipped in agent env, no dev server)
+- task: TASK-0005
+- PR: #6 https://github.com/ForceZac/KeyboardCommandCenter/pull/6
+- trd: approved — built
+- tests: tsc clean ✅ | lint clean ✅ | E2E written (category-page.spec.ts + app-page.spec.ts) — skipped (no dev server in agent env)
+- metrics: run_type=productive | commits=3 | tests_added=2 (E2E spec files) | trd_cycles=0
+- next: Reviewer picks up PR #6 — completes Goal 2 definition of done if approved

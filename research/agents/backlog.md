@@ -33,27 +33,13 @@ Task IDs are monotonic. The Project Manager picks the next number.
 
 _(Project Manager keeps 2–3 tasks here at all times.)_
 
-### TASK-0007: Settings Persistence & Login Startup Registration
-- **Goal:** Goal 3 — Desktop App Shell (Electron + Tray)
-- **PRD:** research/agents/prds/goal-03-desktop-app-shell.md
-- **Scope:** Complete the user-facing Goal 3 PRD items not covered by TASK-0006: (1) Add `electron-store` for local settings persistence — store hotkey binding (Electron accelerator string) and login-startup preference as a JSON file. (2) Wire configurable hotkey into HotkeyManager — Settings window accessible from tray context menu lets user record a new key combo, re-registers the global shortcut on change, and notifies user if the binding is already claimed by another app. (3) Login startup registration via `app.setLoginItemSettings` — enabled by default, toggleable in Settings, persisted via electron-store. (4) Add "Settings" item to tray context menu between "Open" and "Quit". NOT in scope: CI build pipeline (separate task), real shortcut panel content (Goal 5), process detection (Goal 4), overlay (Goal 6), code signing (Goal 9), Linux (Goal 10), auto-update, installer UX.
-- **Acceptance:**
-  - Tray context menu includes "Settings" option that opens a Settings window
-  - Settings window shows current hotkey binding and startup preference
-  - User can change the hotkey binding — new binding persists across app restarts
-  - App handles hotkey conflicts gracefully (shows notification if binding is taken by another app)
-  - App registers for login startup on Windows and macOS via `app.setLoginItemSettings`
-  - Startup preference is toggleable in Settings and persisted
-  - Settings stored via `electron-store` in a local JSON file
-  - All settings survive app restart (kill + relaunch)
-- **PR:**
-- **Branch:**
-- **TRD:**
-- **Notes:** Completes Goal 3 user-facing DoD alongside TASK-0006 (shell, tray, hotkey, panel). Depends on TASK-0006 being shipped first. CI build pipeline deferred to a separate task.
-
 ## In Progress
 
 _(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
+
+## In Review
+
+_(Developer moves tasks here when the draft PR is marked ready.)_
 
 ### TASK-0005: Per-App Shortcut Pages, Category Browse Pages & Platform Toggle
 - **Goal:** Goal 2 — Web Search & Browse Interface
@@ -70,14 +56,10 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
   - Both pages render correctly in dark and light mode
   - Both pages are usable on 320px-wide screens
   - App pages include semantic HTML and meta tags for SEO
-- **PR:**
+- **PR:** #6
 - **Branch:** goals/5-per-app-category-pages
-- **TRD:** research/plans/goals/5-per-app-category-pages-trd.md — awaiting-review
+- **TRD:** research/plans/goals/5-per-app-category-pages-trd.md — approved
 - **Notes:** Depends on TASK-0003 (API routes) and TASK-0004 (shared layout, theme toggle, search bar). Final frontend task for Goal 2 — completing this task finishes the Goal 2 definition of done.
-
-## In Review
-
-_(Developer moves tasks here when the draft PR is marked ready.)_
 
 ## Changes Requested
 
@@ -91,6 +73,10 @@ _(TRD Watcher moves tasks here when a TRD needs rework.)_
 
 _(Reviewer moves tasks here after approving the PR. You merge to main, then move to Shipped.)_
 
+## Shipped
+
+_(You move tasks here after merging to main.)_
+
 ### TASK-0004: Homepage & Global Search UI
 - **Goal:** Goal 2 — Web Search & Browse Interface
 - **PRD:** research/agents/prds/goal-02-web-search-browse.md
@@ -98,10 +84,7 @@ _(Reviewer moves tasks here after approving the PR. You merge to main, then move
 - **Branch:** goals/4-homepage-search
 - **TRD:** research/plans/goals/4-homepage-search-trd.md — approved
 - **Approved:** 2026-05-09
-
-## Shipped
-
-_(You move tasks here after merging to main.)_
+- **Merged:** 2026-05-09
 
 ### TASK-0006: Electron App Shell — Tray Icon + Global Hotkey + Panel Window
 - **Goal:** Goal 3 — Desktop App Shell (Electron + Tray)
@@ -141,3 +124,22 @@ _(You move tasks here after merging to main.)_
 ## Blocked
 
 _(Waiting on an external dependency, a missing PRD, or owner decision.)_
+
+### TASK-0007: Settings Persistence & Login Startup Registration
+- **Goal:** Goal 3 — Desktop App Shell (Electron + Tray)
+- **PRD:** research/agents/prds/goal-03-desktop-app-shell.md — **MISSING** (does not exist)
+- **Scope:** Complete the user-facing Goal 3 PRD items not covered by TASK-0006: (1) Add `electron-store` for local settings persistence — store hotkey binding (Electron accelerator string) and login-startup preference as a JSON file. (2) Wire configurable hotkey into HotkeyManager — Settings window accessible from tray context menu lets user record a new key combo, re-registers the global shortcut on change, and notifies user if the binding is already claimed by another app. (3) Login startup registration via `app.setLoginItemSettings` — enabled by default, toggleable in Settings, persisted via electron-store. (4) Add "Settings" item to tray context menu between "Open" and "Quit". NOT in scope: CI build pipeline (separate task), real shortcut panel content (Goal 5), process detection (Goal 4), overlay (Goal 6), code signing (Goal 9), Linux (Goal 10), auto-update, installer UX.
+- **Acceptance:**
+  - Tray context menu includes "Settings" option that opens a Settings window
+  - Settings window shows current hotkey binding and startup preference
+  - User can change the hotkey binding — new binding persists across app restarts
+  - App handles hotkey conflicts gracefully (shows notification if binding is taken by another app)
+  - App registers for login startup on Windows and macOS via `app.setLoginItemSettings`
+  - Startup preference is toggleable in Settings and persisted
+  - Settings stored via `electron-store` in a local JSON file
+  - All settings survive app restart (kill + relaunch)
+- **PR:**
+- **Branch:**
+- **TRD:**
+- **Notes:** Completes Goal 3 user-facing DoD alongside TASK-0006 (shell, tray, hotkey, panel). Depends on TASK-0006 being shipped first. CI build pipeline deferred to a separate task.
+- **Blocked reason:** Goal 3 PRD (`goal-03-desktop-app-shell.md`) does not exist in `research/agents/prds/`. Product Manager must write the PRD before this task can move to Ready. See also PROP-0001.
