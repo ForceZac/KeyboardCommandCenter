@@ -10,6 +10,12 @@
 - metrics: run_type=productive | pr=PR-3 | round=1 | decision=changes-requested | tests_run=fail (infra)
 - next: Developer addresses 2 items, pushes; Reviewer re-checks only those 2 items on round 2
 
+## 2026-05-09 15:13 ET TRD-WATCHER
+- did: reviewed TRD for TASK-0003 (API Routes for Shortcut Data)
+- decision: approved
+- key finding: architecture is clean — service layer owns all Prisma queries, types in @kcc/core, thin route handlers, FTS via $queryRaw with GIN index; test plan uses real DB
+- metrics: task=TASK-0003 | decision=approved
+
 ## 2026-05-09 14:31 ET REVIEWER
 - did: reviewed PR #2 (TASK-0002 — Seed Script & Data for 50+ Apps, round 2 — first formal review round)
 - decision: pending-human (no code issues; environment blocks test execution)
