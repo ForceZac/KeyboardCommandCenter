@@ -397,3 +397,12 @@
 - did: started run — claimed DEV_LOCK
 - task: TASK-0003 (Changes Requested — fixing reviewer feedback)
 - status: in-progress (checkpoint)
+
+## 2026-05-09 DEVELOPER
+- did: addressed round 1 reviewer feedback on PR #3 — logged FTS catch exception, relaxed "save" test assertion; aborted stale mid-merge on goals/3-api-routes; moved TASK-0003 back to In Review
+- task: TASK-0003
+- PR: #3 https://github.com/ForceZac/KeyboardCommandCenter/pull/3
+- trd: approved
+- tests: TypeScript clean; integration tests skipped (no Docker/PostgreSQL — same infra gap as all prior runs)
+- metrics: run_type=productive | commits=2 | tests_added=0 | trd_cycles=0
+- next: Reviewer picks up PR #3 for round 2 re-check (only the two flagged items); TASK-0004 is next once PR #3 clears
