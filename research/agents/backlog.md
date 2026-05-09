@@ -29,10 +29,9 @@ Task IDs are monotonic. The Project Manager picks the next number.
 
 ---
 
-## Ready
+## In Progress
 
-_(Project Manager keeps 2–3 tasks here at all times.)_
-
+_(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
 
 ### TASK-0004: Homepage & Global Search UI
 - **Goal:** Goal 2 — Web Search & Browse Interface
@@ -47,10 +46,14 @@ _(Project Manager keeps 2–3 tasks here at all times.)_
   - Dark mode renders by default; light mode toggle switches theme
   - Layout is usable on 320px-wide screens
   - Homepage LCP <1.5s on local dev server
-- **PR:**
-- **Branch:**
-- **TRD:**
+- **PR:** #5
+- **Branch:** goals/4-homepage-search
+- **TRD:** research/plans/goals/4-homepage-search-trd.md — awaiting-review
 - **Notes:** Depends on TASK-0003 (API routes must exist for search to function). Second frontend task for Goal 2. Per-app pages and category pages will be a separate task.
+
+## Ready
+
+_(Project Manager keeps 2–3 tasks here at all times.)_
 
 ### TASK-0005: Per-App Shortcut Pages, Category Browse Pages & Platform Toggle
 - **Goal:** Goal 2 — Web Search & Browse Interface
@@ -71,11 +74,6 @@ _(Project Manager keeps 2–3 tasks here at all times.)_
 - **Branch:**
 - **TRD:**
 - **Notes:** Depends on TASK-0003 (API routes) and TASK-0004 (shared layout, theme toggle, search bar). Final frontend task for Goal 2 — completing this task finishes the Goal 2 definition of done.
-
-
-## In Progress
-
-_(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
 
 ## In Review
 
