@@ -33,24 +33,6 @@ Task IDs are monotonic. The Project Manager picks the next number.
 
 _(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
 
-### TASK-0004: Homepage & Global Search UI
-- **Goal:** Goal 2 — Web Search & Browse Interface
-- **PRD:** research/agents/prds/goal-02-web-search-browse.md
-- **Scope:** Build the Next.js homepage in `packages/web/app/`: prominent search bar with debounced full-text search hitting `GET /api/shortcuts/search`, inline search result previews (shortcut command, key combo, app name, platform badges) with "View all shortcuts for [App]" links, category grid linking to category browse pages. Include dark mode (default) with light mode toggle, mobile-responsive layout (320px+), and SEO meta tags. NOT in scope: per-app shortcut pages, category listing pages, platform toggle, in-app shortcut filtering, user accounts, admin panel.
-- **Acceptance:**
-  - Homepage renders with search bar and category grid
-  - Typing in search bar triggers debounced API call and displays inline results
-  - Search results show command description, key combo, app name, and platform badges
-  - Each result links to the app's shortcut page (route exists even if page is built in a later task)
-  - Category tiles link to `/categories/[slug]` routes
-  - Dark mode renders by default; light mode toggle switches theme
-  - Layout is usable on 320px-wide screens
-  - Homepage LCP <1.5s on local dev server
-- **PR:** #5
-- **Branch:** goals/4-homepage-search
-- **TRD:** research/plans/goals/4-homepage-search-trd.md — awaiting-review
-- **Notes:** Depends on TASK-0003 (API routes must exist for search to function). Second frontend task for Goal 2. Per-app pages and category pages will be a separate task.
-
 ## Ready
 
 _(Project Manager keeps 2–3 tasks here at all times.)_
@@ -79,22 +61,23 @@ _(Project Manager keeps 2–3 tasks here at all times.)_
 
 _(Developer moves tasks here when the draft PR is marked ready.)_
 
-### TASK-0003: API Routes for Shortcut Data
+### TASK-0004: Homepage & Global Search UI
 - **Goal:** Goal 2 — Web Search & Browse Interface
 - **PRD:** research/agents/prds/goal-02-web-search-browse.md
-- **Scope:** Build the four Next.js API route handlers in `packages/web/app/api/`: `GET /api/shortcuts/search?q=&platform=` (full-text search with Prisma, debounce-friendly), `GET /api/apps` (list all apps, filterable by category), `GET /api/apps/[slug]` (single app with all shortcuts grouped by context), `GET /api/categories` (list categories with app counts). Use shared types from `packages/core`. All endpoints are public read-only — no auth. NOT in scope: frontend UI, SSR, pagination, rate limiting, admin endpoints, Express migration.
+- **Scope:** Build the Next.js homepage in `packages/web/app/`: prominent search bar with debounced full-text search hitting `GET /api/shortcuts/search`, inline search result previews (shortcut command, key combo, app name, platform badges) with "View all shortcuts for [App]" links, category grid linking to category browse pages. Include dark mode (default) with light mode toggle, mobile-responsive layout (320px+), and SEO meta tags. NOT in scope: per-app shortcut pages, category listing pages, platform toggle, in-app shortcut filtering, user accounts, admin panel.
 - **Acceptance:**
-  - All four API routes return correct JSON responses against the seeded database
-  - `GET /api/shortcuts/search?q=undo` returns matching shortcuts across apps in <200ms
-  - `GET /api/apps` supports optional `?category=` filter parameter
-  - `GET /api/apps/[slug]` returns shortcuts grouped by context/scope
-  - `GET /api/categories` returns category names with app counts
-  - Responses use shared TypeScript types from `packages/core`
-  - API routes have basic error handling (400 for bad params, 404 for unknown slug)
-- **PR:** #3
-- **Branch:** goals/3-api-routes
-- **TRD:** research/plans/goals/3-api-routes-trd.md — approved
-- **Notes:** Round 1 feedback addressed — catch logging added, "save" test assertion relaxed. Re-review requested.
+  - Homepage renders with search bar and category grid
+  - Typing in search bar triggers debounced API call and displays inline results
+  - Search results show command description, key combo, app name, and platform badges
+  - Each result links to the app's shortcut page (route exists even if page is built in a later task)
+  - Category tiles link to `/categories/[slug]` routes
+  - Dark mode renders by default; light mode toggle switches theme
+  - Layout is usable on 320px-wide screens
+  - Homepage LCP <1.5s on local dev server
+- **PR:** #5
+- **Branch:** goals/4-homepage-search
+- **TRD:** research/plans/goals/4-homepage-search-trd.md — approved
+- **Notes:** Depends on TASK-0003 (API routes must exist for search to function). Second frontend task for Goal 2. Per-app pages and category pages will be a separate task.
 
 ## Changes Requested
 
@@ -108,34 +91,25 @@ _(TRD Watcher moves tasks here when a TRD needs rework.)_
 
 _(Reviewer moves tasks here after approving the PR. You merge to main, then move to Shipped.)_
 
+## Shipped
+
+_(You move tasks here after merging to main.)_
+
+### TASK-0003: API Routes for Shortcut Data
+- **Goal:** Goal 2 — Web Search & Browse Interface
+- **PRD:** research/agents/prds/goal-02-web-search-browse.md
+- **PR:** #3
+- **Branch:** goals/3-api-routes
+- **TRD:** research/plans/goals/3-api-routes-trd.md — approved
+- **Merged:** 2026-05-09
+
 ### TASK-0002: Seed Script & Data for 50+ Applications
 - **Goal:** Goal 1 — Shortcut Data Schema & Seed Database
 - **PRD:** research/agents/prds/goal-01-shortcut-data-schema.md
 - **PR:** #2
 - **Branch:** goals/2-seed-script
 - **TRD:** research/plans/goals/2-seed-script-trd.md — approved
-- **Notes:** Static checks passed. Integration tests deferred — run `docker compose up -d` + `npm test -w database` when ready.
-
-### TASK-0001: Define Prisma Schema for Shortcut Database
-- **Goal:** Goal 1 — Shortcut Data Schema & Seed Database
-- **PRD:** research/agents/prds/goal-01-shortcut-data-schema.md
-- **Scope:** Design and implement the Prisma schema with Application, Shortcut, Category, and Platform models and their relationships. Includes modifier key normalization (Ctrl/Cmd, Alt/Option, Shift, Super/Win), chord support for multi-step shortcuts (e.g. Ctrl+K → Ctrl+C), context/scope field (Global, Editor, Terminal, etc.), and category taxonomy (Creative, Developer Tools, Productivity, Gaming, Communication, System). Store both `keyCombo` display string and structured `modifiers[]` + `key` fields per PRD recommendation. Export TypeScript types from `packages/core` for shared use. NOT in scope: seed data/script, full-text search index, web UI, API endpoints.
-- **Acceptance:**
-  - Prisma schema compiles and migrates cleanly on a fresh PostgreSQL instance
-  - Models include Application, Shortcut, Category, Platform with correct relations
-  - Each shortcut supports multi-platform key combos (Win/Mac/Linux)
-  - Chord/multi-step shortcuts representable in the schema
-  - Context/scope field supports per-app scopes (e.g. "Normal Mode", "Editor", "Terminal")
-  - Category taxonomy covers at least: Creative, Developer Tools, Productivity, Gaming, Music, System, Browsers
-  - TypeScript types exported from `packages/core`
-- **PR:** #1
-- **Branch:** goals/1-prisma-schema
-- **TRD:** research/plans/goals/1-prisma-schema-trd.md — approved
-- **Notes:** Foundation task — nothing else can proceed until this ships. See PRD open questions for schema design decisions (structured vs string key combos, modal shortcut handling).
-
-## Shipped
-
-_(You move tasks here after merging to main.)_
+- **Merged:** 2026-05-09
 
 ### TASK-0001: Define Prisma Schema for Shortcut Database
 - **Goal:** Goal 1 — Shortcut Data Schema & Seed Database

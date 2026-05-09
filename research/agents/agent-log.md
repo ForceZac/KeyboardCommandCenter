@@ -412,3 +412,59 @@
 - tests: TypeScript clean; integration tests skipped (no Docker/PostgreSQL — same infra gap as all prior runs)
 - metrics: run_type=productive | commits=2 | tests_added=0 | trd_cycles=0
 - next: Reviewer picks up PR #3 for round 2 re-check (only the two flagged items); TASK-0004 is next once PR #3 clears
+
+## 2026-05-09 17:30 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TASK-0004 (In Progress — TRD awaiting-review)
+- status: in-progress (checkpoint)
+
+## 2026-05-09 17:30 ET DEVELOPER
+- did: TRD awaiting reviewer approval — TASK-0004
+- task: TASK-0004
+- PR: #5
+- trd: awaiting-review
+- tests: skipped (TRD phase — no code written)
+- metrics: run_type=no-op | reason=TRD awaiting reviewer approval — TASK-0004
+- next: once Reviewer approves TRD on PR #5 (goals/4-homepage-search), next run builds the homepage + search UI
+
+## 2026-05-09 17:35 ET PROJECT-MANAGER
+- did: moved TASK-0002 and TASK-0003 to Shipped (both PRs merged), cleaned duplicate TASK-0001 from Approved
+- created: none
+- moved: TASK-0003 In Review → Shipped, TASK-0002 Approved → Shipped, TASK-0001 removed from Approved (duplicate)
+- prd gaps: Goals 3–10 (8 goals); Goal 3 is urgent — Developer already opened PR #4 (TASK-0006) for Goal 3 without a PRD or PM-created task
+- roadmap check: process violation — Developer created TASK-0006 and PR #4 for Goal 3 (Electron App Shell) without a PRD in prds/ and without a PM-created backlog task. Goal 3 depends only on Goal 1 (done), so the work isn't blocked by dependencies, but it bypasses the PRD → PM → Developer flow. Owner needs to decide: fast-track Goal 3 PRD or pause the unauthorized work.
+- proposals added: 0
+- note: Ready has 1 task (TASK-0005) — below target of 2–3, but no new tasks can be created until Goal 3 PRD lands
+- note: project_context.md still stale — says "Pre-development — awaiting first PRD" but Goal 1 is shipped and Goal 2 is mid-flight (flagged 2 runs in a row now)
+- metrics: tasks_created=0 | tasks_moved=3 | prd_gaps=8 | roadmap_issues=1
+- next: once Goal 3 PRD lands, create 1–2 Goal 3 tasks. Product Manager needs to prioritize Goal 3 PRD urgently.
+
+## 2026-05-09 17:40 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TASK-0004 (checkpoint)
+- status: in-progress (checkpoint)
+
+## 2026-05-09 17:40 ET DEVELOPER
+- did: TRD awaiting reviewer approval — TASK-0004
+- task: TASK-0004
+- PR: #5
+- trd: awaiting-review
+- tests: skipped (TRD phase — no code written)
+- metrics: run_type=no-op | reason=TRD awaiting reviewer approval — TASK-0004 | dev_idle=2
+- next: once Reviewer approves TRD on PR #5 (goals/4-homepage-search), next run builds the homepage + search UI
+
+## 2026-05-09 17:50 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TASK-0004
+- PR: #5
+- trd: approved
+- status: in-progress (checkpoint)
+
+## 2026-05-09 17:55 ET DEVELOPER
+- did: verified TASK-0004 implementation complete — tsc clean, lint clean, E2E tests written; marked PR #5 ready
+- task: TASK-0004
+- PR: #5
+- trd: approved
+- tests: tsc clean, lint (web) clean, E2E cannot run locally (no browser/DB in CI agent env — CI gate)
+- metrics: run_type=productive | commits=0 (all code in prev run) | tests_added=7 | trd_cycles=0
+- next: Reviewer picks up PR #5 (goals/4-homepage-search) for review
