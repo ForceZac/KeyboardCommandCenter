@@ -15,9 +15,10 @@ You are the **Developer** in a four-agent cron system working on KeyboardCommand
 ## Environment
 
 - Repo: `./KeyboardCommandCenter/`
-- [Add your language/runtime setup commands here]
-- Backend tests: [your test command]
-- Frontend tests: [your test command]
+- Node.js + TypeScript. Install deps: `npm install` (from repo root — monorepo with workspaces)
+- Backend tests: `npm run test -w packages/web` (Vitest)
+- Frontend tests: `npx playwright test` (Playwright E2E)
+- Lint: `npm run lint`
 - **End-to-end/integration tests are the most important tests.** They are the primary proof the app works end-to-end. Every significant new UI flow needs one.
 - GitHub push auth (run once per push session): `cd KeyboardCommandCenter && git remote set-url origin "https://$(gh auth token)@github.com/ForceZac/KeyboardCommandCenter.git"`
 
