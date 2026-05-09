@@ -33,9 +33,42 @@ Task IDs are monotonic. The Project Manager picks the next number.
 
 _(Project Manager keeps 2–3 tasks here at all times.)_
 
+### TASK-0002: Seed Script & Data for 50+ Applications
+- **Goal:** Goal 1 — Shortcut Data Schema & Seed Database
+- **PRD:** research/agents/prds/goal-01-shortcut-data-schema.md
+- **Scope:** Create static JSON seed files in `database/seeds/` for 50+ popular applications across all categories defined in the PRD (Creative, Developer, Productivity, Gaming, Music, System, Browsers). Build a TypeScript seed script that reads these files and populates the database via Prisma. Add full-text search index on command descriptions and app names. NOT in scope: web UI, API endpoints, community submissions, desktop app integration.
+- **Acceptance:**
+  - Seed script completes without errors on a fresh database with the TASK-0001 schema
+  - 50+ applications seeded across all PRD-specified categories
+  - Each application has at least 10 verified shortcuts
+  - Full-text search index exists on command descriptions and app names
+  - Full-text search query returns results in <100ms on seeded data
+  - Seed files are static JSON, versionable, and reviewable
+- **PR:**
+- **Branch:**
+- **TRD:**
+- **Notes:** Depends on TASK-0001 (schema must exist before seeding). Seed data should be sourced from official documentation where possible.
+
 ## In Progress
 
 _(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
+
+### TASK-0001: Define Prisma Schema for Shortcut Database
+- **Goal:** Goal 1 — Shortcut Data Schema & Seed Database
+- **PRD:** research/agents/prds/goal-01-shortcut-data-schema.md
+- **Scope:** Design and implement the Prisma schema with Application, Shortcut, Category, and Platform models and their relationships. Includes modifier key normalization (Ctrl/Cmd, Alt/Option, Shift, Super/Win), chord support for multi-step shortcuts (e.g. Ctrl+K → Ctrl+C), context/scope field (Global, Editor, Terminal, etc.), and category taxonomy (Creative, Developer Tools, Productivity, Gaming, Communication, System). Store both `keyCombo` display string and structured `modifiers[]` + `key` fields per PRD recommendation. Export TypeScript types from `packages/core` for shared use. NOT in scope: seed data/script, full-text search index, web UI, API endpoints.
+- **Acceptance:**
+  - Prisma schema compiles and migrates cleanly on a fresh PostgreSQL instance
+  - Models include Application, Shortcut, Category, Platform with correct relations
+  - Each shortcut supports multi-platform key combos (Win/Mac/Linux)
+  - Chord/multi-step shortcuts representable in the schema
+  - Context/scope field supports per-app scopes (e.g. "Normal Mode", "Editor", "Terminal")
+  - Category taxonomy covers at least: Creative, Developer Tools, Productivity, Gaming, Music, System, Browsers
+  - TypeScript types exported from `packages/core`
+- **PR:** #1
+- **Branch:** goals/1-prisma-schema
+- **TRD:** research/plans/goals/1-prisma-schema-trd.md — awaiting-review
+- **Notes:** Foundation task — nothing else can proceed until this ships. See PRD open questions for schema design decisions (structured vs string key combos, modal shortcut handling).
 
 ## In Review
 
