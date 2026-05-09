@@ -1,0 +1,96 @@
+{
+  "name": "After Effects",
+  "slug": "after-effects",
+  "description": "Adobe's motion graphics and visual effects software",
+  "category": "creative",
+  "shortcuts": [
+    {
+      "command": "Ram Preview",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Space", "key": " ", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "Space", "key": " ", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Toggle Layer Visibility",
+      "context": "Timeline",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+H", "key": "h", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+H", "key": "h", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Pre-compose",
+      "context": "Timeline",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+C", "key": "c", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+C", "key": "c", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    },
+    {
+      "command": "New Composition",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+N", "key": "n", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+N", "key": "n", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Add Keyframe",
+      "context": "Timeline",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Alt+Shift+P", "key": "p", "modifiers": ["Alt", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Option+Shift+P", "key": "p", "modifiers": ["Option", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Go to Start of Composition",
+      "context": "Timeline",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Home", "key": "Home", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "Home", "key": "Home", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Set Work Area to Layer Duration",
+      "context": "Timeline",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Alt+B", "key": "b", "modifiers": ["Ctrl", "Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Option+B", "key": "b", "modifiers": ["Cmd", "Option"] }] }
+      }
+    },
+    {
+      "command": "Trim Layer to Current Time (In)",
+      "context": "Timeline",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Alt+[", "key": "[", "modifiers": ["Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Option+[", "key": "[", "modifiers": ["Option"] }] }
+      }
+    },
+    {
+      "command": "Trim Layer to Current Time (Out)",
+      "context": "Timeline",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Alt+]", "key": "]", "modifiers": ["Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Option+]", "key": "]", "modifiers": ["Option"] }] }
+      }
+    },
+    {
+      "command": "Enable Motion Blur",
+      "context": "Timeline",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+M", "key": "m", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+M", "key": "m", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Fit Composition to Window",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Shift+/", "key": "/", "modifiers": ["Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Shift+/", "key": "/", "modifiers": ["Shift"] }] }
+      }
+    }
+  ]
+}

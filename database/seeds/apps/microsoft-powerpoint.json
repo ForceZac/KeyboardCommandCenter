@@ -1,0 +1,88 @@
+{
+  "name": "Microsoft PowerPoint",
+  "slug": "microsoft-powerpoint",
+  "description": "Presentation software by Microsoft, part of Office suite",
+  "category": "productivity",
+  "shortcuts": [
+    {
+      "command": "New Slide",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+M", "key": "m", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+N", "key": "n", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Duplicate Slide",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+D", "key": "d", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+D", "key": "d", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Start Presentation",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "F5", "key": "F5", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+Return", "key": "Enter", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Group Objects",
+      "context": "Slide",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+G", "key": "g", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Option+G", "key": "g", "modifiers": ["Cmd", "Option"] }] }
+      }
+    },
+    {
+      "command": "Ungroup Objects",
+      "context": "Slide",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+G", "key": "g", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Option+Shift+G", "key": "g", "modifiers": ["Cmd", "Option", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Bring to Front",
+      "context": "Slide",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Alt+Shift+F10", "key": "F10", "modifiers": ["Alt", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Option+Cmd+F", "key": "f", "modifiers": ["Option", "Cmd"] }] }
+      }
+    },
+    {
+      "command": "Slide Zoom In",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Alt+W Q", "key": "q", "modifiers": ["Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Option+W Q", "key": "q", "modifiers": ["Option"] }] }
+      }
+    },
+    {
+      "command": "Bold",
+      "context": "Text Box",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+B", "key": "b", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+B", "key": "b", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Italic",
+      "context": "Text Box",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+I", "key": "i", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+I", "key": "i", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Increase Font Size",
+      "context": "Text Box",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+>", "key": ">", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+>", "key": ">", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    }
+  ]
+}

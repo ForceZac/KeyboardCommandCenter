@@ -1,0 +1,96 @@
+{
+  "name": "Premiere Pro",
+  "slug": "premiere-pro",
+  "description": "Adobe's professional video editing software",
+  "category": "creative",
+  "shortcuts": [
+    {
+      "command": "Razor Tool",
+      "context": "Timeline",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "C", "key": "c", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "C", "key": "c", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Selection Tool",
+      "context": "Timeline",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "V", "key": "v", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "V", "key": "v", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Play / Pause",
+      "context": "Timeline",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Space", "key": " ", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "Space", "key": " ", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Mark In",
+      "context": "Timeline",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "I", "key": "i", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "I", "key": "i", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Mark Out",
+      "context": "Timeline",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "O", "key": "o", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "O", "key": "o", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Go to Next Edit Point",
+      "context": "Timeline",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Down", "key": "ArrowDown", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "Down", "key": "ArrowDown", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Go to Previous Edit Point",
+      "context": "Timeline",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Up", "key": "ArrowUp", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "Up", "key": "ArrowUp", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Export Media",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+M", "key": "m", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+M", "key": "m", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Ripple Delete",
+      "context": "Timeline",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Shift+Delete", "key": "Delete", "modifiers": ["Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Shift+Delete", "key": "Delete", "modifiers": ["Shift"] }] }
+      }
+    },
+    {
+      "command": "Nest",
+      "context": "Timeline",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+G", "key": "g", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+G", "key": "g", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Add Edit",
+      "context": "Timeline",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+K", "key": "k", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+K", "key": "k", "modifiers": ["Cmd"] }] }
+      }
+    }
+  ]
+}

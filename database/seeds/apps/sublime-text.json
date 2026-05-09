@@ -1,0 +1,98 @@
+{
+  "name": "Sublime Text",
+  "slug": "sublime-text",
+  "description": "A sophisticated text editor for code, markup, and prose",
+  "category": "developer-tools",
+  "shortcuts": [
+    {
+      "command": "Command Palette",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+P", "key": "p", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+P", "key": "p", "modifiers": ["Cmd", "Shift"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+Shift+P", "key": "p", "modifiers": ["Ctrl", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Quick Open File",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+P", "key": "p", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+P", "key": "p", "modifiers": ["Cmd"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+P", "key": "p", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Multiple Selection (Add Next)",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+D", "key": "d", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+D", "key": "d", "modifiers": ["Cmd"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+D", "key": "d", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Select All Instances",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Alt+F3", "key": "F3", "modifiers": ["Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Ctrl+Cmd+G", "key": "g", "modifiers": ["Ctrl", "Cmd"] }] },
+        "linux": { "steps": [{ "keyCombo": "Alt+F3", "key": "F3", "modifiers": ["Alt"] }] }
+      }
+    },
+    {
+      "command": "Toggle Comment",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+/", "key": "/", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+/", "key": "/", "modifiers": ["Cmd"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+/", "key": "/", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Sort Lines",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "F9", "key": "F9", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "F5", "key": "F5", "modifiers": [] }] },
+        "linux": { "steps": [{ "keyCombo": "F9", "key": "F9", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Split View (2 Columns)",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Alt+Shift+2", "key": "2", "modifiers": ["Alt", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Option+Cmd+2", "key": "2", "modifiers": ["Option", "Cmd"] }] },
+        "linux": { "steps": [{ "keyCombo": "Alt+Shift+2", "key": "2", "modifiers": ["Alt", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Expand Selection to Line",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+L", "key": "l", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+L", "key": "l", "modifiers": ["Cmd"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+L", "key": "l", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Go to Symbol",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+R", "key": "r", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+R", "key": "r", "modifiers": ["Cmd"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+R", "key": "r", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Indentation to Spaces",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+P > Indentation: Convert to Spaces", "key": "", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+P > Indentation: Convert to Spaces", "key": "", "modifiers": ["Cmd", "Shift"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+Shift+P > Indentation: Convert to Spaces", "key": "", "modifiers": ["Ctrl", "Shift"] }] }
+      }
+    }
+  ]
+}

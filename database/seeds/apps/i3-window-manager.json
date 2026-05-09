@@ -1,0 +1,85 @@
+{
+  "name": "i3 Window Manager",
+  "slug": "i3-window-manager",
+  "description": "Tiling window manager for Linux, known for keyboard-driven workflow",
+  "category": "system",
+  "shortcuts": [
+    {
+      "command": "Open Terminal",
+      "context": "Global",
+      "bindings": {
+        "linux": { "steps": [{ "keyCombo": "Super+Enter", "key": "Enter", "modifiers": ["Super"] }] }
+      }
+    },
+    {
+      "command": "Close Window",
+      "context": "Global",
+      "bindings": {
+        "linux": { "steps": [{ "keyCombo": "Super+Shift+Q", "key": "q", "modifiers": ["Super", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Open Application Launcher (dmenu)",
+      "context": "Global",
+      "bindings": {
+        "linux": { "steps": [{ "keyCombo": "Super+D", "key": "d", "modifiers": ["Super"] }] }
+      }
+    },
+    {
+      "command": "Focus Left",
+      "context": "Global",
+      "bindings": {
+        "linux": { "steps": [{ "keyCombo": "Super+H", "key": "h", "modifiers": ["Super"] }] }
+      }
+    },
+    {
+      "command": "Focus Right",
+      "context": "Global",
+      "bindings": {
+        "linux": { "steps": [{ "keyCombo": "Super+L", "key": "l", "modifiers": ["Super"] }] }
+      }
+    },
+    {
+      "command": "Focus Up",
+      "context": "Global",
+      "bindings": {
+        "linux": { "steps": [{ "keyCombo": "Super+K", "key": "k", "modifiers": ["Super"] }] }
+      }
+    },
+    {
+      "command": "Focus Down",
+      "context": "Global",
+      "bindings": {
+        "linux": { "steps": [{ "keyCombo": "Super+J", "key": "j", "modifiers": ["Super"] }] }
+      }
+    },
+    {
+      "command": "Go to Workspace 1",
+      "context": "Global",
+      "bindings": {
+        "linux": { "steps": [{ "keyCombo": "Super+1", "key": "1", "modifiers": ["Super"] }] }
+      }
+    },
+    {
+      "command": "Move Window to Workspace 1",
+      "context": "Global",
+      "bindings": {
+        "linux": { "steps": [{ "keyCombo": "Super+Shift+1", "key": "1", "modifiers": ["Super", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Toggle Fullscreen",
+      "context": "Global",
+      "bindings": {
+        "linux": { "steps": [{ "keyCombo": "Super+F", "key": "f", "modifiers": ["Super"] }] }
+      }
+    },
+    {
+      "command": "Restart i3",
+      "context": "Global",
+      "bindings": {
+        "linux": { "steps": [{ "keyCombo": "Super+Shift+R", "key": "r", "modifiers": ["Super", "Shift"] }] }
+      }
+    }
+  ]
+}

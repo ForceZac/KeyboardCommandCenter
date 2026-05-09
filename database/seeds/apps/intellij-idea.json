@@ -1,0 +1,107 @@
+{
+  "name": "IntelliJ IDEA",
+  "slug": "intellij-idea",
+  "description": "The Leading Java and Kotlin IDE by JetBrains",
+  "category": "developer-tools",
+  "shortcuts": [
+    {
+      "command": "Find Action",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+A", "key": "a", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+A", "key": "a", "modifiers": ["Cmd", "Shift"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+Shift+A", "key": "a", "modifiers": ["Ctrl", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Run",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Shift+F10", "key": "F10", "modifiers": ["Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Ctrl+R", "key": "r", "modifiers": ["Ctrl"] }] },
+        "linux": { "steps": [{ "keyCombo": "Shift+F10", "key": "F10", "modifiers": ["Shift"] }] }
+      }
+    },
+    {
+      "command": "Debug",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Shift+F9", "key": "F9", "modifiers": ["Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Ctrl+D", "key": "d", "modifiers": ["Ctrl"] }] },
+        "linux": { "steps": [{ "keyCombo": "Shift+F9", "key": "F9", "modifiers": ["Shift"] }] }
+      }
+    },
+    {
+      "command": "Go to Declaration",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+B", "key": "b", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+B", "key": "b", "modifiers": ["Cmd"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+B", "key": "b", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Refactor / Rename",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Shift+F6", "key": "F6", "modifiers": ["Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Shift+F6", "key": "F6", "modifiers": ["Shift"] }] },
+        "linux": { "steps": [{ "keyCombo": "Shift+F6", "key": "F6", "modifiers": ["Shift"] }] }
+      }
+    },
+    {
+      "command": "Optimize Imports",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Alt+O", "key": "o", "modifiers": ["Ctrl", "Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Ctrl+Option+O", "key": "o", "modifiers": ["Ctrl", "Option"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+Alt+O", "key": "o", "modifiers": ["Ctrl", "Alt"] }] }
+      }
+    },
+    {
+      "command": "Reformat Code",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Alt+L", "key": "l", "modifiers": ["Ctrl", "Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Option+L", "key": "l", "modifiers": ["Cmd", "Option"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+Alt+L", "key": "l", "modifiers": ["Ctrl", "Alt"] }] }
+      }
+    },
+    {
+      "command": "Search Everywhere",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Shift+Shift", "key": "Shift", "modifiers": ["Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Shift+Shift", "key": "Shift", "modifiers": ["Shift"] }] },
+        "linux": { "steps": [{ "keyCombo": "Shift+Shift", "key": "Shift", "modifiers": ["Shift"] }] }
+      }
+    },
+    {
+      "command": "Generate Code",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Alt+Insert", "key": "Insert", "modifiers": ["Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+N", "key": "n", "modifiers": ["Cmd"] }] },
+        "linux": { "steps": [{ "keyCombo": "Alt+Insert", "key": "Insert", "modifiers": ["Alt"] }] }
+      }
+    },
+    {
+      "command": "Show Usages",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Alt+F7", "key": "F7", "modifiers": ["Ctrl", "Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Option+F7", "key": "F7", "modifiers": ["Cmd", "Option"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+Alt+F7", "key": "F7", "modifiers": ["Ctrl", "Alt"] }] }
+      }
+    },
+    {
+      "command": "Toggle Breakpoint",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+F8", "key": "F8", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+F8", "key": "F8", "modifiers": ["Cmd"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+F8", "key": "F8", "modifiers": ["Ctrl"] }] }
+      }
+    }
+  ]
+}

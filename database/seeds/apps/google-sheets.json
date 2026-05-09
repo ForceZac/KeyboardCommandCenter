@@ -1,0 +1,96 @@
+{
+  "name": "Google Sheets",
+  "slug": "google-sheets",
+  "description": "Web-based spreadsheet application by Google",
+  "category": "productivity",
+  "shortcuts": [
+    {
+      "command": "Select All",
+      "context": "Spreadsheet",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+A", "key": "a", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+A", "key": "a", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Fill Down",
+      "context": "Spreadsheet",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+D", "key": "d", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+D", "key": "d", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Fill Right",
+      "context": "Spreadsheet",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+R", "key": "r", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+R", "key": "r", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Insert Row Above",
+      "context": "Spreadsheet",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Alt+Shift+R", "key": "r", "modifiers": ["Ctrl", "Alt", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Option+Shift+R", "key": "r", "modifiers": ["Cmd", "Option", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Format as Bold",
+      "context": "Spreadsheet",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+B", "key": "b", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+B", "key": "b", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Insert Hyperlink",
+      "context": "Spreadsheet",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+K", "key": "k", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+K", "key": "k", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Find and Replace",
+      "context": "Spreadsheet",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+H", "key": "h", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+H", "key": "h", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Open Named Ranges",
+      "context": "Spreadsheet",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+F3", "key": "F3", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+F3", "key": "F3", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Toggle Filter",
+      "context": "Spreadsheet",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+L", "key": "l", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+L", "key": "l", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Move to Next Sheet",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+Page Down", "key": "PageDown", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Option+Down", "key": "ArrowDown", "modifiers": ["Option"] }] }
+      }
+    },
+    {
+      "command": "Sum Selected Cells",
+      "context": "Spreadsheet",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Alt+=", "key": "=", "modifiers": ["Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Option+=", "key": "=", "modifiers": ["Option"] }] }
+      }
+    }
+  ]
+}

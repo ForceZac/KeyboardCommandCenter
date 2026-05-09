@@ -1,0 +1,96 @@
+{
+  "name": "Google Docs",
+  "slug": "google-docs",
+  "description": "Web-based word processor by Google",
+  "category": "productivity",
+  "shortcuts": [
+    {
+      "command": "Bold",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+B", "key": "b", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+B", "key": "b", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Italic",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+I", "key": "i", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+I", "key": "i", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Underline",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+U", "key": "u", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+U", "key": "u", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Insert Link",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+K", "key": "k", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+K", "key": "k", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Insert Comment",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Alt+M", "key": "m", "modifiers": ["Ctrl", "Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Option+M", "key": "m", "modifiers": ["Cmd", "Option"] }] }
+      }
+    },
+    {
+      "command": "Heading 1",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Alt+1", "key": "1", "modifiers": ["Ctrl", "Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Option+1", "key": "1", "modifiers": ["Cmd", "Option"] }] }
+      }
+    },
+    {
+      "command": "Heading 2",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Alt+2", "key": "2", "modifiers": ["Ctrl", "Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Option+2", "key": "2", "modifiers": ["Cmd", "Option"] }] }
+      }
+    },
+    {
+      "command": "Find and Replace",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+H", "key": "h", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+H", "key": "h", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Word Count",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+C", "key": "c", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+C", "key": "c", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Strikethrough",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Alt+Shift+5", "key": "5", "modifiers": ["Alt", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Option+Shift+5", "key": "5", "modifiers": ["Option", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Increase Font Size",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+>", "key": ">", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+>", "key": ">", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    }
+  ]
+}

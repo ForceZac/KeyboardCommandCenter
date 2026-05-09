@@ -1,0 +1,85 @@
+{
+  "name": "Ubuntu GNOME",
+  "slug": "ubuntu-gnome",
+  "description": "Ubuntu Linux with GNOME desktop environment shortcuts",
+  "category": "system",
+  "shortcuts": [
+    {
+      "command": "Activities Overview",
+      "context": "Global",
+      "bindings": {
+        "linux": { "steps": [{ "keyCombo": "Super", "key": "Meta", "modifiers": ["Super"] }] }
+      }
+    },
+    {
+      "command": "Run Command (Run Dialog)",
+      "context": "Global",
+      "bindings": {
+        "linux": { "steps": [{ "keyCombo": "Alt+F2", "key": "F2", "modifiers": ["Alt"] }] }
+      }
+    },
+    {
+      "command": "Switch Application",
+      "context": "Global",
+      "bindings": {
+        "linux": { "steps": [{ "keyCombo": "Super+Tab", "key": "Tab", "modifiers": ["Super"] }] }
+      }
+    },
+    {
+      "command": "Toggle Maximized",
+      "context": "Global",
+      "bindings": {
+        "linux": { "steps": [{ "keyCombo": "Super+Up", "key": "ArrowUp", "modifiers": ["Super"] }] }
+      }
+    },
+    {
+      "command": "Snap Window Left",
+      "context": "Global",
+      "bindings": {
+        "linux": { "steps": [{ "keyCombo": "Super+Left", "key": "ArrowLeft", "modifiers": ["Super"] }] }
+      }
+    },
+    {
+      "command": "Snap Window Right",
+      "context": "Global",
+      "bindings": {
+        "linux": { "steps": [{ "keyCombo": "Super+Right", "key": "ArrowRight", "modifiers": ["Super"] }] }
+      }
+    },
+    {
+      "command": "Lock Screen",
+      "context": "Global",
+      "bindings": {
+        "linux": { "steps": [{ "keyCombo": "Super+L", "key": "l", "modifiers": ["Super"] }] }
+      }
+    },
+    {
+      "command": "Show Desktop",
+      "context": "Global",
+      "bindings": {
+        "linux": { "steps": [{ "keyCombo": "Super+D", "key": "d", "modifiers": ["Super"] }] }
+      }
+    },
+    {
+      "command": "Open Terminal",
+      "context": "Global",
+      "bindings": {
+        "linux": { "steps": [{ "keyCombo": "Ctrl+Alt+T", "key": "t", "modifiers": ["Ctrl", "Alt"] }] }
+      }
+    },
+    {
+      "command": "Screenshot",
+      "context": "Global",
+      "bindings": {
+        "linux": { "steps": [{ "keyCombo": "Print Screen", "key": "PrintScreen", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Move Window to Workspace Left",
+      "context": "Global",
+      "bindings": {
+        "linux": { "steps": [{ "keyCombo": "Shift+Super+Page Up", "key": "PageUp", "modifiers": ["Shift", "Super"] }] }
+      }
+    }
+  ]
+}

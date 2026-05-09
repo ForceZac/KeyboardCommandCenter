@@ -1,0 +1,96 @@
+{
+  "name": "DaVinci Resolve",
+  "slug": "davinci-resolve",
+  "description": "Professional video editing and color grading software by Blackmagic Design",
+  "category": "creative",
+  "shortcuts": [
+    {
+      "command": "Play / Pause",
+      "context": "Timeline",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Space", "key": " ", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "Space", "key": " ", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Blade Edit Mode",
+      "context": "Timeline",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "B", "key": "b", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "B", "key": "b", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Selection Mode",
+      "context": "Timeline",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "A", "key": "a", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "A", "key": "a", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Mark In",
+      "context": "Timeline",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "I", "key": "i", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "I", "key": "i", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Mark Out",
+      "context": "Timeline",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "O", "key": "o", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "O", "key": "o", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Ripple Delete",
+      "context": "Timeline",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Shift+Backspace", "key": "Backspace", "modifiers": ["Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Shift+Backspace", "key": "Backspace", "modifiers": ["Shift"] }] }
+      }
+    },
+    {
+      "command": "Go to Cut Page",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Shift+2", "key": "2", "modifiers": ["Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Shift+2", "key": "2", "modifiers": ["Shift"] }] }
+      }
+    },
+    {
+      "command": "Go to Edit Page",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Shift+4", "key": "4", "modifiers": ["Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Shift+4", "key": "4", "modifiers": ["Shift"] }] }
+      }
+    },
+    {
+      "command": "Go to Color Page",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Shift+6", "key": "6", "modifiers": ["Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Shift+6", "key": "6", "modifiers": ["Shift"] }] }
+      }
+    },
+    {
+      "command": "Render All",
+      "context": "Deliver Page",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+R", "key": "r", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+R", "key": "r", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Full Screen Viewer",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Shift+F", "key": "f", "modifiers": ["Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Shift+F", "key": "f", "modifiers": ["Shift"] }] }
+      }
+    }
+  ]
+}

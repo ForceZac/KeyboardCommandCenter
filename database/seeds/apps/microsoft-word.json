@@ -1,0 +1,96 @@
+{
+  "name": "Microsoft Word",
+  "slug": "microsoft-word",
+  "description": "Word processor by Microsoft, part of Office suite",
+  "category": "productivity",
+  "shortcuts": [
+    {
+      "command": "Bold",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+B", "key": "b", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+B", "key": "b", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Italic",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+I", "key": "i", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+I", "key": "i", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Underline",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+U", "key": "u", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+U", "key": "u", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Heading 1",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Alt+1", "key": "1", "modifiers": ["Ctrl", "Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Option+1", "key": "1", "modifiers": ["Cmd", "Option"] }] }
+      }
+    },
+    {
+      "command": "Find",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+F", "key": "f", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+F", "key": "f", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Find and Replace",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+H", "key": "h", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+H", "key": "h", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Check Spelling",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "F7", "key": "F7", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "F7", "key": "F7", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Insert Table",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Alt+N T", "key": "t", "modifiers": ["Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Option+N T", "key": "t", "modifiers": ["Option"] }] }
+      }
+    },
+    {
+      "command": "Track Changes",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+E", "key": "e", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+E", "key": "e", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Insert Page Break",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Enter", "key": "Enter", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Enter", "key": "Enter", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Select All",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+A", "key": "a", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+A", "key": "a", "modifiers": ["Cmd"] }] }
+      }
+    }
+  ]
+}

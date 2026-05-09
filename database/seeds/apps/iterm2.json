@@ -1,0 +1,85 @@
+{
+  "name": "iTerm2",
+  "slug": "iterm2",
+  "description": "Replacement for Terminal and successor to iTerm for macOS",
+  "category": "developer-tools",
+  "shortcuts": [
+    {
+      "command": "New Tab",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+T", "key": "t", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Split Pane Horizontally",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+D", "key": "d", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Split Pane Vertically",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+D", "key": "d", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Close Tab",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+W", "key": "w", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Find",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+F", "key": "f", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Open Preferences",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+,", "key": ",", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Toggle Fullscreen",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+Enter", "key": "Enter", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Go to Next Tab",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+}", "key": "}", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Go to Previous Tab",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+{", "key": "{", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Clear Buffer",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+K", "key": "k", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Broadcast Input to All Panes",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+Option+I", "key": "i", "modifiers": ["Cmd", "Option"] }] }
+      }
+    }
+  ]
+}

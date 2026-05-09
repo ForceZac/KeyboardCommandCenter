@@ -1,0 +1,98 @@
+{
+  "name": "PyCharm",
+  "slug": "pycharm",
+  "description": "The Python IDE for Professional Developers by JetBrains",
+  "category": "developer-tools",
+  "shortcuts": [
+    {
+      "command": "Run Script",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Shift+F10", "key": "F10", "modifiers": ["Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Ctrl+R", "key": "r", "modifiers": ["Ctrl"] }] },
+        "linux": { "steps": [{ "keyCombo": "Shift+F10", "key": "F10", "modifiers": ["Shift"] }] }
+      }
+    },
+    {
+      "command": "Debug Script",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Shift+F9", "key": "F9", "modifiers": ["Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Ctrl+D", "key": "d", "modifiers": ["Ctrl"] }] },
+        "linux": { "steps": [{ "keyCombo": "Shift+F9", "key": "F9", "modifiers": ["Shift"] }] }
+      }
+    },
+    {
+      "command": "Go to Declaration",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+B", "key": "b", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+B", "key": "b", "modifiers": ["Cmd"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+B", "key": "b", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Reformat Code",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Alt+L", "key": "l", "modifiers": ["Ctrl", "Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Option+L", "key": "l", "modifiers": ["Cmd", "Option"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+Alt+L", "key": "l", "modifiers": ["Ctrl", "Alt"] }] }
+      }
+    },
+    {
+      "command": "Refactor Rename",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Shift+F6", "key": "F6", "modifiers": ["Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Shift+F6", "key": "F6", "modifiers": ["Shift"] }] },
+        "linux": { "steps": [{ "keyCombo": "Shift+F6", "key": "F6", "modifiers": ["Shift"] }] }
+      }
+    },
+    {
+      "command": "Find Usages",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Alt+F7", "key": "F7", "modifiers": ["Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Option+F7", "key": "F7", "modifiers": ["Option"] }] },
+        "linux": { "steps": [{ "keyCombo": "Alt+F7", "key": "F7", "modifiers": ["Alt"] }] }
+      }
+    },
+    {
+      "command": "Quick Fix",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Alt+Enter", "key": "Enter", "modifiers": ["Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Option+Enter", "key": "Enter", "modifiers": ["Option"] }] },
+        "linux": { "steps": [{ "keyCombo": "Alt+Enter", "key": "Enter", "modifiers": ["Alt"] }] }
+      }
+    },
+    {
+      "command": "Navigate Back",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Alt+Left", "key": "ArrowLeft", "modifiers": ["Ctrl", "Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Option+Left", "key": "ArrowLeft", "modifiers": ["Cmd", "Option"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+Alt+Left", "key": "ArrowLeft", "modifiers": ["Ctrl", "Alt"] }] }
+      }
+    },
+    {
+      "command": "Search Everywhere",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Shift+Shift", "key": "Shift", "modifiers": ["Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Shift+Shift", "key": "Shift", "modifiers": ["Shift"] }] },
+        "linux": { "steps": [{ "keyCombo": "Shift+Shift", "key": "Shift", "modifiers": ["Shift"] }] }
+      }
+    },
+    {
+      "command": "Toggle Python Console",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Alt+F12", "key": "F12", "modifiers": ["Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Option+F12", "key": "F12", "modifiers": ["Option"] }] },
+        "linux": { "steps": [{ "keyCombo": "Alt+F12", "key": "F12", "modifiers": ["Alt"] }] }
+      }
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "name": "Emacs",
+  "slug": "emacs",
+  "description": "Extensible, customizable, free text editor",
+  "category": "developer-tools",
+  "shortcuts": [
+    {
+      "command": "Open File",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+x Ctrl+f", "key": "f", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Ctrl+x Ctrl+f", "key": "f", "modifiers": ["Ctrl"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+x Ctrl+f", "key": "f", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Save File",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+x Ctrl+s", "key": "s", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Ctrl+x Ctrl+s", "key": "s", "modifiers": ["Ctrl"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+x Ctrl+s", "key": "s", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Cut",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+w", "key": "w", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Ctrl+w", "key": "w", "modifiers": ["Ctrl"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+w", "key": "w", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Copy",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Meta+w", "key": "w", "modifiers": ["Meta"] }] },
+        "macos": { "steps": [{ "keyCombo": "Meta+w", "key": "w", "modifiers": ["Meta"] }] },
+        "linux": { "steps": [{ "keyCombo": "Meta+w", "key": "w", "modifiers": ["Meta"] }] }
+      }
+    },
+    {
+      "command": "Paste (Yank)",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+y", "key": "y", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Ctrl+y", "key": "y", "modifiers": ["Ctrl"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+y", "key": "y", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Undo",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+/", "key": "/", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Ctrl+/", "key": "/", "modifiers": ["Ctrl"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+/", "key": "/", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Incremental Search",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+s", "key": "s", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Ctrl+s", "key": "s", "modifiers": ["Ctrl"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+s", "key": "s", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "M-x (Execute Command)",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Meta+x", "key": "x", "modifiers": ["Meta"] }] },
+        "macos": { "steps": [{ "keyCombo": "Meta+x", "key": "x", "modifiers": ["Meta"] }] },
+        "linux": { "steps": [{ "keyCombo": "Meta+x", "key": "x", "modifiers": ["Meta"] }] }
+      }
+    },
+    {
+      "command": "Split Window Vertically",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+x 3", "key": "3", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Ctrl+x 3", "key": "3", "modifiers": ["Ctrl"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+x 3", "key": "3", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Delete Other Windows",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+x 1", "key": "1", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Ctrl+x 1", "key": "1", "modifiers": ["Ctrl"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+x 1", "key": "1", "modifiers": ["Ctrl"] }] }
+      }
+    }
+  ]
+}

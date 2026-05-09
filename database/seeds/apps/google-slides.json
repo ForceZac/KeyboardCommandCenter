@@ -1,0 +1,88 @@
+{
+  "name": "Google Slides",
+  "slug": "google-slides",
+  "description": "Web-based presentation software by Google",
+  "category": "productivity",
+  "shortcuts": [
+    {
+      "command": "New Slide",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+M", "key": "m", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+M", "key": "m", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Duplicate Slide",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+D", "key": "d", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+D", "key": "d", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Present From Start",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+F5", "key": "F5", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+Return", "key": "Enter", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Group Objects",
+      "context": "Slide",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+G", "key": "g", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Option+G", "key": "g", "modifiers": ["Cmd", "Option"] }] }
+      }
+    },
+    {
+      "command": "Insert Text Box",
+      "context": "Slide",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+T", "key": "t", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+T", "key": "t", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Align Center Horizontally",
+      "context": "Slide",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+E", "key": "e", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+E", "key": "e", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Send to Back",
+      "context": "Slide",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+Down", "key": "ArrowDown", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+Down", "key": "ArrowDown", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Bring to Front",
+      "context": "Slide",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+Up", "key": "ArrowUp", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+Up", "key": "ArrowUp", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Insert Comment",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Alt+M", "key": "m", "modifiers": ["Ctrl", "Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Option+M", "key": "m", "modifiers": ["Cmd", "Option"] }] }
+      }
+    },
+    {
+      "command": "Zoom In",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl++", "key": "+", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd++", "key": "+", "modifiers": ["Cmd"] }] }
+      }
+    }
+  ]
+}

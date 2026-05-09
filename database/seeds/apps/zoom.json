@@ -1,0 +1,88 @@
+{
+  "name": "Zoom",
+  "slug": "zoom",
+  "description": "Video conferencing and online meeting platform",
+  "category": "productivity",
+  "shortcuts": [
+    {
+      "command": "Mute / Unmute Audio",
+      "context": "Meeting",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Alt+A", "key": "a", "modifiers": ["Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+A", "key": "a", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Start / Stop Video",
+      "context": "Meeting",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Alt+V", "key": "v", "modifiers": ["Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+V", "key": "v", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Share Screen",
+      "context": "Meeting",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Alt+Shift+S", "key": "s", "modifiers": ["Alt", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+S", "key": "s", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Open Chat",
+      "context": "Meeting",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Alt+H", "key": "h", "modifiers": ["Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+H", "key": "h", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Raise / Lower Hand",
+      "context": "Meeting",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Alt+Y", "key": "y", "modifiers": ["Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Option+Y", "key": "y", "modifiers": ["Option"] }] }
+      }
+    },
+    {
+      "command": "Push to Talk",
+      "context": "Meeting",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Space", "key": " ", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "Space", "key": " ", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Participants Panel",
+      "context": "Meeting",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Alt+U", "key": "u", "modifiers": ["Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+U", "key": "u", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Record Meeting",
+      "context": "Meeting",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Alt+R", "key": "r", "modifiers": ["Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+R", "key": "r", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    },
+    {
+      "command": "End Meeting",
+      "context": "Meeting",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Alt+Q", "key": "q", "modifiers": ["Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+W", "key": "w", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Toggle Full Screen",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Alt+F", "key": "f", "modifiers": ["Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+F", "key": "f", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    }
+  ]
+}

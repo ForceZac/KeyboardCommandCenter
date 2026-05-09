@@ -1,0 +1,78 @@
+{
+  "name": "GarageBand",
+  "slug": "garageband",
+  "description": "Music creation app for macOS and iOS by Apple",
+  "category": "music",
+  "shortcuts": [
+    {
+      "command": "Play / Stop",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Space", "key": " ", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Record",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "R", "key": "r", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Undo",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+Z", "key": "z", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Go to Beginning",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Return", "key": "Enter", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Toggle Loop Browser",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "O", "key": "o", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Open Piano Roll",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+6", "key": "6", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Mute Track",
+      "context": "Arrangement",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+M", "key": "m", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Solo Track",
+      "context": "Arrangement",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+S", "key": "s", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Zoom In",
+      "context": "Arrangement",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+Right", "key": "ArrowRight", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Add New Software Instrument Track",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+Option+S", "key": "s", "modifiers": ["Cmd", "Option"] }] }
+      }
+    }
+  ]
+}
