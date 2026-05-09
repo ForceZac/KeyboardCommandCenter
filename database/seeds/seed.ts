@@ -162,8 +162,10 @@ async function main() {
       for (const [platformSlug, bindingData] of Object.entries(shortcutData.bindings)) {
         const platformId = platformMap.get(platformSlug)
         if (!platformId) {
-          // Unknown platform in seed file — skip silently (future-proofing)
-          continue
+          throw new Error(
+            `Unknown platform slug "${platformSlug}" in ${file} shortcut "${shortcutData.command}". ` +
+              `Valid slugs: ${[...platformMap.keys()].join(', ')}`
+          )
         }
 
         const binding = await prisma.shortcutKeyBinding.upsert({
