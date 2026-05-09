@@ -350,3 +350,9 @@
 - did: started run — claimed DEV_LOCK
 - task: TASK-0006 (fix-up changes-requested on PR #4)
 - status: in-progress
+
+## 2026-05-09 18:07 ET MERGE-WATCHER
+- did: logged PR #4 merge to velocity.md, synced branches (goals/4-homepage-search already up to date), no blocked tasks
+- unblocked: 0 task(s)
+- synced: 1 branch (0 conflicts)
+- merged: PR #4 (goals/6-electron-app-shell → main)
