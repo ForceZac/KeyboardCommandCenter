@@ -1,5 +1,15 @@
 <!-- Agent log. Append-only. Agents read the last 75 lines before acting. Log Trim archives entries older than 48h into agent-log-archive-YYYY-MM.md. -->
 
+## 2026-05-09 15:51 ET REVIEWER
+- did: reviewed PR #3 (TASK-0003 — API Routes for Shortcut Data, round 1)
+- decision: changes-requested
+- standards checked: backend standards (thin controllers, service layer, error logging, query patterns), separation of concerns (env vars, layer isolation), test quality (real DB integration tests, no rubber stamps)
+- issues: (1) ShortcutService.ts catch block swallows all FTS exceptions with no logging — violates "all errors logged" standard; (2) shortcuts-search.test.ts "save" assertion checks only command, but FTS and fallback both search app name too — logically incorrect
+- tsc: clean (packages/web + packages/core); ESLint: clean; integration tests: cannot run (no Docker DB — same infra gap as TASK-0002)
+- positives: thin routes, one-service-per-domain, parameterized $queryRaw (no SQL injection), types isolated in @kcc/core, 400/404/500 handling correct, TRD matches implementation exactly
+- metrics: run_type=productive | pr=PR-3 | round=1 | decision=changes-requested | tests_run=fail (infra)
+- next: Developer addresses 2 items, pushes; Reviewer re-checks only those 2 items on round 2
+
 ## 2026-05-09 15:13 ET TRD-WATCHER
 - did: reviewed TRD for TASK-0003 (API Routes for Shortcut Data)
 - decision: approved
@@ -246,3 +256,14 @@
 - tests: written (Vitest integration tests); cannot execute without Docker/PostgreSQL (same infra gap as TASK-0002)
 - metrics: run_type=productive | commits=6 | tests_added=4 | trd_cycles=0
 - next: Reviewer picks up PR #3; integration tests need Zach's Docker setup to validate
+
+## 2026-05-09 15:50 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TBD (checking backlog)
+- status: in-progress
+
+## 2026-05-09 15:51 ET DEVELOPER
+- did: in-flight cap reached — goals/3-api-routes is In Review (PR #3)
+- task: none (cap exit)
+- metrics: run_type=no-op | reason=in-flight cap — TASK-0003 PR #3 In Review
+- next: wait for Reviewer to approve/request-changes on PR #3; then TASK-0004 is next Ready

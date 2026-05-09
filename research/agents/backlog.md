@@ -77,23 +77,6 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
 
 _(Developer moves tasks here when the draft PR is marked ready.)_
 
-### TASK-0003: API Routes for Shortcut Data
-- **Goal:** Goal 2 — Web Search & Browse Interface
-- **PRD:** research/agents/prds/goal-02-web-search-browse.md
-- **Scope:** Build the four Next.js API route handlers in `packages/web/app/api/`: `GET /api/shortcuts/search?q=&platform=` (full-text search with Prisma, debounce-friendly), `GET /api/apps` (list all apps, filterable by category), `GET /api/apps/[slug]` (single app with all shortcuts grouped by context), `GET /api/categories` (list categories with app counts). Use shared types from `packages/core`. All endpoints are public read-only — no auth. NOT in scope: frontend UI, SSR, pagination, rate limiting, admin endpoints, Express migration.
-- **Acceptance:**
-  - All four API routes return correct JSON responses against the seeded database
-  - `GET /api/shortcuts/search?q=undo` returns matching shortcuts across apps in <200ms
-  - `GET /api/apps` supports optional `?category=` filter parameter
-  - `GET /api/apps/[slug]` returns shortcuts grouped by context/scope
-  - `GET /api/categories` returns category names with app counts
-  - Responses use shared TypeScript types from `packages/core`
-  - API routes have basic error handling (400 for bad params, 404 for unknown slug)
-- **PR:** #3
-- **Branch:** goals/3-api-routes
-- **TRD:** research/plans/goals/3-api-routes-trd.md — approved
-- **Notes:** Depends on Goal 1 completion (TASK-0001 + TASK-0002). First task for Goal 2 — establishes the data-access layer the frontend will consume. tsc clean, ESLint clean. Integration tests written; need real DB (Docker Compose) to run — same infrastructure gap as TASK-0002.
-
 ## Pending Human
 
 _(Reviewer found no code issues but needs human action before approval can proceed.)_
@@ -117,6 +100,23 @@ _(Reviewer found no code issues but needs human action before approval can proce
 ## Changes Requested
 
 _(Reviewer moves tasks here when a PR needs rework.)_
+
+### TASK-0003: API Routes for Shortcut Data
+- **Goal:** Goal 2 — Web Search & Browse Interface
+- **PRD:** research/agents/prds/goal-02-web-search-browse.md
+- **Scope:** Build the four Next.js API route handlers in `packages/web/app/api/`: `GET /api/shortcuts/search?q=&platform=` (full-text search with Prisma, debounce-friendly), `GET /api/apps` (list all apps, filterable by category), `GET /api/apps/[slug]` (single app with all shortcuts grouped by context), `GET /api/categories` (list categories with app counts). Use shared types from `packages/core`. All endpoints are public read-only — no auth. NOT in scope: frontend UI, SSR, pagination, rate limiting, admin endpoints, Express migration.
+- **Acceptance:**
+  - All four API routes return correct JSON responses against the seeded database
+  - `GET /api/shortcuts/search?q=undo` returns matching shortcuts across apps in <200ms
+  - `GET /api/apps` supports optional `?category=` filter parameter
+  - `GET /api/apps/[slug]` returns shortcuts grouped by context/scope
+  - `GET /api/categories` returns category names with app counts
+  - Responses use shared TypeScript types from `packages/core`
+  - API routes have basic error handling (400 for bad params, 404 for unknown slug)
+- **PR:** #3
+- **Branch:** goals/3-api-routes
+- **TRD:** research/plans/goals/3-api-routes-trd.md — approved
+- **Notes:** Round 1 review — changes requested. (1) `ShortcutService.ts` catch block must log the exception before falling back. (2) `shortcuts-search.test.ts` "save" test assertion must allow app-name matches, not command-only.
 
 ## TRD Changes Requested
 
