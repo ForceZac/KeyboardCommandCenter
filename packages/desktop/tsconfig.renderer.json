@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "lib": ["ES2020", "DOM"],
+    "rootDir": "src/renderer"
+  },
+  "include": ["src/renderer/**/*.ts", "src/renderer/**/*.d.ts"],
+  "exclude": ["node_modules", "dist", ".webpack"]
+}
