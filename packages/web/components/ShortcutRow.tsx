@@ -5,8 +5,6 @@ interface Props {
   shortcut: ShortcutEntry;
   /** Currently selected platform. ShortcutRow falls back to first available if no binding exists. */
   platform: PlatformSlug;
-  /** The context heading this row belongs to — used to suppress a redundant context badge. */
-  groupContext: string;
 }
 
 /**
@@ -14,7 +12,7 @@ interface Props {
  * Displays the command description and the KeyCombo for the selected platform.
  * If no binding exists for the selected platform, shows the first available with a note.
  */
-export default function ShortcutRow({ shortcut, platform, groupContext }: Props) {
+export default function ShortcutRow({ shortcut, platform }: Props) {
   const binding =
     shortcut.platforms.find((p) => p.platformSlug === platform) ??
     shortcut.platforms[0];

@@ -16,7 +16,7 @@ interface Props {
  * Receives pre-fetched AppDetail from the server component parent.
  */
 export default function AppPageClient({ app }: Props) {
-  const [platform] = usePlatform();
+  const [platform, setPlatform] = usePlatform();
   const [search, setSearch] = useState('');
   const { contexts } = app;
 
@@ -48,7 +48,7 @@ export default function AppPageClient({ app }: Props) {
     <div>
       {/* Controls row */}
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
-        <PlatformToggle />
+        <PlatformToggle platform={platform} onPlatformChange={setPlatform} />
         <div className="flex-1">
           <input
             type="search"

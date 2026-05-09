@@ -23,7 +23,6 @@ export default function ContextGroup({ context, shortcuts, platform }: Props) {
             key={shortcut.id}
             shortcut={shortcut}
             platform={platform}
-            groupContext={context}
           />
         ))}
       </div>

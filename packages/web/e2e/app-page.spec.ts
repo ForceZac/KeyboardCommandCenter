@@ -46,6 +46,25 @@ test.describe('App shortcut page', () => {
     await expect(winBtn).toHaveAttribute('aria-pressed', 'false');
   });
 
+  test('platform toggle changes displayed shortcut key combos', async ({ page }) => {
+    // Wait for shortcuts to load
+    const kbds = page.locator('kbd');
+    const isLoaded = await kbds.first().isVisible({ timeout: 8000 }).catch(() => false);
+    if (!isLoaded) return; // API unavailable — skip gracefully
+
+    // Capture all key combo texts on the default (Windows) platform
+    const winTexts = await kbds.allTextContents();
+
+    // Switch to Mac — VS Code seed data uses Ctrl on Win, Cmd on Mac
+    await page.getByRole('button', { name: 'Mac' }).click();
+    await expect(page.getByRole('button', { name: 'Mac' })).toHaveAttribute('aria-pressed', 'true');
+
+    // At least one kbd must now display different text
+    const macTexts = await kbds.allTextContents();
+    const anyChanged = macTexts.some((text, i) => text !== winTexts[i]);
+    expect(anyChanged).toBe(true);
+  });
+
   test('in-app search input narrows displayed shortcuts', async ({ page }) => {
     const input = page.getByRole('searchbox', { name: /search shortcuts/i });
     await expect(input).toBeVisible();
