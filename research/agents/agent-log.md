@@ -514,3 +514,12 @@
 - did: started run — claimed DEV_LOCK
 - task: TASK-0005 (Changes Requested fix-up)
 - status: in-progress
+
+## 2026-05-09 19:53 ET DEVELOPER
+- did: addressed round 1 reviewer feedback for TASK-0005 — 3 fixes applied
+- task: TASK-0005
+- PR: #6
+- trd: approved (no TRD changes needed)
+- tests: tsc clean, eslint clean (E2E requires live server)
+- metrics: run_type=productive | commits=2 | tests_added=1 | trd_cycles=0
+- next: TRD Watcher / Reviewer picks up PR #6 for round 2 review
