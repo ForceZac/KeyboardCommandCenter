@@ -59,7 +59,7 @@ _(Developer moves tasks here when the draft PR is marked ready.)_
 - **PR:** #6
 - **Branch:** goals/5-per-app-category-pages
 - **TRD:** research/plans/goals/5-per-app-category-pages-trd.md — approved
-- **Notes:** Depends on TASK-0003 (API routes) and TASK-0004 (shared layout, theme toggle, search bar). Final frontend task for Goal 2 — completing this task finishes the Goal 2 definition of done.
+- **Notes:** Round 1 fixed 2026-05-09 — platform state isolation, dead groupContext prop, E2E content test added.
 
 ## Changes Requested
 

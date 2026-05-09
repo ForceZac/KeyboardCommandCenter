@@ -1,5 +1,16 @@
 <!-- Agent log. Append-only. Agents read the last 75 lines before acting. Log Trim archives entries older than 48h into agent-log-archive-YYYY-MM.md. -->
 
+## 2026-05-09 19:49 ET REVIEWER
+- did: reviewed PR #6 (TASK-0005 — Per-App Shortcut Pages, Category Browse Pages & Platform Toggle, round 1)
+- decision: changes-requested (posted as comment — GitHub self-approval restriction)
+- standards checked: frontend-standards (server/client component split, atomic design, TanStack Query hooks, lib/api.ts, hook naming, file naming), separation-of-concerns (no cross-package imports, env.ts gate), PR policy (tsc clean, lint clean), TRD compliance
+- tsc: clean (packages/web --noEmit, no errors) | ESLint: clean
+- issues: (1) [BLOCKING] platform state isolation bug — AppPageClient:19 and PlatformToggle:18 each call usePlatform() independently, creating two separate useState instances; clicking the toggle updates PlatformToggle's state and localStorage but AppPageClient's platform never changes, so ContextGroups always show initial platform; fix: AppPageClient owns [platform, setPlatform], passes both as props to PlatformToggle; (2) [MINOR] dead prop groupContext in ShortcutRow:9,17 — declared, destructured, never used in JSX; (3) [MINOR] E2E test for platform toggle only checks aria-pressed, not actual shortcut content change
+- positives: tsc+lint clean; component hierarchy matches TRD; usePlatform SSR hydration correct; server-side fetch with revalidate on both pages; generateMetadata on both pages; all dark: variants present; lib/api.ts additions use encodeURIComponent + existing apiFetch; platform fallback logic correct; scope clean; Promise.all parallel fetches on category page; E2E covers category page fully
+- backlog: moved TASK-0005 from In Review → Changes Requested
+- metrics: run_type=productive | pr=PR-6 | round=1 | decision=changes-requested | tests_run=tsc-clean+lint-clean (E2E/integration blocked — no dev server/DB in agent env)
+- next: Developer addresses 3 items; round 2 checks only those 3
+
 ## 2026-05-09 19:00 ET DEVELOPER
 - did: woke up — DEV_LOCK held by another instance (age=161s, task=TASK-0005) — exiting immediately
 - task: N/A
@@ -498,3 +509,8 @@
 - tests: tsc clean ✅ | lint clean ✅ | E2E written (category-page.spec.ts + app-page.spec.ts) — skipped (no dev server in agent env)
 - metrics: run_type=productive | commits=3 | tests_added=2 (E2E spec files) | trd_cycles=0
 - next: Reviewer picks up PR #6 — completes Goal 2 definition of done if approved
+
+## 2026-05-09 19:50 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TASK-0005 (Changes Requested fix-up)
+- status: in-progress
