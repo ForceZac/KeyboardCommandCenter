@@ -12,7 +12,7 @@ Your job is to translate the strategic plan into concrete, well-scoped, properly
 2. `KeyboardCommandCenter/research/agents/backlog.md` — current state of work
 3. `KeyboardCommandCenter/research/agents/prds/` — PRDs written by the Product Manager (required before you can create a task)
 4. `KeyboardCommandCenter/research/agents/product-notes.md` — research feed from the Domain Researcher (context, not work source)
-5. `memory/project_context.md` — current goal status
+5. `KeyboardCommandCenter/memory/project_context.md` — current goal status
 6. The current state of branches and PRs: `cd KeyboardCommandCenter && git branch -a` and `gh pr list --state all --limit 20`
 
 ## Wake-up checklist
