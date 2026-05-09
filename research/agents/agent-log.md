@@ -1,5 +1,16 @@
 <!-- Agent log. Append-only. Agents read the last 75 lines before acting. Log Trim archives entries older than 48h into agent-log-archive-YYYY-MM.md. -->
 
+## 2026-05-09 14:10 ET REVIEWER
+- did: reviewed PR #2 (TASK-0002 — Seed Script & Data for 50+ Apps, round 1)
+- decision: changes-requested
+- standards checked: feedback_backend_standards, feedback_separation_of_concerns, feedback_pull_requests, TRD match
+- issue: missing `database/vitest.config.ts` — idempotency tests run `execSync('npx tsx seed.ts')` inside `it` blocks; vitest default testTimeout=5s will timeout against a real database (seed script takes 10-30s for 1000+ queries across 50 apps)
+- fix: add `database/vitest.config.ts` with `testTimeout: 120_000, hookTimeout: 120_000`
+- tests: tsc --noEmit=pass | seed file static validation=pass (50 files, all valid slugs, all ≥10 shortcuts) | integration tests=could not run (no Docker/PostgreSQL in review env)
+- note: GitHub rejected `gh pr review --request-changes` (cannot request changes on own PR); posted as comment instead
+- metrics: run_type=productive | pr=PR-2 | round=1 | decision=changes-requested | tests_run=partial (static only)
+- next: re-review PR #2 after Developer adds vitest.config.ts
+
 ## 2026-05-09 12:03 ET PROJECT-MANAGER
 - did: created 2 tasks for Goal 1 — Ready was empty, now stocked with TASK-0001 (Prisma schema) and TASK-0002 (seed script)
 - created: TASK-0001, TASK-0002
@@ -190,3 +201,71 @@
 - tests: tsc --noEmit ✅ | prisma validate ✅ | seed file validation ✅ (50 apps, 10+ shortcuts each) | integration tests written but require live PostgreSQL (CI only)
 - metrics: run_type=productive | commits=3 | tests_added=0 | trd_cycles=0
 - next: Reviewer reviews PR #2; wake REV_PAUSE if set
+
+## 2026-05-09 13:50 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TBD (determining next task)
+- status: in-progress
+
+## 2026-05-09 13:51 ET REVIEWER
+- did: reviewed PR #2 (round 1) — TASK-0002 Seed Script & Data for 50+ Applications
+- decision: changes-requested
+- standards checked: backend standards, separation of concerns, PR policy, TRD alignment
+- key findings: (1) no docker-compose.yml — cannot run integration tests per reviewer hard rule; backend standards mandate Docker Compose postgres; (2) silent platform slug skip in seed.ts:165–167 should throw, not silently drop bindings (category slugs throw, platforms should too). Positive: all 50 apps present, correct category distribution, TS clean, FTS migration correct, chord example modeled correctly.
+- metrics: run_type=productive | pr=PR-2 | round=1 | decision=changes-requested | tests_run=fail (no postgres)
+- next: wait for Developer to add docker-compose.yml + fix platform slug handling; re-review will scope to those two fixes only
+
+## 2026-05-09 13:50 ET DEVELOPER
+- did: in-flight cap reached — goals/2-seed-script (PR #2) is In Review
+- task: none (cap exit)
+- PR: #2
+- trd: n/a
+- tests: n/a
+- metrics: run_type=no-op | reason=in-flight cap — PR #2 (goals/2-seed-script) in In Review
+- next: once Reviewer approves PR #2, pick up TASK-0003 (API Routes for Shortcut Data)
+
+## 2026-05-09 14:00 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TASK-0002 (fix-up — changes-requested on PR #2)
+- status: in-progress
+
+## 2026-05-09 14:05 ET DEVELOPER
+- did: fix-up TASK-0002 — (1) replaced silent platform slug skip with throw matching category-slug error pattern; (2) added docker-compose.yml (postgres:16-alpine) at repo root; (3) documented integration test sequence in README.md; PR comment posted; moved task back to In Review
+- task: TASK-0002
+- PR: #2 https://github.com/ForceZac/KeyboardCommandCenter/pull/2
+- trd: approved — fix-up complete (round 2)
+- tests: tsc --noEmit ✅ | integration tests require live DB (docker-compose now provided)
+- metrics: run_type=productive | commits=2 | tests_added=0 | trd_cycles=0
+- next: Reviewer re-reviews PR #2 (scope: docker-compose + platform slug fix only)
+
+## 2026-05-09 14:04 ET PROJECT-MANAGER
+- did: no-op — Ready at 3 tasks, no tasks to create or move; ran roadmap health check
+- created: none
+- moved: none
+- prd gaps: Goals 3–10 (8 goals); next two needed: Goal 3 (Desktop App Shell) and Goal 4 (Process Detection)
+- roadmap check: solid — sequencing correct, no scope creep, no stale goals, no missing prerequisites
+- proposals added: 0
+- flag: project_context.md is stale — says "Active goal: Goal 1, Stage: Pre-development" but Goal 1 is nearly complete (TASK-0001 shipped, TASK-0002 in review) and Goal 2 tasks are queued
+- flag: TASK-0002 in review — developer addressed reviewer feedback (docker-compose.yml + platform slug fix); awaiting re-review on PR #2
+- metrics: tasks_created=0 | tasks_moved=0 | prd_gaps=8 | roadmap_issues=0
+- idle: PM_IDLE incremented to 1
+- next: monitor TASK-0002 re-review; once Developer picks up TASK-0003, Ready drops to 2 — Goal 3 PRD needed before more tasks can be created
+
+## 2026-05-09 14:10 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TBD (determining next task)
+- status: in-progress
+
+## 2026-05-09 14:10 ET DEVELOPER
+- did: in-flight cap reached — goals/2-seed-script (PR #2) is In Review
+- task: none (cap exit)
+- PR: #2
+- trd: n/a
+- tests: n/a
+- metrics: run_type=no-op | reason=in-flight cap — PR #2 (goals/2-seed-script) in In Review
+- next: once Reviewer approves PR #2, pick up TASK-0003 (API Routes for Shortcut Data)
+
+## 2026-05-09 14:20 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TASK-0002 (fix-up check — Changes Requested on PR #2)
+- status: in-progress

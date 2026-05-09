@@ -112,7 +112,7 @@ _(Developer moves tasks here when the draft PR is marked ready.)_
 - **PR:** #2
 - **Branch:** goals/2-seed-script
 - **TRD:** research/plans/goals/2-seed-script-trd.md — approved
-- **Notes:** Build complete. Merged origin/main (PR #1 schema) into branch. TypeScript clean, Prisma schema valid, all 50 apps verified 10+ shortcuts each, category slugs valid. Integration tests written (seed.test.ts) — require live PostgreSQL to run (CI will validate). Round 2: added docker-compose.yml, fixed platform slug silent skip → throw.
+- **Notes:** Fix-up round 2 pushed — added `database/vitest.config.ts` with `testTimeout: 120_000` and `hookTimeout: 120_000`.
 
 ## Changes Requested
 
