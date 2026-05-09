@@ -69,6 +69,26 @@ _(Project Manager keeps 2–3 tasks here at all times.)_
 - **TRD:**
 - **Notes:** Depends on TASK-0003 (API routes must exist for search to function). Second frontend task for Goal 2. Per-app pages and category pages will be a separate task.
 
+### TASK-0005: Per-App Shortcut Pages, Category Browse Pages & Platform Toggle
+- **Goal:** Goal 2 — Web Search & Browse Interface
+- **PRD:** research/agents/prds/goal-02-web-search-browse.md
+- **Scope:** Build the remaining Goal 2 frontend pages in `packages/web/app/`: (1) Per-app shortcut page at `/apps/[slug]` — fetches `GET /api/apps/[slug]`, displays all shortcuts grouped by context/scope, includes in-app search/filter, keyboard key styling (visual key caps), and platform filter toggle (Win/Mac/Linux). (2) Category browse page at `/categories/[slug]` — fetches `GET /api/categories` and `GET /api/apps?category=`, displays grid of apps in the selected category. (3) Persistent platform toggle component — defaults to user's detected OS, persists selection across navigation (localStorage), switches displayed modifier keys (Cmd vs Ctrl). All pages must be dark-mode compatible, mobile-responsive (320px+), and include SEO meta tags. NOT in scope: user accounts, favorites, community submissions, admin panel, SSR of search results, analytics.
+- **Acceptance:**
+  - `/apps/[slug]` renders all shortcuts for the given app, grouped by context
+  - Shortcuts display styled keyboard key caps (visual rendering of key combos)
+  - Platform toggle on app page filters shortcuts to selected OS and shows correct modifiers
+  - Platform selection persists in localStorage and carries across page navigations
+  - In-app search/filter narrows displayed shortcuts client-side in real time
+  - `/categories/[slug]` renders a grid of apps in that category with correct counts
+  - Category page app tiles link to `/apps/[slug]`
+  - Both pages render correctly in dark and light mode
+  - Both pages are usable on 320px-wide screens
+  - App pages include semantic HTML and meta tags for SEO
+- **PR:**
+- **Branch:**
+- **TRD:**
+- **Notes:** Depends on TASK-0003 (API routes) and TASK-0004 (shared layout, theme toggle, search bar). Final frontend task for Goal 2 — completing this task finishes the Goal 2 definition of done.
+
 ## In Progress
 
 _(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
