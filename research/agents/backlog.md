@@ -105,26 +105,17 @@ _(TRD Watcher moves tasks here when a TRD needs rework.)_
 
 _(Reviewer moves tasks here after approving the PR. You merge to main, then move to Shipped.)_
 
-### TASK-0001: Define Prisma Schema for Shortcut Database
-- **Goal:** Goal 1 — Shortcut Data Schema & Seed Database
-- **PRD:** research/agents/prds/goal-01-shortcut-data-schema.md
-- **Scope:** Design and implement the Prisma schema with Application, Shortcut, Category, and Platform models and their relationships. Includes modifier key normalization (Ctrl/Cmd, Alt/Option, Shift, Super/Win), chord support for multi-step shortcuts (e.g. Ctrl+K → Ctrl+C), context/scope field (Global, Editor, Terminal, etc.), and category taxonomy (Creative, Developer Tools, Productivity, Gaming, Communication, System). Store both `keyCombo` display string and structured `modifiers[]` + `key` fields per PRD recommendation. Export TypeScript types from `packages/core` for shared use. NOT in scope: seed data/script, full-text search index, web UI, API endpoints.
-- **Acceptance:**
-  - Prisma schema compiles and migrates cleanly on a fresh PostgreSQL instance
-  - Models include Application, Shortcut, Category, Platform with correct relations
-  - Each shortcut supports multi-platform key combos (Win/Mac/Linux)
-  - Chord/multi-step shortcuts representable in the schema
-  - Context/scope field supports per-app scopes (e.g. "Normal Mode", "Editor", "Terminal")
-  - Category taxonomy covers at least: Creative, Developer Tools, Productivity, Gaming, Music, System, Browsers
-  - TypeScript types exported from `packages/core`
-- **PR:** #1
-- **Branch:** goals/1-prisma-schema
-- **TRD:** research/plans/goals/1-prisma-schema-trd.md — approved
-- **Notes:** Foundation task — nothing else can proceed until this ships. See PRD open questions for schema design decisions (structured vs string key combos, modal shortcut handling).
-
 ## Shipped
 
 _(You move tasks here after merging to main.)_
+
+### TASK-0001: Define Prisma Schema for Shortcut Database
+- **Goal:** Goal 1 — Shortcut Data Schema & Seed Database
+- **PRD:** research/agents/prds/goal-01-shortcut-data-schema.md
+- **PR:** #1
+- **Branch:** goals/1-prisma-schema
+- **TRD:** research/plans/goals/1-prisma-schema-trd.md — approved
+- **Merged:** 2026-05-09
 
 ## Blocked
 

@@ -45,6 +45,7 @@ Thumbs.db
 
 # Prisma
 # Note: database/migrations/ is intentionally NOT ignored — Prisma migrations must be versioned
+!database/migrations/
 *.db
 *.db-journal
 
