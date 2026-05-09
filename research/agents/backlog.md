@@ -33,25 +33,6 @@ Task IDs are monotonic. The Project Manager picks the next number.
 
 _(Project Manager keeps 2–3 tasks here at all times.)_
 
-### TASK-0006: Electron App Shell — Tray Icon + Global Hotkey + Panel Window
-- **Goal:** Goal 3 — Desktop App Shell (Electron + Tray)
-- **PRD:** research/agents/prds/goal-03-desktop-app-shell.md
-- **Scope:** Scaffold the Electron app in `packages/desktop` with main + renderer process model. System tray icon with platform-appropriate context menu ("Open Keyboard Command Center", "Quit"). Global hotkey (default Ctrl+Shift+Space on Windows, Cmd+Shift+Space on Mac) toggles a frameless floating BrowserWindow positioned center-screen (top-third offset). Panel shows placeholder content (search bar stub — real shortcut UI is Goal 5). Panel dismisses on Escape key or focus loss. Memory optimizations: `app.disableHardwareAcceleration()` at startup, lazy BrowserWindow creation (create on first hotkey press, hide/show thereafter), single renderer process. Import shared types from `packages/core`. NOT in scope: login startup registration, settings UI/persistence, CI build pipeline, real shortcut content, process detection, overlay, code signing, installer UX, Linux.
-- **Acceptance:**
-  - `npm run dev` in `packages/desktop` launches Electron app that settles into system tray with no visible main window
-  - Tray icon renders correctly on Windows (system tray) and macOS (menu bar)
-  - Right-click (Win) or click (Mac) on tray shows context menu with "Open" and "Quit" options
-  - Global hotkey (Ctrl+Shift+Space / Cmd+Shift+Space) opens a frameless floating panel
-  - Panel dismisses on Escape key press
-  - Panel dismisses on focus loss (clicking outside)
-  - Subsequent hotkey presses toggle panel visibility (show/hide)
-  - App uses <50MB RAM when idle (panel hidden) — measured via `process.memoryUsage()`
-  - TypeScript compiles cleanly with shared types from `@kcc/core`
-- **PR:**
-- **Branch:**
-- **TRD:**
-- **Notes:** Goal 3 depends on Goal 1 (shipped). Independent of Goal 2 — can be worked in parallel once Goal 2 frontend tasks clear. First desktop task.
-
 ### TASK-0004: Homepage with Search Bar & Category Grid
 - **Goal:** Goal 2 — Web Search & Browse Interface
 - **PRD:** research/agents/prds/goal-02-web-search-browse.md
@@ -94,6 +75,25 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
 ## In Review
 
 _(Developer moves tasks here when the draft PR is marked ready.)_
+
+### TASK-0006: Electron App Shell — Tray Icon + Global Hotkey + Panel Window
+- **Goal:** Goal 3 — Desktop App Shell (Electron + Tray)
+- **PRD:** research/agents/prds/goal-03-desktop-app-shell.md
+- **Scope:** Scaffold the Electron app in `packages/desktop` with main + renderer process model. System tray icon with platform-appropriate context menu ("Open Keyboard Command Center", "Quit"). Global hotkey (default Ctrl+Shift+Space on Windows, Cmd+Shift+Space on Mac) toggles a frameless floating BrowserWindow positioned center-screen (top-third offset). Panel shows placeholder content (search bar stub — real shortcut UI is Goal 5). Panel dismisses on Escape key or focus loss. Memory optimizations: `app.disableHardwareAcceleration()` at startup, lazy BrowserWindow creation (create on first hotkey press, hide/show thereafter), single renderer process. Import shared types from `packages/core`. NOT in scope: login startup registration, settings UI/persistence, CI build pipeline, real shortcut content, process detection, overlay, code signing, installer UX, Linux.
+- **Acceptance:**
+  - `npm run dev` in `packages/desktop` launches Electron app that settles into system tray with no visible main window
+  - Tray icon renders correctly on Windows (system tray) and macOS (menu bar)
+  - Right-click (Win) or click (Mac) on tray shows context menu with "Open" and "Quit" options
+  - Global hotkey (Ctrl+Shift+Space / Cmd+Shift+Space) opens a frameless floating panel
+  - Panel dismisses on Escape key press
+  - Panel dismisses on focus loss (clicking outside)
+  - Subsequent hotkey presses toggle panel visibility (show/hide)
+  - App uses <50MB RAM when idle (panel hidden) — measured via `process.memoryUsage()`
+  - TypeScript compiles cleanly with shared types from `@kcc/core`
+- **PR:** #4
+- **Branch:** goals/6-electron-app-shell
+- **TRD:** research/plans/goals/6-electron-app-shell-trd.md — approved
+- **Notes:** Goal 3 depends on Goal 1 (shipped). Independent of Goal 2 — can be worked in parallel once Goal 2 frontend tasks clear. First desktop task.
 
 ## Pending Human
 

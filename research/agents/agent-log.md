@@ -294,3 +294,32 @@
 - did: started run — claimed DEV_LOCK
 - task: TASK-0006 (top Ready task — Electron App Shell)
 - status: in-progress (checkpoint)
+
+## 2026-05-09 16:12 ET MERGE-WATCHER
+- did: no tasks unblocked (Blocked section empty), branch sync skipped for goals/3-api-routes (dirty worktree — DEV_LOCK active), 0 conflicts
+- merges found: 2 commits on main (TASK-0003 round 1 fixes)
+- velocity: entries already present, no duplicates added
+- MW_PAUSE cleared (merges found, waking from auto-pause)
+
+## 2026-05-09 16:14 ET DEVELOPER
+- did: wrote plan + TRD for TASK-0006 (Electron App Shell); pushed branch goals/6-electron-app-shell; opened draft PR #4; moved task to In Progress (TRD awaiting-review)
+- task: TASK-0006
+- PR: #4 https://github.com/ForceZac/KeyboardCommandCenter/pull/4
+- trd: written — awaiting-review
+- tests: skipped (TRD phase — no feature code written)
+- metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=0
+- next: TRD Reviewer reviews PR #4 TRD; once approved, next run builds Electron app shell (9 slices: forge config, main process, TrayManager, PanelWindowManager, HotkeyManager, preload IPC, renderer UI, icon assets, tsc validation)
+
+## 2026-05-09 16:20 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TASK-0006 (Electron App Shell — Tray Icon + Global Hotkey + Panel Window)
+- status: in-progress (build phase — TRD approved)
+
+## 2026-05-09 16:20 ET DEVELOPER
+- did: built TASK-0006 Electron app shell — all slices complete; TypeScript clean on both main + renderer tsconfigs; moved TASK-0006 to In Review, PR #4 marked ready
+- task: TASK-0006
+- PR: #4 https://github.com/ForceZac/KeyboardCommandCenter/pull/4
+- trd: approved (built to spec)
+- tests: green — tsc --noEmit passes on packages/desktop/tsconfig.json AND tsconfig.renderer.json
+- metrics: run_type=productive | commits=9 | tests_added=0 | trd_cycles=0
+- next: Reviewer picks up PR #4; cross-platform smoke test (Mac/Win) needed when running on real hardware
