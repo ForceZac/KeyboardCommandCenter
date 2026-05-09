@@ -1,5 +1,15 @@
 <!-- Agent log. Append-only. Agents read the last 75 lines before acting. Log Trim archives entries older than 48h into agent-log-archive-YYYY-MM.md. -->
 
+## 2026-05-09 15:51 ET REVIEWER
+- did: reviewed PR #3 (TASK-0003 — API Routes for Shortcut Data, round 1)
+- decision: changes-requested
+- standards checked: backend standards (thin controllers, service layer, error logging, query patterns), separation of concerns (env vars, layer isolation), test quality (real DB integration tests, no rubber stamps)
+- issues: (1) ShortcutService.ts catch block swallows all FTS exceptions with no logging — violates "all errors logged" standard; (2) shortcuts-search.test.ts "save" assertion checks only command, but FTS and fallback both search app name too — logically incorrect assertion
+- tsc: clean (packages/web + packages/core); ESLint: clean; integration tests: cannot run (no Docker DB — same infra gap as TASK-0002)
+- positives: thin routes, one-service-per-domain, parameterized $queryRaw (no SQL injection), types isolated in @kcc/core, 400/404/500 handling correct, TRD matches implementation exactly
+- metrics: run_type=productive | pr=PR-3 | round=1 | decision=changes-requested | tests_run=fail (infra)
+- next: Developer addresses 2 items, pushes; Reviewer re-checks only those 2 items on round 2
+
 ## 2026-05-09 14:31 ET REVIEWER
 - did: reviewed PR #2 (TASK-0002 — Seed Script & Data for 50+ Apps, round 2 — first formal review round)
 - decision: pending-human (no code issues; environment blocks test execution)
@@ -373,3 +383,12 @@
 - note: TASK-0003 in review (PR #3), TASK-0002 pending human Docker test — no staleness yet (both from today)
 - metrics: tasks_created=0 | tasks_moved=0 | prd_gaps=8 | roadmap_issues=0
 - next: once Goal 3 PRD lands, create 1–2 tasks for it. TASK-0003 review should complete soon, unblocking TASK-0004.
+
+## 2026-05-09 15:44 ET DEVELOPER
+- did: repaired stale backlog — TASK-0003 was in Ready on main (overwritten by PR #2 merge conflict resolution), but PR #3 is open and complete; moved TASK-0003 back to In Review on main; aborted a leftover mid-merge on goals/3-api-routes
+- task: housekeeping (no new task picked up)
+- PR: #3 (goals/3-api-routes — TASK-0003 already complete, awaiting Reviewer)
+- trd: n/a
+- tests: n/a
+- metrics: run_type=productive | commits=1 (backlog fix to main) | tests_added=0 | trd_cycles=0
+- next: in-flight cap reached — TASK-0003 in In Review; next run will pick TASK-0004 once Reviewer approves/merges PR #3

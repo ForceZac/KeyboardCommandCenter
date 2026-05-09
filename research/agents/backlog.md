@@ -81,6 +81,10 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
 
 _(Developer moves tasks here when the draft PR is marked ready.)_
 
+## Changes Requested
+
+_(Reviewer moves tasks here when a PR needs rework.)_
+
 ### TASK-0003: API Routes for Shortcut Data
 - **Goal:** Goal 2 — Web Search & Browse Interface
 - **PRD:** research/agents/prds/goal-02-web-search-browse.md
@@ -96,11 +100,7 @@ _(Developer moves tasks here when the draft PR is marked ready.)_
 - **PR:** #3
 - **Branch:** goals/3-api-routes
 - **TRD:** research/plans/goals/3-api-routes-trd.md — approved
-- **Notes:** Depends on Goal 1 completion (TASK-0001 + TASK-0002). First task for Goal 2 — establishes the data-access layer the frontend will consume. tsc clean, ESLint clean. Integration tests written; need real DB (Docker Compose) to run. PR #3 open and ready for review.
-
-## Changes Requested
-
-_(Reviewer moves tasks here when a PR needs rework.)_
+- **Notes:** Round 1 review — changes requested. (1) `ShortcutService.ts` catch block must log the exception before falling back. (2) `shortcuts-search.test.ts` "save" test assertion must allow app-name matches, not command-only.
 
 ## TRD Changes Requested
 
