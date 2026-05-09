@@ -5,6 +5,10 @@ app.disableHardwareAcceleration();
 import { TrayManager } from './tray';
 import { PanelWindowManager } from './window';
 import { HotkeyManager, bindHotkeyLifecycle } from './hotkey';
+// Validate @kcc/core cross-package dependency. IApplication and IShortcut types will be
+// used meaningfully in Goal 5 when real shortcut data is displayed in the panel.
+import type { IApplication } from '@kcc/core';
+void (null as unknown as IApplication); // tree-shaken at build time — type-only reference
 
 // Enforce single-instance: if another instance is already running, quit immediately.
 const isFirstInstance = app.requestSingleInstanceLock();
