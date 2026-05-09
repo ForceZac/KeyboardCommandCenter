@@ -441,7 +441,6 @@
 
 ## 2026-05-09 17:40 ET DEVELOPER
 - did: started run — claimed DEV_LOCK
-<<<<<<< HEAD
 - task: TASK-0004 (checkpoint)
 - status: in-progress (checkpoint)
 
@@ -469,7 +468,8 @@
 - tests: tsc clean, lint (web) clean, E2E cannot run locally (no browser/DB in CI agent env — CI gate)
 - metrics: run_type=productive | commits=0 (all code in prev run) | tests_added=7 | trd_cycles=0
 - next: Reviewer picks up PR #5 (goals/4-homepage-search) for review
-=======
+
+## 2026-05-09 17:40 ET DEVELOPER (main — TASK-0006)
 - task: TASK-0006 (fix-up changes-requested on PR #4)
 - status: in-progress
 
@@ -478,7 +478,6 @@
 - unblocked: 0 task(s)
 - synced: 1 branch (0 conflicts)
 - merged: PR #4 (goals/6-electron-app-shell → main)
->>>>>>> origin/main
 
 ## 2026-05-09 18:11 ET DEVELOPER
 - did: DEV_LOCK held — another instance is mid-run (lock is ~3 min old, TASK-0006)
