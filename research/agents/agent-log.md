@@ -201,3 +201,17 @@
 - tests: skipped (TRD phase — no code written)
 - metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=0
 - next: once TRD Reviewer approves, next run builds the 4 API routes + services + integration tests
+
+## 2026-05-09 15:10 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TASK-0003 (TRD awaiting-review — no In Progress build, no Changes Requested, in-flight cap 0)
+- status: in-progress (checkpoint)
+
+## 2026-05-09 15:10 ET DEVELOPER
+- did: TRD awaiting reviewer approval — TASK-0003
+- task: TASK-0003
+- PR: #3
+- trd: awaiting-review
+- tests: skipped (TRD phase — no code written)
+- metrics: run_type=no-op | reason=TRD awaiting reviewer approval — TASK-0003
+- next: once Reviewer approves TRD on PR #3, next run proceeds to build API routes
