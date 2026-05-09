@@ -81,10 +81,6 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
 
 _(Developer moves tasks here when the draft PR is marked ready.)_
 
-## Changes Requested
-
-_(Reviewer moves tasks here when a PR needs rework.)_
-
 ### TASK-0003: API Routes for Shortcut Data
 - **Goal:** Goal 2 — Web Search & Browse Interface
 - **PRD:** research/agents/prds/goal-02-web-search-browse.md
@@ -100,7 +96,11 @@ _(Reviewer moves tasks here when a PR needs rework.)_
 - **PR:** #3
 - **Branch:** goals/3-api-routes
 - **TRD:** research/plans/goals/3-api-routes-trd.md — approved
-- **Notes:** Round 1 review — changes requested. (1) `ShortcutService.ts` catch block must log the exception before falling back. (2) `shortcuts-search.test.ts` "save" test assertion must allow app-name matches, not command-only.
+- **Notes:** Round 1 feedback addressed — catch logging added, "save" test assertion relaxed. Re-review requested.
+
+## Changes Requested
+
+_(Reviewer moves tasks here when a PR needs rework.)_
 
 ## TRD Changes Requested
 
