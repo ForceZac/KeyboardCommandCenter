@@ -93,3 +93,68 @@ export interface IShortcutKeyStep {
   /** Normalized modifier names e.g. ["Ctrl", "Shift"] */
   modifiers: ModifierKey[];
 }
+
+// ---------------------------------------------------------------------------
+// API response types
+// ---------------------------------------------------------------------------
+
+/** One key-press step within a platform binding. */
+export interface KeyStepSummary {
+  stepOrder: number;
+  keyCombo: string;
+  key: string;
+  modifiers: string[];
+}
+
+/** A shortcut binding for a single platform, as returned by API routes. */
+export interface PlatformBinding {
+  platformSlug: string;
+  /** Display string for the full chord, e.g. "Ctrl+K → Ctrl+C". */
+  keyCombo: string;
+  steps: KeyStepSummary[];
+}
+
+/**
+ * SearchResult — one hit from GET /api/shortcuts/search.
+ * Flattened for fast rendering: app name/slug inlined, bindings per platform.
+ */
+export interface SearchResult {
+  id: string;
+  command: string;
+  context: string | null;
+  appName: string;
+  appSlug: string;
+  platforms: PlatformBinding[];
+}
+
+/** AppSummary — one item from GET /api/apps. */
+export interface AppSummary {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  categorySlug: string;
+}
+
+/** One shortcut entry within an AppDetail context group. */
+export interface ShortcutEntry {
+  id: string;
+  command: string;
+  platforms: PlatformBinding[];
+}
+
+/**
+ * AppDetail — response from GET /api/apps/[slug].
+ * Shortcuts are grouped by context/scope (e.g. "Global", "Editor").
+ */
+export interface AppDetail extends AppSummary {
+  contexts: Record<string, ShortcutEntry[]>;
+}
+
+/** CategorySummary — one item from GET /api/categories. */
+export interface CategorySummary {
+  id: string;
+  name: string;
+  slug: string;
+  appCount: number;
+}
