@@ -1,0 +1,85 @@
+{
+  "name": "Safari",
+  "slug": "safari",
+  "description": "Apple's web browser for macOS and iOS",
+  "category": "browsers",
+  "shortcuts": [
+    {
+      "command": "New Tab",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+T", "key": "t", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Close Tab",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+W", "key": "w", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Open New Private Window",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+N", "key": "n", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Open Web Inspector",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+Option+I", "key": "i", "modifiers": ["Cmd", "Option"] }] }
+      }
+    },
+    {
+      "command": "Focus Smart Search Field",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+L", "key": "l", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Find in Page",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+F", "key": "f", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Add Bookmark",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+D", "key": "d", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Reader View",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+R", "key": "r", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Reload Page",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+R", "key": "r", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Show History",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+Y", "key": "y", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Show Sidebar",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+L", "key": "l", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    }
+  ]
+}

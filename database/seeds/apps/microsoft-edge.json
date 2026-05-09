@@ -1,0 +1,88 @@
+{
+  "name": "Microsoft Edge",
+  "slug": "microsoft-edge",
+  "description": "Chromium-based web browser by Microsoft",
+  "category": "browsers",
+  "shortcuts": [
+    {
+      "command": "New Tab",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+T", "key": "t", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+T", "key": "t", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "InPrivate Window",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+N", "key": "n", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+N", "key": "n", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Open Developer Tools",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "F12", "key": "F12", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Option+I", "key": "i", "modifiers": ["Cmd", "Option"] }] }
+      }
+    },
+    {
+      "command": "Focus Address Bar",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+L", "key": "l", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+L", "key": "l", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Open Collections",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+Y", "key": "y", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+Y", "key": "y", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Immersive Reader",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "F9", "key": "F9", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "F9", "key": "F9", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Reload Page",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+R", "key": "r", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+R", "key": "r", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Find in Page",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+F", "key": "f", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+F", "key": "f", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Close Tab",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+W", "key": "w", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+W", "key": "w", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Reopen Closed Tab",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+T", "key": "t", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+T", "key": "t", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    }
+  ]
+}

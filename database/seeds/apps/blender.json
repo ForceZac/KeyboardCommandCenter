@@ -1,0 +1,107 @@
+{
+  "name": "Blender",
+  "slug": "blender",
+  "description": "Free and open source 3D creation suite",
+  "category": "creative",
+  "shortcuts": [
+    {
+      "command": "Grab / Move",
+      "context": "3D Viewport",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "G", "key": "g", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "G", "key": "g", "modifiers": [] }] },
+        "linux": { "steps": [{ "keyCombo": "G", "key": "g", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Rotate",
+      "context": "3D Viewport",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "R", "key": "r", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "R", "key": "r", "modifiers": [] }] },
+        "linux": { "steps": [{ "keyCombo": "R", "key": "r", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Scale",
+      "context": "3D Viewport",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "S", "key": "s", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "S", "key": "s", "modifiers": [] }] },
+        "linux": { "steps": [{ "keyCombo": "S", "key": "s", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Toggle Edit Mode",
+      "context": "3D Viewport",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Tab", "key": "Tab", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "Tab", "key": "Tab", "modifiers": [] }] },
+        "linux": { "steps": [{ "keyCombo": "Tab", "key": "Tab", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Loop Cut",
+      "context": "Edit Mode",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+R", "key": "r", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Ctrl+R", "key": "r", "modifiers": ["Ctrl"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+R", "key": "r", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Extrude",
+      "context": "Edit Mode",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "E", "key": "e", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "E", "key": "e", "modifiers": [] }] },
+        "linux": { "steps": [{ "keyCombo": "E", "key": "e", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Inset Faces",
+      "context": "Edit Mode",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "I", "key": "i", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "I", "key": "i", "modifiers": [] }] },
+        "linux": { "steps": [{ "keyCombo": "I", "key": "i", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Bevel",
+      "context": "Edit Mode",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+B", "key": "b", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Ctrl+B", "key": "b", "modifiers": ["Ctrl"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+B", "key": "b", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Render",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "F12", "key": "F12", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "F12", "key": "F12", "modifiers": [] }] },
+        "linux": { "steps": [{ "keyCombo": "F12", "key": "F12", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Number Pad View Toggle",
+      "context": "3D Viewport",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Numpad 5", "key": "5", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "Numpad 5", "key": "5", "modifiers": [] }] },
+        "linux": { "steps": [{ "keyCombo": "Numpad 5", "key": "5", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Shade Smooth",
+      "context": "3D Viewport",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Right Click > Shade Smooth", "key": "", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "Right Click > Shade Smooth", "key": "", "modifiers": [] }] },
+        "linux": { "steps": [{ "keyCombo": "Right Click > Shade Smooth", "key": "", "modifiers": [] }] }
+      }
+    }
+  ]
+}

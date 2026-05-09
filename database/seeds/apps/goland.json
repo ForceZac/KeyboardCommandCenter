@@ -1,0 +1,98 @@
+{
+  "name": "GoLand",
+  "slug": "goland",
+  "description": "The Go IDE by JetBrains",
+  "category": "developer-tools",
+  "shortcuts": [
+    {
+      "command": "Run",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Shift+F10", "key": "F10", "modifiers": ["Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Ctrl+R", "key": "r", "modifiers": ["Ctrl"] }] },
+        "linux": { "steps": [{ "keyCombo": "Shift+F10", "key": "F10", "modifiers": ["Shift"] }] }
+      }
+    },
+    {
+      "command": "Go to Declaration",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+B", "key": "b", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+B", "key": "b", "modifiers": ["Cmd"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+B", "key": "b", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Refactor Rename",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Shift+F6", "key": "F6", "modifiers": ["Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Shift+F6", "key": "F6", "modifiers": ["Shift"] }] },
+        "linux": { "steps": [{ "keyCombo": "Shift+F6", "key": "F6", "modifiers": ["Shift"] }] }
+      }
+    },
+    {
+      "command": "Reformat Code",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Alt+L", "key": "l", "modifiers": ["Ctrl", "Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Option+L", "key": "l", "modifiers": ["Cmd", "Option"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+Alt+L", "key": "l", "modifiers": ["Ctrl", "Alt"] }] }
+      }
+    },
+    {
+      "command": "Implement Interface Methods",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+I", "key": "i", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Ctrl+I", "key": "i", "modifiers": ["Ctrl"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+I", "key": "i", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Find Usages",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Alt+F7", "key": "F7", "modifiers": ["Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Option+F7", "key": "F7", "modifiers": ["Option"] }] },
+        "linux": { "steps": [{ "keyCombo": "Alt+F7", "key": "F7", "modifiers": ["Alt"] }] }
+      }
+    },
+    {
+      "command": "Search Everywhere",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Shift+Shift", "key": "Shift", "modifiers": ["Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Shift+Shift", "key": "Shift", "modifiers": ["Shift"] }] },
+        "linux": { "steps": [{ "keyCombo": "Shift+Shift", "key": "Shift", "modifiers": ["Shift"] }] }
+      }
+    },
+    {
+      "command": "Quick Fix",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Alt+Enter", "key": "Enter", "modifiers": ["Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Option+Enter", "key": "Enter", "modifiers": ["Option"] }] },
+        "linux": { "steps": [{ "keyCombo": "Alt+Enter", "key": "Enter", "modifiers": ["Alt"] }] }
+      }
+    },
+    {
+      "command": "Extract Function",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Alt+M", "key": "m", "modifiers": ["Ctrl", "Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Option+M", "key": "m", "modifiers": ["Cmd", "Option"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+Alt+M", "key": "m", "modifiers": ["Ctrl", "Alt"] }] }
+      }
+    },
+    {
+      "command": "Run Tests",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+F10", "key": "F10", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Ctrl+Shift+R", "key": "r", "modifiers": ["Ctrl", "Shift"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+Shift+F10", "key": "F10", "modifiers": ["Ctrl", "Shift"] }] }
+      }
+    }
+  ]
+}

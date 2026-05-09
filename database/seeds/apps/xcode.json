@@ -1,0 +1,85 @@
+{
+  "name": "Xcode",
+  "slug": "xcode",
+  "description": "Apple's integrated development environment for macOS, iOS, and other Apple platforms",
+  "category": "developer-tools",
+  "shortcuts": [
+    {
+      "command": "Build",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+B", "key": "b", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Run",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+R", "key": "r", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Test",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+U", "key": "u", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Stop",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+.", "key": ".", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Open Quickly",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+O", "key": "o", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Toggle Navigator",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+0", "key": "0", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Toggle Utilities Panel",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+Option+0", "key": "0", "modifiers": ["Cmd", "Option"] }] }
+      }
+    },
+    {
+      "command": "Refactor Rename",
+      "context": "Editor",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Ctrl+Cmd+E", "key": "e", "modifiers": ["Ctrl", "Cmd"] }] }
+      }
+    },
+    {
+      "command": "Comment Selection",
+      "context": "Editor",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+/", "key": "/", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Jump to Definition",
+      "context": "Editor",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+Ctrl+J", "key": "j", "modifiers": ["Cmd", "Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Fix All Issues",
+      "context": "Editor",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+Option+Ctrl+F", "key": "f", "modifiers": ["Cmd", "Option", "Ctrl"] }] }
+      }
+    }
+  ]
+}

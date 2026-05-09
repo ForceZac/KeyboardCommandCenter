@@ -1,0 +1,88 @@
+{
+  "name": "Obsidian",
+  "slug": "obsidian",
+  "description": "Knowledge base app that works on top of local Markdown files",
+  "category": "productivity",
+  "shortcuts": [
+    {
+      "command": "Quick Switcher",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+O", "key": "o", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+O", "key": "o", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Open Command Palette",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+P", "key": "p", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+P", "key": "p", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Search in All Files",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+F", "key": "f", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+F", "key": "f", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Toggle Edit / Preview Mode",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+E", "key": "e", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+E", "key": "e", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Insert Internal Link",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "[[", "key": "[", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "[[", "key": "[", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Open Graph View",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+G", "key": "g", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+G", "key": "g", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Toggle Left Sidebar",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+B", "key": "b", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+B", "key": "b", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Split Editor Vertically",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+L", "key": "l", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+L", "key": "l", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Focus on Editor",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Esc", "key": "Escape", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "Esc", "key": "Escape", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Navigate Back",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Alt+Left", "key": "ArrowLeft", "modifiers": ["Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Option+Left", "key": "ArrowLeft", "modifiers": ["Cmd", "Option"] }] }
+      }
+    }
+  ]
+}

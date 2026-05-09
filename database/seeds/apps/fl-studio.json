@@ -1,0 +1,85 @@
+{
+  "name": "FL Studio",
+  "slug": "fl-studio",
+  "description": "Digital audio workstation by Image-Line",
+  "category": "music",
+  "shortcuts": [
+    {
+      "command": "Play / Stop",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Space", "key": " ", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Record",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "R", "key": "r", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Song Mode",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+P", "key": "p", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Open Piano Roll",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+B", "key": "b", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Open Mixer",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "F9", "key": "F9", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Open Channel Rack",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "F6", "key": "F6", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Open Playlist",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "F5", "key": "F5", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Undo",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Z", "key": "z", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Redo",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Y", "key": "y", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Quantize Notes",
+      "context": "Piano Roll",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Q", "key": "q", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Zoom In",
+      "context": "Playlist",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Scroll Up", "key": "ScrollUp", "modifiers": ["Ctrl"] }] }
+      }
+    }
+  ]
+}

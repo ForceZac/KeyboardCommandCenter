@@ -1,0 +1,98 @@
+{
+  "name": "Opera",
+  "slug": "opera",
+  "description": "Chromium-based web browser with built-in VPN and ad blocker",
+  "category": "browsers",
+  "shortcuts": [
+    {
+      "command": "New Tab",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+T", "key": "t", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+T", "key": "t", "modifiers": ["Cmd"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+T", "key": "t", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Private Window",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+N", "key": "n", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+N", "key": "n", "modifiers": ["Cmd", "Shift"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+Shift+N", "key": "n", "modifiers": ["Ctrl", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Toggle VPN",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+V", "key": "v", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+V", "key": "v", "modifiers": ["Cmd", "Shift"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+Shift+V", "key": "v", "modifiers": ["Ctrl", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Focus Address Bar",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+L", "key": "l", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+L", "key": "l", "modifiers": ["Cmd"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+L", "key": "l", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Open Speed Dial",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+N", "key": "n", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+N", "key": "n", "modifiers": ["Cmd"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+N", "key": "n", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Open Sidebar",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+B", "key": "b", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+B", "key": "b", "modifiers": ["Cmd", "Shift"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+Shift+B", "key": "b", "modifiers": ["Ctrl", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Find in Page",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+F", "key": "f", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+F", "key": "f", "modifiers": ["Cmd"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+F", "key": "f", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Reload Page",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+R", "key": "r", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+R", "key": "r", "modifiers": ["Cmd"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+R", "key": "r", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Close Tab",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+W", "key": "w", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+W", "key": "w", "modifiers": ["Cmd"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+W", "key": "w", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Developer Tools",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+I", "key": "i", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Option+I", "key": "i", "modifiers": ["Cmd", "Option"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+Shift+I", "key": "i", "modifiers": ["Ctrl", "Shift"] }] }
+      }
+    }
+  ]
+}

@@ -1,0 +1,131 @@
+{
+  "name": "VS Code",
+  "slug": "vscode",
+  "description": "Lightweight but powerful source code editor by Microsoft",
+  "category": "developer-tools",
+  "shortcuts": [
+    {
+      "command": "Toggle Line Comment",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+/", "key": "/", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+/", "key": "/", "modifiers": ["Cmd"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+/", "key": "/", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Open Command Palette",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+P", "key": "p", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+P", "key": "p", "modifiers": ["Cmd", "Shift"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+Shift+P", "key": "p", "modifiers": ["Ctrl", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Quick Open File",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+P", "key": "p", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+P", "key": "p", "modifiers": ["Cmd"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+P", "key": "p", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Save File",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+S", "key": "s", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+S", "key": "s", "modifiers": ["Cmd"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+S", "key": "s", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Go to Definition",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "F12", "key": "F12", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "F12", "key": "F12", "modifiers": [] }] },
+        "linux": { "steps": [{ "keyCombo": "F12", "key": "F12", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Format Document",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Shift+Alt+F", "key": "f", "modifiers": ["Shift", "Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Shift+Option+F", "key": "f", "modifiers": ["Shift", "Option"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+Shift+I", "key": "i", "modifiers": ["Ctrl", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Toggle Terminal",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+`", "key": "`", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Ctrl+`", "key": "`", "modifiers": ["Ctrl"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+`", "key": "`", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Find in Files",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+F", "key": "f", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+F", "key": "f", "modifiers": ["Cmd", "Shift"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+Shift+F", "key": "f", "modifiers": ["Ctrl", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Toggle Block Comment",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Shift+Alt+A", "key": "a", "modifiers": ["Shift", "Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Shift+Option+A", "key": "a", "modifiers": ["Shift", "Option"] }] },
+        "linux": { "steps": [{ "keyCombo": "Shift+Alt+A", "key": "a", "modifiers": ["Shift", "Alt"] }] }
+      }
+    },
+    {
+      "command": "Comment Line (chord)",
+      "context": "Editor",
+      "bindings": {
+        "windows": {
+          "steps": [
+            { "keyCombo": "Ctrl+K", "key": "k", "modifiers": ["Ctrl"] },
+            { "keyCombo": "Ctrl+C", "key": "c", "modifiers": ["Ctrl"] }
+          ]
+        },
+        "macos": {
+          "steps": [
+            { "keyCombo": "Cmd+K", "key": "k", "modifiers": ["Cmd"] },
+            { "keyCombo": "Cmd+C", "key": "c", "modifiers": ["Cmd"] }
+          ]
+        },
+        "linux": {
+          "steps": [
+            { "keyCombo": "Ctrl+K", "key": "k", "modifiers": ["Ctrl"] },
+            { "keyCombo": "Ctrl+C", "key": "c", "modifiers": ["Ctrl"] }
+          ]
+        }
+      }
+    },
+    {
+      "command": "Rename Symbol",
+      "context": "Editor",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "F2", "key": "F2", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "F2", "key": "F2", "modifiers": [] }] },
+        "linux": { "steps": [{ "keyCombo": "F2", "key": "F2", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Split Editor",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+\\", "key": "\\", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+\\", "key": "\\", "modifiers": ["Cmd"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+\\", "key": "\\", "modifiers": ["Ctrl"] }] }
+      }
+    }
+  ]
+}

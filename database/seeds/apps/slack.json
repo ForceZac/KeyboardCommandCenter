@@ -1,0 +1,88 @@
+{
+  "name": "Slack",
+  "slug": "slack",
+  "description": "Business messaging app for team collaboration",
+  "category": "productivity",
+  "shortcuts": [
+    {
+      "command": "Quick Switcher",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+K", "key": "k", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+K", "key": "k", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Search",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+F", "key": "f", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+F", "key": "f", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Mark All as Read",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Shift+Esc", "key": "Escape", "modifiers": ["Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Shift+Esc", "key": "Escape", "modifiers": ["Shift"] }] }
+      }
+    },
+    {
+      "command": "Toggle Sidebar",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+D", "key": "d", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+D", "key": "d", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Next Unread Message",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Alt+Down", "key": "ArrowDown", "modifiers": ["Alt"] }] },
+        "macos": { "steps": [{ "keyCombo": "Option+Down", "key": "ArrowDown", "modifiers": ["Option"] }] }
+      }
+    },
+    {
+      "command": "Start a Call",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+H", "key": "h", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+H", "key": "h", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Set Status",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+Shift+Y", "key": "y", "modifiers": ["Ctrl", "Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+Y", "key": "y", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Edit Last Message",
+      "context": "Message Input",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Up", "key": "ArrowUp", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "Up", "key": "ArrowUp", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Format Bold",
+      "context": "Message Input",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+B", "key": "b", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+B", "key": "b", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Open Preferences",
+      "context": "Global",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+,", "key": ",", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Cmd+,", "key": ",", "modifiers": ["Cmd"] }] }
+      }
+    }
+  ]
+}

@@ -1,0 +1,85 @@
+{
+  "name": "macOS",
+  "slug": "macos",
+  "description": "Apple macOS operating system shortcuts",
+  "category": "system",
+  "shortcuts": [
+    {
+      "command": "Spotlight Search",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+Space", "key": " ", "modifiers": ["Cmd"] }] }
+      }
+    },
+    {
+      "command": "Mission Control",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Ctrl+Up", "key": "ArrowUp", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Application Expose",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Ctrl+Down", "key": "ArrowDown", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Switch Spaces Left",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Ctrl+Left", "key": "ArrowLeft", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Switch Spaces Right",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Ctrl+Right", "key": "ArrowRight", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Lock Screen",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+Ctrl+Q", "key": "q", "modifiers": ["Cmd", "Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Force Quit",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+Option+Esc", "key": "Escape", "modifiers": ["Cmd", "Option"] }] }
+      }
+    },
+    {
+      "command": "Screenshot Selection",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+4", "key": "4", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Screenshot Full Screen",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+Shift+3", "key": "3", "modifiers": ["Cmd", "Shift"] }] }
+      }
+    },
+    {
+      "command": "Open Launchpad",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+Option+Space", "key": " ", "modifiers": ["Cmd", "Option"] }] }
+      }
+    },
+    {
+      "command": "Switch Between Apps",
+      "context": "Global",
+      "bindings": {
+        "macos": { "steps": [{ "keyCombo": "Cmd+Tab", "key": "Tab", "modifiers": ["Cmd"] }] }
+      }
+    }
+  ]
+}

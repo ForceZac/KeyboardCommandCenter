@@ -1,0 +1,107 @@
+{
+  "name": "Neovim",
+  "slug": "neovim",
+  "description": "Hyperextensible Vim-based text editor",
+  "category": "developer-tools",
+  "shortcuts": [
+    {
+      "command": "Enter Normal Mode",
+      "context": "Insert Mode",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Esc", "key": "Escape", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "Esc", "key": "Escape", "modifiers": [] }] },
+        "linux": { "steps": [{ "keyCombo": "Esc", "key": "Escape", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Enter Insert Mode Before Cursor",
+      "context": "Normal Mode",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "i", "key": "i", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "i", "key": "i", "modifiers": [] }] },
+        "linux": { "steps": [{ "keyCombo": "i", "key": "i", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Enter Insert Mode After Cursor",
+      "context": "Normal Mode",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "a", "key": "a", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "a", "key": "a", "modifiers": [] }] },
+        "linux": { "steps": [{ "keyCombo": "a", "key": "a", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Undo",
+      "context": "Normal Mode",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "u", "key": "u", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "u", "key": "u", "modifiers": [] }] },
+        "linux": { "steps": [{ "keyCombo": "u", "key": "u", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Redo",
+      "context": "Normal Mode",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+r", "key": "r", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Ctrl+r", "key": "r", "modifiers": ["Ctrl"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+r", "key": "r", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Delete to End of Line",
+      "context": "Normal Mode",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "D", "key": "d", "modifiers": ["Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "D", "key": "d", "modifiers": ["Shift"] }] },
+        "linux": { "steps": [{ "keyCombo": "D", "key": "d", "modifiers": ["Shift"] }] }
+      }
+    },
+    {
+      "command": "Visual Block Mode",
+      "context": "Normal Mode",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "Ctrl+v", "key": "v", "modifiers": ["Ctrl"] }] },
+        "macos": { "steps": [{ "keyCombo": "Ctrl+v", "key": "v", "modifiers": ["Ctrl"] }] },
+        "linux": { "steps": [{ "keyCombo": "Ctrl+v", "key": "v", "modifiers": ["Ctrl"] }] }
+      }
+    },
+    {
+      "command": "Open File Explorer (Netrw)",
+      "context": "Normal Mode",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": ":Ex", "key": "x", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": ":Ex", "key": "x", "modifiers": [] }] },
+        "linux": { "steps": [{ "keyCombo": ":Ex", "key": "x", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "Fuzzy Find (Telescope)",
+      "context": "Normal Mode",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "<leader>ff", "key": "f", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "<leader>ff", "key": "f", "modifiers": [] }] },
+        "linux": { "steps": [{ "keyCombo": "<leader>ff", "key": "f", "modifiers": [] }] }
+      }
+    },
+    {
+      "command": "LSP Hover",
+      "context": "Normal Mode",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "K", "key": "k", "modifiers": ["Shift"] }] },
+        "macos": { "steps": [{ "keyCombo": "K", "key": "k", "modifiers": ["Shift"] }] },
+        "linux": { "steps": [{ "keyCombo": "K", "key": "k", "modifiers": ["Shift"] }] }
+      }
+    },
+    {
+      "command": "LSP Rename",
+      "context": "Normal Mode",
+      "bindings": {
+        "windows": { "steps": [{ "keyCombo": "<leader>rn", "key": "n", "modifiers": [] }] },
+        "macos": { "steps": [{ "keyCombo": "<leader>rn", "key": "n", "modifiers": [] }] },
+        "linux": { "steps": [{ "keyCombo": "<leader>rn", "key": "n", "modifiers": [] }] }
+      }
+    }
+  ]
+}
