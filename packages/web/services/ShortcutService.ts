@@ -25,9 +25,10 @@ export class ShortcutService {
         LIMIT 100
       `;
       shortcutIds = rows.map((r) => r.id);
-    } catch {
+    } catch (err) {
       // GIN index unavailable (e.g. test DB without the TASK-0002 migration).
       // Fall back to case-insensitive substring match so local dev still works.
+      console.error('[ShortcutService] FTS query error — falling back to ILIKE:', err);
       shortcutIds = [];
     }
 

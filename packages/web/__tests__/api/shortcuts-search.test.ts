@@ -55,9 +55,11 @@ describe('GET /api/shortcuts/search', () => {
     expect(res.status).toBe(200);
     const results = (await res.json()) as SearchResult[];
     expect(results.length).toBeGreaterThan(0);
-    // Every result should mention "save" in command (case-insensitive)
+    // Results may match on command OR app name (both FTS and ILIKE paths search both fields)
     for (const r of results) {
-      expect(r.command.toLowerCase()).toContain('save');
+      const matchesCommand = r.command.toLowerCase().includes('save');
+      const matchesApp = r.appName.toLowerCase().includes('save');
+      expect(matchesCommand || matchesApp).toBe(true);
     }
   });
 
