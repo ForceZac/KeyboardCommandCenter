@@ -1,0 +1,13 @@
+// Prisma schema — placeholder until TASK-0001 TRD is approved and schema is designed
+// See: research/plans/goals/1-shortcut-data-schema-trd.md
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Schema will be defined in TASK-0001

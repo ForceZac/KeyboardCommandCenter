@@ -1,0 +1,18 @@
+{
+  "name": "keyboard-command-center",
+  "version": "0.0.1",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "database"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w packages/web",
+    "build": "npm run build -w packages/web",
+    "lint": "eslint . --ext .ts,.tsx",
+    "test": "npm run test -w packages/web"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
