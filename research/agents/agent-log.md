@@ -1,5 +1,16 @@
 <!-- Agent log. Append-only. Agents read the last 75 lines before acting. Log Trim archives entries older than 48h into agent-log-archive-YYYY-MM.md. -->
 
+## 2026-05-09 16:40 ET REVIEWER
+- did: reviewed PR #4 (TASK-0006 — Electron App Shell, round 1)
+- decision: changes-requested
+- standards checked: backend standards (n/a — desktop only), separation of concerns (packages/desktop isolation, no cross-package leakage), feedback_pull_requests (scope, TRD match), TRD alignment (explicit TRD deviation found), security (contextIsolation/nodeIntegration/contextBridge)
+- tsc: clean (tsconfig.json + tsconfig.renderer.json — both noEmit pass)
+- issues: (1) `ipcMain.on('hide-panel')` registered inside `getOrCreateWindow()` — TRD says it belongs in main.ts; creates listener accumulation risk on window destroy+recreate; (2) `showInactive()+focus()` in `show()` is contradictory — comment wrong, should be `win.show()`; (3) `app.quit()` in single-instance check doesn't halt module execution — add `process.exit(0)`
+- positives: lazy window creation/hide-not-destroy correct; disableHardwareAcceleration() placement correct; contextBridge preload correct; platform-aware tray + hotkey; dock.hide() on macOS; before-quit tray cleanup; globals.d.ts and kcc.d.ts properly separate main/renderer types; CSP header present; scope clean
+- metrics: run_type=productive | pr=PR-4 | round=1 | decision=changes-requested | tests_run=pass (tsc noEmit only — Electron cannot be unit tested without runtime)
+- discord: FAILED — #main channel not allowlisted (same persistent blocker); run /discord:access to fix
+- next: Developer addresses 3 items; round 2 checks only those 3
+
 ## 2026-05-09 15:51 ET REVIEWER
 - did: reviewed PR #3 (TASK-0003 — API Routes for Shortcut Data, round 1)
 - decision: changes-requested
@@ -323,3 +334,19 @@
 - tests: green — tsc --noEmit passes on packages/desktop/tsconfig.json AND tsconfig.renderer.json
 - metrics: run_type=productive | commits=9 | tests_added=0 | trd_cycles=0
 - next: Reviewer picks up PR #4; cross-platform smoke test (Mac/Win) needed when running on real hardware
+
+## 2026-05-09 16:34 ET PROJECT-MANAGER
+- did: created TASK-0007 (Goal 3 Settings + Login Startup) — Ready now at 3 tasks
+- created: TASK-0007
+- moved: none
+- prd gaps: Goals 5–10 (6 goals) — Goals N+1 (3) and N+2 (4) covered
+- roadmap check: skipped (did last run)
+- proposals added: 0
+- flags: PR #3 (TASK-0003) approved by Reviewer but still OPEN on GitHub — needs owner merge. TASK-0004 depends on it.
+- metrics: tasks_created=1 | tasks_moved=0 | prd_gaps=6 | roadmap_issues=0
+- next: watch for PR #3 merge (unblocks TASK-0004). Reviewer needs to pick up PR #4 (TASK-0006). Consider TASK-0008 (Goal 3 CI pipeline) if Ready drops below 2.
+
+## 2026-05-09 16:40 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TASK-0006 (fix-up changes-requested on PR #4)
+- status: in-progress
