@@ -18,9 +18,9 @@ export default function SearchSection() {
     <div className="w-full">
       <SearchBar onQueryChange={setQuery} isLoading={isLoading} />
 
-      {query.trim().length >= 2 && (
+      {query.trim().length >= 2 && results !== undefined && (
         <div className="mt-4 max-w-2xl mx-auto">
-          <SearchResults results={results ?? []} />
+          <SearchResults results={results} />
         </div>
       )}
     </div>

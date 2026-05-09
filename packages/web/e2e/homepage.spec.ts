@@ -38,8 +38,10 @@ test.describe('Homepage', () => {
   test('clearing search hides results', async ({ page }) => {
     const input = page.getByRole('searchbox', { name: /search shortcuts/i });
     await input.fill('copy');
-    // Wait for results to potentially appear
-    await page.waitForTimeout(500);
+    // Wait for results or no-results message to appear (observable-state, not arbitrary timeout)
+    await expect(
+      page.getByRole('article').first().or(page.getByText(/no shortcuts found/i)),
+    ).toBeVisible({ timeout: 6000 });
     await input.fill('');
     // Results section should disappear immediately (clear is not debounced)
     await expect(page.getByRole('article').first()).not.toBeVisible({ timeout: 1000 });
