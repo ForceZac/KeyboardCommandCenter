@@ -29,93 +29,55 @@ Task IDs are monotonic. The Project Manager picks the next number.
 
 ---
 
+## In Progress
+
+_(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
+
 ## Ready
 
 _(Project Manager keeps 2–3 tasks here at all times.)_
 
-### TASK-0004: Homepage with Search Bar & Category Grid
+### TASK-0005: Per-App Shortcut Pages, Category Browse Pages & Platform Toggle
 - **Goal:** Goal 2 — Web Search & Browse Interface
 - **PRD:** research/agents/prds/goal-02-web-search-browse.md
-- **Scope:** Build the homepage in `packages/web/app/page.tsx`: prominent search bar with debounced full-text search (calls `GET /api/shortcuts/search`), search results displayed inline with shortcut command, key combo, app name, and platform badges, and a category grid below the search bar linking to `/categories/[slug]`. Include dark mode (default) with light mode toggle persisted in localStorage. Mobile-responsive layout down to 320px. NOT in scope: category listing pages, per-app shortcut pages, platform toggle, SEO meta tags, Vercel deployment, analytics.
+- **Scope:** Build the remaining Goal 2 frontend pages in `packages/web/app/`: (1) Per-app shortcut page at `/apps/[slug]` — fetches `GET /api/apps/[slug]`, displays all shortcuts grouped by context/scope, includes in-app search/filter, keyboard key styling (visual key caps), and platform filter toggle (Win/Mac/Linux). (2) Category browse page at `/categories/[slug]` — fetches `GET /api/categories` and `GET /api/apps?category=`, displays grid of apps in the selected category. (3) Persistent platform toggle component — defaults to user's detected OS, persists selection across navigation (localStorage), switches displayed modifier keys (Cmd vs Ctrl). All pages must be dark-mode compatible, mobile-responsive (320px+), and include SEO meta tags. NOT in scope: user accounts, favorites, community submissions, admin panel, SSR of search results, analytics.
 - **Acceptance:**
-  - Homepage renders search bar and category grid
-  - Typing in search bar triggers debounced API call and displays results inline
-  - Each search result shows command description, key combo, app name, platform badges
-  - Category tiles link to `/categories/[slug]`
-  - Dark/light mode toggle works and persists across page loads
-  - Layout is responsive and usable at 320px width
-  - No layout shift on search result updates
+  - `/apps/[slug]` renders all shortcuts for the given app, grouped by context
+  - Shortcuts display styled keyboard key caps (visual rendering of key combos)
+  - Platform toggle on app page filters shortcuts to selected OS and shows correct modifiers
+  - Platform selection persists in localStorage and carries across page navigations
+  - In-app search/filter narrows displayed shortcuts client-side in real time
+  - `/categories/[slug]` renders a grid of apps in that category with correct counts
+  - Category page app tiles link to `/apps/[slug]`
+  - Both pages render correctly in dark and light mode
+  - Both pages are usable on 320px-wide screens
+  - App pages include semantic HTML and meta tags for SEO
 - **PR:**
 - **Branch:**
 - **TRD:**
-- **Notes:** Depends on TASK-0003 (API routes must exist). Second frontend task for Goal 2.
-
-### TASK-0007: Settings Persistence & Login Startup Registration
-- **Goal:** Goal 3 — Desktop App Shell (Electron + Tray)
-- **PRD:** research/agents/prds/goal-03-desktop-app-shell.md
-- **Scope:** Complete the user-facing Goal 3 PRD items not covered by TASK-0006: (1) Add `electron-store` for local settings persistence — store hotkey binding (Electron accelerator string) and login-startup preference as a JSON file. (2) Wire configurable hotkey into HotkeyManager — Settings window accessible from tray context menu lets user record a new key combo, re-registers the global shortcut on change, and notifies user if the binding is already claimed by another app. (3) Login startup registration via `app.setLoginItemSettings` — enabled by default, toggleable in Settings, persisted via electron-store. (4) Add "Settings" item to tray context menu between "Open" and "Quit". NOT in scope: CI build pipeline (separate task), real shortcut panel content (Goal 5), process detection (Goal 4), overlay (Goal 6), code signing (Goal 9), Linux (Goal 10), auto-update, installer UX.
-- **Acceptance:**
-  - Tray context menu includes "Settings" option that opens a Settings window
-  - Settings window shows current hotkey binding and startup preference
-  - User can change the hotkey binding — new binding persists across app restarts
-  - App handles hotkey conflicts gracefully (shows notification if binding is taken by another app)
-  - App registers for login startup on Windows and macOS via `app.setLoginItemSettings`
-  - Startup preference is toggleable in Settings and persisted
-  - Settings stored via `electron-store` in a local JSON file
-  - All settings survive app restart (kill + relaunch)
-- **PR:**
-- **Branch:**
-- **TRD:**
-- **Notes:** Completes Goal 3 user-facing DoD alongside TASK-0006 (shell, tray, hotkey, panel). Depends on TASK-0006 being shipped first. CI build pipeline deferred to a separate task.
-
-### TASK-0005: Category Browse & App Shortcut Pages
-- **Goal:** Goal 2 — Web Search & Browse Interface
-- **PRD:** research/agents/prds/goal-02-web-search-browse.md
-- **Scope:** Build two page types: (1) Category page at `/categories/[slug]` showing a grid of apps in that category (data from `GET /api/apps?category=`), and (2) App shortcut page at `/apps/[slug]` showing all shortcuts for one app grouped by context/scope with a platform toggle (Win/Mac/Linux) that filters key combos and an in-app search/filter. Shortcuts displayed with visual key cap styling. Platform toggle defaults to detected OS and persists across navigation. SEO meta tags on all pages. NOT in scope: homepage, global search, user accounts, favorites, admin panel, community submissions.
-- **Acceptance:**
-  - `/categories/[slug]` renders app grid for the given category
-  - `/apps/[slug]` renders all shortcuts grouped by context/scope
-  - Platform toggle switches displayed key combos between Win/Mac/Linux
-  - Platform toggle defaults to user's OS and persists
-  - In-app search filters shortcuts within the current app
-  - Key combos styled as visual key caps (keyboard key appearance)
-  - Pages have appropriate SEO meta tags (title, description)
-  - Both pages are mobile-responsive
-- **PR:**
-- **Branch:**
-- **TRD:**
-- **Notes:** Depends on TASK-0003 (API routes) and TASK-0004 (shared layout/theme). Final frontend task for Goal 2.
-
-## In Progress
-
-_(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
+- **Notes:** Depends on TASK-0003 (API routes) and TASK-0004 (shared layout, theme toggle, search bar). Final frontend task for Goal 2 — completing this task finishes the Goal 2 definition of done.
 
 ## In Review
 
 _(Developer moves tasks here when the draft PR is marked ready.)_
 
-### TASK-0006: Electron App Shell — Tray Icon + Global Hotkey + Panel Window
-- **Goal:** Goal 3 — Desktop App Shell (Electron + Tray)
-- **PRD:** research/agents/prds/goal-03-desktop-app-shell.md
-- **Scope:** Scaffold the Electron app in `packages/desktop` with main + renderer process model. System tray icon with platform-appropriate context menu ("Open Keyboard Command Center", "Quit"). Global hotkey (default Ctrl+Shift+Space on Windows, Cmd+Shift+Space on Mac) toggles a frameless floating BrowserWindow positioned center-screen (top-third offset). Panel shows placeholder content (search bar stub — real shortcut UI is Goal 5). Panel dismisses on Escape key or focus loss. Memory optimizations: `app.disableHardwareAcceleration()` at startup, lazy BrowserWindow creation (create on first hotkey press, hide/show thereafter), single renderer process. Import shared types from `packages/core`. NOT in scope: login startup registration, settings UI/persistence, CI build pipeline, real shortcut content, process detection, overlay, code signing, installer UX, Linux.
+### TASK-0004: Homepage & Global Search UI
+- **Goal:** Goal 2 — Web Search & Browse Interface
+- **PRD:** research/agents/prds/goal-02-web-search-browse.md
+- **Scope:** Build the Next.js homepage in `packages/web/app/`: prominent search bar with debounced full-text search hitting `GET /api/shortcuts/search`, inline search result previews (shortcut command, key combo, app name, platform badges) with "View all shortcuts for [App]" links, category grid linking to category browse pages. Include dark mode (default) with light mode toggle, mobile-responsive layout (320px+), and SEO meta tags. NOT in scope: per-app shortcut pages, category listing pages, platform toggle, in-app shortcut filtering, user accounts, admin panel.
 - **Acceptance:**
-  - `npm run dev` in `packages/desktop` launches Electron app that settles into system tray with no visible main window
-  - Tray icon renders correctly on Windows (system tray) and macOS (menu bar)
-  - Right-click (Win) or click (Mac) on tray shows context menu with "Open" and "Quit" options
-  - Global hotkey (Ctrl+Shift+Space / Cmd+Shift+Space) opens a frameless floating panel
-  - Panel dismisses on Escape key press
-  - Panel dismisses on focus loss (clicking outside)
-  - Subsequent hotkey presses toggle panel visibility (show/hide)
-  - App uses <50MB RAM when idle (panel hidden) — measured via `process.memoryUsage()`
-  - TypeScript compiles cleanly with shared types from `@kcc/core`
-- **PR:** #4
-- **Branch:** goals/6-electron-app-shell
-- **TRD:** research/plans/goals/6-electron-app-shell-trd.md — approved
-- **Notes:** Round 2 — all 3 reviewer items addressed 2026-05-09.
-
-## Pending Human
-
-_(Reviewer found no code issues but needs human action before approval can proceed.)_
+  - Homepage renders with search bar and category grid
+  - Typing in search bar triggers debounced API call and displays inline results
+  - Search results show command description, key combo, app name, and platform badges
+  - Each result links to the app's shortcut page (route exists even if page is built in a later task)
+  - Category tiles link to `/categories/[slug]` routes
+  - Dark mode renders by default; light mode toggle switches theme
+  - Layout is usable on 320px-wide screens
+  - Homepage LCP <1.5s on local dev server
+- **PR:** #5
+- **Branch:** goals/4-homepage-search
+- **TRD:** research/plans/goals/4-homepage-search-trd.md — approved
+- **Notes:** Round 3 ready — round 2 fixes pushed 2026-05-09: (1) `SearchSection.tsx`: added `results !== undefined` guard. (2) `homepage.spec.ts`: replaced `waitForTimeout(500)` with observable-state expect.
 
 ## Changes Requested
 
@@ -129,50 +91,44 @@ _(TRD Watcher moves tasks here when a TRD needs rework.)_
 
 _(Reviewer moves tasks here after approving the PR. You merge to main, then move to Shipped.)_
 
+## Shipped
+
+_(You move tasks here after merging to main.)_
+
+### TASK-0006: Electron App Shell — Tray Icon + Global Hotkey + Panel Window
+- **Goal:** Goal 3 — Desktop App Shell (Electron + Tray)
+- **PRD:** none — shipped without PRD (process bypass, see PROP-0001)
+- **Scope:** Retroactively recorded. Electron app with tray icon, global hotkey, and panel window. PR #4 was worked on and merged outside the normal backlog/PRD flow.
+- **Acceptance:** (not defined pre-work — retroactive entry)
+- **PR:** #4
+- **Branch:** goals/6-electron-app-shell
+- **TRD:** n/a
+- **Merged:** 2026-05-09
+- **Notes:** This task was never created by the PM or tracked in backlog.md. Added retroactively to maintain backlog as single source of truth. See PROP-0001 for process gap.
+
 ### TASK-0003: API Routes for Shortcut Data
 - **Goal:** Goal 2 — Web Search & Browse Interface
 - **PRD:** research/agents/prds/goal-02-web-search-browse.md
 - **PR:** #3
 - **Branch:** goals/3-api-routes
 - **TRD:** research/plans/goals/3-api-routes-trd.md — approved
-- **Notes:** Round 2 approved 2026-05-09. Both round-1 issues addressed. Integration tests require Docker — pending Zach's env. Non-blocking carry-forward: introduce `env.ts` config module in TASK-0004/0005.
-
-## Shipped
-
-_(You move tasks here after merging to main.)_
+- **Merged:** 2026-05-09
 
 ### TASK-0002: Seed Script & Data for 50+ Applications
 - **Goal:** Goal 1 — Shortcut Data Schema & Seed Database
 - **PRD:** research/agents/prds/goal-01-shortcut-data-schema.md
-- **Scope:** Create static JSON seed files in `database/seeds/` for 50+ popular applications across all categories defined in the PRD (Creative, Developer, Productivity, Gaming, Music, System, Browsers). Build a TypeScript seed script that reads these files and populates the database via Prisma. Add full-text search index on command descriptions and app names. NOT in scope: web UI, API endpoints, community submissions, desktop app integration.
-- **Acceptance:**
-  - Seed script completes without errors on a fresh database with the TASK-0001 schema
-  - 50+ applications seeded across all PRD-specified categories
-  - Each application has at least 10 verified shortcuts
-  - Full-text search index exists on command descriptions and app names
-  - Full-text search query returns results in <100ms on seeded data
-  - Seed files are static JSON, versionable, and reviewable
 - **PR:** #2
 - **Branch:** goals/2-seed-script
 - **TRD:** research/plans/goals/2-seed-script-trd.md — approved
-- **Notes:** Shipped 2026-05-09. PR #2 merged to main.
+- **Merged:** 2026-05-09
 
 ### TASK-0001: Define Prisma Schema for Shortcut Database
 - **Goal:** Goal 1 — Shortcut Data Schema & Seed Database
 - **PRD:** research/agents/prds/goal-01-shortcut-data-schema.md
-- **Scope:** Design and implement the Prisma schema with Application, Shortcut, Category, and Platform models and their relationships. Includes modifier key normalization (Ctrl/Cmd, Alt/Option, Shift, Super/Win), chord support for multi-step shortcuts (e.g. Ctrl+K → Ctrl+C), context/scope field (Global, Editor, Terminal, etc.), and category taxonomy (Creative, Developer Tools, Productivity, Gaming, Communication, System). Store both `keyCombo` display string and structured `modifiers[]` + `key` fields per PRD recommendation. Export TypeScript types from `packages/core` for shared use. NOT in scope: seed data/script, full-text search index, web UI, API endpoints.
-- **Acceptance:**
-  - Prisma schema compiles and migrates cleanly on a fresh PostgreSQL instance
-  - Models include Application, Shortcut, Category, Platform with correct relations
-  - Each shortcut supports multi-platform key combos (Win/Mac/Linux)
-  - Chord/multi-step shortcuts representable in the schema
-  - Context/scope field supports per-app scopes (e.g. "Normal Mode", "Editor", "Terminal")
-  - Category taxonomy covers at least: Creative, Developer Tools, Productivity, Gaming, Music, System, Browsers
-  - TypeScript types exported from `packages/core`
 - **PR:** #1
 - **Branch:** goals/1-prisma-schema
 - **TRD:** research/plans/goals/1-prisma-schema-trd.md — approved
-- **Notes:** Foundation task — shipped 2026-05-09. PR #1 merged to main.
+- **Merged:** 2026-05-09
 
 ## Blocked
 
