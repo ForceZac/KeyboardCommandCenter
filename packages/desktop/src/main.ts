@@ -1,5 +1,5 @@
 // Must be called before app.whenReady() — eliminates the GPU process (~20-40MB RAM savings).
-import { app } from 'electron';
+import { app, ipcMain } from 'electron';
 app.disableHardwareAcceleration();
 
 import { TrayManager } from './tray';
@@ -14,6 +14,7 @@ void (null as unknown as IApplication); // tree-shaken at build time — type-on
 const isFirstInstance = app.requestSingleInstanceLock();
 if (!isFirstInstance) {
   app.quit();
+  process.exit(0);
 }
 
 let trayManager: TrayManager;
@@ -38,6 +39,11 @@ app.whenReady().then(() => {
   });
   hotkeyManager.register();
   bindHotkeyLifecycle(hotkeyManager);
+
+  // IPC: renderer sends 'hide-panel' when Escape is pressed.
+  ipcMain.on('hide-panel', () => {
+    panelManager.hide();
+  });
 
   // Log idle memory usage after everything has settled.
   setTimeout(() => {

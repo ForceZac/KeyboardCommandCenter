@@ -1,4 +1,4 @@
-import { BrowserWindow, screen, ipcMain } from 'electron';
+import { BrowserWindow, screen } from 'electron';
 import path from 'path';
 
 export class PanelWindowManager {
@@ -51,18 +51,12 @@ export class PanelWindowManager {
       this.window = null;
     });
 
-    // IPC: renderer sends 'hide-panel' when Escape is pressed.
-    ipcMain.on('hide-panel', () => {
-      this.hide();
-    });
-
     return this.window;
   }
 
   show(): void {
     const win = this.getOrCreateWindow();
-    win.showInactive(); // showInactive avoids stealing focus from the user's active app
-    win.focus();
+    win.show();
   }
 
   hide(): void {
