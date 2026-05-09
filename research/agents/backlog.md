@@ -33,7 +33,6 @@ Task IDs are monotonic. The Project Manager picks the next number.
 
 _(Project Manager keeps 2–3 tasks here at all times.)_
 
-
 ### TASK-0004: Homepage with Search Bar & Category Grid
 - **Goal:** Goal 2 — Web Search & Browse Interface
 - **PRD:** research/agents/prds/goal-02-web-search-browse.md
@@ -50,6 +49,24 @@ _(Project Manager keeps 2–3 tasks here at all times.)_
 - **Branch:**
 - **TRD:**
 - **Notes:** Depends on TASK-0003 (API routes must exist). Second frontend task for Goal 2.
+
+### TASK-0007: Settings Persistence & Login Startup Registration
+- **Goal:** Goal 3 — Desktop App Shell (Electron + Tray)
+- **PRD:** research/agents/prds/goal-03-desktop-app-shell.md
+- **Scope:** Complete the user-facing Goal 3 PRD items not covered by TASK-0006: (1) Add `electron-store` for local settings persistence — store hotkey binding (Electron accelerator string) and login-startup preference as a JSON file. (2) Wire configurable hotkey into HotkeyManager — Settings window accessible from tray context menu lets user record a new key combo, re-registers the global shortcut on change, and notifies user if the binding is already claimed by another app. (3) Login startup registration via `app.setLoginItemSettings` — enabled by default, toggleable in Settings, persisted via electron-store. (4) Add "Settings" item to tray context menu between "Open" and "Quit". NOT in scope: CI build pipeline (separate task), real shortcut panel content (Goal 5), process detection (Goal 4), overlay (Goal 6), code signing (Goal 9), Linux (Goal 10), auto-update, installer UX.
+- **Acceptance:**
+  - Tray context menu includes "Settings" option that opens a Settings window
+  - Settings window shows current hotkey binding and startup preference
+  - User can change the hotkey binding — new binding persists across app restarts
+  - App handles hotkey conflicts gracefully (shows notification if binding is taken by another app)
+  - App registers for login startup on Windows and macOS via `app.setLoginItemSettings`
+  - Startup preference is toggleable in Settings and persisted
+  - Settings stored via `electron-store` in a local JSON file
+  - All settings survive app restart (kill + relaunch)
+- **PR:**
+- **Branch:**
+- **TRD:**
+- **Notes:** Completes Goal 3 user-facing DoD alongside TASK-0006 (shell, tray, hotkey, panel). Depends on TASK-0006 being shipped first. CI build pipeline deferred to a separate task.
 
 ### TASK-0005: Category Browse & App Shortcut Pages
 - **Goal:** Goal 2 — Web Search & Browse Interface
@@ -77,9 +94,52 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
 
 _(Developer moves tasks here when the draft PR is marked ready.)_
 
+### TASK-0006: Electron App Shell — Tray Icon + Global Hotkey + Panel Window
+- **Goal:** Goal 3 — Desktop App Shell (Electron + Tray)
+- **PRD:** research/agents/prds/goal-03-desktop-app-shell.md
+- **Scope:** Scaffold the Electron app in `packages/desktop` with main + renderer process model. System tray icon with platform-appropriate context menu ("Open Keyboard Command Center", "Quit"). Global hotkey (default Ctrl+Shift+Space on Windows, Cmd+Shift+Space on Mac) toggles a frameless floating BrowserWindow positioned center-screen (top-third offset). Panel shows placeholder content (search bar stub — real shortcut UI is Goal 5). Panel dismisses on Escape key or focus loss. Memory optimizations: `app.disableHardwareAcceleration()` at startup, lazy BrowserWindow creation (create on first hotkey press, hide/show thereafter), single renderer process. Import shared types from `packages/core`. NOT in scope: login startup registration, settings UI/persistence, CI build pipeline, real shortcut content, process detection, overlay, code signing, installer UX, Linux.
+- **Acceptance:**
+  - `npm run dev` in `packages/desktop` launches Electron app that settles into system tray with no visible main window
+  - Tray icon renders correctly on Windows (system tray) and macOS (menu bar)
+  - Right-click (Win) or click (Mac) on tray shows context menu with "Open" and "Quit" options
+  - Global hotkey (Ctrl+Shift+Space / Cmd+Shift+Space) opens a frameless floating panel
+  - Panel dismisses on Escape key press
+  - Panel dismisses on focus loss (clicking outside)
+  - Subsequent hotkey presses toggle panel visibility (show/hide)
+  - App uses <50MB RAM when idle (panel hidden) — measured via `process.memoryUsage()`
+  - TypeScript compiles cleanly with shared types from `@kcc/core`
+- **PR:** #4
+- **Branch:** goals/6-electron-app-shell
+- **TRD:** research/plans/goals/6-electron-app-shell-trd.md — approved
+- **Notes:** Round 2 — all 3 reviewer items addressed 2026-05-09.
+
 ## Pending Human
 
 _(Reviewer found no code issues but needs human action before approval can proceed.)_
+
+## Changes Requested
+
+_(Reviewer moves tasks here when a PR needs rework.)_
+
+## TRD Changes Requested
+
+_(TRD Watcher moves tasks here when a TRD needs rework.)_
+
+## Approved
+
+_(Reviewer moves tasks here after approving the PR. You merge to main, then move to Shipped.)_
+
+### TASK-0003: API Routes for Shortcut Data
+- **Goal:** Goal 2 — Web Search & Browse Interface
+- **PRD:** research/agents/prds/goal-02-web-search-browse.md
+- **PR:** #3
+- **Branch:** goals/3-api-routes
+- **TRD:** research/plans/goals/3-api-routes-trd.md — approved
+- **Notes:** Round 2 approved 2026-05-09. Both round-1 issues addressed. Integration tests require Docker — pending Zach's env. Non-blocking carry-forward: introduce `env.ts` config module in TASK-0004/0005.
+
+## Shipped
+
+_(You move tasks here after merging to main.)_
 
 ### TASK-0002: Seed Script & Data for 50+ Applications
 - **Goal:** Goal 1 — Shortcut Data Schema & Seed Database
@@ -95,40 +155,7 @@ _(Reviewer found no code issues but needs human action before approval can proce
 - **PR:** #2
 - **Branch:** goals/2-seed-script
 - **TRD:** research/plans/goals/2-seed-script-trd.md — approved
-- **Notes:** Reviewer static check passed (2026-05-09). No code issues found. Blocked on test execution: reviewer environment lacks Docker/PostgreSQL. Zach: run `docker compose up -d && DATABASE_URL=... npx prisma migrate deploy -w database && DATABASE_URL=... npm test -w database`. If tests pass, PR is ready to merge.
-
-## Changes Requested
-
-_(Reviewer moves tasks here when a PR needs rework.)_
-
-### TASK-0003: API Routes for Shortcut Data
-- **Goal:** Goal 2 — Web Search & Browse Interface
-- **PRD:** research/agents/prds/goal-02-web-search-browse.md
-- **Scope:** Build the four Next.js API route handlers in `packages/web/app/api/`: `GET /api/shortcuts/search?q=&platform=` (full-text search with Prisma, debounce-friendly), `GET /api/apps` (list all apps, filterable by category), `GET /api/apps/[slug]` (single app with all shortcuts grouped by context), `GET /api/categories` (list categories with app counts). Use shared types from `packages/core`. All endpoints are public read-only — no auth. NOT in scope: frontend UI, SSR, pagination, rate limiting, admin endpoints, Express migration.
-- **Acceptance:**
-  - All four API routes return correct JSON responses against the seeded database
-  - `GET /api/shortcuts/search?q=undo` returns matching shortcuts across apps in <200ms
-  - `GET /api/apps` supports optional `?category=` filter parameter
-  - `GET /api/apps/[slug]` returns shortcuts grouped by context/scope
-  - `GET /api/categories` returns category names with app counts
-  - Responses use shared TypeScript types from `packages/core`
-  - API routes have basic error handling (400 for bad params, 404 for unknown slug)
-- **PR:** #3
-- **Branch:** goals/3-api-routes
-- **TRD:** research/plans/goals/3-api-routes-trd.md — approved
-- **Notes:** Round 1 review — changes requested. (1) `ShortcutService.ts` catch block must log the exception before falling back. (2) `shortcuts-search.test.ts` "save" test assertion must allow app-name matches, not command-only.
-
-## TRD Changes Requested
-
-_(TRD Watcher moves tasks here when a TRD needs rework.)_
-
-## Approved
-
-_(Reviewer moves tasks here after approving the PR. You merge to main, then move to Shipped.)_
-
-## Shipped
-
-_(You move tasks here after merging to main.)_
+- **Notes:** Shipped 2026-05-09. PR #2 merged to main.
 
 ### TASK-0001: Define Prisma Schema for Shortcut Database
 - **Goal:** Goal 1 — Shortcut Data Schema & Seed Database
