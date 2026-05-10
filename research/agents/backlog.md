@@ -57,6 +57,10 @@ _(Project Manager keeps 2–3 tasks here at all times.)_
 
 _(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
 
+## In Review
+
+_(Developer moves tasks here when the draft PR is marked ready.)_
+
 ### TASK-0009: Rust Native Module for Active Window Detection
 - **Goal:** Goal 4 — Active Window Process Detection
 - **PRD:** research/agents/prds/goal-04-process-detection.md
@@ -72,12 +76,8 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
   - Works on both Windows and macOS (platform-specific code behind adapter interface)
 - **PR:** #9
 - **Branch:** goals/9-rust-native-module
-- **TRD:** research/plans/goals/9-rust-native-module-trd.md — awaiting-review
+- **TRD:** research/plans/goals/9-rust-native-module-trd.md — approved
 - **Notes:** Depends on Goal 3 infrastructure (TASK-0007 must ship first — Electron app with settings via electron-store). Uses `napi-rs` per PRD recommendation. The native module is consumed by the polling service (TASK-0010) and by TASK-0008's mapping layer.
-
-## In Review
-
-_(Developer moves tasks here when the draft PR is marked ready.)_
 
 ## Changes Requested
 

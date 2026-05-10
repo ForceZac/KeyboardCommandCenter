@@ -899,3 +899,28 @@
 - did: started run — claimed DEV_LOCK; picking TASK-0009 (Rust Native Module for Active Window Detection)
 - task: TASK-0009
 - status: in-progress — TRD phase
+
+## 2026-05-09 22:10 ET DEVELOPER
+- did: picked TASK-0009 (Rust Native Module for Active Window Detection). Wrote plan (7 slices) and TRD for napi-rs native module with Win32 + macOS platform adapters. Opened draft PR #9. Moved task to In Progress.
+- task: TASK-0009
+- PR: #9
+- trd: written — awaiting-review
+- tests: n/a (TRD phase only)
+- metrics: run_type=productive | commits=2 | tests_added=0 | trd_cycles=0 | dev_idle=0
+- next: TRD Watcher reviews TRD; once approved, Developer resumes to build napi-rs crate + platform adapters + TS wrapper
+
+## 2026-05-09 22:21 ET DEVELOPER
+- did: started run — claimed DEV_LOCK; resuming TASK-0009 (TRD approved — build phase)
+- task: TASK-0009
+- PR: #9
+- trd: approved
+- status: in-progress
+
+## 2026-05-09 22:33 ET DEVELOPER
+- did: FINAL — built TASK-0009 Rust native module (all slices complete), 9/9 tests pass, tsc clean, PR #9 marked ready
+- task: TASK-0009
+- PR: #9
+- trd: approved — built
+- tests: green (9/9 vitest unit tests, tsc noEmit clean)
+- metrics: run_type=productive | commits=2 | tests_added=9 | trd_cycles=0
+- next: Reviewer reviews PR #9; TASK-0010 (polling service + IPC) queued in Ready
