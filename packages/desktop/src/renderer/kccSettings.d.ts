@@ -20,6 +20,7 @@ interface KccSettingsAPI {
     setOpacity: (opacity: number) => Promise<void>;
     setPosition: (position: string) => Promise<void>;
     setSize: (size: string) => Promise<void>;
+    isSupported: () => Promise<boolean>;
   };
 }
 

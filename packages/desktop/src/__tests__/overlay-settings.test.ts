@@ -48,6 +48,7 @@ vi.mock('electron-store', () => ({
 // ---------------------------------------------------------------------------
 
 import {
+  clampOpacity,
   getOverlayPrefs,
   setOverlayEnabled,
   setOverlayHotkey,
@@ -72,6 +73,14 @@ function makeMockController() {
     setPosition: vi.fn(),
     setSize: vi.fn(),
   };
+}
+
+// Simulates the fixed overlay:set-opacity IPC handler from main.ts.
+// The bug: original code passed raw opacity to controller instead of clamped.
+// The fix: clampOpacity() applied before both the store call and the controller call.
+function handleSetOpacity(opacity: number, controller?: ReturnType<typeof makeMockController>): void {
+  setOverlayOpacity(opacity); // clamps to 0.2–0.8 and persists
+  controller?.setOpacity(clampOpacity(opacity)); // forward clamped value, not raw
 }
 
 // Simulates the overlay:set-hotkey IPC handler from main.ts — extracted here
@@ -258,27 +267,43 @@ describe('overlayController registry', () => {
 
 // ---------------------------------------------------------------------------
 // IPC handler simulation: overlay:set-opacity — persist + controller call-through.
+// Uses handleSetOpacity helper which mirrors the fixed main.ts handler.
 // ---------------------------------------------------------------------------
 
 describe('overlay:set-opacity IPC handler simulation', () => {
   beforeEach(() => { mockState.setSpy.mockClear(); });
 
-  it('persists value and calls controller.setOpacity', () => {
+  it('persists in-range value and forwards same value to controller', () => {
     const controller = makeMockController();
-    registerOverlayController(controller);
-
-    // Simulate the IPC handler in main.ts:
-    // setOverlayOpacity(opacity); overlayControllerModule.overlayController?.setOpacity(opacity)
-    setOverlayOpacity(0.7);
-    controller.setOpacity(0.7);
+    handleSetOpacity(0.7, controller);
 
     expect(mockState.setSpy).toHaveBeenCalledWith('overlay.opacity', 0.7);
     expect(controller.setOpacity).toHaveBeenCalledWith(0.7);
   });
 
   it('clamps out-of-range value before persisting', () => {
-    setOverlayOpacity(1.5);
+    handleSetOpacity(1.5);
     expect(mockState.setSpy).toHaveBeenCalledWith('overlay.opacity', 0.8);
+  });
+
+  it('controller receives clamped 0.8 when raw opacity 1.5 is submitted — regression for bug fix', () => {
+    // Bug: original handler passed raw opacity to controller; store clamped but controller got unclamped.
+    // Fix: handler applies clampOpacity() before forwarding to controller.
+    const controller = makeMockController();
+    handleSetOpacity(1.5, controller);
+
+    expect(mockState.setSpy).toHaveBeenCalledWith('overlay.opacity', 0.8);
+    expect(controller.setOpacity).toHaveBeenCalledWith(0.8);
+    expect(controller.setOpacity).not.toHaveBeenCalledWith(1.5);
+  });
+
+  it('controller receives clamped 0.2 when raw opacity 0.05 is submitted', () => {
+    const controller = makeMockController();
+    handleSetOpacity(0.05, controller);
+
+    expect(mockState.setSpy).toHaveBeenCalledWith('overlay.opacity', 0.2);
+    expect(controller.setOpacity).toHaveBeenCalledWith(0.2);
+    expect(controller.setOpacity).not.toHaveBeenCalledWith(0.05);
   });
 });
 

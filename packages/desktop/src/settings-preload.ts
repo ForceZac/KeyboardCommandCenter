@@ -39,5 +39,8 @@ contextBridge.exposeInMainWorld('kccSettings', {
 
     setSize: (size: string): Promise<void> =>
       ipcRenderer.invoke('overlay:set-size', { size }),
+
+    isSupported: (): Promise<boolean> =>
+      ipcRenderer.invoke('overlay:is-supported'),
   },
 });

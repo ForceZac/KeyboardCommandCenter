@@ -21,6 +21,7 @@ import { ShortcutService, ShortcutCache } from './shortcut-service';
 import type { ShortcutDb } from './shortcut-service';
 // TASK-0019: overlay settings store + controller registry.
 import {
+  clampOpacity,
   getHotkey,
   getOverlayPrefs,
   setOverlayEnabled,
@@ -212,9 +213,12 @@ app.whenReady().then(() => {
   });
 
   ipcMain.handle('overlay:set-opacity', (_event, { opacity }: { opacity: number }) => {
-    setOverlayOpacity(opacity); // clamped inside setOverlayOpacity
-    overlayControllerModule.overlayController?.setOpacity(opacity);
+    setOverlayOpacity(opacity); // clamps to 0.2–0.8 and persists
+    overlayControllerModule.overlayController?.setOpacity(clampOpacity(opacity)); // forward clamped value
   });
+
+  // Returns true on Windows and macOS where the overlay feature is supported.
+  ipcMain.handle('overlay:is-supported', () => process.platform !== 'linux');
 
   ipcMain.handle('overlay:set-position', (_event, { position }: { position: string }) => {
     setOverlayPosition(position);

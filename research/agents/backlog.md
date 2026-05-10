@@ -50,7 +50,25 @@ _(Project Manager keeps 2–3 tasks here at all times.)_
 - **PR:**
 - **Branch:**
 - **TRD:**
-- **Notes:** First Goal 6 task — the overlay window shell. Depends on Goal 5 completion (panel and detection infrastructure must be on main). Look-ahead task queued while Goal 5 wraps up so the Developer doesn't idle between goals.
+- **Notes:** First Goal 6 task — the overlay window shell. Depends on Goal 5 completion (panel and detection infrastructure must be on main). Look-ahead task queued while Goal 5 wraps up so the Developer doesn't idle between goals. **Re: PROP-0005:** The overlay electron-store schema (overlay.enabled, overlay.hotkey, overlay.opacity, overlay.position, overlay.size with defaults) is already defined by TASK-0019's implementation. Do NOT redefine it — use the existing schema. The `OverlayController` interface registered by TASK-0019 is the integration point this task implements.
+
+### TASK-0020: Overlay Detection Integration & App-Switch Content Updates
+- **Goal:** Goal 6 — Overlay Mode
+- **PRD:** research/agents/prds/goal-06-overlay-mode.md
+- **Scope:** Wire the overlay renderer to the detection service so overlay content updates when the active app changes. Listen for the `detection:app-changed` IPC event in the overlay preload/renderer (same channel the panel uses). On app change: fetch shortcuts for the new app via the existing `shortcuts:get-by-app` IPC (prefetch cache serves immediately), re-render the compact shortcut display with the new app's data. Handle unrecognized apps: show a muted "No shortcuts for [Process Name]" message in the overlay (PRD Flow 5). Handle no-detection state: show "No app detected" in the overlay. Ensure content update completes within 200ms of receiving the IPC event (success metric from PRD). NOT in scope: overlay BrowserWindow creation or positioning (TASK-0017), overlay renderer components or styling (TASK-0018, shipped), settings UI (TASK-0019), panel fallback states (TASK-0016), drag-to-reposition, Linux/Wayland, fullscreen app detection.
+- **Acceptance:**
+  - Overlay content updates to show the correct app's shortcuts when the active app changes
+  - Content update completes within 200ms of receiving the detection:app-changed event
+  - Overlay shows "No shortcuts for [Process Name]" when the detected app is not in the database
+  - Overlay shows "No app detected" when detection returns no active app
+  - Overlay reuses the panel's prefetch cache — no duplicate database queries
+  - App name header in the overlay updates to reflect the currently detected app
+  - No flash or blank state during content transitions between apps
+  - No unhandled errors when detection service fires events before overlay renderer is ready
+- **PR:**
+- **Branch:**
+- **TRD:**
+- **Notes:** Fourth Goal 6 task — covers PRD Flows 3 and 5. Depends on TASK-0017 (overlay BrowserWindow must exist) and TASK-0018 (overlay renderer, shipped). Should be buildable once TASK-0017 merges.
 
 ### TASK-0016: Panel Fallback States — No Detection, Unrecognized App, No Shortcuts
 - **Goal:** Goal 5 — Shortcut Panel UI (Desktop)
@@ -77,10 +95,6 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
 
 _(Developer moves tasks here when the draft PR is marked ready.)_
 
-## Changes Requested
-
-_(Reviewer moves tasks here when a PR needs rework.)_
-
 ### TASK-0019: Overlay Settings UI Section
 - **Goal:** Goal 6 — Overlay Mode
 - **PRD:** research/agents/prds/goal-06-overlay-mode.md
@@ -97,7 +111,11 @@ _(Reviewer moves tasks here when a PR needs rework.)_
 - **PR:** #17
 - **Branch:** goals/19-overlay-settings-ui
 - **TRD:** research/plans/goals/19-overlay-settings-ui-trd.md — approved
-- **Notes:** Third Goal 6 task — PRD Flows 1 and 4. TRD defines overlay store schema and OverlayController interface (see PROP-0005 for TASK-0017 coordination). Round 1 changes requested 2026-05-10: (1) unclamped opacity forwarded to overlayController in main.ts — store clamps but controller receives raw value; (2) bare `select` CSS selector in settings.css not scoped to overlay section; (3) "disabled/hidden when not available" acceptance criterion not implemented or explicitly deferred.
+- **Notes:** Third Goal 6 task — PRD Flows 1 and 4. TRD defines overlay store schema and OverlayController interface (see PROP-0005 for TASK-0017 coordination). Round 2 resubmit 2026-05-10: (1) exported clampOpacity from settings.ts — opacity handler in main.ts now calls clampOpacity() before forwarding to overlayController; 2 regression tests added; (2) select/select:focus selectors scoped to .overlay-fieldset; (3) added overlay:is-supported IPC handler (returns process.platform !== 'linux') — exposed via preload/contextBridge; renderer hides overlay-section fieldset when not supported.
+
+## Changes Requested
+
+_(Reviewer moves tasks here when a PR needs rework.)_
 
 ## TRD Changes Requested
 

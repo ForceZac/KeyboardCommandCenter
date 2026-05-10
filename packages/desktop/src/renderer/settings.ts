@@ -6,6 +6,9 @@ const hotkeyFeedback = document.getElementById('hotkey-feedback') as HTMLSpanEle
 const recordingHint = document.getElementById('recording-hint') as HTMLParagraphElement;
 const loginStartupToggle = document.getElementById('login-startup-toggle') as HTMLInputElement;
 
+// Overlay section
+const overlaySection = document.getElementById('overlay-section') as HTMLFieldSetElement;
+
 // Overlay controls
 const overlayEnabled = document.getElementById('overlay-enabled') as HTMLInputElement;
 const overlayHotkeyBtn = document.getElementById('overlay-hotkey-btn') as HTMLButtonElement;
@@ -24,6 +27,13 @@ async function loadSettings(): Promise<void> {
   const settings = await window.kccSettings.getSettings();
   hotkeyDisplay.textContent = settings.hotkey;
   loginStartupToggle.checked = settings.loginStartup;
+
+  // Hide the overlay section entirely on platforms where the feature is unsupported.
+  const overlaySupported = await window.kccSettings.overlay.isSupported();
+  if (!overlaySupported) {
+    overlaySection.hidden = true;
+    return;
+  }
 
   const overlayPrefs = await window.kccSettings.overlay.getOverlay();
   overlayEnabled.checked = overlayPrefs.enabled;

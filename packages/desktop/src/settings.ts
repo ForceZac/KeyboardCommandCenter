@@ -62,10 +62,13 @@ export function setOverlayHotkey(accelerator: string): void {
   store.set('overlay.hotkey', accelerator);
 }
 
+/** Clamps an opacity float to the 0.2–0.8 allowed range. Exported for use in IPC handlers. */
+export function clampOpacity(opacity: number): number {
+  return Math.min(0.8, Math.max(0.2, opacity));
+}
+
 export function setOverlayOpacity(opacity: number): void {
-  // Clamp to 0.2–0.8 range before persisting.
-  const clamped = Math.min(0.8, Math.max(0.2, opacity));
-  store.set('overlay.opacity', clamped);
+  store.set('overlay.opacity', clampOpacity(opacity));
 }
 
 export function setOverlayPosition(position: string): void {
