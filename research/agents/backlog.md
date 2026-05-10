@@ -33,16 +33,22 @@ Task IDs are monotonic. The Project Manager picks the next number.
 
 _(Project Manager keeps 2–3 tasks here at all times.)_
 
-_(Empty — Goal 7 PRD does not exist yet. Cannot create new tasks until Product Manager writes `research/agents/prds/goal-07-accounts-favorites.md`.)_
+_(Empty — next goal (Goal 7) blocked on missing PRD. Product Manager must write `research/agents/prds/goal-07-accounts-favorites.md` before tasks can be created. Goals 5 and 6 remaining tasks are all in progress or in review.)_
 
 ## In Progress
 
 _(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
 
+_(Empty)_
+
+## In Review
+
+_(Developer moves tasks here when the draft PR is marked ready.)_
+
 ### TASK-0020: Overlay Detection Integration & App-Switch Content Updates
 - **Goal:** Goal 6 — Overlay Mode
 - **PRD:** research/agents/prds/goal-06-overlay-mode.md
-- **Scope:** Wire the overlay renderer to the detection service so overlay content updates when the active app changes. Listen for the `detection:app-changed` IPC event in the overlay preload/renderer (same channel the panel uses). On app change: fetch shortcuts for the new app via the existing `shortcuts:get-by-app` IPC (prefetch cache serves immediately), re-render the compact shortcut display with the new app's data. Handle unrecognized apps: show a muted "No shortcuts for [Process Name]" message in the overlay (PRD Flow 5). Handle no-detection state: show "No app detected" in the overlay. Ensure content update completes within 200ms of receiving the IPC event (success metric from PRD). NOT in scope: overlay BrowserWindow creation or positioning (TASK-0017), overlay renderer components or styling (TASK-0018, shipped), settings UI (TASK-0019), panel fallback states (TASK-0016), drag-to-reposition, Linux/Wayland, fullscreen app detection.
+- **Scope:** Wire the overlay renderer to the detection service so overlay content updates when the active app changes. Listen for the `detection:app-changed` IPC event in the overlay preload/renderer (same channel the panel uses). On app change: fetch shortcuts for the new app via the existing `shortcuts:get-by-app` IPC (prefetch cache serves immediately), re-render the compact shortcut display with the new app's data. Handle unrecognized apps: show a muted "No shortcuts for [Process Name]" message in the overlay (PRD Flow 5). Handle no-detection state: show "No app detected" in the overlay. Ensure content update completes within 200ms of receiving the IPC event (success metric from PRD). NOT in scope: overlay BrowserWindow creation or positioning (TASK-0017, shipped), overlay renderer components or styling (TASK-0018, shipped), settings UI (TASK-0019, shipped), panel fallback states (TASK-0016), drag-to-reposition, Linux/Wayland, fullscreen app detection.
 - **Acceptance:**
   - Overlay content updates to show the correct app's shortcuts when the active app changes
   - Content update completes within 200ms of receiving the detection:app-changed event
@@ -55,11 +61,7 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
 - **PR:** #19
 - **Branch:** goals/20-overlay-detection-integration
 - **TRD:** research/plans/goals/20-overlay-detection-integration-trd.md — approved
-- **Notes:** Fourth Goal 6 task — covers PRD Flows 3 and 5. Depends on TASK-0017 (shipped) and TASK-0018 (shipped). PR still in draft.
-
-## In Review
-
-_(Developer moves tasks here when the draft PR is marked ready.)_
+- **Notes:** Fourth Goal 6 task — covers PRD Flows 3 and 5. All deps shipped (TASK-0017, TASK-0018, TASK-0019). PR #19 marked ready for review.
 
 ### TASK-0016: Panel Fallback States — No Detection, Unrecognized App, No Shortcuts
 - **Goal:** Goal 5 — Shortcut Panel UI (Desktop)
@@ -76,7 +78,7 @@ _(Developer moves tasks here when the draft PR is marked ready.)_
 - **PR:** #20
 - **Branch:** goals/16-panel-fallback-states
 - **TRD:**
-- **Notes:** Fourth Goal 5 task — covers PRD Flows 3 and 4. Deps shipped (TASK-0013, TASK-0012). PR #20 is open (not draft).
+- **Notes:** Fourth Goal 5 task — covers PRD Flows 3 and 4. All deps shipped (TASK-0013, TASK-0012). PR #20 is open (not draft — ready for review).
 
 ## Changes Requested
 
@@ -89,7 +91,6 @@ _(TRD Watcher moves tasks here when a TRD needs rework.)_
 ## Approved
 
 _(Reviewer moves tasks here after approving the PR. You merge to main, then move to Shipped.)_
-
 
 ## Shipped
 
@@ -139,7 +140,7 @@ _(You move tasks here after merging to main.)_
 - **Branch:** (unknown — added retroactively)
 - **TRD:** (unknown — added retroactively)
 - **Merged:** 2026-05-10
-- **Notes:** Added retroactively — PR #16 was built and merged outside the normal backlog flow. PM should reconstruct task details and verify TRD exists. No reviewer approval on record.
+- **Notes:** Added retroactively — PR #16 was built and merged outside the normal backlog flow.
 
 ### TASK-0015: Panel Search/Filter Input
 - **Goal:** Goal 5 — Shortcut Panel UI (Desktop)
@@ -147,7 +148,7 @@ _(You move tasks here after merging to main.)_
 - **PR:** #15
 - **Branch:** goals/15-panel-search-filter
 - **TRD:** research/plans/goals/15-panel-search-filter-trd.md — approved
-- **Approved:** 2026-05-10 (Round 2 — reviewer approved via PR comment; GitHub blocked formal approval since author == reviewer)
+- **Approved:** 2026-05-10 (Round 2)
 - **Merged:** 2026-05-10
 
 ### TASK-0013: Panel Content Renderer & Shortcut Key Caps
@@ -156,7 +157,7 @@ _(You move tasks here after merging to main.)_
 - **PR:** #14
 - **Branch:** goals/13-panel-content-renderer
 - **TRD:** research/plans/goals/13-panel-content-renderer-trd.md — approved
-- **Approved:** 2026-05-10 (Round 1 — reviewer approved)
+- **Approved:** 2026-05-10 (Round 1)
 - **Merged:** 2026-05-10
 
 ### TASK-0011: Tray "Recent Apps" Submenu
@@ -165,7 +166,7 @@ _(You move tasks here after merging to main.)_
 - **PR:** #11
 - **Branch:** goals/11-tray-recent-apps
 - **TRD:** research/plans/goals/11-tray-recent-apps-trd.md — approved
-- **Approved:** 2026-05-10 (post-hoc — owner merged directly after round 2 resubmit)
+- **Approved:** 2026-05-10 (post-hoc)
 - **Merged:** 2026-05-10
 
 ### TASK-0010: Detection Polling Service & IPC Integration
@@ -225,13 +226,12 @@ _(You move tasks here after merging to main.)_
 ### TASK-0006: Electron App Shell — Tray Icon + Global Hotkey + Panel Window
 - **Goal:** Goal 3 — Desktop App Shell (Electron + Tray)
 - **PRD:** none — shipped without PRD (process bypass, see PROP-0001)
-- **Scope:** Retroactively recorded. Electron app with tray icon, global hotkey, and panel window. PR #4 was worked on and merged outside the normal backlog/PRD flow.
+- **Scope:** Retroactively recorded. Electron app with tray icon, global hotkey, and panel window.
 - **Acceptance:** (not defined pre-work — retroactive entry)
 - **PR:** #4
 - **Branch:** goals/6-electron-app-shell
 - **TRD:** n/a
 - **Merged:** 2026-05-09
-- **Notes:** This task was never created by the PM or tracked in backlog.md. Added retroactively to maintain backlog as single source of truth. See PROP-0001 for process gap.
 
 ### TASK-0003: API Routes for Shortcut Data
 - **Goal:** Goal 2 — Web Search & Browse Interface
@@ -260,3 +260,11 @@ _(You move tasks here after merging to main.)_
 ## Blocked
 
 _(Waiting on an external dependency, a missing PRD, or owner decision.)_
+
+### TASK-0021: Auth Schema & NextAuth Integration
+- **Goal:** Goal 7 — User Accounts & Favorites Sync
+- **PRD:** research/agents/prds/goal-07-accounts-favorites.md (**DOES NOT EXIST** — blocked)
+- **PR:** #21 (draft — opened prematurely before PRD/task existed)
+- **Branch:** goals/21-auth-schema-nextauth
+- **TRD:**
+- **Notes:** Developer opened PR #21 before this task was created by PM and before Goal 7 PRD exists. Task cannot proceed until PRD is written. See PROP-0006.
