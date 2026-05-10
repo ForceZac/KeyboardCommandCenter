@@ -77,6 +77,10 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
 
 _(Developer moves tasks here when the draft PR is marked ready.)_
 
+## Changes Requested
+
+_(Reviewer moves tasks here when a PR needs rework.)_
+
 ### TASK-0019: Overlay Settings UI Section
 - **Goal:** Goal 6 — Overlay Mode
 - **PRD:** research/agents/prds/goal-06-overlay-mode.md
@@ -93,11 +97,7 @@ _(Developer moves tasks here when the draft PR is marked ready.)_
 - **PR:** #17
 - **Branch:** goals/19-overlay-settings-ui
 - **TRD:** research/plans/goals/19-overlay-settings-ui-trd.md — approved
-- **Notes:** Third Goal 6 task — PRD Flows 1 and 4. TRD defines overlay store schema and OverlayController interface (see PROP-0005 for TASK-0017 coordination).
-
-## Changes Requested
-
-_(Reviewer moves tasks here when a PR needs rework.)_
+- **Notes:** Third Goal 6 task — PRD Flows 1 and 4. TRD defines overlay store schema and OverlayController interface (see PROP-0005 for TASK-0017 coordination). Round 1 changes requested 2026-05-10: (1) unclamped opacity forwarded to overlayController in main.ts — store clamps but controller receives raw value; (2) bare `select` CSS selector in settings.css not scoped to overlay section; (3) "disabled/hidden when not available" acceptance criterion not implemented or explicitly deferred.
 
 ## TRD Changes Requested
 

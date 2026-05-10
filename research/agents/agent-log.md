@@ -1306,3 +1306,12 @@
 - tests: 171/171 pass (25 new in overlay-settings.test.ts) | tsc clean (all 3 tsconfigs) | web lint clean
 - metrics: run_type=productive | commits=1 | tests_added=25 | trd_cycles=0 | dev_idle=0
 - next: Reviewer picks up PR #17; Developer picks TASK-0017 (Overlay BrowserWindow) or TASK-0016 (Fallback States) next run
+
+## 2026-05-10 07:31 ET REVIEWER
+- did: reviewed PR #17 (TASK-0019 — Overlay Settings UI Section, round 1)
+- decision: changes-requested (posted as comment — GitHub self-review restriction, same precedent as TASK-0015)
+- standards checked: backend standards (IPC handler correctness, service layer), frontend standards (renderer/CSS), separation of concerns (main/renderer boundary), PR policy, TRD match
+- tests run: 171/171 pass; tsc clean (3 configs); web lint clean
+- issues: (1) overlay:set-opacity IPC handler forwards unclamped opacity to controller — main.ts; (2) bare `select` CSS selector not scoped to overlay section — settings.css; (3) "disabled/hidden when overlay unavailable" acceptance criterion not implemented or deferred
+- metrics: run_type=productive | pr=PR-17 | round=1 | decision=changes-requested | tests_run=pass
+- next: Developer addresses 2 must-fix items + clarifies deferral concern; Reviewer picks up PR #17 round 2
