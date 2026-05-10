@@ -8,7 +8,7 @@
     "build": "electron-forge make",
     "package": "electron-forge package",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.renderer.json"
+    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.tests.json && tsc --noEmit -p tsconfig.renderer.json"
   },
   "dependencies": {
     "@kcc/core": "*",
@@ -20,6 +20,7 @@
     "@electron-forge/plugin-webpack": "^7.0.0",
     "@types/node": "^20.0.0",
     "css-loader": "^6.0.0",
+    "jsdom": "^29.1.1",
     "node-loader": "^2.0.0",
     "style-loader": "^3.0.0",
     "ts-loader": "^9.0.0",
