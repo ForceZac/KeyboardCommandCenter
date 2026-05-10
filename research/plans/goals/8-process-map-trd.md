@@ -82,3 +82,15 @@ The PRD's "process-to-app mapping layer" requires a static lookup table that tra
 - **Multi-process apps (e.g. Chrome, Electron apps):** The Win32 and NSWorkspace APIs return the process that *owns* the foreground window, not child/helper processes. This is noted in the PRD open questions section. The mapping only needs to cover the main process name (e.g. `chrome`, not `chrome_crashpad_handler`). However, on macOS, Electron-based apps often expose a `Helper` process as the frontmost — the mapping should include `App Helper` aliases for common Electron apps (Slack, Discord, VS Code, Figma) as a fallback, with the bundle ID as the primary resolver.
 
 - **Spotify not in seed data:** The PRD success metrics list Spotify as one of the top 10 apps to cover, but `database/seeds/apps/` does not currently include a `spotify.json`. The mapping can include a Spotify entry pointing to a future slug (`spotify`) — the `lookupApp()` function will return it, and if no database record exists, the panel will show "no shortcuts found." This is acceptable per PRD Flow 3.
+
+---
+
+## Addendum: Intentionally excluded seed slugs
+
+*(Added post-review to document omissions that are by design, not accidental.)*
+
+Cross-checking `database/seeds/apps/` against `process-map.json` reveals four seed slugs with no entries in either `byProcess` or `byBundleId`:
+
+- **`google-docs`**, **`google-sheets`**, **`google-slides`** — Browser-hosted web apps. There is no standalone process to detect; the frontmost process is always the browser (Chrome, Firefox, Safari, etc.). Mapping a browser slug to `google-docs` would produce wrong results whenever the user has Chrome open on a non-Google-Docs page. These apps are intentionally not mappable at the process level; they would require a URL/tab-inspection layer that is explicitly out of scope for Goal 4.
+
+- **`windows-11`** — An operating system, not a detectable foreground application. There is no "Windows 11" process that becomes the active window — the OS manifests as individual apps (Explorer, Settings, etc.) which are mapped under their own slugs. Excluding `windows-11` from the process map is correct; it is a shortcut-catalog entry, not a detectable process.
