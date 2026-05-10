@@ -72,6 +72,10 @@ _(Project Manager keeps 2–3 tasks here at all times.)_
 
 _(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
 
+## In Review
+
+_(Developer moves tasks here when the draft PR is marked ready.)_
+
 ### TASK-0017: Overlay BrowserWindow & Toggle Hotkey
 - **Goal:** Goal 6 — Overlay Mode
 - **PRD:** research/agents/prds/goal-06-overlay-mode.md
@@ -88,12 +92,8 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
   - No crash when overlay hotkey is pressed before detection service is running
 - **PR:** #18
 - **Branch:** goals/17-overlay-browser-window
-- **TRD:** research/plans/goals/17-overlay-browser-window-trd.md — awaiting-review
-- **Notes:** First Goal 6 task — the overlay window shell. Depends on Goal 5 completion (panel and detection infrastructure must be on main). Look-ahead task queued while Goal 5 wraps up so the Developer doesn't idle between goals. **Re: PROP-0005:** The overlay electron-store schema (overlay.enabled, overlay.hotkey, overlay.opacity, overlay.position, overlay.size with defaults) is already defined by TASK-0019's implementation. Do NOT redefine it — use the existing schema. The `OverlayController` interface registered by TASK-0019 is the integration point this task implements.
-
-## In Review
-
-_(Developer moves tasks here when the draft PR is marked ready.)_
+- **TRD:** research/plans/goals/17-overlay-browser-window-trd.md — approved
+- **Notes:** First Goal 6 task — the overlay window shell. Also includes overlay-controller.ts and overlay settings store functions (parity with TASK-0019, needed on this branch since TASK-0019 hasn't merged to main yet). Reviewer: when merging TASK-0019 after TASK-0017, expect conflict on settings.ts and overlay-controller.ts — TASK-0017's versions are canonical and include all TASK-0017 wiring.
 
 ## Changes Requested
 
@@ -115,44 +115,29 @@ _(Reviewer moves tasks here after approving the PR. You merge to main, then move
 - **TRD:** research/plans/goals/19-overlay-settings-ui-trd.md — approved
 - **Approved:** 2026-05-10 (Round 2 — reviewer approved via PR comment; GitHub blocked formal approval since author == reviewer)
 
-### TASK-0012: Shortcut Data IPC Layer & Prefetch
-- **Goal:** Goal 5 — Shortcut Panel UI (Desktop)
-- **PRD:** research/agents/prds/goal-05-shortcut-panel-ui.md
-- **Scope:** Add a `shortcuts:get-by-app` IPC handler in the Electron main process that accepts an app slug, queries PostgreSQL via Prisma for all shortcuts belonging to that app, groups results by context/scope, and returns structured data to the renderer. Expose a `getShortcutsForApp(slug)` method via contextBridge preload. Add prefetch logic: when the detection service fires an app-changed event, the main process proactively fetches and caches shortcut data for the new app so it's ready when the panel opens (meeting the 100ms render target from the PRD). Cache the most recent 5 app results in memory; invalidate on slug change. NOT in scope: panel UI rendering or visual components (separate task), search/filter UI, fallback state UI, overlay mode (Goal 6), user accounts (Goal 7), Linux (Goal 10).
-- **Acceptance:**
-  - `shortcuts:get-by-app` IPC handler accepts an app slug and returns grouped shortcut data
-  - Preload exposes `getShortcutsForApp(slug)` via contextBridge
-  - Data is fetched from PostgreSQL via Prisma ORM
-  - Shortcuts are grouped by context/scope in the response
-  - Prefetch fires automatically on detection app-changed event
-  - Cached results serve immediately for recently-detected apps (up to 5)
-  - Response time <50ms for cached apps (no DB round-trip)
-  - Handler returns empty result for unknown app slugs (no crash)
-  - No unhandled exceptions if database is unreachable
-- **PR:** #13
-- **Branch:** goals/12-shortcut-ipc-layer
-- **TRD:** research/plans/goals/12-shortcut-ipc-layer-trd.md — approved
-- **Approved:** 2026-05-10 (Round 1 — reviewer approved, awaiting owner merge)
-
-### TASK-0014: Reconcile Goal 4 Stubs — process-map.ts & active-window.ts
-- **Goal:** Goal 4 — Active Window Process Detection
-- **PRD:** research/agents/prds/goal-04-process-detection.md
-- **Scope:** Write the real `lookupApp()` implementation in process-map.ts (bundleId-first lookup from process-map.json, normalized process name fallback, .exe stripping) and the real `loadNativeModule` + `createActiveWindowDetector` wrapper in active-window.ts (three-path binary probe for packaged/webpack-dev/non-webpack runtimes). Both were stubs on main causing 49 test failures. NOT in scope: changes to DetectionService, TrayManager, main.ts, process-map.json, or test files.
-- **Acceptance:**
-  - lookupApp() returns correct app slugs via bundleId-first lookup with process name fallback
-  - loadNativeModule probes three paths for the kcc-native .node binary
-  - createActiveWindowDetector returns a factory-pattern detector instance
-  - All 49 previously-failing tests pass (40 lookupApp + 9 active-window)
-  - No regressions in existing passing tests
-- **PR:** #12
-- **Branch:** goals/14-reconcile-goal4-stubs
-- **TRD:** research/plans/goals/14-reconcile-goal4-stubs-trd.md — approved
-- **Approved:** 2026-05-10 (Round 2 — reviewer approved, awaiting owner merge)
-- **Notes:** Added retroactively by PM — Developer opened this PR outside normal backlog flow. Addresses PROP-0003 and PROP-0004.
 
 ## Shipped
 
 _(You move tasks here after merging to main.)_
+
+### TASK-0012: Shortcut Data IPC Layer & Prefetch
+- **Goal:** Goal 5 — Shortcut Panel UI (Desktop)
+- **PRD:** research/agents/prds/goal-05-shortcut-panel-ui.md
+- **PR:** #13
+- **Branch:** goals/12-shortcut-ipc-layer
+- **TRD:** research/plans/goals/12-shortcut-ipc-layer-trd.md — approved
+- **Approved:** 2026-05-10 (Round 1)
+- **Merged:** 2026-05-10
+
+### TASK-0014: Reconcile Goal 4 Stubs — process-map.ts & active-window.ts
+- **Goal:** Goal 4 — Active Window Process Detection
+- **PRD:** research/agents/prds/goal-04-process-detection.md
+- **PR:** #12
+- **Branch:** goals/14-reconcile-goal4-stubs
+- **TRD:** research/plans/goals/14-reconcile-goal4-stubs-trd.md — approved
+- **Approved:** 2026-05-10 (Round 2)
+- **Merged:** 2026-05-10
+- **Notes:** Addresses PROP-0003 and PROP-0004 (process-map.ts and active-window.ts stubs).
 
 ### TASK-0018: Overlay Renderer — Compact Shortcut Display
 - **Goal:** Goal 6 — Overlay Mode

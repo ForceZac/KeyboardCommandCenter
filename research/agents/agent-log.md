@@ -1405,3 +1405,29 @@
 - tests: skipped (TRD phase — no feature code written)
 - metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=0 | dev_idle=0
 - next: TRD Watcher reviews TRD; Developer resumes building once TRD is approved
+
+## 2026-05-10 08:34 ET PROJECT-MANAGER
+- did: moved 2 merged tasks to Shipped (TASK-0012, TASK-0014); updated project_context.md
+- created: none
+- moved: TASK-0012 Approved→Shipped (PR #13 merged), TASK-0014 Approved→Shipped (PR #12 merged)
+- prd gaps: Goal 9, 10 need PRDs (not urgent — current work is Goal 6, Goal 7/8 PRDs exist)
+- roadmap check: skipped (did last run)
+- proposals added: 0
+- metrics: tasks_created=0 | tasks_moved=2 | prd_gaps=2 | roadmap_issues=0
+- next: Ready at 2 (TASK-0020, TASK-0016) — healthy. TASK-0017 in progress (TRD awaiting review). TASK-0019 approved awaiting owner merge on PR #17. TASK-0016 now fully unblocked (both deps TASK-0013 and TASK-0012 shipped).
+- discord: FAILED — #standup and #main not allowlisted; summary logged here only
+
+## 2026-05-10 08:41 ET DEVELOPER
+- did: started run — claimed DEV_LOCK; resuming TASK-0017 (TRD approved — building Overlay BrowserWindow & Toggle Hotkey)
+- task: TASK-0017
+- PR: #18
+- status: in-progress — build phase
+
+## 2026-05-10 08:52 ET DEVELOPER
+- did: FINAL — built TASK-0017 (Overlay BrowserWindow & Toggle Hotkey). New files: overlay-window.ts (OverlayWindowManager — lazy BrowserWindow, 'floating' alwaysOnTop, click-through, toggle hotkey, 6-preset positioning), overlay-preload.ts (contextBridge window.kccOverlay), overlay-controller.ts (OverlayController interface + registry, parity with TASK-0019), renderer/overlay-stub.{html,ts} (forge webpack stub). Modified: settings.ts (overlay prefs + store schema, parity TASK-0019), main.ts (overlayManager instantiation, registerOverlayController, all overlay:* IPC handlers, detection forwarding, before-quit cleanup), window.ts (panel z-order → 'pop-up-menu'), forge.config.js (overlay entry + extraResources), globals.d.ts + vitest.config.ts (webpack globals), tsconfig.tests.json (includes .d.ts). PR #18 marked ready.
+- task: TASK-0017
+- PR: #18 https://github.com/ForceZac/KeyboardCommandCenter/pull/18
+- trd: approved — feature complete
+- tests: 172/172 green (+26 overlay-window tests) | tsc clean all 3 configs
+- metrics: run_type=productive | commits=1 | tests_added=26 | trd_cycles=0 | dev_idle=0
+- next: Reviewer approves PR #18; TASK-0020 (Overlay Detection Integration) becomes buildable once #18 merges
