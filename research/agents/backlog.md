@@ -49,7 +49,27 @@ _(Project Manager keeps 2–3 tasks here at all times.)_
 - **PR:**
 - **Branch:**
 - **TRD:**
-- **Notes:** Depends on Goal 3 infrastructure (TASK-0007 must ship first — Electron app with settings via electron-store). Uses `napi-rs` per PRD recommendation. The native module is consumed by the polling service (future task) and by TASK-0008's mapping layer.
+- **Notes:** Depends on Goal 3 infrastructure (TASK-0007 must ship first — Electron app with settings via electron-store). Uses `napi-rs` per PRD recommendation. The native module is consumed by the polling service (TASK-0010) and by TASK-0008's mapping layer.
+
+### TASK-0010: Detection Polling Service & IPC Integration
+- **Goal:** Goal 4 — Active Window Process Detection
+- **PRD:** research/agents/prds/goal-04-process-detection.md
+- **Scope:** Build the background polling service in the Electron main process that calls `getActiveWindow()` (TASK-0009) on a configurable interval (default 1–2 seconds), passes the result through `lookupApp()` (TASK-0008) to resolve the database app slug, and sends the detected app identity to the renderer via an IPC channel. Add electron-store settings for detection enable/disable toggle and polling interval. When detection is disabled, polling stops and the renderer receives no detection events. Handle unknown processes: send an "unknown" app identity to the renderer with the raw process name, and append unrecognized process names to a local log file for future database expansion. Track the last 5 unique detected apps in session memory (in-memory array, not persisted) for consumption by the tray submenu (separate task). NOT in scope: tray "Recent Apps" submenu UI (separate task), shortcut panel UI changes (Goal 5), renderer-side panel content or layout, Linux support, overlay mode, keystroke detection.
+- **Acceptance:**
+  - Polling service starts automatically when detection is enabled and stops when disabled
+  - Polling interval is configurable via electron-store (default 1500ms)
+  - Service calls `getActiveWindow()` and `lookupApp()` each tick, sends result to renderer via IPC
+  - Renderer receives `{ appSlug: string | null, processName: string, windowTitle: string }` on each detection change
+  - IPC only fires when the detected app changes (not on every tick — debounce duplicate detections)
+  - Settings toggle for enable/disable persists across restarts via electron-store
+  - Unknown processes: IPC sends `appSlug: null` with the raw process name; process name is appended to a local log file (`~/.shortcutvault/unrecognized-processes.log` or similar)
+  - Last 5 unique detected apps are tracked in memory and retrievable via IPC query (for tray integration)
+  - CPU overhead of polling is <1% on a modern machine
+  - No crashes or unhandled exceptions from native module failures (graceful degradation)
+- **PR:**
+- **Branch:**
+- **TRD:**
+- **Notes:** Depends on TASK-0008 (process map, in review) and TASK-0009 (native module). This is the integration layer that ties together detection + mapping + renderer communication. The tray "Recent Apps" submenu consumes the session app list but is scoped to a separate task.
 
 ## In Progress
 
