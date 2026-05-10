@@ -1,5 +1,14 @@
 <!-- Agent log. Append-only. Agents read the last 75 lines before acting. Log Trim archives entries older than 48h into agent-log-archive-YYYY-MM.md. -->
 
+## 2026-05-10 10:28 ET DEVELOPER
+- did: FINAL — completed TASK-0020 (Overlay Detection Integration). Phase 3 — added OverlayWindowManager (incorporating TASK-0017 base) with ready-state buffer: lastDetectionPayload field, sendToRenderer buffers detection:app-changed unconditionally, did-finish-load replays buffered payload. Added overlay-window.test.ts (31 tests: 25 from TASK-0017 base + 6 Phase 3). Fixed vitest.config.ts define block for webpack globals. Marked PR #19 ready.
+- task: TASK-0020
+- PR: #19
+- trd: approved
+- tests: green (180 desktop + 35 overlay = 215 pass)
+- metrics: run_type=productive | commits=1 | tests_added=6 | dev_idle=0
+- next: Reviewer picks up PR #19. Note: overlay-window.ts incorporates TASK-0017 base — rebase needed after TASK-0017 merges. Reviewer should be aware of this dependency when assessing.
+
 ## 2026-05-10 08:56 ET REVIEWER
 - did: reviewed PR #18 (TASK-0017 — Overlay BrowserWindow & Toggle Hotkey, round 1)
 - decision: changes-requested (posted as comment — GitHub self-review restriction, same precedent as prior PRs)
@@ -1536,3 +1545,64 @@
 - task: TASK-0020
 - PR: #19
 - status: in-progress — build phase
+
+## 2026-05-10 09:48 ET DEVELOPER
+- did: TASK-0020 Phase 1+2 — detection no-detection sentinel + overlay no-detection state + flash prevention
+- task: TASK-0020
+- PR: #19 https://github.com/ForceZac/KeyboardCommandCenter/pull/19
+- trd: approved — building
+- tests: 148 desktop + 35 overlay = 183 green | +3 detection tests | +5 overlay tests
+- metrics: run_type=productive | commits=1 | tests_added=8 | trd_cycles=0 | dev_idle=0
+- next: Phase 3 (overlay-window.ts ready-state buffer) requires TASK-0017 (PR #18) to merge first. Once merged, rebase this branch on updated main and add lastDetectionPayload buffer + replay on did-finish-load. All other acceptance criteria done.
+
+## 2026-05-10 09:51 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TASK-0020
+- status: in-progress
+
+## 2026-05-10 09:51 ET DEVELOPER
+- did: resumed TASK-0020 — verified Phase 1 (detection null-emit) and Phase 2 (overlay renderer no-detection + flash prevention) complete; all 183 tests green (148 desktop + 35 overlay); Phase 3 (overlay-window.ts ready-state buffer) blocked on TASK-0017 (PR #18) not yet merged — plan requires rebase onto main after merge before Phase 3 can begin; no Playwright E2E infra for Electron (confirmed web-only), unit tests are primary proof per TRD
+- task: TASK-0020
+- PR: #19
+- trd: approved
+- tests: green (183 pass — 148 desktop + 35 overlay)
+- metrics: run_type=no-op | reason=Phase 3 blocked — TASK-0017 (PR #18) not yet merged | dev_idle=1
+- next: Owner merges PR #18 (TASK-0017); Developer rebases goals/20-overlay-detection-integration onto updated main and builds Phase 3 (overlay-window.ts lastDetectionPayload buffer + did-finish-load replay)
+
+## 2026-05-10 10:02 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TASK-0020 (resuming In Progress)
+- status: in-progress — checking Phase 3 dependency (PR #18)
+
+## 2026-05-10 10:03 ET DEVELOPER
+- did: no-op — TASK-0020 Phase 3 still blocked on TASK-0017 (PR #18); PR #18 approved Round 2 at 13:18 UTC but not yet merged to main; overlay-window.ts not on main — cannot complete Phase 3
+- task: TASK-0020
+- PR: #19
+- trd: approved
+- tests: skipped (no code written this run)
+- metrics: run_type=no-op | reason=Phase 3 blocked — TASK-0017 (PR #18) approved but awaiting owner merge | dev_idle=2
+- next: Owner merges PR #18 → Developer rebases goals/20-overlay-detection-integration onto updated main → Phase 3 (lastDetectionPayload buffer + replay on did-finish-load)
+
+## 2026-05-10 10:05 ET PROJECT-MANAGER
+- did: promoted 1 task to Ready (TASK-0022 — Favorites CRUD API & Web Toggle for Goal 7); roadmap health check done
+- created: TASK-0022
+- moved: none
+- prd gaps: Goal 9, Goal 10 still need PRDs (N+3, N+4 — not blocking yet)
+- roadmap check: solid — sequencing intact, no scope creep, no stale goals. Merge bottleneck: TASK-0017 (PR #18) and TASK-0019 (PR #17) both approved but not merged — Developer idle 2+ cycles waiting on PR #18 merge to finish TASK-0020 Phase 3. Flagging for owner.
+- proposals added: 0
+- metrics: tasks_created=1 | tasks_moved=0 | prd_gaps=2 | roadmap_issues=0
+- next: Ready at 3 (healthy). Watch for TASK-0017/TASK-0019 merges — once those ship and TASK-0020 finishes, Goal 6 is done. Developer can then pick up TASK-0016 (Goal 5 fallback states) or TASK-0021 (Goal 7 auth). If Goal 6 ships next run, consider queuing a third Goal 7 task (Favorites page/view UI).
+
+## 2026-05-10 10:11 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TASK-0020 (Overlay Detection Integration & App-Switch Content Updates)
+- status: in-progress
+
+## 2026-05-10 10:13 ET DEVELOPER
+- did: verified TASK-0020 — Phases 1 & 2 complete (detection null-window emit + overlay no-detection/flash-free renderer); Phase 3 (overlay-window.ts ready-state guard) still blocked on TASK-0017 merge (PR #18 open)
+- task: TASK-0020
+- PR: #19
+- trd: approved
+- tests: green (148 desktop + 35 overlay = 183 total; all pass)
+- metrics: run_type=no-op | reason=Phase 3 blocked — TASK-0017 (PR #18) not yet merged; overlay-window.ts not on main | dev_idle=3
+- next: TASK-0017 must merge to main; then rebase goals/20-overlay-detection-integration onto updated main and build Phase 3 (lastDetectionPayload buffer + did-finish-load replay in OverlayWindowManager)
