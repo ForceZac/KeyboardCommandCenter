@@ -12,36 +12,187 @@ body {
   border-radius: 12px;
 }
 
+/* ── Panel shell ────────────────────────────────────────────────────────── */
+
 #panel {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 24px 20px 20px;
-  gap: 12px;
+  height: 100vh;
+  max-height: 420px;
 }
 
-#search-stub {
-  width: 100%;
-  padding: 12px 16px;
-  background: #2a2a2a;
-  border: 1px solid #3a3a3a;
-  border-radius: 8px;
-  color: #e0e0e0;
-  font-size: 16px;
-  outline: none;
-  transition: border-color 0.15s ease;
+/* ── App header ─────────────────────────────────────────────────────────── */
+
+#app-header {
+  flex-shrink: 0;
+  padding: 14px 16px 10px;
+  background: #1a1a1a;
+  border-bottom: 1px solid #2e2e2e;
 }
 
-#search-stub:focus {
-  border-color: #555;
+#app-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #c8c8c8;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
 }
 
-#search-stub::placeholder {
+/* ── Shortcuts scroll container ─────────────────────────────────────────── */
+
+#shortcuts-container {
+  flex: 1;
+  overflow-y: auto;
+  /* Performance hint — promotes the scroll layer for GPU compositing. */
+  will-change: transform;
+}
+
+/* Custom scrollbar (dark theme). */
+#shortcuts-container::-webkit-scrollbar {
+  width: 6px;
+}
+#shortcuts-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+#shortcuts-container::-webkit-scrollbar-thumb {
+  background: #3a3a3a;
+  border-radius: 3px;
+}
+
+/* ── Context groups ─────────────────────────────────────────────────────── */
+
+.context-group {
+  border-bottom: 1px solid #252525;
+}
+
+.context-group[open] .context-rows {
+  display: block;
+}
+
+.context-heading {
+  list-style: none;
+  padding: 8px 16px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
   color: #666;
+  cursor: pointer;
+  user-select: none;
+  /* Prevent the default disclosure triangle — we rely on open/closed state only. */
+  display: flex;
+  align-items: center;
 }
 
-.hint {
+/* Remove default marker in Firefox and Safari. */
+.context-heading::-webkit-details-marker {
+  display: none;
+}
+
+.context-heading::marker {
+  display: none;
+}
+
+/* Small caret that rotates on open/close */
+.context-heading::after {
+  content: '▸';
+  margin-left: auto;
+  font-size: 10px;
+  color: #444;
+  transition: transform 0.15s ease;
+}
+
+details[open] > .context-heading::after {
+  transform: rotate(90deg);
+}
+
+.context-rows {
+  display: none;
+}
+
+details[open] > .context-rows {
+  display: block;
+}
+
+/* ── Shortcut rows ──────────────────────────────────────────────────────── */
+
+.shortcut-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 16px;
+  min-height: 32px;
+  border-top: 1px solid #222;
+}
+
+.shortcut-row:hover {
+  background: #242424;
+}
+
+.shortcut-cmd {
+  flex: 1;
   font-size: 12px;
+  color: #d0d0d0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.shortcut-combo {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+/* ── Key caps ───────────────────────────────────────────────────────────── */
+
+/* Ported from web app KeyCap component — adapted to dark panel palette. */
+.key-combo {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  flex-wrap: nowrap;
+}
+
+.key-step {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.key-cap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.4rem;
+  padding: 2px 5px;
+  font-family: ui-monospace, 'SF Mono', 'Cascadia Code', 'Fira Code', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1;
+  color: #c0c0c0;
+  background: #2a2a2a;
+  border: 1px solid #444;
+  border-bottom: 2px solid #383838;
+  border-radius: 4px;
+  box-shadow: 0 1px 0 #111;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.key-sep-plus {
+  font-size: 10px;
   color: #555;
-  text-align: center;
+  padding: 0 1px;
+}
+
+.key-sep-chord {
+  font-size: 10px;
+  color: #555;
+  padding: 0 3px;
 }

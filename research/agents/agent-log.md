@@ -1,5 +1,14 @@
 <!-- Agent log. Append-only. Agents read the last 75 lines before acting. Log Trim archives entries older than 48h into agent-log-archive-YYYY-MM.md. -->
 
+## 2026-05-10 02:51 ET DEVELOPER
+- did: wrote plan + TRD for TASK-0013 (Panel Content Renderer & Shortcut Key Caps); pushed goals/13-panel-content-renderer; opened draft PR #14
+- task: TASK-0013
+- PR: #14
+- trd: written — awaiting-review
+- tests: skipped (TRD phase — no code written)
+- metrics: run_type=productive | commits=1 | trd_cycles=1 | dev_idle=0
+- next: TRD Watcher reviews TRD; Developer resumes building once TRD is approved
+
 ## 2026-05-10 01:20 ET REVIEWER
 - did: reviewed PR #11 (TASK-0011 — Tray "Recent Apps" Submenu, round 1)
 - decision: changes-requested (posted as comment — GitHub self-review restriction, same precedent as PR #8/9)
@@ -1091,7 +1100,53 @@
 - metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=0 | dev_idle=0
 - next: Reviewer picks up PR #11 round 2; PM should create tasks for PROP-0003 (lookupApp reconciliation) and PROP-0004 (active-window.ts reconciliation)
 
-## 2026-05-10 02:21 ET DEVELOPER
+## 2026-05-10 03:01 ET DEVELOPER
 - did: started run — claimed DEV_LOCK
-- task: TASK-0012 (update below when known)
+- task: TASK-0013 (Panel Content Renderer & Shortcut Key Caps)
 - status: in-progress
+
+## 2026-05-10 03:01 ET DEVELOPER
+- did: no-op — TRD awaiting reviewer approval for TASK-0013
+- task: TASK-0013
+- PR: #14
+- trd: awaiting-review
+- tests: skipped (TRD phase — no code yet)
+- metrics: run_type=no-op | reason=TRD awaiting review (TASK-0013) | dev_idle=1
+- next: TRD Watcher approves TRD for TASK-0013; Developer resumes build phase on next run
+
+## 2026-05-10 02:59 ET REVIEWER
+- did: reviewed PR #11 (TASK-0011 — Tray "Recent Apps" Submenu, round 2 independent verification)
+- decision: approved (posted as comment — GitHub self-review restriction, same precedent as prior PRs)
+- note: PR was already merged (05:57 UTC = 01:57 ET) before this run started. Backlog was stale on first read (still showed In Review); TASK-0011 is already in Shipped. Completed full independent verification to confirm round-2 approval was correct.
+- standards checked: TRD compliance (all 4 components match exactly), backend/Electron patterns (injected deps, dynamic menu at open time), separation of concerns (packages/desktop isolation), test quality (white-box via type cast, all 5 TRD scenarios covered), scope (both round-1 items reverted — lookupApp stub confirmed, active-window stub confirmed), PR policy
+- tests run (myself): tray.test.ts 7/7 ✅ | detection.test.ts 14/14 ✅ | process-map.test.ts getDisplayName 9/9 ✅ | lookupApp null returns 4/4 ✅ | pre-existing failures: 49 (identical to main — PROP-0003 + PROP-0004 stubs)
+- metrics: run_type=productive | pr=PR-11 | round=2 | decision=approved | tests_run=pass
+- idle-reset: REV_IDLE → 0, DEV_PAUSE removed
+- next: In Review empty. No further PRs to review this run.
+- discord: FAILED — channels not allowlisted. Owner needs to run /discord:access.
+
+## 2026-05-10 03:05 ET PROJECT-MANAGER
+- did: created TASK-0016 (Panel Fallback States) for Goal 5 — Ready queue now at 2 tasks (TASK-0015, TASK-0016). Updated PROP-0003 and PROP-0004 to resolved (both addressed by TASK-0014, approved, awaiting merge). Ran roadmap health check.
+- created: TASK-0016
+- moved: none
+- prd gaps: Goal 7 (User Accounts & Favorites Sync) — no PRD at research/agents/prds/goal-07-accounts-favorites.md. This is N+2 from active work (Goal 5 active, Goal 6 has PRD, Goal 7 does not). Product Manager should write it soon.
+- roadmap check: solid — sequencing correct (Goals 1-4 shipped, Goal 5 in progress, Goal 6 PRD ready). No scope creep detected. TASK-0014 in Approved resolves the 49 test failures on main (PROP-0003/0004) — once merged, Goal 4 is fully clean. Goal 7 PRD gap is the only near-term flag.
+- proposals added: 0 (updated 2 existing: PROP-0003, PROP-0004 → resolved)
+- stale context: project_context.md still says "Active goal: Goal 1" — actual is Goal 5. Not PM's file to edit but flagging again.
+- approved awaiting merge: TASK-0012 (PR #13), TASK-0014 (PR #12) — both approved 2026-05-10, need owner merge
+- metrics: tasks_created=1 | tasks_moved=0 | prd_gaps=1 | roadmap_issues=0
+- next: Ready queue healthy at 2. Once TASK-0013 ships and Goal 5 nears completion, may need to start queueing Goal 6 tasks (PRD exists). Watch for Goal 7 PRD from Product Manager.
+
+## 2026-05-10 03:11 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TASK-0013 (in-progress, TRD approved, resuming build)
+- status: in-progress
+
+## 2026-05-10 03:20 ET DEVELOPER
+- did: built TASK-0013 panel content renderer — full feature complete, PR #14 marked ready
+- task: TASK-0013
+- PR: #14
+- trd: approved — building done
+- tests: 65 pass (31 new: keycap.test.ts 15 + shortcut-list.test.ts 16) | 49 pre-existing failures (TASK-0014, not my scope) | renderer tsc: clean
+- metrics: run_type=productive | commits=1 | tests_added=31 | trd_cycles=0 | dev_idle=0
+- next: Reviewer picks up PR #14; TASK-0015 (search/filter) or TASK-0016 (fallback states) when reviewer approves
