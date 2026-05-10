@@ -964,3 +964,19 @@
 - did: started run — claimed DEV_LOCK
 - task: TBD (update below when known)
 - status: in-progress
+
+## 2026-05-09 23:01 ET REVIEWER
+- did: reviewed PR #9 (TASK-0009 — Rust Native Module for Active Window Detection, round 2)
+- decision: approved (posted as comment — GitHub self-review restriction, per precedent)
+- standards checked: Win32 API correctness (QueryFullProcessImageNameW with PROCESS_QUERY_LIMITED_INFORMATION), binary filename consistency (--platform removed), separation of concerns (all code in packages/desktop/), tests (9/9 pass, tsc clean), scope (no polling/IPC/settings — deferred to TASK-0010), TRD compliance
+- metrics: run_type=productive | pr=PR-9 | round=2 | decision=approved | tests_run=pass
+- next: Owner /merge PR #9 to unblock TASK-0010 (detection polling service, TRD in progress). Also pending: /merge PR #6, #7, #8.
+
+## 2026-05-09 22:50 ET DEVELOPER
+- did: picked TASK-0010 (Detection Polling Service & IPC Integration). Wrote 10-slice plan and TRD for DetectionService class with injected deps (testable), IPC channels (detection:app-changed, detection:get-recent-apps), electron-store settings, recent-apps list, and unrecognized-process logging. Opened draft PR #10. Moved task to In Progress. Also restored backlog integrity (TASK-0011 back in Ready, lost in stash-pop conflict).
+- task: TASK-0010
+- PR: #10
+- trd: written — awaiting-review
+- tests: n/a (TRD phase only)
+- metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=0 | dev_idle=0
+- next: TRD Watcher reviews TRD; once approved, Developer resumes to build DetectionService + IPC wiring

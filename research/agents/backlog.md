@@ -69,7 +69,7 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
   - Last 5 unique detected apps are tracked in memory and retrievable via IPC query (for tray integration)
   - CPU overhead of polling is <1% on a modern machine
   - No crashes or unhandled exceptions from native module failures (graceful degradation)
-- **PR:**
+- **PR:** #10
 - **Branch:** goals/10-detection-polling-service
 - **TRD:** research/plans/goals/10-detection-polling-service-trd.md — awaiting-review
 - **Notes:** Depends on TASK-0008 (process map, approved) and TASK-0009 (native module, in review). This is the integration layer that ties together detection + mapping + renderer communication. The tray "Recent Apps" submenu consumes the session app list but is scoped to a separate task.
