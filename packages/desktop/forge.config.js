@@ -16,7 +16,7 @@ module.exports = {
       // OverlayWindowManager can load it via win.loadFile() at runtime.
       {
         from: '../../packages/overlay/dist',
-        to: '../../packages/overlay/dist',
+        to: 'overlay/dist',
       },
     ],
   },

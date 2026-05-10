@@ -95,8 +95,6 @@ export class OverlayWindowManager implements OverlayController {
       transparent: true,
       backgroundColor: '#00000000',
       alwaysOnTop: true,
-      // 'floating' keeps the overlay above normal windows but below the panel ('pop-up-menu').
-      type: 'desktop',
       skipTaskbar: true,
       resizable: false,
       movable: false,
@@ -108,7 +106,8 @@ export class OverlayWindowManager implements OverlayController {
       },
     });
 
-    // Set alwaysOnTop level after creation — 'floating' is the overlay level.
+    // Set alwaysOnTop level after creation — 'floating' keeps the overlay above
+    // normal windows but below the panel window ('pop-up-menu').
     this.window.setAlwaysOnTop(true, 'floating');
 
     // Full click-through: all mouse events pass to the underlying window.
