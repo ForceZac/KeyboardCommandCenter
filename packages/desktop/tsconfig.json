@@ -14,5 +14,5 @@
     }
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts"],
-  "exclude": ["src/renderer/**/*.ts", "node_modules", "dist", ".webpack"]
+  "exclude": ["src/renderer/**/*.ts", "src/__tests__/**/*.ts", "node_modules", "dist", ".webpack"]
 }

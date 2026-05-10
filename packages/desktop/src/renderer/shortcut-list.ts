@@ -32,9 +32,13 @@ export function renderShortcutRow(shortcut: ShortcutEntry, platformSlug: string)
     null;
 
   const comboHTML = binding ? renderKeyComboHTML(binding.keyCombo) : '';
+  // Pre-lowercased data attributes let the search filter do a single includes()
+  // call per row without any string allocation at filter time.
+  const dataCmdAttr = escHtml(shortcut.command.toLowerCase());
+  const dataComboAttr = escHtml(binding ? binding.keyCombo.toLowerCase() : '');
 
   return (
-    `<div class="shortcut-row">` +
+    `<div class="shortcut-row" data-cmd="${dataCmdAttr}" data-combo="${dataComboAttr}">` +
       `<span class="shortcut-cmd">${escHtml(shortcut.command)}</span>` +
       `<span class="shortcut-combo">${comboHTML}</span>` +
     `</div>`

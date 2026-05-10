@@ -33,23 +33,24 @@ Task IDs are monotonic. The Project Manager picks the next number.
 
 _(Project Manager keeps 2–3 tasks here at all times.)_
 
-### TASK-0015: Panel Search/Filter Input
-- **Goal:** Goal 5 — Shortcut Panel UI (Desktop)
-- **PRD:** research/agents/prds/goal-05-shortcut-panel-ui.md
-- **Scope:** Add a search/filter input to the shortcut panel, positioned below the app header and above the shortcut list. When the user types, filter the displayed shortcuts in real time — matching against command description text and key combo text (case-insensitive substring match). Context group headings with no matching shortcuts should be hidden during filtering. Display a "No matching shortcuts" message when the filter matches nothing. Clearing the input restores the full shortcut list. The search input should be focused and ready for typing when the panel opens. Target <50ms filter response per keystroke on lists of 200+ shortcuts. NOT in scope: fallback states for no-detection/unrecognized app (separate task), fuzzy matching or advanced search operators, overlay mode (Goal 6), user accounts (Goal 7).
+### TASK-0017: Overlay BrowserWindow & Toggle Hotkey
+- **Goal:** Goal 6 — Overlay Mode
+- **PRD:** research/agents/prds/goal-06-overlay-mode.md
+- **Scope:** Create the Electron BrowserWindow for the overlay: frameless, `transparent: true`, `backgroundColor: '#00000000'`, `alwaysOnTop: true` with level `'floating'`, `setIgnoreMouseEvents(true, { forward: true })` for full click-through. Register a secondary configurable global hotkey (default Ctrl+Shift+O on Windows / Cmd+Shift+O on macOS) via `globalShortcut` that toggles overlay window visibility. Add overlay preferences to `electron-store`: `overlay.enabled` (bool, default false), `overlay.hotkey` (string), `overlay.opacity` (number, default 0.4), `overlay.position` (string, default "Top Right"), `overlay.size` (string, default "Standard"). Position the overlay on the correct monitor using Electron's `screen` API. Ensure the panel window has a higher z-order than the overlay when both are visible (PRD Flow 6). NOT in scope: overlay renderer content or React components (separate task), settings UI section for overlay preferences (separate task), detection integration and app-switch content updates (separate task), opacity live preview in settings.
 - **Acceptance:**
-  - Search input renders below app header, above shortcut list
-  - Search input is focused when the panel opens
-  - Typing filters shortcuts in real time by command description and key combo text
-  - Filtering is case-insensitive substring matching
-  - Context group headings with no matching results are hidden
-  - "No matching shortcuts" message displays when filter matches nothing
-  - Clearing input restores the full shortcut list
-  - Filter response <50ms per keystroke on 200+ shortcuts
+  - Overlay BrowserWindow is frameless, transparent, always-on-top with `'floating'` level
+  - Overlay window is click-through — all mouse events pass to the underlying window on both Windows and macOS
+  - Configurable global hotkey toggles overlay window show/hide
+  - Default hotkey is Ctrl+Shift+O (Windows) / Cmd+Shift+O (macOS)
+  - Overlay preferences stored in electron-store with correct defaults
+  - Overlay appears on the same monitor as the active application window
+  - Panel window renders above overlay when both are visible (higher z-order)
+  - Overlay does not increase idle memory by more than 20MB
+  - No crash when overlay hotkey is pressed before detection service is running
 - **PR:**
 - **Branch:**
 - **TRD:**
-- **Notes:** Third Goal 5 task — adds search/filter on top of the renderer from TASK-0013. Depends on TASK-0013 shipping first (provides the panel content and grouped shortcut list to filter against). See PRD Flow 2 for the full UX specification.
+- **Notes:** First Goal 6 task — the overlay window shell. Depends on Goal 5 completion (panel and detection infrastructure must be on main). Look-ahead task queued while Goal 5 wraps up so the Developer doesn't idle between goals.
 
 ### TASK-0016: Panel Fallback States — No Detection, Unrecognized App, No Shortcuts
 - **Goal:** Goal 5 — Shortcut Panel UI (Desktop)
@@ -76,24 +77,23 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
 
 _(Developer moves tasks here when the draft PR is marked ready.)_
 
-### TASK-0013: Panel Content Renderer & Shortcut Key Caps
+### TASK-0015: Panel Search/Filter Input
 - **Goal:** Goal 5 — Shortcut Panel UI (Desktop)
 - **PRD:** research/agents/prds/goal-05-shortcut-panel-ui.md
-- **Scope:** Build the panel content renderer that displays shortcut data fetched via the IPC layer (TASK-0012). When the panel opens, render an app header with the detected app name, then list shortcuts grouped by context/scope (e.g. "General", "Editor", "Terminal", "Debug"). Each shortcut row shows the command description on the left and a visual key cap rendering on the right (styled `<kbd>` elements with monospace font and visual separators for chord sequences, matching the web app's KeyCap/KeyCombo pattern). Detect the user's OS at runtime and display platform-appropriate modifier keys (Cmd on Mac, Ctrl on Windows — no manual toggle needed on desktop). Context group headings should be collapsible. NOT in scope: search/filter input (separate task), fallback states for no-detection/unrecognized/no-shortcuts (separate task), recent apps fallback list, keyboard navigation beyond Escape to dismiss (existing behavior), overlay mode (Goal 6), user accounts (Goal 7), app icons (text-only for v1), theming/dark mode, Linux (Goal 10).
+- **Scope:** Add a search/filter input to the shortcut panel, positioned below the app header and above the shortcut list. When the user types, filter the displayed shortcuts in real time — matching against command description text and key combo text (case-insensitive substring match). Context group headings with no matching shortcuts should be hidden during filtering. Display a "No matching shortcuts" message when the filter matches nothing. Clearing the input restores the full shortcut list. The search input should be focused and ready for typing when the panel opens. Target <50ms filter response per keystroke on lists of 200+ shortcuts. NOT in scope: fallback states for no-detection/unrecognized app (separate task), fuzzy matching or advanced search operators, overlay mode (Goal 6), user accounts (Goal 7).
 - **Acceptance:**
-  - Panel displays shortcut data for the detected app, grouped by context/scope
-  - App header shows the detected app's display name at the top of the panel
-  - Shortcut rows show command description (left) and key cap rendering (right)
-  - Key caps use styled `<kbd>` elements with visual separators for chord sequences
-  - Platform-appropriate modifiers display correctly (Cmd on Mac, Ctrl on Windows)
-  - Context/scope groups render with clear headings that are collapsible
-  - Panel content renders within 100ms using prefetched data from TASK-0012
-  - No scroll jank on apps with 200+ shortcuts (virtualize or lazy-render if needed)
-  - No unhandled errors if IPC returns empty or malformed data
-- **PR:** #14
-- **Branch:** goals/13-panel-content-renderer
-- **TRD:** research/plans/goals/13-panel-content-renderer-trd.md — approved
-- **Notes:** Second Goal 5 task — builds the visual layer on top of the data plumbing from TASK-0012. Depends on TASK-0012 shipping first (provides `getShortcutsForApp()` via preload). Porting the visual key cap pattern from the web app's components (packages/web) is recommended but the desktop renderer uses vanilla HTML/CSS, not React/Tailwind — duplicate the CSS pattern rather than extracting to packages/core (per PRD recommendation).
+  - Search input renders below app header, above shortcut list
+  - Search input is focused when the panel opens
+  - Typing filters shortcuts in real time by command description and key combo text
+  - Filtering is case-insensitive substring matching
+  - Context group headings with no matching results are hidden
+  - "No matching shortcuts" message displays when filter matches nothing
+  - Clearing input restores the full shortcut list
+  - Filter response <50ms per keystroke on 200+ shortcuts
+- **PR:** #15
+- **Branch:** goals/15-panel-search-filter
+- **TRD:** research/plans/goals/15-panel-search-filter-trd.md — approved
+- **Notes:** Third Goal 5 task — adds search/filter on top of the renderer from TASK-0013. See PRD Flow 2 for the full UX specification. Round 1 changes requested 2026-05-10: move #no-results outside #shortcuts-container (destroyed by innerHTML= on app-change), add regression test. Round 2 resubmit 2026-05-10: fix applied, regression test added, 146/146 pass.
 
 ## Changes Requested
 
@@ -145,6 +145,15 @@ _(Reviewer moves tasks here after approving the PR. You merge to main, then move
 ## Shipped
 
 _(You move tasks here after merging to main.)_
+
+### TASK-0013: Panel Content Renderer & Shortcut Key Caps
+- **Goal:** Goal 5 — Shortcut Panel UI (Desktop)
+- **PRD:** research/agents/prds/goal-05-shortcut-panel-ui.md
+- **PR:** #14
+- **Branch:** goals/13-panel-content-renderer
+- **TRD:** research/plans/goals/13-panel-content-renderer-trd.md — approved
+- **Approved:** 2026-05-10 (Round 1 — reviewer approved)
+- **Merged:** 2026-05-10
 
 ### TASK-0011: Tray "Recent Apps" Submenu
 - **Goal:** Goal 4 — Active Window Process Detection
