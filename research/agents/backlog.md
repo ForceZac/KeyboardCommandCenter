@@ -55,6 +55,10 @@ _(Project Manager keeps 2–3 tasks here at all times.)_
 
 _(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
 
+## In Review
+
+_(Developer moves tasks here when the draft PR is marked ready.)_
+
 ### TASK-0008: Process-to-App Mapping Table
 - **Goal:** Goal 4 — Active Window Process Detection
 - **PRD:** research/agents/prds/goal-04-process-detection.md
@@ -69,10 +73,6 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
 - **Branch:** goals/8-process-map
 - **TRD:** research/plans/goals/8-process-map-trd.md — approved
 - **Notes:** Foundational for TASK-0009 and the rest of Goal 4. Does not depend on Goal 3 Electron infrastructure — can be started immediately. App slugs should match existing database entries from seed data.
-
-## In Review
-
-_(Developer moves tasks here when the draft PR is marked ready.)_
 
 ## Changes Requested
 

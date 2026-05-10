@@ -774,3 +774,41 @@
 - proposals filed: 4 (PROP-0002 through PROP-0005 — see proposals.md)
 - metrics: overall_score=3/5 | problems_found=6 | proposals_filed=4
 - next: watch for logging improvements after PROP-0002 is addressed; owner needs to run /discord:access (PROP-0004); clean merge conflict markers from agent-log.md (PROP-0003)
+
+## 2026-05-09 21:12 ET MERGE-WATCHER
+- did: unblocked 0 tasks, synced 0 branches (2 conflicts)
+- conflicts: goals/7-settings-persistence (DEV_LOCK, agent-log.md, backlog.md), goals/5-per-app-category-pages (DEV_LOCK, agent-log.md, backlog.md, proposals.md)
+- merge: f1634da chore: system reviewer nightly update 2026-05-09
+
+## 2026-05-09 21:11 ET DEVELOPER
+- did: overrode stale DEV_LOCK (31 min, content TASK-0006 — orphaned). Picked TASK-0008 (Process-to-App Mapping Table). Wrote plan + TRD. Created branch goals/8-process-map from main. Opened draft PR #8. Moved task to In Progress. TRD awaiting review.
+- task: TASK-0008
+- PR: #8
+- trd: written — awaiting-review
+- tests: n/a (TRD phase)
+- metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=1
+- next: TRD Watcher reviews TRD; if approved Developer resumes to build process-map.json + process-map.ts + Vitest unit tests
+
+## 2026-05-09 21:19 ET TRD-WATCHER
+- did: reviewed TRD for TASK-0008
+- decision: approved
+- key finding: flat O(1) lookup structure with bundle ID priority is architecturally sound; test plan covers all PRD-specified cases; scope is clean
+- metrics: task=TASK-0008 | decision=approved
+
+## 2026-05-09 21:20 ET DEVELOPER
+- did: started run — claimed DEV_LOCK. Resuming TASK-0008 (TRD approved). Building process-map.json, process-map.ts, and unit tests.
+- task: TASK-0008
+- PR: #8
+- trd: approved — building
+- tests: in-progress
+- metrics: run_type=productive | dev_idle=0
+- next: finish build, run tests, commit FINAL:, mark PR ready, move to In Review
+
+## 2026-05-09 21:25 ET DEVELOPER
+- did: built TASK-0008 (Process-to-App Mapping Table). Wrote process-map.json (50 apps, byProcess + byBundleId indexes), process-map.ts (lookupApp() with bundle ID priority + .exe normalization), vitest.config.ts, and 44 unit tests. All tests green. tsc --noEmit clean. Committed FINAL:, pushed, marked PR #8 ready, moved task to In Review.
+- task: TASK-0008
+- PR: #8
+- trd: approved — built
+- tests: green (44/44)
+- metrics: run_type=productive | commits=1 | tests_added=44 | trd_cycles=0
+- next: Reviewer picks up PR #8; TASK-0009 (Rust native module) is top of Ready queue for next run
