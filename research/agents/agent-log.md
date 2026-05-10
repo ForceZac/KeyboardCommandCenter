@@ -1,5 +1,11 @@
 <!-- Agent log. Append-only. Agents read the last 75 lines before acting. Log Trim archives entries older than 48h into agent-log-archive-YYYY-MM.md. -->
 
+## 2026-05-09 20:52 ET DEVELOPER
+- did: woke — DEV_LOCK held by prior run (TASK-0006 in lock, age ~12 min), exiting
+- task: n/a
+- metrics: run_type=no-op | reason=DEV_LOCK held | dev_idle=3
+- next: lock expires or next run clears it; TASK-0008 is next Ready task
+
 ## 2026-05-09 20:41 ET REVIEWER
 - did: reviewed PR #7 (TASK-0007 — Settings Persistence & Login Startup Registration, round 1)
 - decision: approved (posted as comment — GitHub self-review restriction, same precedent as PRs #3/#5/#6)
@@ -741,3 +747,30 @@
 - task: n/a
 - metrics: run_type=no-op | reason=DEV_LOCK held | dev_idle=2
 - next: DEV_LOCK holder finishes; next run picks up from where it left off
+
+## 2026-05-09 21:02 ET DEVELOPER
+- did: no-op — DEV_LOCK held by another instance (age ~22 min, mtime 2026-05-10T00:39Z, content: 2026-05-09T20:20:46Z TASK-0006)
+- task: n/a
+- metrics: run_type=no-op | reason=DEV_LOCK held (<25 min) | dev_idle=4
+- next: lock will be ~25+ min old at next run — override it and check whether it's truly stale (TASK-0006 is Shipped; lock content is suspect). If override succeeds, pick up TASK-0008 (Process-to-App Mapping Table) — no In Progress tasks, no Changes Requested, cap TBD vs In Review items.
+
+## 2026-05-09 21:04 ET PROJECT-MANAGER
+- did: no-op — Ready queue healthy (2 tasks), no new tasks to create, no movements needed
+- created: none
+- moved: none
+- prd gaps: Goal 5 (Shortcut Panel UI) — still no PRD; Product Manager should write it next
+- roadmap check: solid — Goal 3→4→5 sequencing holds. No scope creep, no stale goals, no missing prerequisites. Goal 5 PRD gap persists.
+- stale items: none — TASK-0005 (approved 05-09) and TASK-0007 (approved 05-10) both awaiting /merge, <3 days
+- note: project_context.md still stale (says "Goal 1 active, pre-dev") — needs owner update
+- proposals added: 0
+- metrics: tasks_created=0 | tasks_moved=0 | prd_gaps=1 | roadmap_issues=0
+- idle: PM_IDLE=1 (threshold 4)
+- next: monitor for TASK-0005/TASK-0007 merges (Goals 2+3 complete). Once Goal 5 PRD lands, create Goal 5 tasks. Developer should pick up TASK-0008 next.
+
+## 2026-05-09 21:01 ET SYSTEM-REVIEWER
+- did: 24h audit complete
+- overall score: 3/5
+- problems found: 6 (TRD Watcher logging gaps, Reviewer logging gaps, merge conflict markers in agent-log.md, Discord broken all day, PROP-0001 never written, Goal 3 PRD on wrong branch)
+- proposals filed: 4 (PROP-0002 through PROP-0005 — see proposals.md)
+- metrics: overall_score=3/5 | problems_found=6 | proposals_filed=4
+- next: watch for logging improvements after PROP-0002 is addressed; owner needs to run /discord:access (PROP-0004); clean merge conflict markers from agent-log.md (PROP-0003)
