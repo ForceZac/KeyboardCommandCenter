@@ -33,67 +33,33 @@ Task IDs are monotonic. The Project Manager picks the next number.
 
 _(Project Manager keeps 2–3 tasks here at all times.)_
 
-### TASK-0020: Overlay Detection Integration & App-Switch Content Updates
-- **Goal:** Goal 6 — Overlay Mode
-- **PRD:** research/agents/prds/goal-06-overlay-mode.md
-- **Scope:** Wire the overlay renderer to the detection service so overlay content updates when the active app changes. Listen for the `detection:app-changed` IPC event in the overlay preload/renderer (same channel the panel uses). On app change: fetch shortcuts for the new app via the existing `shortcuts:get-by-app` IPC (prefetch cache serves immediately), re-render the compact shortcut display with the new app's data. Handle unrecognized apps: show a muted "No shortcuts for [Process Name]" message in the overlay (PRD Flow 5). Handle no-detection state: show "No app detected" in the overlay. Ensure content update completes within 200ms of receiving the IPC event (success metric from PRD). NOT in scope: overlay BrowserWindow creation or positioning (TASK-0017), overlay renderer components or styling (TASK-0018, shipped), settings UI (TASK-0019), panel fallback states (TASK-0016), drag-to-reposition, Linux/Wayland, fullscreen app detection.
-- **Acceptance:**
-  - Overlay content updates to show the correct app's shortcuts when the active app changes
-  - Content update completes within 200ms of receiving the detection:app-changed event
-  - Overlay shows "No shortcuts for [Process Name]" when the detected app is not in the database
-  - Overlay shows "No app detected" when detection returns no active app
-  - Overlay reuses the panel's prefetch cache — no duplicate database queries
-  - App name header in the overlay updates to reflect the currently detected app
-  - No flash or blank state during content transitions between apps
-  - No unhandled errors when detection service fires events before overlay renderer is ready
-- **PR:**
-- **Branch:**
-- **TRD:**
-- **Notes:** Fourth Goal 6 task — covers PRD Flows 3 and 5. Depends on TASK-0017 (overlay BrowserWindow must exist) and TASK-0018 (overlay renderer, shipped). Should be buildable once TASK-0017 merges.
-
-### TASK-0016: Panel Fallback States — No Detection, Unrecognized App, No Shortcuts
-- **Goal:** Goal 5 — Shortcut Panel UI (Desktop)
-- **PRD:** research/agents/prds/goal-05-shortcut-panel-ui.md
-- **Scope:** Handle all three fallback states in the panel renderer. (1) No app detected: display "No app detected" message with brief explanation, plus a list of recently-detected apps from the detection service that the user can click to load shortcuts manually. (2) Unrecognized app: display "Shortcuts not available for [Process Name]", plus recent apps list. (3) Recognized app with no shortcuts in the database: display "No shortcuts found for [App Name]", plus recent apps list. The recent apps list reuses data from the detection service's app history (exposed via existing IPC). Each recent app entry is clickable to load that app's shortcuts in the panel. NOT in scope: search/filter input (TASK-0015), overlay mode (Goal 6), user accounts (Goal 7), keyboard navigation within the fallback list (future task).
-- **Acceptance:**
-  - Panel shows "No app detected" message when detection returns no active app
-  - Panel shows "Shortcuts not available for [Process Name]" when detected app is not in the database
-  - Panel shows "No shortcuts found for [App Name]" when recognized app has zero shortcuts
-  - Recent apps list displays up to 5 recently-detected apps in all three fallback states
-  - Clicking a recent app loads that app's shortcuts in the panel
-  - Fallback states render within 100ms (same perf target as normal panel content)
-  - No unhandled errors for edge cases (empty detection history, all recent apps unrecognized)
-- **PR:**
-- **Branch:**
-- **TRD:**
-- **Notes:** Fourth Goal 5 task — covers PRD Flows 3 and 4. Depends on TASK-0013 (panel content renderer) and TASK-0012 (IPC data layer). Should be buildable once TASK-0013 ships.
+_(Empty — TASK-0021 moved to In Progress; TASK-0022 moved to Blocked pending TASK-0021)_
 
 ## In Progress
 
 _(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
 
+### TASK-0021: Auth Schema & NextAuth Integration
+- **Goal:** Goal 7 — User Accounts & Favorites Sync
+- **PRD:** research/agents/prds/goal-07-accounts-favorites.md
+- **Scope:** Add NextAuth.js (Auth.js v5) to the Next.js web app with GitHub and Google OAuth providers. Add a `User` model to the Prisma schema with id, email, name, image, and provider fields (Auth.js standard tables: User, Account, Session, VerificationToken). Wire up NextAuth session handling (JWT strategy). Protect API routes that will require auth (favorites, submissions). Add sign-in/sign-out UI to the web app header. NOT in scope: favorites data model or CRUD (separate task), community submissions (Goal 8), Electron deep-link auth (separate task), email/password auth.
+- **Acceptance:**
+  - NextAuth configured with GitHub + Google providers
+  - User model added to Prisma schema, migration generated
+  - Session available server-side via `auth()` and client-side via `useSession()`
+  - Sign-in / sign-out buttons in web app header
+  - Protected API route middleware scaffold in place
+  - No regressions on existing public pages
+- **PR:** #21
+- **Branch:** goals/21-auth-schema-nextauth
+- **TRD:** research/plans/goals/21-auth-schema-nextauth-trd.md — awaiting-review
+- **Notes:** PRD exists (written 2026-05-10). Branch and draft PR already open. Previous TRD was out of scope (included credentials provider and favorites/collection schema) — corrected TRD written 2026-05-10. Reviewer: check TRD stays within scope (OAuth-only, User+Auth.js tables only, no Favorite/Collection).
+
 ## In Review
 
 _(Developer moves tasks here when the draft PR is marked ready.)_
 
-### TASK-0017: Overlay BrowserWindow & Toggle Hotkey
-- **Goal:** Goal 6 — Overlay Mode
-- **PRD:** research/agents/prds/goal-06-overlay-mode.md
-- **Scope:** Create the Electron BrowserWindow for the overlay: frameless, `transparent: true`, `backgroundColor: '#00000000'`, `alwaysOnTop: true` with level `'floating'`, `setIgnoreMouseEvents(true, { forward: true })` for full click-through. Register a secondary configurable global hotkey (default Ctrl+Shift+O on Windows / Cmd+Shift+O on macOS) via `globalShortcut` that toggles overlay window visibility. Add overlay preferences to `electron-store`: `overlay.enabled` (bool, default false), `overlay.hotkey` (string), `overlay.opacity` (number, default 0.4), `overlay.position` (string, default "Top Right"), `overlay.size` (string, default "Standard"). Position the overlay on the correct monitor using Electron's `screen` API. Ensure the panel window has a higher z-order than the overlay when both are visible (PRD Flow 6). NOT in scope: overlay renderer content or React components (separate task), settings UI section for overlay preferences (separate task), detection integration and app-switch content updates (separate task), opacity live preview in settings.
-- **Acceptance:**
-  - Overlay BrowserWindow is frameless, transparent, always-on-top with `'floating'` level
-  - Overlay window is click-through — all mouse events pass to the underlying window on both Windows and macOS
-  - Configurable global hotkey toggles overlay window show/hide
-  - Default hotkey is Ctrl+Shift+O (Windows) / Cmd+Shift+O (macOS)
-  - Overlay preferences stored in electron-store with correct defaults
-  - Overlay appears on the same monitor as the active application window
-  - Panel window renders above overlay when both are visible (higher z-order)
-  - Overlay does not increase idle memory by more than 20MB
-  - No crash when overlay hotkey is pressed before detection service is running
-- **PR:** #18
-- **Branch:** goals/17-overlay-browser-window
-- **TRD:** research/plans/goals/17-overlay-browser-window-trd.md — approved
-- **Notes:** First Goal 6 task — the overlay window shell. Also includes overlay-controller.ts and overlay settings store functions (parity with TASK-0019, needed on this branch since TASK-0019 hasn't merged to main yet). Reviewer: when merging TASK-0019 after TASK-0017, expect conflict on settings.ts and overlay-controller.ts — TASK-0017's versions are canonical and include all TASK-0017 wiring.
+_(Empty)_
 
 ## Changes Requested
 
@@ -107,18 +73,42 @@ _(TRD Watcher moves tasks here when a TRD needs rework.)_
 
 _(Reviewer moves tasks here after approving the PR. You merge to main, then move to Shipped.)_
 
+## Shipped
+
+_(You move tasks here after merging to main.)_
+
+### TASK-0020: Overlay Detection Integration & App-Switch Content Updates
+- **Goal:** Goal 6 — Overlay Mode
+- **PRD:** research/agents/prds/goal-06-overlay-mode.md
+- **PR:** #19
+- **Branch:** goals/20-overlay-detection-integration
+- **TRD:** research/plans/goals/20-overlay-detection-integration-trd.md — approved
+- **Merged:** 2026-05-10
+
+### TASK-0016: Panel Fallback States — No Detection, Unrecognized App, No Shortcuts
+- **Goal:** Goal 5 — Shortcut Panel UI (Desktop)
+- **PRD:** research/agents/prds/goal-05-shortcut-panel-ui.md
+- **PR:** #20
+- **Branch:** goals/16-panel-fallback-states
+- **Merged:** 2026-05-10
+
+### TASK-0017: Overlay BrowserWindow & Toggle Hotkey
+- **Goal:** Goal 6 — Overlay Mode
+- **PRD:** research/agents/prds/goal-06-overlay-mode.md
+- **PR:** #18
+- **Branch:** goals/17-overlay-browser-window
+- **TRD:** research/plans/goals/17-overlay-browser-window-trd.md — approved
+- **Approved:** 2026-05-10 (Round 2)
+- **Merged:** 2026-05-10
+
 ### TASK-0019: Overlay Settings UI Section
 - **Goal:** Goal 6 — Overlay Mode
 - **PRD:** research/agents/prds/goal-06-overlay-mode.md
 - **PR:** #17
 - **Branch:** goals/19-overlay-settings-ui
 - **TRD:** research/plans/goals/19-overlay-settings-ui-trd.md — approved
-- **Approved:** 2026-05-10 (Round 2 — reviewer approved via PR comment; GitHub blocked formal approval since author == reviewer)
-
-
-## Shipped
-
-_(You move tasks here after merging to main.)_
+- **Approved:** 2026-05-10 (Round 2)
+- **Merged:** 2026-05-10
 
 ### TASK-0012: Shortcut Data IPC Layer & Prefetch
 - **Goal:** Goal 5 — Shortcut Panel UI (Desktop)
@@ -146,7 +136,7 @@ _(You move tasks here after merging to main.)_
 - **Branch:** (unknown — added retroactively)
 - **TRD:** (unknown — added retroactively)
 - **Merged:** 2026-05-10
-- **Notes:** Added retroactively — PR #16 was built and merged outside the normal backlog flow. PM should reconstruct task details and verify TRD exists. No reviewer approval on record.
+- **Notes:** Added retroactively — PR #16 was built and merged outside the normal backlog flow.
 
 ### TASK-0015: Panel Search/Filter Input
 - **Goal:** Goal 5 — Shortcut Panel UI (Desktop)
@@ -154,7 +144,7 @@ _(You move tasks here after merging to main.)_
 - **PR:** #15
 - **Branch:** goals/15-panel-search-filter
 - **TRD:** research/plans/goals/15-panel-search-filter-trd.md — approved
-- **Approved:** 2026-05-10 (Round 2 — reviewer approved via PR comment; GitHub blocked formal approval since author == reviewer)
+- **Approved:** 2026-05-10 (Round 2)
 - **Merged:** 2026-05-10
 
 ### TASK-0013: Panel Content Renderer & Shortcut Key Caps
@@ -163,7 +153,7 @@ _(You move tasks here after merging to main.)_
 - **PR:** #14
 - **Branch:** goals/13-panel-content-renderer
 - **TRD:** research/plans/goals/13-panel-content-renderer-trd.md — approved
-- **Approved:** 2026-05-10 (Round 1 — reviewer approved)
+- **Approved:** 2026-05-10 (Round 1)
 - **Merged:** 2026-05-10
 
 ### TASK-0011: Tray "Recent Apps" Submenu
@@ -172,7 +162,7 @@ _(You move tasks here after merging to main.)_
 - **PR:** #11
 - **Branch:** goals/11-tray-recent-apps
 - **TRD:** research/plans/goals/11-tray-recent-apps-trd.md — approved
-- **Approved:** 2026-05-10 (post-hoc — owner merged directly after round 2 resubmit)
+- **Approved:** 2026-05-10 (post-hoc)
 - **Merged:** 2026-05-10
 
 ### TASK-0010: Detection Polling Service & IPC Integration
@@ -232,13 +222,12 @@ _(You move tasks here after merging to main.)_
 ### TASK-0006: Electron App Shell — Tray Icon + Global Hotkey + Panel Window
 - **Goal:** Goal 3 — Desktop App Shell (Electron + Tray)
 - **PRD:** none — shipped without PRD (process bypass, see PROP-0001)
-- **Scope:** Retroactively recorded. Electron app with tray icon, global hotkey, and panel window. PR #4 was worked on and merged outside the normal backlog/PRD flow.
+- **Scope:** Retroactively recorded. Electron app with tray icon, global hotkey, and panel window.
 - **Acceptance:** (not defined pre-work — retroactive entry)
 - **PR:** #4
 - **Branch:** goals/6-electron-app-shell
 - **TRD:** n/a
 - **Merged:** 2026-05-09
-- **Notes:** This task was never created by the PM or tracked in backlog.md. Added retroactively to maintain backlog as single source of truth. See PROP-0001 for process gap.
 
 ### TASK-0003: API Routes for Shortcut Data
 - **Goal:** Goal 2 — Web Search & Browse Interface
@@ -267,3 +256,26 @@ _(You move tasks here after merging to main.)_
 ## Blocked
 
 _(Waiting on an external dependency, a missing PRD, or owner decision.)_
+
+### TASK-0022: Favorites Data Model & CRUD API
+- **Goal:** Goal 7 — User Accounts & Favorites Sync
+- **PRD:** research/agents/prds/goal-07-accounts-favorites.md
+- **Scope:** Add Collection and CollectionShortcut models to the Prisma schema (Collection: id, userId, name, description, isDefault, createdAt, updatedAt; CollectionShortcut: join table linking userId + collectionId + shortcutId with createdAt timestamp for last-write-wins sync). Generate migration. Implement API routes: `GET/POST/DELETE /api/favorites` (add/remove a shortcut from the user's default "My Favorites" collection), `GET/POST/PATCH/DELETE /api/collections` (CRUD for named collections), `GET /api/collections/:id/shortcuts` (list shortcuts in a collection). Auto-create a "My Favorites" default collection when a new User record is created (via Prisma middleware or Auth.js event callback). Enforce server-side limits: max 50 collections per user, max 1000 total favorites per user. All routes require authenticated session. NOT in scope: web UI components (separate task), desktop client or sync engine (separate task), desktop auth flow (separate task), collection reordering, import/export, guest favorites migration.
+- **Acceptance:**
+  - Collection and CollectionShortcut models added to Prisma schema with proper relations
+  - Migration generated and applies cleanly
+  - "My Favorites" default collection auto-created on new user sign-up
+  - `POST /api/favorites` adds a shortcut to the user's default collection (returns 201)
+  - `DELETE /api/favorites/:shortcutId` removes a favorite (returns 204)
+  - `GET /api/favorites` returns the user's favorited shortcuts with collection info
+  - `POST /api/collections` creates a named collection (returns 201)
+  - `PATCH /api/collections/:id` renames or updates description (returns 200)
+  - `DELETE /api/collections/:id` deletes a collection (returns 204; cannot delete default)
+  - `GET /api/collections/:id/shortcuts` returns shortcuts in a specific collection
+  - Server returns 403 if user exceeds 50 collections or 1000 favorites
+  - All routes return 401 for unauthenticated requests
+  - All routes return <200ms under normal load
+- **PR:**
+- **Branch:**
+- **TRD:**
+- **Notes:** Blocked — awaiting TASK-0021 (auth schema + User model must be in place for user relations). Second Goal 7 task.

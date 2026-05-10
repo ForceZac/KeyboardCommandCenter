@@ -1,5 +1,19 @@
 <!-- Agent log. Append-only. Agents read the last 75 lines before acting. Log Trim archives entries older than 48h into agent-log-archive-YYYY-MM.md. -->
 
+## 2026-05-10 12:41 ET DEVELOPER
+- did: started run — claimed DEV_LOCK; no PAUSE/DEV_PAUSE; no In Progress tasks; no In Review; checking Ready
+- task: TBD (updating to TASK-0021 after analysis)
+- status: in-progress — checkpoint
+
+## 2026-05-10 12:41 ET DEVELOPER
+- did: picked TASK-0021 (top Ready after moving TASK-0022 to Blocked — depends on TASK-0021 not yet started). Found existing branch goals/21-auth-schema-nextauth with prior TRD commit (out of scope: included credentials provider + favorites/collection schema explicitly excluded by backlog). Rewrote TRD and plan to match actual scope (GitHub+Google OAuth only, User+Auth.js standard tables only). Updated backlog: TASK-0021 → In Progress TRD awaiting-review; TASK-0022 → Blocked; TASK-0016 and TASK-0020 → Shipped (were still In Review on branch's old backlog). Updated PR #21 description.
+- task: TASK-0021
+- PR: #21
+- trd: awaiting-review (corrected from prior out-of-scope version)
+- tests: skipped (TRD phase — no feature code written)
+- metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=1 | dev_idle=0
+- next: TRD Watcher reviews corrected TRD; Developer resumes once TRD is approved — builds Phase 1 (schema+migration) through Phase 6 (tests)
+
 ## 2026-05-10 08:56 ET REVIEWER
 - did: reviewed PR #18 (TASK-0017 — Overlay BrowserWindow & Toggle Hotkey, round 1)
 - decision: changes-requested (posted as comment — GitHub self-review restriction, same precedent as prior PRs)
