@@ -70,7 +70,7 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
   - Response time <50ms for cached apps (no DB round-trip)
   - Handler returns empty result for unknown app slugs (no crash)
   - No unhandled exceptions if database is unreachable
-- **PR:** (filled after draft PR is opened)
+- **PR:** #13
 - **Branch:** goals/12-shortcut-ipc-layer
 - **TRD:** research/plans/goals/12-shortcut-ipc-layer-trd.md — awaiting-review
 - **Notes:** First Goal 5 task — provides the data plumbing for the panel UI. Depends on Goal 4 shipping (detection service IPC provides the app slug). TASK-0011 is the last Goal 4 task; once it ships, this task is unblocked.
