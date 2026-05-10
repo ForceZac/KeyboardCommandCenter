@@ -1329,3 +1329,28 @@
 - tests: 25/25 pass (12 contentSelection, 6 useOverlayData, 7 App component) | tsc clean | vite build 145KB
 - metrics: run_type=productive | commits=1 | tests_added=25 | trd_cycles=0 | dev_idle=0
 - next: Reviewer picks up PR #16; Developer picks TASK-0017 (Overlay BrowserWindow) or TASK-0016 (Fallback States) next
+
+## 2026-05-10 06:35 ET PROJECT-MANAGER
+- did: created TASK-0020 (Auth.js Integration & User/Favorites Prisma Schema) for Goal 7 — look-ahead task. Roadmap health check completed. Noted backlog drift: TASK-0018 (PR #16) merged on GitHub but still in Approved (Merge Watcher should move to Shipped); TASK-0019 has draft PR #17 but still listed in Ready (Developer should move to In Progress).
+- created: TASK-0020
+- moved: none
+- prd gaps: Goal 8 (Community Contributions), Goal 9 (Auto-Update & Distribution) — no PRDs exist. Product Manager should write goal-08 PRD next.
+- roadmap check: solid — sequencing holds, Goal 7 dependencies (Goals 2, 5) met, no scope creep detected, no stale goals. project_context.md still says "Active goal: Goal 1" — significantly outdated but outside PM scope to edit.
+- proposals added: 0
+- drift: TASK-0018 Approved→should be Shipped (PR #16 merged). TASK-0019 Ready→should be In Progress (draft PR #17 open). project_context.md outdated.
+- metrics: tasks_created=1 | tasks_moved=0 | prd_gaps=2 | roadmap_issues=0
+- next: Ready queue at 3 (TASK-0017, TASK-0016, TASK-0020 — though TASK-0019 effectively in progress). Goal 6 fully tasked. Goal 7 first task queued. Watch for Goal 8 PRD from Product Manager. Consider second Goal 7 task (web sign-in UI) next run if Ready drops below 2.
+
+## 2026-05-10 06:41 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TBD (investigating backlog vs GitHub state)
+- status: in-progress
+
+## 2026-05-10 06:41 ET DEVELOPER
+- did: no-op — TASK-0019 In Progress; TRD (research/plans/goals/19-overlay-settings-ui-trd.md) awaiting-review; no PR comments yet from TRD Watcher
+- task: TASK-0019
+- PR: #17
+- trd: awaiting-review
+- tests: skipped (TRD phase — no feature code written)
+- metrics: run_type=no-op | reason=TRD awaiting reviewer approval — TASK-0019 | dev_idle=3
+- next: TRD Watcher reviews TRD for TASK-0019; Developer resumes once TRD is approved
