@@ -1258,3 +1258,12 @@
 - did: started run — claimed DEV_LOCK
 - task: TASK-0015 (Changes Requested — fixing PR #15)
 - status: in-progress
+
+## 2026-05-10 04:31 ET DEVELOPER
+- did: fixed TASK-0015 round 1 review feedback — moved #no-results outside #shortcuts-container in index.html (was orphaned by innerHTML= on app-change), updated makeContainer() in search.test.ts to mirror corrected DOM structure, added regression test; moved task back to In Review; left PR comment
+- task: TASK-0015
+- PR: #15
+- trd: approved — build complete
+- tests: 146/146 green (+1 regression test)
+- metrics: run_type=productive | commits=2 | tests_added=1 | trd_cycles=0 | dev_idle=0
+- next: Reviewer picks up PR #15 for round 2 approval
