@@ -7,7 +7,8 @@ import { initSearch, applyFilter, resetFilter } from '../renderer/search';
 /**
  * Build a minimal shortcut container that mirrors what shortcut-list.ts renders.
  *
- *   #shortcuts-container
+ * DOM layout (matches index.html after fix):
+ *   #shortcuts-container          ← innerHTML gets replaced on every app change
  *     <details class="context-group" open>
  *       <summary class="context-heading">Editor</summary>
  *       <div class="context-rows">
@@ -21,7 +22,7 @@ import { initSearch, applyFilter, resetFilter } from '../renderer/search';
  *         <div class="shortcut-row" data-cmd="start debugging" data-combo="f5">…</div>
  *       </div>
  *     </details>
- *     <div id="no-results" hidden>No matching shortcuts</div>
+ *   #no-results (hidden)          ← OUTSIDE #shortcuts-container — survives innerHTML replacement
  */
 function makeContainer(): { container: HTMLElement; noResults: HTMLElement } {
   const container = document.createElement('div');
@@ -40,10 +41,16 @@ function makeContainer(): { container: HTMLElement; noResults: HTMLElement } {
         <div class="shortcut-row" data-cmd="start debugging" data-combo="f5"></div>
       </div>
     </details>
-    <div id="no-results" hidden>No matching shortcuts</div>
   `;
   document.body.appendChild(container);
-  const noResults = container.querySelector<HTMLElement>('#no-results')!;
+
+  // #no-results lives outside #shortcuts-container so container.innerHTML = doesn't orphan it.
+  const noResults = document.createElement('div');
+  noResults.id = 'no-results';
+  noResults.hidden = true;
+  noResults.textContent = 'No matching shortcuts';
+  document.body.appendChild(noResults);
+
   return { container, noResults };
 }
 
@@ -193,5 +200,24 @@ describe('initSearch', () => {
     const allRows = rows(container);
     expect(allRows[0]!.hidden).toBe(false); // "save file" — matches
     expect(allRows[1]!.hidden).toBe(true);  // "find" — no match
+  });
+});
+
+// ── regression ────────────────────────────────────────────────────────────
+
+describe('regression: #no-results survives container innerHTML replacement', () => {
+  it('noResults is not a detached orphan after container.innerHTML is replaced', () => {
+    // Step 1: Apply a no-match filter — noResults becomes visible.
+    applyFilter('zzznomatch', container, noResults);
+    expect(noResults.hidden).toBe(false);
+
+    // Step 2: Simulate handleAppChanged replacing the shortcut list.
+    // This is the destructive assignment that orphaned #no-results when it lived
+    // inside #shortcuts-container. With #no-results outside the container, it must
+    // survive unaffected.
+    container.innerHTML = '<details class="context-group"><div class="context-rows"></div></details>';
+
+    // Step 3: noResults must still be attached to the document — not a detached orphan.
+    expect(document.contains(noResults)).toBe(true);
   });
 });
