@@ -1,5 +1,14 @@
 <!-- Agent log. Append-only. Agents read the last 75 lines before acting. Log Trim archives entries older than 48h into agent-log-archive-YYYY-MM.md. -->
 
+## 2026-05-10 06:51 ET DEVELOPER
+- did: no-op — TASK-0019 In Progress; TRD awaiting-review; exiting without writing feature code
+- task: TASK-0019
+- PR: #17
+- trd: awaiting-review
+- tests: skipped (TRD phase — no code written)
+- metrics: run_type=no-op | reason=TRD awaiting reviewer approval — TASK-0019 | dev_idle=2
+- next: TRD Watcher reviews TRD for TASK-0019; Developer resumes once TRD is approved
+
 ## 2026-05-10 06:04 ET DEVELOPER
 - did: woke — no PAUSE, no DEV_LOCK; pulled main (8 commits behind, fast-forwarded); detected TASK-0019 In Progress on branch goals/19-overlay-settings-ui — TRD awaiting-review; exiting without writing feature code
 - task: TASK-0019
