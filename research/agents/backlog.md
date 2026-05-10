@@ -95,13 +95,6 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
 
 _(Developer moves tasks here when the draft PR is marked ready.)_
 
-### TASK-0018: Overlay Renderer — Compact Shortcut Display
-- **Goal:** Goal 6 — Overlay Mode
-- **PRD:** research/agents/prds/goal-06-overlay-mode.md
-- **PR:** #16
-- **Branch:** goals/18-overlay-renderer
-- **TRD:** research/plans/goals/18-overlay-renderer-trd.md — approved
-
 ## Changes Requested
 
 _(Reviewer moves tasks here when a PR needs rework.)_
@@ -114,24 +107,36 @@ _(TRD Watcher moves tasks here when a TRD needs rework.)_
 
 _(Reviewer moves tasks here after approving the PR. You merge to main, then move to Shipped.)_
 
-### TASK-0015: Panel Search/Filter Input
-- **Goal:** Goal 5 — Shortcut Panel UI (Desktop)
-- **PRD:** research/agents/prds/goal-05-shortcut-panel-ui.md
-- **Scope:** Add a search/filter input to the shortcut panel, positioned below the app header and above the shortcut list. When the user types, filter the displayed shortcuts in real time — matching against command description text and key combo text (case-insensitive substring match). Context group headings with no matching shortcuts should be hidden during filtering. Display a "No matching shortcuts" message when the filter matches nothing. Clearing the input restores the full shortcut list. The search input should be focused and ready for typing when the panel opens. Target <50ms filter response per keystroke on lists of 200+ shortcuts. NOT in scope: fallback states for no-detection/unrecognized app (separate task), fuzzy matching or advanced search operators, overlay mode (Goal 6), user accounts (Goal 7).
-- **Acceptance:**
-  - Search input renders below app header, above shortcut list
-  - Search input is focused when the panel opens
-  - Typing filters shortcuts in real time by command description and key combo text
-  - Filtering is case-insensitive substring matching
-  - Context group headings with no matching results are hidden
-  - "No matching shortcuts" message displays when filter matches nothing
-  - Clearing input restores the full shortcut list
-  - Filter response <50ms per keystroke on 200+ shortcuts
-- **PR:** #15
-- **Branch:** goals/15-panel-search-filter
-- **TRD:** research/plans/goals/15-panel-search-filter-trd.md — approved
+### TASK-0018: Overlay Renderer — Compact Shortcut Display
+- **Goal:** Goal 6 — Overlay Mode
+- **PRD:** research/agents/prds/goal-06-overlay-mode.md
+- **Scope:** React renderer for the overlay BrowserWindow. Compact display showing the active app name and top shortcuts (key caps + command labels). Uses `useOverlayData` hook for IPC data fetching. Supports Compact/Standard size modes. Click-through pass-through must be preserved. NOT in scope: overlay BrowserWindow creation (TASK-0017), settings UI (TASK-0019), detection integration, drag-to-reposition.
+- **PR:** #16
+- **Branch:** goals/18-overlay-renderer
+- **TRD:** research/plans/goals/18-overlay-renderer-trd.md — approved
 - **Approved:** 2026-05-10 (Round 2 — reviewer approved, awaiting owner merge)
-- **Notes:** Third Goal 5 task — adds search/filter on top of the renderer from TASK-0013. Round 1 changes requested: move #no-results outside #shortcuts-container, add regression test. Round 2: both fixed, 146/146 pass.
+- **Notes:** Round 1: ShortcutRow platform tests, Compact-mode App test, pointerEvents fix. Round 2: all addressed, 30/30 pass.
+
+## Shipped
+
+_(You move tasks here after merging to main.)_
+
+### TASK-0014: Reconcile Goal 4 Stubs — process-map.ts & active-window.ts
+- **Goal:** Goal 4 — Active Window Process Detection
+- **PRD:** research/agents/prds/goal-04-process-detection.md
+- **Scope:** Write the real `lookupApp()` implementation in process-map.ts (bundleId-first lookup from process-map.json, normalized process name fallback, .exe stripping) and the real `loadNativeModule` + `createActiveWindowDetector` wrapper in active-window.ts (three-path binary probe for packaged/webpack-dev/non-webpack runtimes). Both were stubs on main causing 49 test failures. NOT in scope: changes to DetectionService, TrayManager, main.ts, process-map.json, or test files.
+- **Acceptance:**
+  - lookupApp() returns correct app slugs via bundleId-first lookup with process name fallback
+  - loadNativeModule probes three paths for the kcc-native .node binary
+  - createActiveWindowDetector returns a factory-pattern detector instance
+  - All 49 previously-failing tests pass (40 lookupApp + 9 active-window)
+  - No regressions in existing passing tests
+- **PR:** #12
+- **Branch:** goals/14-reconcile-goal4-stubs
+- **TRD:** research/plans/goals/14-reconcile-goal4-stubs-trd.md — approved
+- **Approved:** 2026-05-10 (Round 2 — reviewer approved, awaiting owner merge)
+- **Merged:** 2026-05-10
+- **Notes:** Added retroactively by PM — Developer opened this PR outside normal backlog flow. Addresses PROP-0003 and PROP-0004.
 
 ### TASK-0012: Shortcut Data IPC Layer & Prefetch
 - **Goal:** Goal 5 — Shortcut Panel UI (Desktop)
@@ -151,26 +156,27 @@ _(Reviewer moves tasks here after approving the PR. You merge to main, then move
 - **Branch:** goals/12-shortcut-ipc-layer
 - **TRD:** research/plans/goals/12-shortcut-ipc-layer-trd.md — approved
 - **Approved:** 2026-05-10 (Round 1 — reviewer approved, awaiting owner merge)
+- **Merged:** 2026-05-10
 
-### TASK-0014: Reconcile Goal 4 Stubs — process-map.ts & active-window.ts
-- **Goal:** Goal 4 — Active Window Process Detection
-- **PRD:** research/agents/prds/goal-04-process-detection.md
-- **Scope:** Write the real `lookupApp()` implementation in process-map.ts (bundleId-first lookup from process-map.json, normalized process name fallback, .exe stripping) and the real `loadNativeModule` + `createActiveWindowDetector` wrapper in active-window.ts (three-path binary probe for packaged/webpack-dev/non-webpack runtimes). Both were stubs on main causing 49 test failures. NOT in scope: changes to DetectionService, TrayManager, main.ts, process-map.json, or test files.
+### TASK-0015: Panel Search/Filter Input
+- **Goal:** Goal 5 — Shortcut Panel UI (Desktop)
+- **PRD:** research/agents/prds/goal-05-shortcut-panel-ui.md
+- **Scope:** Add a search/filter input to the shortcut panel, positioned below the app header and above the shortcut list. When the user types, filter the displayed shortcuts in real time — matching against command description text and key combo text (case-insensitive substring match). Context group headings with no matching shortcuts should be hidden during filtering. Display a "No matching shortcuts" message when the filter matches nothing. Clearing the input restores the full shortcut list. The search input should be focused and ready for typing when the panel opens. Target <50ms filter response per keystroke on lists of 200+ shortcuts. NOT in scope: fallback states for no-detection/unrecognized app (separate task), fuzzy matching or advanced search operators, overlay mode (Goal 6), user accounts (Goal 7).
 - **Acceptance:**
-  - lookupApp() returns correct app slugs via bundleId-first lookup with process name fallback
-  - loadNativeModule probes three paths for the kcc-native .node binary
-  - createActiveWindowDetector returns a factory-pattern detector instance
-  - All 49 previously-failing tests pass (40 lookupApp + 9 active-window)
-  - No regressions in existing passing tests
-- **PR:** #12
-- **Branch:** goals/14-reconcile-goal4-stubs
-- **TRD:** research/plans/goals/14-reconcile-goal4-stubs-trd.md — approved
+  - Search input renders below app header, above shortcut list
+  - Search input is focused when the panel opens
+  - Typing filters shortcuts in real time by command description and key combo text
+  - Filtering is case-insensitive substring matching
+  - Context group headings with no matching results are hidden
+  - "No matching shortcuts" message displays when filter matches nothing
+  - Clearing input restores the full shortcut list
+  - Filter response <50ms per keystroke on 200+ shortcuts
+- **PR:** #15
+- **Branch:** goals/15-panel-search-filter
+- **TRD:** research/plans/goals/15-panel-search-filter-trd.md — approved
 - **Approved:** 2026-05-10 (Round 2 — reviewer approved, awaiting owner merge)
-- **Notes:** Added retroactively by PM — Developer opened this PR outside normal backlog flow. Addresses PROP-0003 and PROP-0004.
-
-## Shipped
-
-_(You move tasks here after merging to main.)_
+- **Merged:** 2026-05-10
+- **Notes:** Third Goal 5 task — adds search/filter on top of the renderer from TASK-0013. Round 1 changes requested: move #no-results outside #shortcuts-container, add regression test. Round 2: both fixed, 146/146 pass.
 
 ### TASK-0013: Panel Content Renderer & Shortcut Key Caps
 - **Goal:** Goal 5 — Shortcut Panel UI (Desktop)
