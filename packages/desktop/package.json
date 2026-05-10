@@ -7,7 +7,8 @@
     "dev": "electron-forge start",
     "build": "electron-forge make",
     "package": "electron-forge package",
-    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.renderer.json"
+    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.renderer.json",
+    "test": "vitest run"
   },
   "dependencies": {
     "@kcc/core": "*",
@@ -22,6 +23,7 @@
     "node-loader": "^2.0.0",
     "style-loader": "^3.0.0",
     "ts-loader": "^9.0.0",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "vitest": "^1.0.0"
   }
 }
