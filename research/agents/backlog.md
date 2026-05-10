@@ -73,6 +73,24 @@ _(Project Manager keeps 2–3 tasks here at all times.)_
 
 _(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
 
+### TASK-0019: Overlay Settings UI Section
+- **Goal:** Goal 6 — Overlay Mode
+- **PRD:** research/agents/prds/goal-06-overlay-mode.md
+- **Scope:** Add an "Overlay" section to the existing Settings window. Controls: (1) "Enable overlay mode" toggle (default off), (2) overlay hotkey input with configurable keybinding (default Ctrl+Shift+O / Cmd+Shift+O), (3) opacity slider (20%–80%, default 40%) with live preview, (4) position dropdown: "Top Right", "Top Left", "Bottom Right", "Bottom Left", "Center Right", "Center Left", (5) size toggle: "Compact" or "Standard". All values persist to electron-store. Hotkey validation: prevent conflicting panel hotkey — show inline error. When enable toggle off, overlay hotkey unregistered. NOT in scope: overlay BrowserWindow (TASK-0017), overlay renderer (TASK-0018), detection integration, drag-to-reposition, Linux/Wayland.
+- **Acceptance:**
+  - Settings window shows an "Overlay" section with all 5 controls
+  - Enable toggle registers/unregisters the overlay hotkey
+  - Opacity slider updates overlay opacity in real time when overlay is visible (live preview)
+  - Position dropdown moves overlay to the selected preset location immediately
+  - Size toggle switches between Compact and Standard display modes
+  - Hotkey input prevents assignment of conflicting panel hotkey — shows inline error
+  - All preference changes persist to electron-store and survive app restart
+  - Settings section is disabled/hidden when overlay feature is not available
+- **PR:** #17
+- **Branch:** goals/19-overlay-settings-ui
+- **TRD:** research/plans/goals/19-overlay-settings-ui-trd.md — awaiting-review
+- **Notes:** Third Goal 6 task — PRD Flows 1 and 4. TASK-0019 was in local PM/Reviewer agent state but not yet committed to main; added here retroactively. TRD defines overlay store schema and OverlayController interface (see PROP-0005 for coordination note with TASK-0017).
+
 ## In Review
 
 _(Developer moves tasks here when the draft PR is marked ready.)_
