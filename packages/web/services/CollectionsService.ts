@@ -1,5 +1,6 @@
 import { prisma } from '../lib/prisma';
 import type { CollectionSummary, FavoriteEntry } from '@kcc/core';
+import { mapRowToFavoriteEntry } from './favorites-utils';
 
 const COLLECTIONS_LIMIT = 50;
 
@@ -128,18 +129,6 @@ export class CollectionsService {
       orderBy: { createdAt: 'asc' },
     });
 
-    return rows.map((row) => ({
-      collectionShortcutId: row.id,
-      collectionId: row.collectionId,
-      shortcutId: row.shortcutId,
-      addedAt: row.createdAt.toISOString(),
-      shortcut: {
-        id: row.shortcut.id,
-        command: row.shortcut.command,
-        context: row.shortcut.context,
-        appName: row.shortcut.application.name,
-        appSlug: row.shortcut.application.slug,
-      },
-    }));
+    return rows.map(mapRowToFavoriteEntry);
   }
 }

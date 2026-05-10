@@ -189,6 +189,14 @@ describe('PATCH /api/collections/:id', () => {
     expect(res.status).toBe(401);
   });
 
+  it('returns 400 when no valid fields are provided', async () => {
+    const res = await PATCH(
+      makeRequest(`http://localhost/api/collections/${COLLECTION_ID}`, 'PATCH', {}),
+      { params: Promise.resolve({ id: COLLECTION_ID }) },
+    );
+    expect(res.status).toBe(400);
+  });
+
   it('returns 404 when collection is not found', async () => {
     mockPrisma.collection.findFirst.mockResolvedValue(null);
     const res = await PATCH(

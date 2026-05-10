@@ -1,5 +1,6 @@
 import { prisma } from '../lib/prisma';
 import type { FavoriteEntry } from '@kcc/core';
+import { mapRowToFavoriteEntry } from './favorites-utils';
 
 const FAVORITES_LIMIT = 1000;
 
@@ -22,19 +23,7 @@ export class FavoritesService {
       orderBy: { createdAt: 'asc' },
     });
 
-    return rows.map((row) => ({
-      collectionShortcutId: row.id,
-      collectionId: row.collectionId,
-      shortcutId: row.shortcutId,
-      addedAt: row.createdAt.toISOString(),
-      shortcut: {
-        id: row.shortcut.id,
-        command: row.shortcut.command,
-        context: row.shortcut.context,
-        appName: row.shortcut.application.name,
-        appSlug: row.shortcut.application.slug,
-      },
-    }));
+    return rows.map(mapRowToFavoriteEntry);
   }
 
   /**
