@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { lookupApp } from '../process-map';
+import { lookupApp, getDisplayName } from '../process-map';
 
 // PRD-specified top 10 apps
 describe('lookupApp — PRD top-10 apps', () => {
@@ -192,5 +192,46 @@ describe('lookupApp — extended app coverage', () => {
 
   it('FL Studio: "fl64" → fl-studio', () => {
     expect(lookupApp('fl64')).toBe('fl-studio');
+  });
+});
+
+// getDisplayName — display name lookup and title-case fallback
+describe('getDisplayName — known slugs', () => {
+  it('google-chrome → "Google Chrome"', () => {
+    expect(getDisplayName('google-chrome')).toBe('Google Chrome');
+  });
+
+  it('vscode → "VS Code"', () => {
+    expect(getDisplayName('vscode')).toBe('VS Code');
+  });
+
+  it('obs-studio → "OBS Studio"', () => {
+    expect(getDisplayName('obs-studio')).toBe('OBS Studio');
+  });
+
+  it('microsoft-word → "Microsoft Word"', () => {
+    expect(getDisplayName('microsoft-word')).toBe('Microsoft Word');
+  });
+
+  it('ableton-live → "Ableton Live"', () => {
+    expect(getDisplayName('ableton-live')).toBe('Ableton Live');
+  });
+
+  it('intellij-idea → "IntelliJ IDEA"', () => {
+    expect(getDisplayName('intellij-idea')).toBe('IntelliJ IDEA');
+  });
+});
+
+describe('getDisplayName — title-case fallback', () => {
+  it('unknown slug falls back to title-casing: "my-cool-app" → "My Cool App"', () => {
+    expect(getDisplayName('my-cool-app')).toBe('My Cool App');
+  });
+
+  it('single-word slug: "zoom" → "Zoom"', () => {
+    expect(getDisplayName('zoom')).toBe('Zoom');
+  });
+
+  it('single-word unknown slug: "zerglings" → "Zerglings"', () => {
+    expect(getDisplayName('zerglings')).toBe('Zerglings');
   });
 });
