@@ -1431,3 +1431,4 @@
 - tests: 172/172 green (+26 overlay-window tests) | tsc clean all 3 configs
 - metrics: run_type=productive | commits=1 | tests_added=26 | trd_cycles=0 | dev_idle=0
 - next: Reviewer approves PR #18; TASK-0020 (Overlay Detection Integration) becomes buildable once #18 merges
+- discord: FAILED — #main (1494231685900931192) not allowlisted; summary logged here only
