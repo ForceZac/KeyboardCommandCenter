@@ -3,6 +3,7 @@ import mapData from './process-map.json';
 type ProcessMap = {
   byProcess: Record<string, string>;
   byBundleId: Record<string, string>;
+  displayNames: Record<string, string>;
 };
 
 const processMap: ProcessMap = mapData as ProcessMap;
@@ -38,4 +39,19 @@ export function lookupApp(
   if (!normalized) return null;
 
   return processMap.byProcess[normalized] ?? null;
+}
+
+/**
+ * Return a human-readable display name for an app slug.
+ *
+ * Uses the displayNames lookup table in process-map.json when available;
+ * falls back to title-casing the slug (e.g. "my-cool-app" → "My Cool App").
+ */
+export function getDisplayName(slug: string): string {
+  const mapped = processMap.displayNames[slug];
+  if (mapped) return mapped;
+  return slug
+    .split('-')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
 }
