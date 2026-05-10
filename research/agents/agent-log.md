@@ -1,5 +1,20 @@
 <!-- Agent log. Append-only. Agents read the last 75 lines before acting. Log Trim archives entries older than 48h into agent-log-archive-YYYY-MM.md. -->
 
+## 2026-05-09 22:08 ET REVIEWER
+- did: reviewed PR #8 (TASK-0008 — Process-to-App Mapping Table, round 1)
+- decision: approved (posted as comment — GitHub self-review restriction, same precedent as prior reviews)
+- standards checked: separation-of-concerns (desktop-only placement, no web/IPC code), scope/TRD match (exact), PR policy, TypeScript (clean), test quality (44/44 pass), scalability (O(1) flat lookup), readability (JSDoc clear)
+- tests: `npm run test -w packages/desktop` → 44/44 PASS | `npm run typecheck` → clean
+- no E2E tests: TRD-approved exception (pure TS utility module, no UI surface)
+- coverage: 46/46 mappable seed apps covered; 4 intentionally excluded (google-docs/sheets/slides, windows-11) — documented in TRD addendum with sound reasoning
+- owner advisory addressed: Electron helper process aliases (slack helper, code helper (renderer), figma helper, discord helper (renderer)) present in byProcess map
+- minor observation: developer added TASK-0010 to backlog — technically PM scope, not blocking
+- backlog: moved TASK-0008 from In Review → Approved
+- goal-summary: created research/goals/goal-04-process-detection.md with TASK-0008 section
+- idle-reset: REV_IDLE → 0, DEV_PAUSE removed
+- metrics: run_type=productive | pr=PR-8 | round=1 | decision=approved | tests_run=pass
+- next: Zach merges PR #8; TASK-0008 moves to Shipped; TASK-0009 (Rust native module) is next in Goal 4
+
 ## 2026-05-09 20:52 ET DEVELOPER
 - did: woke — DEV_LOCK held by prior run (TASK-0006 in lock, age ~12 min), exiting
 - task: n/a
@@ -812,3 +827,100 @@
 - tests: green (44/44)
 - metrics: run_type=productive | commits=1 | tests_added=44 | trd_cycles=0
 - next: Reviewer picks up PR #8; TASK-0009 (Rust native module) is top of Ready queue for next run
+
+## 2026-05-09 21:34 ET PROJECT-MANAGER
+- did: created TASK-0010 (Detection Polling Service & IPC Integration) for Goal 4; filed PROP-0001 (Goal 3 process bypass — prevent future untracked work)
+- created: TASK-0010
+- moved: none
+- prd gaps: Goal 5 (Shortcut Panel UI) — no PRD exists yet; Product Manager should write it next
+- roadmap check: skipped (ran last PM cycle)
+- stale items: none — TASK-0005 approved 05-09, TASK-0007 approved 05-10, TASK-0008 in review since 05-09 21:25 ET — all within thresholds
+- proposals added: 1 (PROP-0001 — Goal 3 process bypass, filed retroactively per PROP-0005)
+- metrics: tasks_created=1 | tasks_moved=0 | prd_gaps=1 | roadmap_issues=0
+- idle: PM_IDLE=0 (reset — productive run)
+- next: Ready queue healthy at 2 (TASK-0009, TASK-0010). Once Goal 5 PRD lands, create Goal 5 tasks. Monitor TASK-0008 review progress and TASK-0005/TASK-0007 merge status.
+
+## 2026-05-09 21:35 ET PROJECT-MANAGER (addendum)
+- discord: FAILED — #standup and #main channels not allowlisted. Owner needs to run /discord:access (see PROP-0004).
+
+## 2026-05-09 21:40 ET REVIEWER
+- did: reviewed PR #8 (TASK-0008 — Process-to-App Mapping Table, round 1)
+- decision: changes-requested
+- standards checked: backend-standards (no backend code, n/a), frontend-standards (no frontend code, n/a), separation-of-concerns (all code in packages/desktop/src/ ✓), pull-request-policy (tests pass, TS clean ✓)
+- findings: 44/44 tests pass; TypeScript clean; TRD compliance confirmed (byProcess/byBundleId structure, lookupApp() API, .exe normalization, bundle ID priority, ProcessMap type, Vitest tests — all match); scope clean; code quality high. Blocker: 4 seeded slugs (google-docs, google-sheets, google-slides, windows-11) absent from map without documentation. Acceptance criteria says all 50+ seeded apps must be covered. Exclusions are defensible (web-only/OS) but undocumented. Fix is documentation-only — no code change needed.
+- note: gh pr review --request-changes blocked (self-PR); review left as comment
+- metrics: run_type=productive | pr=PR-8 | round=1 | decision=changes-requested | tests_run=pass
+- next: Developer adds documentation note for 4 excluded apps; Reviewer re-reviews (round 2 — scoped to whether the note was added)
+
+## 2026-05-09 21:40 ET DEVELOPER
+- did: woke, found DEV_LOCK held (~10 min old) — exiting without work
+- task: n/a
+- status: no-op exit
+- metrics: run_type=no-op | reason=DEV_LOCK held (claimed at 2026-05-10T01:30:45Z, ~10 min ago)
+- next: retry next cron — if lock is stale (>25 min) on next run, will override and proceed
+
+## 2026-05-09 21:50 ET DEVELOPER
+- did: woke, found DEV_LOCK held (19 min old, claimed at 2026-05-10T01:30:45Z — TBD) — exiting without work
+- task: n/a
+- status: no-op exit
+- metrics: run_type=no-op | reason=DEV_LOCK held (<25 min) | dev_idle=2
+- next: retry next cron — if lock is stale (>25 min) on next run, will override and proceed
+
+## 2026-05-09 22:02 ET DEVELOPER
+- did: overrode stale DEV_LOCK (30 min, content TBD — orphaned from two prior no-op runs). Fixed TASK-0008 changes-requested: added TRD addendum documenting 4 intentionally excluded seed slugs (google-docs, google-sheets, google-slides, windows-11). Committed, pushed, left PR comment, moved task back to In Review.
+- task: TASK-0008
+- PR: #8
+- trd: approved — fix-up complete
+- tests: green (44/44 — no code changes, docs only)
+- metrics: run_type=productive | commits=2 | tests_added=0 | trd_cycles=0
+- next: Reviewer re-reviews PR #8 (round 2 — scoped to TRD addendum). Once approved, Reviewer merges. TASK-0009 (Rust native module) is top of Ready queue for next Developer run.
+
+## 2026-05-09 22:04 ET PROJECT-MANAGER
+- did: roadmap health check — no structural issues; flagged merge backlog and PRD gap
+- created: none
+- moved: none
+- prd gaps: Goal 5 (Shortcut Panel UI) — still no PRD; Goal 6 (Overlay Mode) — no PRD (N+2, lower urgency)
+- roadmap check: solid — sequencing correct, no scope creep, no stale goals. Soft blocker: TASK-0009 (Ready) depends on TASK-0007 merging, which awaits /merge authorization. Two approved tasks (TASK-0005, TASK-0007) sitting with open PRs pending /merge.
+- stale items: TASK-0005 approved 05-09 (PR #6 open), TASK-0007 approved 05-10 (PR #7 open) — both awaiting /merge from owner. TASK-0008 in review since 05-09 21:25 ET awaiting reviewer round 2.
+- proposals added: 0
+- metrics: tasks_created=0 | tasks_moved=0 | prd_gaps=2 | roadmap_issues=0
+- idle: PM_IDLE incremented to 1 (no tasks created/moved/proposals filed)
+- next: Ready queue at 2 (TASK-0009, TASK-0010) — can't add more until Goal 5 PRD exists. Owner needs to /merge PR #6 and PR #7 to unblock TASK-0009. Product Manager needs to write Goal 5 PRD.
+
+## 2026-05-09 22:04 ET PROJECT-MANAGER (addendum)
+- discord: FAILED — #standup, #alerts, and #main channels not allowlisted (PROP-0004 still open). Owner needs to run /discord:access.
+
+## 2026-05-09 22:10 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TBD (update below when known)
+- status: in-progress
+
+## 2026-05-09 22:10 ET DEVELOPER
+- did: started run — claimed DEV_LOCK; picking TASK-0009 (Rust Native Module for Active Window Detection)
+- task: TASK-0009
+- status: in-progress — TRD phase
+
+## 2026-05-09 22:10 ET DEVELOPER
+- did: picked TASK-0009 (Rust Native Module for Active Window Detection). Wrote plan (7 slices) and TRD for napi-rs native module with Win32 + macOS platform adapters. Opened draft PR #9. Moved task to In Progress.
+- task: TASK-0009
+- PR: #9
+- trd: written — awaiting-review
+- tests: n/a (TRD phase only)
+- metrics: run_type=productive | commits=2 | tests_added=0 | trd_cycles=0 | dev_idle=0
+- next: TRD Watcher reviews TRD; once approved, Developer resumes to build napi-rs crate + platform adapters + TS wrapper
+
+## 2026-05-09 22:21 ET DEVELOPER
+- did: started run — claimed DEV_LOCK; resuming TASK-0009 (TRD approved — build phase)
+- task: TASK-0009
+- PR: #9
+- trd: approved
+- status: in-progress
+
+## 2026-05-09 22:33 ET DEVELOPER
+- did: FINAL — built TASK-0009 Rust native module (all slices complete), 9/9 tests pass, tsc clean, PR #9 marked ready
+- task: TASK-0009
+- PR: #9
+- trd: approved — built
+- tests: green (9/9 vitest unit tests, tsc noEmit clean)
+- metrics: run_type=productive | commits=2 | tests_added=9 | trd_cycles=0
+- next: Reviewer reviews PR #9; TASK-0010 (polling service + IPC) queued in Ready

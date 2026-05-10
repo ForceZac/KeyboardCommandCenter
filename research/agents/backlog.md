@@ -33,24 +33,6 @@ Task IDs are monotonic. The Project Manager picks the next number.
 
 _(Project Manager keeps 2–3 tasks here at all times.)_
 
-### TASK-0009: Rust Native Module for Active Window Detection
-- **Goal:** Goal 4 — Active Window Process Detection
-- **PRD:** research/agents/prds/goal-04-process-detection.md
-- **Scope:** Set up a `napi-rs` project within the desktop package to build a native Node module exposing `getActiveWindow(): { processName: string, windowTitle: string, bundleId?: string }`. Implement platform adapters using a strategy pattern: Win32 adapter (`GetForegroundWindow` → `GetWindowThreadProcessId` → process name/exe path) and macOS adapter (`NSWorkspace.shared.frontmostApplication` → bundle ID and process name). Integrate the native module build with the existing Electron Forge webpack pipeline so `npm run make` produces a working binary. Generate TypeScript type definitions for the exported interface. NOT in scope: polling service, IPC to renderer, tray "Recent Apps" submenu, settings toggle, process-to-app mapping (TASK-0008), Linux support, overlay.
-- **Acceptance:**
-  - `napi-rs` project structure exists and compiles successfully
-  - `getActiveWindow()` returns the correct process name for the currently active window on the build platform
-  - Function returns window title and bundle ID (macOS) when available
-  - Native module `.node` binary is loadable from Electron's main process via `require()`
-  - Build integrates with Electron Forge — no manual steps beyond `npm run make`
-  - TypeScript type definitions are generated for the native interface
-  - Graceful error handling: returns `null` on detection failure, does not crash the Electron process
-  - Works on both Windows and macOS (platform-specific code behind adapter interface)
-- **PR:**
-- **Branch:**
-- **TRD:**
-- **Notes:** Depends on Goal 3 infrastructure (TASK-0007 must ship first — Electron app with settings via electron-store). Uses `napi-rs` per PRD recommendation. The native module is consumed by the polling service (TASK-0010) and by TASK-0008's mapping layer.
-
 ### TASK-0010: Detection Polling Service & IPC Integration
 - **Goal:** Goal 4 — Active Window Process Detection
 - **PRD:** research/agents/prds/goal-04-process-detection.md
@@ -79,6 +61,36 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
 
 _(Developer moves tasks here when the draft PR is marked ready.)_
 
+### TASK-0009: Rust Native Module for Active Window Detection
+- **Goal:** Goal 4 — Active Window Process Detection
+- **PRD:** research/agents/prds/goal-04-process-detection.md
+- **Scope:** Set up a `napi-rs` project within the desktop package to build a native Node module exposing `getActiveWindow(): { processName: string, windowTitle: string, bundleId?: string }`. Implement platform adapters using a strategy pattern: Win32 adapter (`GetForegroundWindow` → `GetWindowThreadProcessId` → process name/exe path) and macOS adapter (`NSWorkspace.shared.frontmostApplication` → bundle ID and process name). Integrate the native module build with the existing Electron Forge webpack pipeline so `npm run make` produces a working binary. Generate TypeScript type definitions for the exported interface. NOT in scope: polling service, IPC to renderer, tray "Recent Apps" submenu, settings toggle, process-to-app mapping (TASK-0008), Linux support, overlay.
+- **Acceptance:**
+  - `napi-rs` project structure exists and compiles successfully
+  - `getActiveWindow()` returns the correct process name for the currently active window on the build platform
+  - Function returns window title and bundle ID (macOS) when available
+  - Native module `.node` binary is loadable from Electron's main process via `require()`
+  - Build integrates with Electron Forge — no manual steps beyond `npm run make`
+  - TypeScript type definitions are generated for the native interface
+  - Graceful error handling: returns `null` on detection failure, does not crash the Electron process
+  - Works on both Windows and macOS (platform-specific code behind adapter interface)
+- **PR:** #9
+- **Branch:** goals/9-rust-native-module
+- **TRD:** research/plans/goals/9-rust-native-module-trd.md — approved
+- **Notes:** Depends on Goal 3 infrastructure (TASK-0007 must ship first — Electron app with settings via electron-store). Uses `napi-rs` per PRD recommendation. The native module is consumed by the polling service (TASK-0010) and by TASK-0008's mapping layer.
+
+## Changes Requested
+
+_(Reviewer moves tasks here when a PR needs rework.)_
+
+## TRD Changes Requested
+
+_(TRD Watcher moves tasks here when a TRD needs rework.)_
+
+## Approved
+
+_(Reviewer moves tasks here after approving the PR. You merge to main, then move to Shipped.)_
+
 ### TASK-0008: Process-to-App Mapping Table
 - **Goal:** Goal 4 — Active Window Process Detection
 - **PRD:** research/agents/prds/goal-04-process-detection.md
@@ -92,19 +104,8 @@ _(Developer moves tasks here when the draft PR is marked ready.)_
 - **PR:** #8
 - **Branch:** goals/8-process-map
 - **TRD:** research/plans/goals/8-process-map-trd.md — approved
+- **Approved:** 2026-05-09
 - **Notes:** Foundational for TASK-0009 and the rest of Goal 4. Does not depend on Goal 3 Electron infrastructure — can be started immediately. App slugs should match existing database entries from seed data.
-
-## Changes Requested
-
-_(Reviewer moves tasks here when a PR needs rework.)_
-
-## TRD Changes Requested
-
-_(TRD Watcher moves tasks here when a TRD needs rework.)_
-
-## Approved
-
-_(Reviewer moves tasks here after approving the PR. You merge to main, then move to Shipped.)_
 
 ### TASK-0007: Settings Persistence & Login Startup Registration
 - **Goal:** Goal 3 — Desktop App Shell (Electron + Tray)
