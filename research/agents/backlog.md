@@ -33,6 +33,25 @@ Task IDs are monotonic. The Project Manager picks the next number.
 
 _(Project Manager keeps 2–3 tasks here at all times.)_
 
+### TASK-0017: Overlay BrowserWindow & Toggle Hotkey
+- **Goal:** Goal 6 — Overlay Mode
+- **PRD:** research/agents/prds/goal-06-overlay-mode.md
+- **Scope:** Create the Electron BrowserWindow for the overlay: frameless, `transparent: true`, `backgroundColor: '#00000000'`, `alwaysOnTop: true` with level `'floating'`, `setIgnoreMouseEvents(true, { forward: true })` for full click-through. Register a secondary configurable global hotkey (default Ctrl+Shift+O on Windows / Cmd+Shift+O on macOS) via `globalShortcut` that toggles overlay window visibility. Add overlay preferences to `electron-store`: `overlay.enabled` (bool, default false), `overlay.hotkey` (string), `overlay.opacity` (number, default 0.4), `overlay.position` (string, default "Top Right"), `overlay.size` (string, default "Standard"). Position the overlay on the correct monitor using Electron's `screen` API. Ensure the panel window has a higher z-order than the overlay when both are visible (PRD Flow 6). NOT in scope: overlay renderer content or React components (separate task), settings UI section for overlay preferences (separate task), detection integration and app-switch content updates (separate task), opacity live preview in settings.
+- **Acceptance:**
+  - Overlay BrowserWindow is frameless, transparent, always-on-top with `'floating'` level
+  - Overlay window is click-through — all mouse events pass to the underlying window on both Windows and macOS
+  - Configurable global hotkey toggles overlay window show/hide
+  - Default hotkey is Ctrl+Shift+O (Windows) / Cmd+Shift+O (macOS)
+  - Overlay preferences stored in electron-store with correct defaults
+  - Overlay appears on the same monitor as the active application window
+  - Panel window renders above overlay when both are visible (higher z-order)
+  - Overlay does not increase idle memory by more than 20MB
+  - No crash when overlay hotkey is pressed before detection service is running
+- **PR:**
+- **Branch:**
+- **TRD:**
+- **Notes:** First Goal 6 task — the overlay window shell. Depends on Goal 5 completion (panel and detection infrastructure must be on main). Look-ahead task queued while Goal 5 wraps up so the Developer doesn't idle between goals.
+
 ### TASK-0016: Panel Fallback States — No Detection, Unrecognized App, No Shortcuts
 - **Goal:** Goal 5 — Shortcut Panel UI (Desktop)
 - **PRD:** research/agents/prds/goal-05-shortcut-panel-ui.md
@@ -54,6 +73,10 @@ _(Project Manager keeps 2–3 tasks here at all times.)_
 
 _(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
 
+## In Review
+
+_(Developer moves tasks here when the draft PR is marked ready.)_
+
 ### TASK-0015: Panel Search/Filter Input
 - **Goal:** Goal 5 — Shortcut Panel UI (Desktop)
 - **PRD:** research/agents/prds/goal-05-shortcut-panel-ui.md
@@ -69,12 +92,8 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
   - Filter response <50ms per keystroke on 200+ shortcuts
 - **PR:** #15
 - **Branch:** goals/15-panel-search-filter
-- **TRD:** research/plans/goals/15-panel-search-filter-trd.md — awaiting-review
-- **Notes:** Third Goal 5 task — adds search/filter on top of the renderer from TASK-0013. Depends on TASK-0013 shipping first (provides the panel content and grouped shortcut list to filter against). See PRD Flow 2 for the full UX specification.
-
-## In Review
-
-_(Developer moves tasks here when the draft PR is marked ready.)_
+- **TRD:** research/plans/goals/15-panel-search-filter-trd.md — approved
+- **Notes:** Third Goal 5 task — adds search/filter on top of the renderer from TASK-0013. See PRD Flow 2 for the full UX specification.
 
 ## Changes Requested
 

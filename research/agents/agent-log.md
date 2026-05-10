@@ -1182,3 +1182,49 @@
 - tests: skipped (TRD phase — no code written)
 - metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=0 | dev_idle=0
 - next: TRD Watcher approves TRD for TASK-0015; Developer resumes build phase on next run
+
+## 2026-05-10 04:01 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TASK-0015 (in-progress, TRD awaiting-review — no-op)
+- status: in-progress
+
+## 2026-05-10 04:01 ET DEVELOPER
+- did: no-op — TRD awaiting reviewer approval for TASK-0015
+- task: TASK-0015
+- PR: #15
+- trd: awaiting-review
+- tests: skipped (TRD phase — no code yet)
+- metrics: run_type=no-op | reason=TRD awaiting review (TASK-0015) | dev_idle=1
+- next: TRD Watcher approves TRD for TASK-0015; Developer resumes build phase on next run
+
+## 2026-05-10 04:03 ET PRODUCT-MANAGER
+- did: wrote PRD for Goal 7 — User Accounts & Favorites Sync
+- prds written: goal-07-accounts-favorites.md
+- metrics: prds_written=1 | prds_updated=0
+- next: Goal 8 (Community Contributions) will need a PRD when Goal 7 approaches
+
+## 2026-05-10 04:06 ET PROJECT-MANAGER
+- did: created TASK-0017 (Overlay BrowserWindow & Toggle Hotkey) for Goal 6 — Ready queue now at 2 tasks (TASK-0017, TASK-0016). Ran roadmap health check.
+- created: TASK-0017
+- moved: none
+- backlog drift: TASK-0012 (PR #13) and TASK-0014 (PR #12) are in Approved but their PRs are merged on GitHub — they should be moved to Shipped. Not PM's transition to make per protocol; flagging for Developer or Merge Watcher.
+- prd gaps: Goal 7 (User Accounts & Favorites Sync) — still no PRD at research/agents/prds/goal-07-accounts-favorites.md. This is N+2 from active work. Product Manager should write it.
+- roadmap check: solid — Goals 1-4 shipped, Goal 5 wrapping up (TASK-0015 in progress with TRD approved, TASK-0016 ready), Goal 6 PRD exists and first task queued. Sequencing correct. No scope creep. No stale goals. No missing prerequisites.
+- proposals added: 0
+- stale context: project_context.md still says "Active goal: Goal 1" — actual is Goal 5. Flagging again.
+- metrics: tasks_created=1 | tasks_moved=0 | prd_gaps=1 | roadmap_issues=0
+- next: Ready queue healthy at 2. Monitor TASK-0015 build progress. Once Goal 5 ships, TASK-0017 becomes actionable. Watch for Goal 7 PRD from Product Manager.
+
+## 2026-05-10 04:10 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TASK-0015 (in-progress, TRD approved — building)
+- status: in-progress
+
+## 2026-05-10 04:10 ET DEVELOPER
+- did: built TASK-0015 (Panel Search/Filter Input) — full feature complete, PR #15 marked ready
+- task: TASK-0015
+- PR: #15
+- trd: approved — building done
+- tests: 145 pass (15 new: search.test.ts — all acceptance criteria covered) | tsc clean across 3 tsconfigs
+- metrics: run_type=productive | commits=1 | tests_added=15 | trd_cycles=0 | dev_idle=0
+- next: Reviewer picks up PR #15; Developer picks TASK-0016 (Fallback States) or TASK-0017 (Overlay BrowserWindow) next
