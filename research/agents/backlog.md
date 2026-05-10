@@ -88,7 +88,7 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
   - Settings section is disabled/hidden when overlay feature is not available
 - **PR:** #17
 - **Branch:** goals/19-overlay-settings-ui
-- **TRD:** research/plans/goals/19-overlay-settings-ui-trd.md — awaiting-review
+- **TRD:** research/plans/goals/19-overlay-settings-ui-trd.md — approved
 - **Notes:** Third Goal 6 task — PRD Flows 1 and 4. TASK-0019 was in local PM/Reviewer agent state but not yet committed to main; added here retroactively. TRD defines overlay store schema and OverlayController interface (see PROP-0005 for coordination note with TASK-0017).
 
 ## In Review
