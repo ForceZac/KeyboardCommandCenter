@@ -252,7 +252,7 @@ describe('DetectionService', () => {
     }).not.toThrow();
   });
 
-  it('does not emit when getActiveWindow returns null', () => {
+  it('does not emit when getActiveWindow returns null on the very first tick', () => {
     const emitToRenderer = vi.fn();
     const svc = new DetectionService({
       getActiveWindow: vi.fn(() => null),
@@ -266,6 +266,53 @@ describe('DetectionService', () => {
     svc.stop();
 
     expect(emitToRenderer).not.toHaveBeenCalled();
+  });
+
+  it('emits no-detection sentinel when active window transitions from detected app to null', () => {
+    const emitToRenderer = vi.fn<[string, DetectionPayload], void>();
+    let call = 0;
+    // First tick: return a real window; second tick: return null.
+    const getActiveWindow = vi.fn(() => call++ === 0 ? makeWindowInfo('code') : null);
+
+    const svc = new DetectionService({
+      getActiveWindow,
+      lookupApp: () => 'vscode',
+      emitToRenderer,
+      store: makeStore({ 'detection.intervalMs': 100 }),
+    });
+
+    svc.start();
+    vi.advanceTimersByTime(250); // 2 ticks: code → null
+    svc.stop();
+
+    expect(emitToRenderer).toHaveBeenCalledTimes(2);
+    // First call: detected 'code'
+    expect(emitToRenderer.mock.calls[0][1]).toMatchObject({ appSlug: 'vscode', processName: 'code' });
+    // Second call: no-detection sentinel
+    expect(emitToRenderer.mock.calls[1][1]).toMatchObject({ appSlug: null, processName: '', windowTitle: '' });
+  });
+
+  it('emits no-detection sentinel only once for consecutive null ticks', () => {
+    const emitToRenderer = vi.fn<[string, DetectionPayload], void>();
+    let call = 0;
+    // First tick: real window; second and third ticks: null.
+    const getActiveWindow = vi.fn(() => call++ === 0 ? makeWindowInfo('code') : null);
+
+    const svc = new DetectionService({
+      getActiveWindow,
+      lookupApp: () => 'vscode',
+      emitToRenderer,
+      store: makeStore({ 'detection.intervalMs': 100 }),
+    });
+
+    svc.start();
+    vi.advanceTimersByTime(350); // 3 ticks: code → null → null
+    svc.stop();
+
+    // Only 2 emits total: first detection + first null transition.
+    // The third tick (still null) must not emit again.
+    expect(emitToRenderer).toHaveBeenCalledTimes(2);
+    expect(emitToRenderer.mock.calls[1][1]).toMatchObject({ appSlug: null, processName: '' });
   });
 
   // ── Disabled service ───────────────────────────────────────────────────────

@@ -58,6 +58,18 @@ describe('App', () => {
     expect(container.firstChild).toBeNull();
   });
 
+  it('shows "No app detected" when processName is empty (no-detection sentinel)', async () => {
+    render(<App />);
+    await waitFor(() => expect(appChangedCallback).not.toBeNull());
+
+    await act(async () => {
+      // Empty processName is the detection service's no-active-window sentinel.
+      appChangedCallback!({ appSlug: null, processName: '', windowTitle: '' });
+    });
+
+    expect(screen.getByText('No app detected')).toBeTruthy();
+  });
+
   it('shows NoShortcuts when app is unrecognized (null slug)', async () => {
     setupMock(null);
     render(<App />);
