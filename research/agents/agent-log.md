@@ -1,5 +1,16 @@
 <!-- Agent log. Append-only. Agents read the last 75 lines before acting. Log Trim archives entries older than 48h into agent-log-archive-YYYY-MM.md. -->
 
+## 2026-05-10 04:52 ET REVIEWER
+- did: reviewed PR #15 (TASK-0015 — Panel Search/Filter Input, round 2 independent verification)
+- decision: approved (posted as comment — GitHub self-review restriction, same precedent as prior PRs)
+- note: Round-1 changes-requested was from 04:30 ET this run cycle. Developer resubmitted same session. Backlog had stash-pop merge conflict resolved; TASK-0015 moved from In Review → Approved. Goal summary already present in goal-05-shortcut-panel-ui.md from prior stash.
+- standards checked: TRD compliance (all signatures/decisions match exactly), separation of concerns (packages/desktop only, zero IPC/main-process/web changes), test quality (14 acceptance + 1 regression, jsdom env, E2E exception established), scope (strictly TASK-0015), no new runtime deps (jsdom is devDep only)
+- tests run (myself): `npm run test -w packages/desktop` → 146/146 PASS ✅ | TypeScript: clean on tsconfig.json + tsconfig.tests.json + tsconfig.renderer.json ✅
+- round-1 issues verified: #no-results is sibling of #shortcuts-container (not child) in index.html ✅ | regression test confirms document.contains(noResults) after innerHTML replacement ✅
+- metrics: run_type=productive | pr=PR-15 | round=2 | decision=approved | tests_run=pass
+- idle-reset: REV_IDLE → 0, DEV_PAUSE removed
+- next: In Review empty. TASK-0016 (fallback states) next in Ready — depends on TASK-0015 merge. TASK-0012/TASK-0014 still awaiting owner merge.
+
 ## 2026-05-10 04:30 ET REVIEWER
 - did: reviewed PR #15 (TASK-0015 — Panel Search/Filter Input, round 1)
 - decision: changes-requested (posted as comment — GitHub self-review restriction, same precedent as prior reviews)
@@ -1267,3 +1278,37 @@
 - tests: 146/146 green (+1 regression test)
 - metrics: run_type=productive | commits=2 | tests_added=1 | trd_cycles=0 | dev_idle=0
 - next: Reviewer picks up PR #15 for round 2 approval
+
+## 2026-05-10 04:41 ET DEVELOPER
+- did: wrote plan + TRD for TASK-0018 (Overlay Renderer — Compact Shortcut Display), pushed branch goals/18-overlay-renderer, opened draft PR #16
+- task: TASK-0018
+- PR: #16
+- trd: written — awaiting-review
+- tests: skipped (TRD phase — no code yet)
+- metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=0 | dev_idle=0
+- next: TRD Watcher reviews TRD for TASK-0018; Developer resumes build phase once approved (requires TASK-0017 merge for e2e integration)
+
+## 2026-05-10 05:05 ET PROJECT-MANAGER
+- did: created TASK-0019 (Overlay Settings UI Section) for Goal 6 — Ready queue now at 3 tasks (TASK-0019, TASK-0017, TASK-0016). Skipped roadmap health check (did last run).
+- created: TASK-0019
+- moved: none
+- prd gaps: Goal 8 (Community Contributions) — no PRD at research/agents/prds/goal-08-community-contributions.md. Goal 7 gap resolved (Product Manager wrote goal-07-accounts-favorites.md last run).
+- roadmap check: skipped (did last run — was solid)
+- proposals added: 0
+- drift notes: TASK-0012 (PR #13) and TASK-0014 (PR #12) still in Approved but PRs are merged on GitHub — Merge Watcher should move to Shipped. project_context.md still says "Active goal: Goal 1" — actual is Goal 5/6.
+- metrics: tasks_created=1 | tasks_moved=0 | prd_gaps=1 | roadmap_issues=0
+- next: Ready queue healthy at 3. Goal 6 fully tasked (TASK-0017, TASK-0018, TASK-0019). Watch for TASK-0015 merge to clear Goal 5. Goal 8 PRD needed from Product Manager before Goal 7 tasks can be queued.
+
+## 2026-05-10 05:02 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TASK-0018 (in-progress, TRD approved — building)
+- status: in-progress
+
+## 2026-05-10 05:11 ET DEVELOPER
+- did: built TASK-0018 (Overlay Renderer — Compact Shortcut Display) — full feature complete, PR #16 marked ready
+- task: TASK-0018
+- PR: #16 https://github.com/ForceZac/KeyboardCommandCenter/pull/16
+- trd: approved — building done
+- tests: 25/25 pass (12 contentSelection, 6 useOverlayData, 7 App component) | tsc clean | vite build 145KB
+- metrics: run_type=productive | commits=1 | tests_added=25 | trd_cycles=0 | dev_idle=0
+- next: Reviewer picks up PR #16; Developer picks TASK-0017 (Overlay BrowserWindow) or TASK-0016 (Fallback States) next
