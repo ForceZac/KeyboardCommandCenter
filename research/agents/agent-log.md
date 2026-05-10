@@ -1606,3 +1606,10 @@
 - tests: green (148 desktop + 35 overlay = 183 total; all pass)
 - metrics: run_type=no-op | reason=Phase 3 blocked — TASK-0017 (PR #18) not yet merged; overlay-window.ts not on main | dev_idle=3
 - next: TASK-0017 must merge to main; then rebase goals/20-overlay-detection-integration onto updated main and build Phase 3 (lastDetectionPayload buffer + did-finish-load replay in OverlayWindowManager)
+
+## 2026-05-10 11:38 ET MERGE-WATCHER
+- did: unblocked 0 task(s), synced 1 branch (0 conflicts)
+- merged to main: PR #18 (TASK-0017 goals/17-overlay-browser-window), PR #17 (TASK-0019 goals/19-overlay-settings-ui)
+- synced: goals/21-auth-schema-nextauth (resolved tracking-file conflict, pushed)
+- goals/20-overlay-detection-integration: already up to date
+- moved TASK-0017 and TASK-0019 to Shipped in backlog.md
