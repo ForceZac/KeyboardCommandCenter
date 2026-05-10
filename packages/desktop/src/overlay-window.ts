@@ -66,6 +66,14 @@ export class OverlayWindowManager implements OverlayController {
   private currentHotkey: string;
   private currentPosition: string;
   private currentSize: string;
+  /**
+   * Buffers the most recent `detection:app-changed` payload. When the overlay
+   * BrowserWindow is created lazily (on first show()), detection events may
+   * fire before `loadFile` completes. We store the latest payload here and
+   * replay it on `did-finish-load` so the renderer always reflects the current
+   * detected app — not a blank or stale state.
+   */
+  private lastDetectionPayload: unknown = null;
 
   constructor() {
     const prefs = getOverlayPrefs();
@@ -113,6 +121,15 @@ export class OverlayWindowManager implements OverlayController {
     // Full click-through: all mouse events pass to the underlying window.
     this.window.setIgnoreMouseEvents(true, { forward: true });
 
+    // Replay the last known detection state once the renderer is ready.
+    // This handles the race between lazy window creation and detection events
+    // that fire while loadFile is still in progress.
+    this.window.webContents.on('did-finish-load', () => {
+      if (this.lastDetectionPayload !== null && this.window !== null && !this.window.isDestroyed()) {
+        this.window.webContents.send('detection:app-changed', this.lastDetectionPayload);
+      }
+    });
+
     // Load the Vite-built overlay renderer from packages/overlay/dist/.
     // __dirname in the webpack-compiled main process is packages/desktop/.webpack/main/.
     // Going up 3 levels reaches packages/, then we enter overlay/dist/.
@@ -153,9 +170,17 @@ export class OverlayWindowManager implements OverlayController {
 
   /**
    * Forward an IPC event to the overlay renderer webContents.
-   * Silently skips when the window has not been created or is destroyed.
+   *
+   * Detection payloads are buffered unconditionally so that if the renderer
+   * is not yet loaded (window loading or not yet created), the latest app
+   * state is available for replay on `did-finish-load`.
    */
   sendToRenderer(channel: string, payload: unknown): void {
+    // Buffer detection events for ready-state replay (Phase 3 — TASK-0020).
+    // This runs regardless of whether the window exists yet.
+    if (channel === 'detection:app-changed') {
+      this.lastDetectionPayload = payload;
+    }
     if (this.window !== null && !this.window.isDestroyed()) {
       this.window.webContents.send(channel, payload);
     }

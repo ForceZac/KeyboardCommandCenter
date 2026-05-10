@@ -14,6 +14,7 @@ const {
 } = vi.hoisted(() => {
   const mockWebContents = {
     send: vi.fn(),
+    on: vi.fn(),
   };
 
   const mockBrowserWindow = {
@@ -314,5 +315,130 @@ describe('OverlayWindowManager — hotkey', () => {
     const manager = new OverlayWindowManager();
     manager.destroy();
     expect(mockGlobalShortcut.unregister).toHaveBeenCalledWith('Ctrl+Shift+O');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// OverlayWindowManager — ready-state guard (Phase 3 — TASK-0020)
+//
+// The overlay BrowserWindow is created lazily. Detection events that fire
+// while loadFile is still in progress are silently dropped by webContents.send.
+// The ready-state guard buffers the latest detection:app-changed payload and
+// replays it on did-finish-load so the renderer always starts with the correct
+// app state.
+// ---------------------------------------------------------------------------
+
+/**
+ * Capture the did-finish-load handler registered on webContents.on during show().
+ * Must be called BEFORE vi.clearAllMocks() to preserve the mock call record.
+ */
+function captureDidFinishLoadHandler(): () => void {
+  const call = mockWebContents.on.mock.calls.find(([event]) => event === 'did-finish-load');
+  if (!call) throw new Error('did-finish-load handler was not registered on webContents');
+  return call[1] as () => void;
+}
+
+describe('OverlayWindowManager — ready-state guard', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockBrowserWindow.isDestroyed.mockReturnValue(false);
+    mockBrowserWindow.isVisible.mockReturnValue(false);
+    mockBrowserWindow.loadFile.mockReturnValue(Promise.resolve());
+    mockGlobalShortcut.register.mockReturnValue(true);
+    MockBrowserWindowCtor.mockReturnValue(mockBrowserWindow);
+  });
+
+  it('registers a did-finish-load handler on webContents when window is created', () => {
+    const manager = new OverlayWindowManager();
+    manager.show();
+    const didFinishLoadCalls = mockWebContents.on.mock.calls.filter(
+      ([event]) => event === 'did-finish-load',
+    );
+    expect(didFinishLoadCalls).toHaveLength(1);
+  });
+
+  it('buffers detection:app-changed payload even before window exists', () => {
+    const manager = new OverlayWindowManager();
+    const payload = { appSlug: 'vscode', processName: 'Code', windowTitle: 'editor.ts' };
+
+    // No window yet — sendToRenderer should not throw and should not call webContents.send.
+    manager.sendToRenderer('detection:app-changed', payload);
+    expect(mockWebContents.send).not.toHaveBeenCalled();
+
+    // Create the window so the did-finish-load handler is registered.
+    manager.show();
+    // Capture the handler BEFORE clearing mocks (clear wipes mock.calls).
+    const didFinishLoad = captureDidFinishLoadHandler();
+    vi.clearAllMocks();
+    mockBrowserWindow.isDestroyed.mockReturnValue(false);
+
+    // Simulate did-finish-load — buffered payload should be replayed.
+    didFinishLoad();
+    expect(mockWebContents.send).toHaveBeenCalledWith('detection:app-changed', payload);
+    expect(mockWebContents.send).toHaveBeenCalledTimes(1);
+  });
+
+  it('replays the latest payload when multiple detection events arrive before did-finish-load', () => {
+    const manager = new OverlayWindowManager();
+    const payload1 = { appSlug: 'vscode', processName: 'Code', windowTitle: 'a.ts' };
+    const payload2 = { appSlug: 'slack', processName: 'Slack', windowTitle: 'messages' };
+
+    manager.sendToRenderer('detection:app-changed', payload1);
+    manager.sendToRenderer('detection:app-changed', payload2);
+
+    manager.show();
+    const didFinishLoad = captureDidFinishLoadHandler();
+    vi.clearAllMocks();
+    mockBrowserWindow.isDestroyed.mockReturnValue(false);
+
+    didFinishLoad();
+
+    // Only the latest payload is replayed — not payload1.
+    expect(mockWebContents.send).toHaveBeenCalledWith('detection:app-changed', payload2);
+    expect(mockWebContents.send).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not replay on did-finish-load when no detection event was ever buffered', () => {
+    const manager = new OverlayWindowManager();
+    // No detection event sent — nothing in the buffer.
+    manager.show();
+    const didFinishLoad = captureDidFinishLoadHandler();
+    vi.clearAllMocks();
+    mockBrowserWindow.isDestroyed.mockReturnValue(false);
+
+    didFinishLoad();
+
+    expect(mockWebContents.send).not.toHaveBeenCalled();
+  });
+
+  it('does not buffer non-detection channels', () => {
+    const manager = new OverlayWindowManager();
+    manager.sendToRenderer('overlay:prefs-changed', { opacity: 0.5 });
+
+    manager.show();
+    const didFinishLoad = captureDidFinishLoadHandler();
+    vi.clearAllMocks();
+    mockBrowserWindow.isDestroyed.mockReturnValue(false);
+
+    didFinishLoad();
+
+    // overlay:prefs-changed was not buffered, so no replay.
+    expect(mockWebContents.send).not.toHaveBeenCalled();
+  });
+
+  it('no-detection sentinel (empty processName) is buffered and replayed correctly', () => {
+    const manager = new OverlayWindowManager();
+    // The no-detection sentinel: appSlug null, processName empty string.
+    const noDetectionPayload = { appSlug: null, processName: '', windowTitle: '' };
+
+    manager.sendToRenderer('detection:app-changed', noDetectionPayload);
+    manager.show();
+    const didFinishLoad = captureDidFinishLoadHandler();
+    vi.clearAllMocks();
+    mockBrowserWindow.isDestroyed.mockReturnValue(false);
+
+    didFinishLoad();
+
+    expect(mockWebContents.send).toHaveBeenCalledWith('detection:app-changed', noDetectionPayload);
   });
 });

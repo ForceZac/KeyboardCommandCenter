@@ -25,7 +25,7 @@ export interface DetectionPayload {
 }
 
 /** Status of the overlay renderer's data state. */
-export type OverlayStatus = 'idle' | 'loaded' | 'unrecognized';
+export type OverlayStatus = 'idle' | 'loaded' | 'unrecognized' | 'no-detection';
 
 /**
  * IPC bridge exposed by overlay-preload.ts via contextBridge.
