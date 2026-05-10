@@ -5,20 +5,20 @@ app.disableHardwareAcceleration();
 import fs from 'fs';
 import path from 'path';
 import Store from 'electron-store';
+import { PrismaClient } from '@prisma/client';
 import { TrayManager } from './tray';
 import { PanelWindowManager } from './window';
 import { SettingsWindowManager } from './settings-window';
 import { HotkeyManager, bindHotkeyLifecycle } from './hotkey';
 import { DetectionService } from './detection';
-import type { DetectionServiceStore } from './detection';
+import type { DetectionServiceStore, DetectionPayload } from './detection';
 // TASK-0009: real getActiveWindow loaded from native module at merge time.
 import { getActiveWindow } from './platform/active-window';
 // TASK-0008: real lookupApp and TASK-0011: getDisplayName from process map.
 import { lookupApp, getDisplayName } from './process-map';
-// Validate @kcc/core cross-package dependency. IApplication and IShortcut types will be
-// used meaningfully in Goal 5 when real shortcut data is displayed in the panel.
-import type { IApplication } from '@kcc/core';
-void (null as unknown as IApplication); // tree-shaken at build time — type-only reference
+// TASK-0012: shortcut data IPC layer.
+import { ShortcutService, ShortcutCache } from './shortcut-service';
+import type { ShortcutDb } from './shortcut-service';
 
 // Enforce single-instance: if another instance is already running, quit immediately.
 const isFirstInstance = app.requestSingleInstanceLock();
@@ -34,6 +34,8 @@ let panelManager: PanelWindowManager;
 let settingsWindowManager: SettingsWindowManager;
 let hotkeyManager: HotkeyManager;
 let detectionService: DetectionService;
+let shortcutService: ShortcutService;
+let shortcutCache: ShortcutCache;
 
 // ---------------------------------------------------------------------------
 // Unrecognized-process log writer (production implementation).
@@ -73,11 +75,39 @@ function writeUnrecognizedProcessLog(processName: string): void {
   }
 }
 
+// ---------------------------------------------------------------------------
+// Prefetch helper (TASK-0012).
+// Called when detection:app-changed fires. Populates the cache before the
+// user opens the panel so IPC responses are served from memory (<50ms).
+// Fire-and-forget — no await, does not delay the IPC event to the renderer.
+// ---------------------------------------------------------------------------
+
+function prefetchShortcuts(slug: string): void {
+  if (shortcutCache.has(slug)) return; // already cached — nothing to do
+  shortcutService
+    .getShortcutsForApp(slug)
+    .then((data) => {
+      shortcutCache.set(slug, data);
+    })
+    .catch((err) => {
+      // getShortcutsForApp already catches DB errors and returns null, so this
+      // path is a safety net for unexpected rejections.
+      console.error('[kcc] prefetchShortcuts unexpected error:', err);
+    });
+}
+
 app.whenReady().then(() => {
   // Prevent the app from showing a dock icon on macOS — tray-only app.
   if (process.platform === 'darwin') {
     app.dock.hide();
   }
+
+  // TASK-0012: Shortcut data IPC layer — instantiate Prisma + service + cache.
+  // PrismaClient is cast to ShortcutDb because its complex generic findUnique
+  // signature cannot be matched structurally; the runtime shape is compatible.
+  const prisma = new PrismaClient();
+  shortcutCache = new ShortcutCache();
+  shortcutService = new ShortcutService(prisma as unknown as ShortcutDb);
 
   panelManager = new PanelWindowManager();
   settingsWindowManager = new SettingsWindowManager();
@@ -112,11 +142,29 @@ app.whenReady().then(() => {
     panelManager.hide();
   });
 
+  // IPC: renderer requests shortcut data for a given app slug (TASK-0012).
+  // Serves from cache when available; otherwise fetches from DB, caches, and returns.
+  ipcMain.handle('shortcuts:get-by-app', async (_event, slug: string) => {
+    if (shortcutCache.has(slug)) {
+      return shortcutCache.get(slug) ?? null;
+    }
+    const data = await shortcutService.getShortcutsForApp(slug);
+    shortcutCache.set(slug, data);
+    return data;
+  });
+
   // Detection polling service (Goal 4 — TASK-0010).
+  // emitToRenderer is wrapped to trigger a prefetch whenever app-changed fires
+  // with a recognized slug — so the cache is warm before the panel opens.
   detectionService = new DetectionService({
     getActiveWindow,
     lookupApp,
-    emitToRenderer: (channel, payload) => panelManager.sendToRenderer(channel, payload),
+    emitToRenderer: (channel: string, payload: DetectionPayload) => {
+      if (channel === 'detection:app-changed' && payload.appSlug) {
+        prefetchShortcuts(payload.appSlug);
+      }
+      panelManager.sendToRenderer(channel, payload);
+    },
     store: store as DetectionServiceStore,
     onUnrecognizedProcess: writeUnrecognizedProcessLog,
   });

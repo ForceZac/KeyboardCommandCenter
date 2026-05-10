@@ -88,16 +88,6 @@ _(TRD Watcher moves tasks here when a TRD needs rework.)_
 
 _(Reviewer moves tasks here after approving the PR. You merge to main, then move to Shipped.)_
 
-### TASK-0013: Panel Content Renderer & Shortcut Key Caps
-- **Goal:** Goal 5 — Shortcut Panel UI (Desktop)
-- **PRD:** research/agents/prds/goal-05-shortcut-panel-ui.md
-- **Scope:** Build the panel content renderer that displays shortcut data fetched via the IPC layer (TASK-0012). Renders app header, shortcuts grouped by context/scope, visual key cap rendering, collapsible context groups, platform-appropriate modifier keys (Cmd/Ctrl). Vanilla HTML/CSS/TypeScript — no React, no Tailwind.
-- **PR:** #14
-- **Branch:** goals/13-panel-content-renderer
-- **TRD:** research/plans/goals/13-panel-content-renderer-trd.md — approved
-- **Approved:** 2026-05-10 (Round 1 — reviewer approved, awaiting owner merge after #13)
-- **Notes:** Must merge after PR #13 (TASK-0012) — requires `window.kcc.getShortcutsForApp()` at runtime.
-
 ### TASK-0012: Shortcut Data IPC Layer & Prefetch
 - **Goal:** Goal 5 — Shortcut Panel UI (Desktop)
 - **PRD:** research/agents/prds/goal-05-shortcut-panel-ui.md
@@ -136,6 +126,15 @@ _(Reviewer moves tasks here after approving the PR. You merge to main, then move
 ## Shipped
 
 _(You move tasks here after merging to main.)_
+
+### TASK-0013: Panel Content Renderer & Shortcut Key Caps
+- **Goal:** Goal 5 — Shortcut Panel UI (Desktop)
+- **PRD:** research/agents/prds/goal-05-shortcut-panel-ui.md
+- **PR:** #14
+- **Branch:** goals/13-panel-content-renderer
+- **TRD:** research/plans/goals/13-panel-content-renderer-trd.md — approved
+- **Approved:** 2026-05-10 (Round 1 — reviewer approved)
+- **Merged:** 2026-05-10
 
 ### TASK-0011: Tray "Recent Apps" Submenu
 - **Goal:** Goal 4 — Active Window Process Detection
