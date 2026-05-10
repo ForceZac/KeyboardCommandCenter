@@ -12,6 +12,12 @@ module.exports = {
         to: 'native',
         filter: ['**/*.node'],
       },
+      // TASK-0017: Vite-built overlay renderer must be bundled outside ASAR so
+      // OverlayWindowManager can load it via win.loadFile() at runtime.
+      {
+        from: '../../packages/overlay/dist',
+        to: 'overlay/dist',
+      },
     ],
   },
   rebuildConfig: {},
@@ -38,6 +44,16 @@ module.exports = {
               name: 'settings_window',
               preload: {
                 js: './src/settings-preload.ts',
+              },
+            },
+            // TASK-0017: stub entry — generates OVERLAY_WINDOW_PRELOAD_WEBPACK_ENTRY.
+            // The real overlay renderer is Vite-built; see OverlayWindowManager.loadFile().
+            {
+              html: './src/renderer/overlay-stub.html',
+              js: './src/renderer/overlay-stub.ts',
+              name: 'overlay_window',
+              preload: {
+                js: './src/overlay-preload.ts',
               },
             },
           ],

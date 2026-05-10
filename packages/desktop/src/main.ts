@@ -19,7 +19,7 @@ import { lookupApp, getDisplayName } from './process-map';
 // TASK-0012: shortcut data IPC layer.
 import { ShortcutService, ShortcutCache } from './shortcut-service';
 import type { ShortcutDb } from './shortcut-service';
-// TASK-0019: overlay settings store + controller registry.
+// TASK-0017/0019: overlay settings store, controller registry, and window manager.
 import {
   clampOpacity,
   getHotkey,
@@ -31,6 +31,7 @@ import {
   setOverlaySize,
 } from './settings';
 import * as overlayControllerModule from './overlay-controller';
+import { OverlayWindowManager } from './overlay-window';
 
 // Enforce single-instance: if another instance is already running, quit immediately.
 const isFirstInstance = app.requestSingleInstanceLock();
@@ -48,6 +49,7 @@ let hotkeyManager: HotkeyManager;
 let detectionService: DetectionService;
 let shortcutService: ShortcutService;
 let shortcutCache: ShortcutCache;
+let overlayManager: OverlayWindowManager;
 
 // ---------------------------------------------------------------------------
 // Unrecognized-process log writer (production implementation).
@@ -124,6 +126,11 @@ app.whenReady().then(() => {
   panelManager = new PanelWindowManager();
   settingsWindowManager = new SettingsWindowManager();
 
+  // TASK-0017: Overlay window manager — register as the OverlayController so
+  // TASK-0019 IPC handlers can reach the real BrowserWindow.
+  overlayManager = new OverlayWindowManager();
+  overlayControllerModule.registerOverlayController(overlayManager);
+
   trayManager = new TrayManager(
     // onOpenPanel: open the shortcut panel
     () => { panelManager.show(); },
@@ -149,6 +156,17 @@ app.whenReady().then(() => {
   hotkeyManager.register();
   bindHotkeyLifecycle(hotkeyManager);
 
+  // If overlay was enabled in the previous session, register its hotkey and show it.
+  const overlayPrefs = getOverlayPrefs();
+  if (overlayPrefs.enabled) {
+    overlayManager.registerHotkey();
+    overlayManager.show();
+  } else {
+    // Always register the overlay hotkey so the user can toggle the overlay on
+    // even when overlay.enabled is false in the store.
+    overlayManager.registerHotkey();
+  }
+
   // IPC: renderer sends 'hide-panel' when Escape is pressed.
   ipcMain.on('hide-panel', () => {
     panelManager.hide();
@@ -166,8 +184,8 @@ app.whenReady().then(() => {
   });
 
   // Detection polling service (Goal 4 — TASK-0010).
-  // emitToRenderer is wrapped to trigger a prefetch whenever app-changed fires
-  // with a recognized slug — so the cache is warm before the panel opens.
+  // emitToRenderer also forwards detection:app-changed to the overlay renderer
+  // so TASK-0020 can update overlay content on app switch.
   detectionService = new DetectionService({
     getActiveWindow,
     lookupApp,
@@ -176,6 +194,8 @@ app.whenReady().then(() => {
         prefetchShortcuts(payload.appSlug);
       }
       panelManager.sendToRenderer(channel, payload);
+      // TASK-0017: forward detection events to the overlay renderer.
+      overlayManager.sendToRenderer(channel, payload);
     },
     store: store as DetectionServiceStore,
     onUnrecognizedProcess: writeUnrecognizedProcessLog,
@@ -187,7 +207,6 @@ app.whenReady().then(() => {
   // ---------------------------------------------------------------------------
   // Overlay settings IPC handlers (TASK-0019).
   // All persist to electron-store and forward to overlayController when available.
-  // overlayController is null until TASK-0017 registers the overlay BrowserWindow.
   // ---------------------------------------------------------------------------
 
   ipcMain.handle('overlay:get', () => getOverlayPrefs());
@@ -214,7 +233,7 @@ app.whenReady().then(() => {
 
   ipcMain.handle('overlay:set-opacity', (_event, { opacity }: { opacity: number }) => {
     setOverlayOpacity(opacity); // clamps to 0.2–0.8 and persists
-    overlayControllerModule.overlayController?.setOpacity(clampOpacity(opacity)); // forward clamped value
+    overlayControllerModule.overlayController?.setOpacity(clampOpacity(opacity));
   });
 
   // Returns true on Windows and macOS where the overlay feature is supported.
@@ -250,4 +269,5 @@ app.on('window-all-closed', () => {
 app.on('before-quit', () => {
   detectionService?.stop();
   trayManager?.destroy();
+  overlayManager?.destroy();
 });

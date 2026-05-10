@@ -2,8 +2,8 @@
  * OverlayController interface + singleton registry.
  *
  * TASK-0019 registers IPC handlers that call through this interface.
- * TASK-0017 will implement the interface (overlay BrowserWindow manager)
- * and call registerOverlayController() at startup.
+ * TASK-0017 implements the interface (OverlayWindowManager) and calls
+ * registerOverlayController() at startup.
  *
  * Until TASK-0017 ships, overlayController is null and live-preview calls
  * are no-ops — settings persist correctly regardless.

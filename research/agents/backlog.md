@@ -33,25 +33,6 @@ Task IDs are monotonic. The Project Manager picks the next number.
 
 _(Project Manager keeps 2–3 tasks here at all times.)_
 
-### TASK-0017: Overlay BrowserWindow & Toggle Hotkey
-- **Goal:** Goal 6 — Overlay Mode
-- **PRD:** research/agents/prds/goal-06-overlay-mode.md
-- **Scope:** Create the Electron BrowserWindow for the overlay: frameless, `transparent: true`, `backgroundColor: '#00000000'`, `alwaysOnTop: true` with level `'floating'`, `setIgnoreMouseEvents(true, { forward: true })` for full click-through. Register a secondary configurable global hotkey (default Ctrl+Shift+O on Windows / Cmd+Shift+O on macOS) via `globalShortcut` that toggles overlay window visibility. Add overlay preferences to `electron-store`: `overlay.enabled` (bool, default false), `overlay.hotkey` (string), `overlay.opacity` (number, default 0.4), `overlay.position` (string, default "Top Right"), `overlay.size` (string, default "Standard"). Position the overlay on the correct monitor using Electron's `screen` API. Ensure the panel window has a higher z-order than the overlay when both are visible (PRD Flow 6). NOT in scope: overlay renderer content or React components (separate task), settings UI section for overlay preferences (separate task), detection integration and app-switch content updates (separate task), opacity live preview in settings.
-- **Acceptance:**
-  - Overlay BrowserWindow is frameless, transparent, always-on-top with `'floating'` level
-  - Overlay window is click-through — all mouse events pass to the underlying window on both Windows and macOS
-  - Configurable global hotkey toggles overlay window show/hide
-  - Default hotkey is Ctrl+Shift+O (Windows) / Cmd+Shift+O (macOS)
-  - Overlay preferences stored in electron-store with correct defaults
-  - Overlay appears on the same monitor as the active application window
-  - Panel window renders above overlay when both are visible (higher z-order)
-  - Overlay does not increase idle memory by more than 20MB
-  - No crash when overlay hotkey is pressed before detection service is running
-- **PR:**
-- **Branch:**
-- **TRD:**
-- **Notes:** First Goal 6 task — the overlay window shell. Depends on Goal 5 completion (panel and detection infrastructure must be on main). Look-ahead task queued while Goal 5 wraps up so the Developer doesn't idle between goals. **Re: PROP-0005:** The overlay electron-store schema (overlay.enabled, overlay.hotkey, overlay.opacity, overlay.position, overlay.size with defaults) is already defined by TASK-0019's implementation. Do NOT redefine it — use the existing schema. The `OverlayController` interface registered by TASK-0019 is the integration point this task implements.
-
 ### TASK-0020: Overlay Detection Integration & App-Switch Content Updates
 - **Goal:** Goal 6 — Overlay Mode
 - **PRD:** research/agents/prds/goal-06-overlay-mode.md
@@ -95,23 +76,24 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
 
 _(Developer moves tasks here when the draft PR is marked ready.)_
 
-### TASK-0019: Overlay Settings UI Section
+### TASK-0017: Overlay BrowserWindow & Toggle Hotkey
 - **Goal:** Goal 6 — Overlay Mode
 - **PRD:** research/agents/prds/goal-06-overlay-mode.md
-- **Scope:** Add an "Overlay" section to the existing Settings window. Controls: (1) "Enable overlay mode" toggle (default off), (2) overlay hotkey input with configurable keybinding (default Ctrl+Shift+O / Cmd+Shift+O), (3) opacity slider (20%–80%, default 40%) with live preview, (4) position dropdown: "Top Right", "Top Left", "Bottom Right", "Bottom Left", "Center Right", "Center Left", (5) size toggle: "Compact" or "Standard". All values persist to electron-store. Hotkey validation: prevent conflicting panel hotkey — show inline error. When enable toggle off, overlay hotkey unregistered. NOT in scope: overlay BrowserWindow (TASK-0017), overlay renderer (TASK-0018), detection integration, drag-to-reposition, Linux/Wayland.
+- **Scope:** Create the Electron BrowserWindow for the overlay: frameless, `transparent: true`, `backgroundColor: '#00000000'`, `alwaysOnTop: true` with level `'floating'`, `setIgnoreMouseEvents(true, { forward: true })` for full click-through. Register a secondary configurable global hotkey (default Ctrl+Shift+O on Windows / Cmd+Shift+O on macOS) via `globalShortcut` that toggles overlay window visibility. Add overlay preferences to `electron-store`: `overlay.enabled` (bool, default false), `overlay.hotkey` (string), `overlay.opacity` (number, default 0.4), `overlay.position` (string, default "Top Right"), `overlay.size` (string, default "Standard"). Position the overlay on the correct monitor using Electron's `screen` API. Ensure the panel window has a higher z-order than the overlay when both are visible (PRD Flow 6). NOT in scope: overlay renderer content or React components (separate task), settings UI section for overlay preferences (separate task), detection integration and app-switch content updates (separate task), opacity live preview in settings.
 - **Acceptance:**
-  - Settings window shows an "Overlay" section with all 5 controls
-  - Enable toggle registers/unregisters the overlay hotkey
-  - Opacity slider updates overlay opacity in real time when overlay is visible (live preview)
-  - Position dropdown moves overlay to the selected preset location immediately
-  - Size toggle switches between Compact and Standard display modes
-  - Hotkey input prevents assignment of conflicting panel hotkey — shows inline error
-  - All preference changes persist to electron-store and survive app restart
-  - Settings section is disabled/hidden when overlay feature is not available
-- **PR:** #17
-- **Branch:** goals/19-overlay-settings-ui
-- **TRD:** research/plans/goals/19-overlay-settings-ui-trd.md — approved
-- **Notes:** Third Goal 6 task — PRD Flows 1 and 4. TRD defines overlay store schema and OverlayController interface (see PROP-0005 for TASK-0017 coordination). Round 2 resubmit 2026-05-10: (1) exported clampOpacity from settings.ts — opacity handler in main.ts now calls clampOpacity() before forwarding to overlayController; 2 regression tests added; (2) select/select:focus selectors scoped to .overlay-fieldset; (3) added overlay:is-supported IPC handler (returns process.platform !== 'linux') — exposed via preload/contextBridge; renderer hides overlay-section fieldset when not supported.
+  - Overlay BrowserWindow is frameless, transparent, always-on-top with `'floating'` level
+  - Overlay window is click-through — all mouse events pass to the underlying window on both Windows and macOS
+  - Configurable global hotkey toggles overlay window show/hide
+  - Default hotkey is Ctrl+Shift+O (Windows) / Cmd+Shift+O (macOS)
+  - Overlay preferences stored in electron-store with correct defaults
+  - Overlay appears on the same monitor as the active application window
+  - Panel window renders above overlay when both are visible (higher z-order)
+  - Overlay does not increase idle memory by more than 20MB
+  - No crash when overlay hotkey is pressed before detection service is running
+- **PR:** #18
+- **Branch:** goals/17-overlay-browser-window
+- **TRD:** research/plans/goals/17-overlay-browser-window-trd.md — approved
+- **Notes:** First Goal 6 task — the overlay window shell. Also includes overlay-controller.ts and overlay settings store functions (parity with TASK-0019, needed on this branch since TASK-0019 hasn't merged to main yet). Reviewer: when merging TASK-0019 after TASK-0017, expect conflict on settings.ts and overlay-controller.ts — TASK-0017's versions are canonical and include all TASK-0017 wiring.
 
 ## Changes Requested
 
@@ -125,44 +107,37 @@ _(TRD Watcher moves tasks here when a TRD needs rework.)_
 
 _(Reviewer moves tasks here after approving the PR. You merge to main, then move to Shipped.)_
 
-### TASK-0012: Shortcut Data IPC Layer & Prefetch
-- **Goal:** Goal 5 — Shortcut Panel UI (Desktop)
-- **PRD:** research/agents/prds/goal-05-shortcut-panel-ui.md
-- **Scope:** Add a `shortcuts:get-by-app` IPC handler in the Electron main process that accepts an app slug, queries PostgreSQL via Prisma for all shortcuts belonging to that app, groups results by context/scope, and returns structured data to the renderer. Expose a `getShortcutsForApp(slug)` method via contextBridge preload. Add prefetch logic: when the detection service fires an app-changed event, the main process proactively fetches and caches shortcut data for the new app so it's ready when the panel opens (meeting the 100ms render target from the PRD). Cache the most recent 5 app results in memory; invalidate on slug change. NOT in scope: panel UI rendering or visual components (separate task), search/filter UI, fallback state UI, overlay mode (Goal 6), user accounts (Goal 7), Linux (Goal 10).
-- **Acceptance:**
-  - `shortcuts:get-by-app` IPC handler accepts an app slug and returns grouped shortcut data
-  - Preload exposes `getShortcutsForApp(slug)` via contextBridge
-  - Data is fetched from PostgreSQL via Prisma ORM
-  - Shortcuts are grouped by context/scope in the response
-  - Prefetch fires automatically on detection app-changed event
-  - Cached results serve immediately for recently-detected apps (up to 5)
-  - Response time <50ms for cached apps (no DB round-trip)
-  - Handler returns empty result for unknown app slugs (no crash)
-  - No unhandled exceptions if database is unreachable
-- **PR:** #13
-- **Branch:** goals/12-shortcut-ipc-layer
-- **TRD:** research/plans/goals/12-shortcut-ipc-layer-trd.md — approved
-- **Approved:** 2026-05-10 (Round 1 — reviewer approved, awaiting owner merge)
+### TASK-0019: Overlay Settings UI Section
+- **Goal:** Goal 6 — Overlay Mode
+- **PRD:** research/agents/prds/goal-06-overlay-mode.md
+- **PR:** #17
+- **Branch:** goals/19-overlay-settings-ui
+- **TRD:** research/plans/goals/19-overlay-settings-ui-trd.md — approved
+- **Approved:** 2026-05-10 (Round 2 — reviewer approved via PR comment; GitHub blocked formal approval since author == reviewer)
 
-### TASK-0014: Reconcile Goal 4 Stubs — process-map.ts & active-window.ts
-- **Goal:** Goal 4 — Active Window Process Detection
-- **PRD:** research/agents/prds/goal-04-process-detection.md
-- **Scope:** Write the real `lookupApp()` implementation in process-map.ts (bundleId-first lookup from process-map.json, normalized process name fallback, .exe stripping) and the real `loadNativeModule` + `createActiveWindowDetector` wrapper in active-window.ts (three-path binary probe for packaged/webpack-dev/non-webpack runtimes). Both were stubs on main causing 49 test failures. NOT in scope: changes to DetectionService, TrayManager, main.ts, process-map.json, or test files.
-- **Acceptance:**
-  - lookupApp() returns correct app slugs via bundleId-first lookup with process name fallback
-  - loadNativeModule probes three paths for the kcc-native .node binary
-  - createActiveWindowDetector returns a factory-pattern detector instance
-  - All 49 previously-failing tests pass (40 lookupApp + 9 active-window)
-  - No regressions in existing passing tests
-- **PR:** #12
-- **Branch:** goals/14-reconcile-goal4-stubs
-- **TRD:** research/plans/goals/14-reconcile-goal4-stubs-trd.md — approved
-- **Approved:** 2026-05-10 (Round 2 — reviewer approved, awaiting owner merge)
-- **Notes:** Added retroactively by PM — Developer opened this PR outside normal backlog flow. Addresses PROP-0003 and PROP-0004.
 
 ## Shipped
 
 _(You move tasks here after merging to main.)_
+
+### TASK-0012: Shortcut Data IPC Layer & Prefetch
+- **Goal:** Goal 5 — Shortcut Panel UI (Desktop)
+- **PRD:** research/agents/prds/goal-05-shortcut-panel-ui.md
+- **PR:** #13
+- **Branch:** goals/12-shortcut-ipc-layer
+- **TRD:** research/plans/goals/12-shortcut-ipc-layer-trd.md — approved
+- **Approved:** 2026-05-10 (Round 1)
+- **Merged:** 2026-05-10
+
+### TASK-0014: Reconcile Goal 4 Stubs — process-map.ts & active-window.ts
+- **Goal:** Goal 4 — Active Window Process Detection
+- **PRD:** research/agents/prds/goal-04-process-detection.md
+- **PR:** #12
+- **Branch:** goals/14-reconcile-goal4-stubs
+- **TRD:** research/plans/goals/14-reconcile-goal4-stubs-trd.md — approved
+- **Approved:** 2026-05-10 (Round 2)
+- **Merged:** 2026-05-10
+- **Notes:** Addresses PROP-0003 and PROP-0004 (process-map.ts and active-window.ts stubs).
 
 ### TASK-0018: Overlay Renderer — Compact Shortcut Display
 - **Goal:** Goal 6 — Overlay Mode

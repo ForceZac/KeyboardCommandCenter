@@ -1,5 +1,39 @@
 <!-- Agent log. Append-only. Agents read the last 75 lines before acting. Log Trim archives entries older than 48h into agent-log-archive-YYYY-MM.md. -->
 
+## 2026-05-10 08:56 ET REVIEWER
+- did: reviewed PR #18 (TASK-0017 — Overlay BrowserWindow & Toggle Hotkey, round 1)
+- decision: changes-requested (posted as comment — GitHub self-review restriction, same precedent as prior PRs)
+- standards checked: backend (main-process structure, IPC thin-handler pattern, security preload boundary), separation of concerns (overlay/desktop package boundary), PR policy (conventional commits, tsc clean, tests pass), TRD match
+- tests run: 172/172 pass (26 new overlay-window tests) | tsc clean | no regression
+- issues: (1) overlay-window.ts:99 — `type: 'desktop'` not in TRD, silently ignored on macOS/Windows but latent Linux bug (Goal 10), comment misattributed to it; (2) forge.config.js:19 — extraResources `to: '../../packages/overlay/dist'` escapes app bundle, packaged app won't find renderer — should be `to: 'overlay/dist'`; (3) no overlay-preload.test.ts — TRD-required unit tests for contextBridge surface are missing
+- metrics: run_type=productive | pr=PR-18 | round=1 | decision=changes-requested | tests_run=pass
+- idle-reset: REV_IDLE → 0
+- next: Developer fixes 3 items (remove type:desktop, fix forge to path, add preload tests) and re-submits; Reviewer picks up round 2
+
+## 2026-05-10 08:19 ET REVIEWER
+- did: reviewed PR #17 (TASK-0019 — Overlay Settings UI Section, round 2)
+- decision: approved (posted as comment — GitHub self-review restriction, same precedent as TASK-0015/TASK-0012)
+- standards checked: backend (IPC handler correctness, thin handlers, conflict validation in main process), frontend (renderer wires DOM→IPC, opacity float↔slider conversion in renderer only), separation of concerns (main/renderer/preload boundary), PR policy (conventional commits, tsc clean, tests green), TRD match
+- tests run: 173/173 pass (2 new regression tests for opacity-clamp fix)
+- round 1 issues resolved: (1) overlay:set-opacity now calls clampOpacity() before forwarding to controller — store and controller receive identical clamped value; (2) CSS select selectors scoped to .overlay-fieldset; (3) overlay:is-supported IPC handler added, renderer hides section on Linux
+- metrics: run_type=productive | pr=PR-17 | round=2 | decision=approved | tests_run=pass
+- next: Owner merges PR #17 to main; Developer picks up TASK-0017 (Overlay BrowserWindow) or TASK-0016 (Panel Fallback States)
+
+## 2026-05-10 08:10 ET DEVELOPER
+- did: no-op — in-flight cap reached (PR #17 goals/19-overlay-settings-ui is In Review)
+- task: TASK-0019
+- PR: #17
+- trd: approved
+- tests: skipped (no work done)
+- metrics: run_type=no-op | reason=in-flight cap — PR #17 In Review | dev_idle=1
+- next: Reviewer approves/requests-changes PR #17; Developer picks TASK-0017 next
+
+## 2026-05-10 08:04 ET PRODUCT-MANAGER
+- did: wrote PRD for Goal 8 — Community Contributions & Shortcut Submissions
+- prds written: goal-08-community-contributions.md
+- metrics: prds_written=1 | prds_updated=0
+- next: Goal 9 (Auto-Update & Distribution) will need a PRD on next run
+
 ## 2026-05-10 06:51 ET DEVELOPER
 - did: no-op — TASK-0019 In Progress; TRD awaiting-review; exiting without writing feature code
 - task: TASK-0019
@@ -1315,3 +1349,130 @@
 - issues: (1) overlay:set-opacity IPC handler forwards unclamped opacity to controller — main.ts; (2) bare `select` CSS selector not scoped to overlay section — settings.css; (3) "disabled/hidden when overlay unavailable" acceptance criterion not implemented or deferred
 - metrics: run_type=productive | pr=PR-17 | round=1 | decision=changes-requested | tests_run=pass
 - next: Developer addresses 2 must-fix items + clarifies deferral concern; Reviewer picks up PR #17 round 2
+
+## 2026-05-10 07:35 ET PROJECT-MANAGER
+- did: promoted 1 task to Ready (TASK-0020 — Overlay Detection Integration)
+- created: TASK-0020
+- moved: none
+- prd gaps: Goal 8, 9, 10 need PRDs (not urgent — Goal 7 PRD exists, current work is Goal 6)
+- roadmap check: skipped (did last run)
+- proposals added: 0
+- metrics: tasks_created=1 | tasks_moved=0 | prd_gaps=3 | roadmap_issues=0
+- next: Ready at 3 (TASK-0020, TASK-0017, TASK-0016). Monitor TASK-0019 changes-requested resolution. TASK-0012 and TASK-0014 approved awaiting owner merge — once merged, TASK-0016 and TASK-0017 fully unblocked.
+
+## 2026-05-10 07:41 ET DEVELOPER
+- did: no-op — DEV_LOCK held (claimed at 2026-05-10T11:31:10Z, age ~9 min)
+- task: n/a
+- trd: n/a
+- tests: skipped
+- metrics: run_type=no-op | reason=DEV_LOCK held | dev_idle=1
+- next: Lock will expire in ~16 min if not released; next run will override if stale
+
+## 2026-05-10 07:52 ET DEVELOPER
+- did: no-op — DEV_LOCK held (claimed at 2026-05-10T11:31:10Z, age ~20 min, stale threshold 25 min)
+- task: n/a
+- trd: n/a
+- tests: skipped
+- metrics: run_type=no-op | reason=DEV_LOCK held | dev_idle=2
+- next: Lock will become stale (~5 min) — next run will override and address TASK-0019 changes-requested
+
+## 2026-05-10 08:01 ET DEVELOPER
+- did: started run — DEV_LOCK was stale (>25 min), overriding and proceeding; fixing TASK-0019 Changes Requested
+- task: TASK-0019
+- PR: #17
+- status: in-progress
+
+## 2026-05-10 08:04 ET PROJECT-MANAGER
+- did: updated TASK-0017 notes (PROP-0005 guidance: overlay store schema defined by TASK-0019, do not redefine), updated project_context.md (was stale — said Goal 1/Pre-dev, now reflects Goals 1–4 shipped, Goal 6 active), roadmap health check
+- created: none
+- moved: none
+- prd gaps: Goal 8, 9, 10 need PRDs (Goal 8 is N+2 — Product Manager should write it soon)
+- roadmap check: solid — sequencing correct, no scope creep, no stale goals, no missing prerequisites
+- proposals added: 0
+- metrics: tasks_created=0 | tasks_moved=0 | prd_gaps=3 | roadmap_issues=0
+- next: Ready at 3 (healthy). Monitor TASK-0019 changes-requested resolution. TASK-0012 and TASK-0014 approved awaiting owner merge. Goal 8 PRD needed before tasks can be queued for it.
+
+## 2026-05-10 08:08 ET DEVELOPER
+- did: fixed TASK-0019 round 1 review feedback — (1) exported clampOpacity from settings.ts, opacity handler in main.ts now calls clampOpacity() before forwarding to overlayController, added handleSetOpacity helper + 2 regression tests; (2) scoped select/select:focus CSS to .overlay-fieldset select; (3) added overlay:is-supported IPC (process.platform !== 'linux'), exposed via preload, renderer hides overlay fieldset when unsupported. Moved task back to In Review.
+- task: TASK-0019
+- PR: #17
+- trd: approved — all fixes applied
+- tests: 173/173 green (+2 regression tests for opacity clamping) | tsc clean (all configs) | web lint clean
+- metrics: run_type=productive | commits=1 | tests_added=2 | trd_cycles=0 | dev_idle=0
+- next: Reviewer picks up PR #17 for round 2 approval; Developer picks TASK-0017 (Overlay BrowserWindow) or TASK-0016 (Fallback States) next run
+
+## 2026-05-10 08:21 ET DEVELOPER
+- did: started run — claimed DEV_LOCK; picking TASK-0017 (Overlay BrowserWindow & Toggle Hotkey)
+- task: TASK-0017
+- PR: (TBD)
+- status: in-progress — writing plan + TRD
+
+## 2026-05-10 08:21 ET DEVELOPER
+- did: wrote plan + TRD for TASK-0017 (Overlay BrowserWindow & Toggle Hotkey); moved task to In Progress; opened draft PR #18
+- task: TASK-0017
+- PR: #18 https://github.com/ForceZac/KeyboardCommandCenter/pull/18
+- trd: written — awaiting-review
+- tests: skipped (TRD phase — no feature code written)
+- metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=0 | dev_idle=0
+- next: TRD Watcher reviews TRD; Developer resumes building once TRD is approved
+
+## 2026-05-10 08:34 ET PROJECT-MANAGER
+- did: moved 2 merged tasks to Shipped (TASK-0012, TASK-0014); updated project_context.md
+- created: none
+- moved: TASK-0012 Approved→Shipped (PR #13 merged), TASK-0014 Approved→Shipped (PR #12 merged)
+- prd gaps: Goal 9, 10 need PRDs (not urgent — current work is Goal 6, Goal 7/8 PRDs exist)
+- roadmap check: skipped (did last run)
+- proposals added: 0
+- metrics: tasks_created=0 | tasks_moved=2 | prd_gaps=2 | roadmap_issues=0
+- next: Ready at 2 (TASK-0020, TASK-0016) — healthy. TASK-0017 in progress (TRD awaiting review). TASK-0019 approved awaiting owner merge on PR #17. TASK-0016 now fully unblocked (both deps TASK-0013 and TASK-0012 shipped).
+- discord: FAILED — #standup and #main not allowlisted; summary logged here only
+
+## 2026-05-10 08:41 ET DEVELOPER
+- did: started run — claimed DEV_LOCK; resuming TASK-0017 (TRD approved — building Overlay BrowserWindow & Toggle Hotkey)
+- task: TASK-0017
+- PR: #18
+- status: in-progress — build phase
+
+## 2026-05-10 08:52 ET DEVELOPER
+- did: FINAL — built TASK-0017 (Overlay BrowserWindow & Toggle Hotkey). New files: overlay-window.ts (OverlayWindowManager — lazy BrowserWindow, 'floating' alwaysOnTop, click-through, toggle hotkey, 6-preset positioning), overlay-preload.ts (contextBridge window.kccOverlay), overlay-controller.ts (OverlayController interface + registry, parity with TASK-0019), renderer/overlay-stub.{html,ts} (forge webpack stub). Modified: settings.ts (overlay prefs + store schema, parity TASK-0019), main.ts (overlayManager instantiation, registerOverlayController, all overlay:* IPC handlers, detection forwarding, before-quit cleanup), window.ts (panel z-order → 'pop-up-menu'), forge.config.js (overlay entry + extraResources), globals.d.ts + vitest.config.ts (webpack globals), tsconfig.tests.json (includes .d.ts). PR #18 marked ready.
+- task: TASK-0017
+- PR: #18 https://github.com/ForceZac/KeyboardCommandCenter/pull/18
+- trd: approved — feature complete
+- tests: 172/172 green (+26 overlay-window tests) | tsc clean all 3 configs
+- metrics: run_type=productive | commits=1 | tests_added=26 | trd_cycles=0 | dev_idle=0
+- next: Reviewer approves PR #18; TASK-0020 (Overlay Detection Integration) becomes buildable once #18 merges
+- discord: FAILED — #main (1494231685900931192) not allowlisted; summary logged here only
+
+## 2026-05-10 09:01 ET DEVELOPER
+- did: no-op — in-flight cap reached; PR #18 (goals/17-overlay-browser-window) is In Review
+- task: n/a
+- trd: n/a
+- tests: skipped
+- metrics: run_type=no-op | reason=in-flight cap | dev_idle=1
+- next: Reviewer approves/requests-changes on PR #18; next Developer run picks up TASK-0020 or TASK-0016
+
+## 2026-05-10 09:04 ET PROJECT-MANAGER
+- did: roadmap health check, updated project_context.md (TASK-0017 now changes-requested, not in-progress)
+- created: none
+- moved: none
+- prd gaps: Goal 9, 10 need PRDs (not urgent — N+3, N+4; Goal 7/8 PRDs exist)
+- roadmap check: solid — sequencing correct, no scope creep, no stale goals, no missing prerequisites. Goal 7 PRD (N+1) and Goal 8 PRD (N+2) both exist.
+- flag: merge order risk — TASK-0019 (approved, PR #17) and TASK-0017 (changes requested, PR #18) overlap on settings.ts and overlay-controller.ts. TASK-0017 notes say it should merge first. If owner merges PR #17 first, PR #18 will need conflict resolution.
+- proposals added: 0
+- metrics: tasks_created=0 | tasks_moved=0 | prd_gaps=2 | roadmap_issues=0
+- next: Ready at 2 (healthy). TASK-0017 needs developer to fix 3 reviewer items (type:desktop removal, extraResources path fix, overlay-preload tests). TASK-0019 awaiting owner merge. Once TASK-0017 ships, TASK-0020 unblocks. Consider queuing Goal 7 tasks next run if Ready drops below 2.
+
+## 2026-05-10 09:11 ET DEVELOPER
+- did: started run — claimed DEV_LOCK; addressing TASK-0017 Changes Requested (PR #18)
+- task: TASK-0017
+- PR: #18
+- status: in-progress — fix-up phase
+
+## 2026-05-10 09:11 ET DEVELOPER
+- did: TASK-0017 round-1 fix-up — (1) removed type:'desktop' from overlay-window.ts, moved 'floating' comment to setAlwaysOnTop() where it belongs; (2) fixed forge.config.js extraResources to:'overlay/dist' (was navigating outside app bundle); (3) added overlay-preload.test.ts with 9 tests (API shape, onAppChanged subscribe/unsubscribe cycle, getShortcutsForApp and getOverlayPrefs IPC channels). Moved TASK-0017 back to In Review. Left PR comment for reviewer.
+- task: TASK-0017
+- PR: #18 https://github.com/ForceZac/KeyboardCommandCenter/pull/18
+- trd: approved — round-1 fixes applied
+- tests: 181/181 green (+9 preload tests) | tsc clean (all configs implied)
+- metrics: run_type=productive | commits=1 | tests_added=9 | trd_cycles=0 | dev_idle=0
+- next: Reviewer picks up PR #18 for round-2; TASK-0020 unblocks once #18 merges

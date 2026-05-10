@@ -39,6 +39,10 @@ export class PanelWindowManager {
       },
     });
 
+    // Raise the panel to 'pop-up-menu' level so it renders above the overlay's
+    // 'floating' level when both windows are visible (PRD Flow 6).
+    this.window.setAlwaysOnTop(true, 'pop-up-menu');
+
     this.window.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
     // Dismiss on focus loss — user clicked outside the panel.
