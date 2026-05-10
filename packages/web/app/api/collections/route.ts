@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '../../../lib/auth';
 import { CollectionsService } from '../../../services/CollectionsService';
+import { LimitReachedError } from '../../../lib/errors';
 
 const service = new CollectionsService();
 
@@ -45,7 +46,7 @@ export async function POST(request: NextRequest) {
     );
     return NextResponse.json(created, { status: 201 });
   } catch (err) {
-    if ((err as NodeJS.ErrnoException).code === 'LIMIT_REACHED') {
+    if (err instanceof LimitReachedError) {
       return NextResponse.json(
         { error: 'Collections limit reached (max 50)' },
         { status: 403 },

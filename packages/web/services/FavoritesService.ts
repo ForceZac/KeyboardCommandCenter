@@ -1,6 +1,7 @@
 import { prisma } from '../lib/prisma';
 import type { FavoriteEntry } from '@kcc/core';
 import { mapRowToFavoriteEntry } from './favorites-utils';
+import { LimitReachedError } from '../lib/errors';
 
 const FAVORITES_LIMIT = 1000;
 
@@ -44,9 +45,7 @@ export class FavoritesService {
     // (TASK-0024) won't POST for already-favorited shortcuts, so real impact is
     // negligible. Fixing this would require a read-then-count atomic operation.
     if (count >= FAVORITES_LIMIT) {
-      const err = new Error('Favorites limit reached');
-      (err as NodeJS.ErrnoException).code = 'LIMIT_REACHED';
-      throw err;
+      throw new LimitReachedError('Favorites limit reached');
     }
 
     // upsert: if already favorited, do nothing; otherwise insert

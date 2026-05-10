@@ -1,6 +1,7 @@
 import { prisma } from '../lib/prisma';
 import type { CollectionSummary, FavoriteEntry } from '@kcc/core';
 import { mapRowToFavoriteEntry } from './favorites-utils';
+import { LimitReachedError } from '../lib/errors';
 
 const COLLECTIONS_LIMIT = 50;
 
@@ -36,9 +37,7 @@ export class CollectionsService {
     const count = await prisma.collection.count({ where: { userId } });
 
     if (count >= COLLECTIONS_LIMIT) {
-      const err = new Error('Collections limit reached');
-      (err as NodeJS.ErrnoException).code = 'LIMIT_REACHED';
-      throw err;
+      throw new LimitReachedError('Collections limit reached');
     }
 
     const created = await prisma.collection.create({

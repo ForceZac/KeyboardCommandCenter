@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '../../../lib/auth';
 import { FavoritesService } from '../../../services/FavoritesService';
+import { LimitReachedError } from '../../../lib/errors';
 
 const service = new FavoritesService();
 
@@ -41,7 +42,7 @@ export async function POST(request: NextRequest) {
     await service.addFavorite(session.user.id, shortcutId);
     return NextResponse.json({ ok: true }, { status: 201 });
   } catch (err) {
-    if ((err as NodeJS.ErrnoException).code === 'LIMIT_REACHED') {
+    if (err instanceof LimitReachedError) {
       return NextResponse.json(
         { error: 'Favorites limit reached (max 1000)' },
         { status: 403 },

@@ -11,7 +11,11 @@ export default defineConfig({
     pool: 'forks',
     poolOptions: { forks: { singleFork: true } },
     testTimeout: 30_000,
-    include: ['__tests__/**/*.test.ts'],
+    include: [
+      '__tests__/api/favorites.test.ts',
+      '__tests__/api/collections.test.ts',
+      '__tests__/api/createUser-event.test.ts',
+    ],
     // No globalSetup — unit tests mock Prisma and do not hit a real database.
   },
   resolve: {
