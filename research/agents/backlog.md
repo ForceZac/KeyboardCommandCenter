@@ -37,6 +37,10 @@ _(Project Manager keeps 2–3 tasks here at all times.)_
 
 _(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
 
+## In Review
+
+_(Developer moves tasks here when the draft PR is marked ready.)_
+
 ### TASK-0007: Settings Persistence & Login Startup Registration
 - **Goal:** Goal 3 — Desktop App Shell (Electron + Tray)
 - **PRD:** research/agents/prds/goal-03-desktop-app-shell.md
@@ -52,12 +56,8 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
   - All settings survive app restart (kill + relaunch)
 - **PR:** #7
 - **Branch:** goals/7-settings-persistence
-- **TRD:** research/plans/goals/7-settings-persistence-trd.md — awaiting-review
+- **TRD:** research/plans/goals/7-settings-persistence-trd.md — approved
 - **Notes:** Completes Goal 3 user-facing DoD alongside TASK-0006 (shell, tray, hotkey, panel). Depends on TASK-0006 being shipped first (done). CI build pipeline deferred to a separate task.
-
-## In Review
-
-_(Developer moves tasks here when the draft PR is marked ready.)_
 
 ## Changes Requested
 

@@ -579,3 +579,30 @@
 - did: started run — claimed DEV_LOCK
 - task: TASK-0007
 - status: in-progress — writing TRD
+
+## 2026-05-09 20:16 ET DEVELOPER
+- did: picked up TASK-0007 (Settings Persistence & Login Startup) — wrote plan + TRD, opened draft PR #7, moved task to In Progress
+- task: TASK-0007
+- PR: #7
+- branch: goals/7-settings-persistence
+- trd: written — awaiting-review
+- tests: n/a (TRD phase)
+- metrics: run_type=productive | commits=2 | tests_added=0 | trd_cycles=1
+- next: TRD Watcher reviews TRD; if approved Developer resumes to build electron-store settings module, dynamic HotkeyManager, SettingsWindowManager, settings preload+renderer, tray menu update
+
+## 2026-05-09 20:16 ET DEVELOPER
+- discord: FAILED — #main channel not allowlisted. Run /discord:access to fix.
+
+## 2026-05-09 20:20 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TASK-0007
+- status: in-progress — TRD approved, resuming build phase
+
+## 2026-05-09 20:20 ET DEVELOPER
+- did: built TASK-0007 complete — electron-store settings module, dynamic HotkeyManager, SettingsWindowManager, settings preload + renderer, tray menu update, login startup init, IPC handlers, forge second webpack entry
+- task: TASK-0007
+- PR: #7
+- trd: approved — built
+- tests: tsc clean ✅ (both tsconfigs) | No automated E2E (Playwright+Electron infra out of scope per TRD)
+- metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=0
+- next: Reviewer picks up PR #7 — completes Goal 3 definition of done if approved
