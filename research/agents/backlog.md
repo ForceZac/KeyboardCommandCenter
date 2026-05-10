@@ -33,23 +33,51 @@ Task IDs are monotonic. The Project Manager picks the next number.
 
 _(Project Manager keeps 2–3 tasks here at all times.)_
 
-### TASK-0020: Overlay Detection Integration & App-Switch Content Updates
-- **Goal:** Goal 6 — Overlay Mode
-- **PRD:** research/agents/prds/goal-06-overlay-mode.md
-- **Scope:** Wire the overlay renderer to the detection service so overlay content updates when the active app changes. Listen for the `detection:app-changed` IPC event in the overlay preload/renderer (same channel the panel uses). On app change: fetch shortcuts for the new app via the existing `shortcuts:get-by-app` IPC (prefetch cache serves immediately), re-render the compact shortcut display with the new app's data. Handle unrecognized apps: show a muted "No shortcuts for [Process Name]" message in the overlay (PRD Flow 5). Handle no-detection state: show "No app detected" in the overlay. Ensure content update completes within 200ms of receiving the IPC event (success metric from PRD). NOT in scope: overlay BrowserWindow creation or positioning (TASK-0017), overlay renderer components or styling (TASK-0018, shipped), settings UI (TASK-0019), panel fallback states (TASK-0016), drag-to-reposition, Linux/Wayland, fullscreen app detection.
+
+### TASK-0021: Auth Schema & NextAuth Integration
+- **Goal:** Goal 7 — User Accounts & Favorites Sync
+- **PRD:** research/agents/prds/goal-07-accounts-favorites.md
+- **Scope:** Add Prisma schema models for authentication and favorites: User, Account, Session, VerificationToken (Auth.js standard models via `@auth/prisma-adapter`), plus Favorite (userId + shortcutId + timestamp) and Collection (userId + name + shortcuts relation). Configure Auth.js v5 in the Next.js web app with Prisma adapter, JWT session strategy, Google OAuth provider, GitHub OAuth provider, and email/password (credentials) provider. Create the catch-all auth API route (`/api/auth/[...nextauth]`). Add sign-in UI: modal with "Continue with Google", "Continue with GitHub", and email/password form. Add authenticated header state: user avatar and dropdown menu with "Favorites" link and "Sign out" action. Migrate anonymous localStorage favorites to the new account on first sign-in (detect existing localStorage favorites, POST to favorites API, clear localStorage). Run and verify Prisma migration is non-destructive (no changes to existing shortcut tables). NOT in scope: favorites CRUD API routes (separate task), favorites page/view UI, collections CRUD or UI, desktop auth flow, desktop electron-store, offline sync, rate limiting, verification email sending infrastructure (Auth.js handles basic flow).
 - **Acceptance:**
-  - Overlay content updates to show the correct app's shortcuts when the active app changes
-  - Content update completes within 200ms of receiving the detection:app-changed event
-  - Overlay shows "No shortcuts for [Process Name]" when the detected app is not in the database
-  - Overlay shows "No app detected" when detection returns no active app
-  - Overlay reuses the panel's prefetch cache — no duplicate database queries
-  - App name header in the overlay updates to reflect the currently detected app
-  - No flash or blank state during content transitions between apps
-  - No unhandled errors when detection service fires events before overlay renderer is ready
+  - Prisma migration adds User, Account, Session, VerificationToken, Favorite, and Collection tables without modifying existing tables
+  - Auth.js configured with JWT sessions, Prisma adapter, Google OAuth, GitHub OAuth, and credentials providers
+  - `/api/auth/[...nextauth]` route handles sign-in, sign-out, and session callbacks
+  - Sign-in modal renders with OAuth buttons and email/password form
+  - User can sign in via Google OAuth and is redirected back authenticated
+  - User can sign in via GitHub OAuth and is redirected back authenticated
+  - Authenticated user sees avatar and dropdown in the web header
+  - Sign-out clears the session and returns to unauthenticated state
+  - Anonymous localStorage favorites are migrated to the account on first sign-in
+  - Existing shortcut data and API routes are unaffected by the migration
 - **PR:**
 - **Branch:**
 - **TRD:**
-- **Notes:** Fourth Goal 6 task — covers PRD Flows 3 and 5. Depends on TASK-0017 (overlay BrowserWindow must exist) and TASK-0018 (overlay renderer, shipped). Should be buildable once TASK-0017 merges.
+- **Notes:** First Goal 7 task — foundational auth setup. Depends on Goal 2 (web app, shipped) and Goal 5 (panel, nearly complete). Can be worked in parallel with remaining Goal 6 tasks since it touches the web app only. PRD Flows 1, 2, and partial Flow 9 (web sign-out).
+
+### TASK-0022: Favorites CRUD API Routes & Web Favorite Toggle
+- **Goal:** Goal 7 — User Accounts & Favorites Sync
+- **PRD:** research/agents/prds/goal-07-accounts-favorites.md
+- **Scope:** Build the server-side favorites API and the web UI for toggling favorites on shortcut rows. API routes: `POST /api/favorites` (add favorite — accepts shortcutId, returns created favorite), `DELETE /api/favorites/[id]` (remove favorite), `GET /api/favorites` (list authenticated user's favorites with shortcut data, supports pagination). All routes require authentication (return 401 if not signed in). Add a heart/star toggle icon to each shortcut row on the web app's per-app shortcut pages. Clicking the icon sends the API request and updates the UI optimistically — icon fills immediately, reverts with a brief toast on failure. The toggle state is derived from the user's favorites list (fetched on page load for authenticated users). NOT in scope: favorites page/view (separate task), collections CRUD or UI, desktop panel favorites, desktop offline sync, rate limiting (future task), bulk import/export.
+- **Acceptance:**
+  - `POST /api/favorites` creates a Favorite record for the authenticated user and returns 201
+  - `POST /api/favorites` returns 401 for unauthenticated requests
+  - `POST /api/favorites` returns 409 if the shortcut is already favorited
+  - `DELETE /api/favorites/[id]` removes the favorite and returns 200
+  - `DELETE /api/favorites/[id]` returns 404 if the favorite doesn't exist or belongs to another user
+  - `GET /api/favorites` returns the authenticated user's favorites with shortcut details
+  - Heart/star icon appears on each shortcut row for authenticated users
+  - Clicking the icon toggles the favorite state with optimistic UI update
+  - Failed API calls revert the icon state and show a brief error toast
+  - Icon does not appear for unauthenticated users (no broken state)
+  - No regressions to existing shortcut page load performance
+- **PR:**
+- **Branch:**
+- **TRD:**
+- **Notes:** Second Goal 7 task — covers PRD Flow 4 (web favoriting). Depends on TASK-0021 (auth schema and NextAuth must be in place). Can be worked independently of Goal 6 tasks since it touches web app only.
+
+## In Progress
+
+_(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
 
 ### TASK-0016: Panel Fallback States — No Detection, Unrecognized App, No Shortcuts
 - **Goal:** Goal 5 — Shortcut Panel UI (Desktop)
@@ -63,41 +91,36 @@ _(Project Manager keeps 2–3 tasks here at all times.)_
   - Clicking a recent app loads that app's shortcuts in the panel
   - Fallback states render within 100ms (same perf target as normal panel content)
   - No unhandled errors for edge cases (empty detection history, all recent apps unrecognized)
-- **PR:**
-- **Branch:**
-- **TRD:**
-- **Notes:** Fourth Goal 5 task — covers PRD Flows 3 and 4. Depends on TASK-0013 (panel content renderer) and TASK-0012 (IPC data layer). Should be buildable once TASK-0013 ships.
-
-## In Progress
-
-_(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
+- **PR:** #20
+- **Branch:** goals/16-panel-fallback-states
+- **TRD:** research/plans/goals/16-panel-fallback-states-trd.md — awaiting-review
+- **Notes:** Fourth Goal 5 task — covers PRD Flows 3 and 4. Depends on TASK-0013 (panel content renderer) and TASK-0012 (IPC data layer). Both shipped.
 
 ## In Review
 
 _(Developer moves tasks here when the draft PR is marked ready.)_
 
-### TASK-0017: Overlay BrowserWindow & Toggle Hotkey
-- **Goal:** Goal 6 — Overlay Mode
-- **PRD:** research/agents/prds/goal-06-overlay-mode.md
-- **Scope:** Create the Electron BrowserWindow for the overlay: frameless, `transparent: true`, `backgroundColor: '#00000000'`, `alwaysOnTop: true` with level `'floating'`, `setIgnoreMouseEvents(true, { forward: true })` for full click-through. Register a secondary configurable global hotkey (default Ctrl+Shift+O on Windows / Cmd+Shift+O on macOS) via `globalShortcut` that toggles overlay window visibility. Add overlay preferences to `electron-store`: `overlay.enabled` (bool, default false), `overlay.hotkey` (string), `overlay.opacity` (number, default 0.4), `overlay.position` (string, default "Top Right"), `overlay.size` (string, default "Standard"). Position the overlay on the correct monitor using Electron's `screen` API. Ensure the panel window has a higher z-order than the overlay when both are visible (PRD Flow 6). NOT in scope: overlay renderer content or React components (separate task), settings UI section for overlay preferences (separate task), detection integration and app-switch content updates (separate task), opacity live preview in settings.
-- **Acceptance:**
-  - Overlay BrowserWindow is frameless, transparent, always-on-top with `'floating'` level
-  - Overlay window is click-through — all mouse events pass to the underlying window on both Windows and macOS
-  - Configurable global hotkey toggles overlay window show/hide
-  - Default hotkey is Ctrl+Shift+O (Windows) / Cmd+Shift+O (macOS)
-  - Overlay preferences stored in electron-store with correct defaults
-  - Overlay appears on the same monitor as the active application window
-  - Panel window renders above overlay when both are visible (higher z-order)
-  - Overlay does not increase idle memory by more than 20MB
-  - No crash when overlay hotkey is pressed before detection service is running
-- **PR:** #18
-- **Branch:** goals/17-overlay-browser-window
-- **TRD:** research/plans/goals/17-overlay-browser-window-trd.md — approved
-- **Notes:** First Goal 6 task — the overlay window shell. Also includes overlay-controller.ts and overlay settings store functions (parity with TASK-0019, needed on this branch since TASK-0019 hasn't merged to main yet). Reviewer: when merging TASK-0019 after TASK-0017, expect conflict on settings.ts and overlay-controller.ts — TASK-0017's versions are canonical and include all TASK-0017 wiring.
-
 ## Changes Requested
 
 _(Reviewer moves tasks here when a PR needs rework.)_
+
+### TASK-0020: Overlay Detection Integration & App-Switch Content Updates
+- **Goal:** Goal 6 — Overlay Mode
+- **PRD:** research/agents/prds/goal-06-overlay-mode.md
+- **Scope:** Wire the overlay renderer to the detection service so overlay content updates when the active app changes. Listen for the `detection:app-changed` IPC event in the overlay preload/renderer (same channel the panel uses). On app change: fetch shortcuts for the new app via the existing `shortcuts:get-by-app` IPC (prefetch cache serves immediately), re-render the compact shortcut display with the new app's data. Handle unrecognized apps: show a muted "No shortcuts for [Process Name]" message in the overlay (PRD Flow 5). Handle no-detection state: show "No app detected" in the overlay. Ensure content update completes within 200ms of receiving the IPC event (success metric from PRD). NOT in scope: overlay BrowserWindow creation or positioning (TASK-0017), overlay renderer components or styling (TASK-0018, shipped), settings UI (TASK-0019), panel fallback states (TASK-0016), drag-to-reposition, Linux/Wayland, fullscreen app detection.
+- **Acceptance:**
+  - Overlay content updates to show the correct app's shortcuts when the active app changes
+  - Content update completes within 200ms of receiving the detection:app-changed event
+  - Overlay shows "No shortcuts for [Process Name]" when the detected app is not in the database
+  - Overlay shows "No app detected" when detection returns no active app
+  - Overlay reuses the panel's prefetch cache — no duplicate database queries
+  - App name header in the overlay updates to reflect the currently detected app
+  - No flash or blank state during content transitions between apps
+  - No unhandled errors when detection service fires events before overlay renderer is ready
+- **PR:** #19
+- **Branch:** goals/20-overlay-detection-integration
+- **TRD:** research/plans/goals/20-overlay-detection-integration-trd.md — approved
+- **Notes:** Fourth Goal 6 task — covers PRD Flows 3 and 5. Depends on TASK-0017 (overlay BrowserWindow must exist) and TASK-0018 (overlay renderer, shipped). overlay-window.ts incorporated from TASK-0017 base + Phase 3 ready-state guard. **Changes Requested (Round 1):** 3 tsc errors in packages/desktop — all caused by TASK-0017 not yet merged. Fix: mark draft, wait for TASK-0017 merge, rebase, re-mark ready.
 
 ## TRD Changes Requested
 
@@ -106,6 +129,15 @@ _(TRD Watcher moves tasks here when a TRD needs rework.)_
 ## Approved
 
 _(Reviewer moves tasks here after approving the PR. You merge to main, then move to Shipped.)_
+
+### TASK-0017: Overlay BrowserWindow & Toggle Hotkey
+- **Goal:** Goal 6 — Overlay Mode
+- **PRD:** research/agents/prds/goal-06-overlay-mode.md
+- **PR:** #18
+- **Branch:** goals/17-overlay-browser-window
+- **TRD:** research/plans/goals/17-overlay-browser-window-trd.md — approved
+- **Approved:** 2026-05-10 (Round 2 — reviewer approved via PR comment; GitHub blocked formal approval since author == reviewer)
+- **Notes:** Merge before PR #17 (TASK-0019) — both touch settings.ts and overlay-controller.ts; TASK-0017's versions are canonical.
 
 ### TASK-0019: Overlay Settings UI Section
 - **Goal:** Goal 6 — Overlay Mode
