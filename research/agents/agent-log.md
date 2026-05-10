@@ -1,5 +1,15 @@
 <!-- Agent log. Append-only. Agents read the last 75 lines before acting. Log Trim archives entries older than 48h into agent-log-archive-YYYY-MM.md. -->
 
+## 2026-05-10 08:56 ET REVIEWER
+- did: reviewed PR #18 (TASK-0017 — Overlay BrowserWindow & Toggle Hotkey, round 1)
+- decision: changes-requested (posted as comment — GitHub self-review restriction, same precedent as prior PRs)
+- standards checked: backend (main-process structure, IPC thin-handler pattern, security preload boundary), separation of concerns (overlay/desktop package boundary), PR policy (conventional commits, tsc clean, tests pass), TRD match
+- tests run: 172/172 pass (26 new overlay-window tests) | tsc clean | no regression
+- issues: (1) overlay-window.ts:99 — `type: 'desktop'` not in TRD, silently ignored on macOS/Windows but latent Linux bug (Goal 10), comment misattributed to it; (2) forge.config.js:19 — extraResources `to: '../../packages/overlay/dist'` escapes app bundle, packaged app won't find renderer — should be `to: 'overlay/dist'`; (3) no overlay-preload.test.ts — TRD-required unit tests for contextBridge surface are missing
+- metrics: run_type=productive | pr=PR-18 | round=1 | decision=changes-requested | tests_run=pass
+- idle-reset: REV_IDLE → 0
+- next: Developer fixes 3 items (remove type:desktop, fix forge to path, add preload tests) and re-submits; Reviewer picks up round 2
+
 ## 2026-05-10 08:19 ET REVIEWER
 - did: reviewed PR #17 (TASK-0019 — Overlay Settings UI Section, round 2)
 - decision: approved (posted as comment — GitHub self-review restriction, same precedent as TASK-0015/TASK-0012)
@@ -1432,3 +1442,37 @@
 - metrics: run_type=productive | commits=1 | tests_added=26 | trd_cycles=0 | dev_idle=0
 - next: Reviewer approves PR #18; TASK-0020 (Overlay Detection Integration) becomes buildable once #18 merges
 - discord: FAILED — #main (1494231685900931192) not allowlisted; summary logged here only
+
+## 2026-05-10 09:01 ET DEVELOPER
+- did: no-op — in-flight cap reached; PR #18 (goals/17-overlay-browser-window) is In Review
+- task: n/a
+- trd: n/a
+- tests: skipped
+- metrics: run_type=no-op | reason=in-flight cap | dev_idle=1
+- next: Reviewer approves/requests-changes on PR #18; next Developer run picks up TASK-0020 or TASK-0016
+
+## 2026-05-10 09:04 ET PROJECT-MANAGER
+- did: roadmap health check, updated project_context.md (TASK-0017 now changes-requested, not in-progress)
+- created: none
+- moved: none
+- prd gaps: Goal 9, 10 need PRDs (not urgent — N+3, N+4; Goal 7/8 PRDs exist)
+- roadmap check: solid — sequencing correct, no scope creep, no stale goals, no missing prerequisites. Goal 7 PRD (N+1) and Goal 8 PRD (N+2) both exist.
+- flag: merge order risk — TASK-0019 (approved, PR #17) and TASK-0017 (changes requested, PR #18) overlap on settings.ts and overlay-controller.ts. TASK-0017 notes say it should merge first. If owner merges PR #17 first, PR #18 will need conflict resolution.
+- proposals added: 0
+- metrics: tasks_created=0 | tasks_moved=0 | prd_gaps=2 | roadmap_issues=0
+- next: Ready at 2 (healthy). TASK-0017 needs developer to fix 3 reviewer items (type:desktop removal, extraResources path fix, overlay-preload tests). TASK-0019 awaiting owner merge. Once TASK-0017 ships, TASK-0020 unblocks. Consider queuing Goal 7 tasks next run if Ready drops below 2.
+
+## 2026-05-10 09:11 ET DEVELOPER
+- did: started run — claimed DEV_LOCK; addressing TASK-0017 Changes Requested (PR #18)
+- task: TASK-0017
+- PR: #18
+- status: in-progress — fix-up phase
+
+## 2026-05-10 09:11 ET DEVELOPER
+- did: TASK-0017 round-1 fix-up — (1) removed type:'desktop' from overlay-window.ts, moved 'floating' comment to setAlwaysOnTop() where it belongs; (2) fixed forge.config.js extraResources to:'overlay/dist' (was navigating outside app bundle); (3) added overlay-preload.test.ts with 9 tests (API shape, onAppChanged subscribe/unsubscribe cycle, getShortcutsForApp and getOverlayPrefs IPC channels). Moved TASK-0017 back to In Review. Left PR comment for reviewer.
+- task: TASK-0017
+- PR: #18 https://github.com/ForceZac/KeyboardCommandCenter/pull/18
+- trd: approved — round-1 fixes applied
+- tests: 181/181 green (+9 preload tests) | tsc clean (all configs implied)
+- metrics: run_type=productive | commits=1 | tests_added=9 | trd_cycles=0 | dev_idle=0
+- next: Reviewer picks up PR #18 for round-2; TASK-0020 unblocks once #18 merges
