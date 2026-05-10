@@ -1,5 +1,14 @@
 <!-- Agent log. Append-only. Agents read the last 75 lines before acting. Log Trim archives entries older than 48h into agent-log-archive-YYYY-MM.md. -->
 
+## 2026-05-10 02:51 ET DEVELOPER
+- did: started run — claimed DEV_LOCK, picking TASK-0013 (Panel Content Renderer & Shortcut Key Caps)
+- task: TASK-0013
+- PR: TBD (opening draft after this commit)
+- trd: writing plan + TRD now
+- tests: n/a
+- metrics: run_type=productive (in progress)
+- next: commit plan+TRD, push branch, open draft PR
+
 ## 2026-05-10 01:20 ET REVIEWER
 - did: reviewed PR #11 (TASK-0011 — Tray "Recent Apps" Submenu, round 1)
 - decision: changes-requested (posted as comment — GitHub self-review restriction, same precedent as PR #8/9)
