@@ -33,39 +33,6 @@ Task IDs are monotonic. The Project Manager picks the next number.
 
 _(Project Manager keeps 2–3 tasks here at all times.)_
 
-### TASK-0008: Process-to-App Mapping Table
-- **Goal:** Goal 4 — Active Window Process Detection
-- **PRD:** research/agents/prds/goal-04-process-detection.md
-- **Scope:** Create a static JSON mapping file (e.g. `packages/desktop/src/process-map.json`) that maps process names, executable names, and macOS bundle identifiers to application slugs in the shortcut database. Cover all 50+ apps in the existing seed data. Handle common process name variations per app (e.g. `code` / `Code.exe` / `Code Helper` → `vs-code`; `Photoshop` / `Adobe Photoshop 2024` → `photoshop`). Include a TypeScript module that loads the map and exports a `lookupApp(processName: string, bundleId?: string): string | null` function for use by the detection service. NOT in scope: Rust native module, active window detection, polling service, tray integration, detection settings UI, Linux process names.
-- **Acceptance:**
-  - JSON mapping file exists with entries for all 50+ seeded apps
-  - Each entry maps at least one process name or bundle ID to a database app slug
-  - Common aliases and variations are covered (verified against top 10 apps: VS Code, Chrome, Photoshop, Figma, Slack, Terminal, Finder/Explorer, Word, Excel, Spotify)
-  - TypeScript `lookupApp()` function returns correct slugs for test inputs and `null` for unrecognized process names
-  - File is loadable at runtime by the Electron main process without external dependencies
-- **PR:**
-- **Branch:**
-- **TRD:**
-- **Notes:** Foundational for TASK-0009 and the rest of Goal 4. Does not depend on Goal 3 Electron infrastructure — can be started immediately. App slugs should match existing database entries from seed data.
-
-### TASK-0009: Rust Native Module for Active Window Detection
-- **Goal:** Goal 4 — Active Window Process Detection
-- **PRD:** research/agents/prds/goal-04-process-detection.md
-- **Scope:** Set up a `napi-rs` project within the desktop package to build a native Node module exposing `getActiveWindow(): { processName: string, windowTitle: string, bundleId?: string }`. Implement platform adapters using a strategy pattern: Win32 adapter (`GetForegroundWindow` → `GetWindowThreadProcessId` → process name/exe path) and macOS adapter (`NSWorkspace.shared.frontmostApplication` → bundle ID and process name). Integrate the native module build with the existing Electron Forge webpack pipeline so `npm run make` produces a working binary. Generate TypeScript type definitions for the exported interface. NOT in scope: polling service, IPC to renderer, tray "Recent Apps" submenu, settings toggle, process-to-app mapping (TASK-0008), Linux support, overlay.
-- **Acceptance:**
-  - `napi-rs` project structure exists and compiles successfully
-  - `getActiveWindow()` returns the correct process name for the currently active window on the build platform
-  - Function returns window title and bundle ID (macOS) when available
-  - Native module `.node` binary is loadable from Electron's main process via `require()`
-  - Build integrates with Electron Forge — no manual steps beyond `npm run make`
-  - TypeScript type definitions are generated for the native interface
-  - Graceful error handling: returns `null` on detection failure, does not crash the Electron process
-  - Works on both Windows and macOS (platform-specific code behind adapter interface)
-- **PR:**
-- **Branch:**
-- **TRD:**
-- **Notes:** Depends on Goal 3 infrastructure (TASK-0007 must ship first — Electron app with settings via electron-store). Uses `napi-rs` per PRD recommendation. The native module is consumed by the polling service (future task) and by TASK-0008's mapping layer.
-
 ## In Progress
 
 _(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
@@ -73,37 +40,6 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
 ## In Review
 
 _(Developer moves tasks here when the draft PR is marked ready.)_
-
-## Changes Requested
-
-_(Reviewer moves tasks here when a PR needs rework.)_
-
-## TRD Changes Requested
-
-_(TRD Watcher moves tasks here when a TRD needs rework.)_
-
-## Approved
-
-_(Reviewer moves tasks here after approving the PR. You merge to main, then move to Shipped.)_
-
-### TASK-0007: Settings Persistence & Login Startup Registration
-- **Goal:** Goal 3 — Desktop App Shell (Electron + Tray)
-- **PRD:** research/agents/prds/goal-03-desktop-app-shell.md
-- **Scope:** Complete the user-facing Goal 3 PRD items not covered by TASK-0006: (1) Add `electron-store` for local settings persistence — store hotkey binding (Electron accelerator string) and login-startup preference as a JSON file. (2) Wire configurable hotkey into HotkeyManager — Settings window accessible from tray context menu lets user record a new key combo, re-registers the global shortcut on change, and notifies user if the binding is already claimed by another app. (3) Login startup registration via `app.setLoginItemSettings` — enabled by default, toggleable in Settings, persisted via electron-store. (4) Add "Settings" item to tray context menu between "Open" and "Quit". NOT in scope: CI build pipeline (separate task), real shortcut panel content (Goal 5), process detection (Goal 4), overlay (Goal 6), code signing (Goal 9), Linux (Goal 10), auto-update, installer UX.
-- **Acceptance:**
-  - Tray context menu includes "Settings" option that opens a Settings window
-  - Settings window shows current hotkey binding and startup preference
-  - User can change the hotkey binding — new binding persists across app restarts
-  - App handles hotkey conflicts gracefully (shows notification if binding is taken by another app)
-  - App registers for login startup on Windows and macOS via `app.setLoginItemSettings`
-  - Startup preference is toggleable in Settings and persisted
-  - Settings stored via `electron-store` in a local JSON file
-  - All settings survive app restart (kill + relaunch)
-- **PR:** #7
-- **Branch:** goals/7-settings-persistence
-- **TRD:** research/plans/goals/7-settings-persistence-trd.md — approved
-- **Approved:** 2026-05-10
-- **Notes:** Completes Goal 3 user-facing DoD alongside TASK-0006 (shell, tray, hotkey, panel). Depends on TASK-0006 being shipped first (done). CI build pipeline deferred to a separate task.
 
 ### TASK-0005: Per-App Shortcut Pages, Category Browse Pages & Platform Toggle
 - **Goal:** Goal 2 — Web Search & Browse Interface
@@ -123,7 +59,19 @@ _(Reviewer moves tasks here after approving the PR. You merge to main, then move
 - **PR:** #6
 - **Branch:** goals/5-per-app-category-pages
 - **TRD:** research/plans/goals/5-per-app-category-pages-trd.md — approved
-- **Approved:** 2026-05-09
+- **Notes:** Round 1 fixed 2026-05-09 — platform state isolation, dead groupContext prop, E2E content test added.
+
+## Changes Requested
+
+_(Reviewer moves tasks here when a PR needs rework.)_
+
+## TRD Changes Requested
+
+_(TRD Watcher moves tasks here when a TRD needs rework.)_
+
+## Approved
+
+_(Reviewer moves tasks here after approving the PR. You merge to main, then move to Shipped.)_
 
 ## Shipped
 
@@ -176,3 +124,22 @@ _(You move tasks here after merging to main.)_
 ## Blocked
 
 _(Waiting on an external dependency, a missing PRD, or owner decision.)_
+
+### TASK-0007: Settings Persistence & Login Startup Registration
+- **Goal:** Goal 3 — Desktop App Shell (Electron + Tray)
+- **PRD:** research/agents/prds/goal-03-desktop-app-shell.md — **MISSING** (does not exist)
+- **Scope:** Complete the user-facing Goal 3 PRD items not covered by TASK-0006: (1) Add `electron-store` for local settings persistence — store hotkey binding (Electron accelerator string) and login-startup preference as a JSON file. (2) Wire configurable hotkey into HotkeyManager — Settings window accessible from tray context menu lets user record a new key combo, re-registers the global shortcut on change, and notifies user if the binding is already claimed by another app. (3) Login startup registration via `app.setLoginItemSettings` — enabled by default, toggleable in Settings, persisted via electron-store. (4) Add "Settings" item to tray context menu between "Open" and "Quit". NOT in scope: CI build pipeline (separate task), real shortcut panel content (Goal 5), process detection (Goal 4), overlay (Goal 6), code signing (Goal 9), Linux (Goal 10), auto-update, installer UX.
+- **Acceptance:**
+  - Tray context menu includes "Settings" option that opens a Settings window
+  - Settings window shows current hotkey binding and startup preference
+  - User can change the hotkey binding — new binding persists across app restarts
+  - App handles hotkey conflicts gracefully (shows notification if binding is taken by another app)
+  - App registers for login startup on Windows and macOS via `app.setLoginItemSettings`
+  - Startup preference is toggleable in Settings and persisted
+  - Settings stored via `electron-store` in a local JSON file
+  - All settings survive app restart (kill + relaunch)
+- **PR:**
+- **Branch:**
+- **TRD:**
+- **Notes:** Completes Goal 3 user-facing DoD alongside TASK-0006 (shell, tray, hotkey, panel). Depends on TASK-0006 being shipped first. CI build pipeline deferred to a separate task.
+- **Blocked reason:** Goal 3 PRD (`goal-03-desktop-app-shell.md`) does not exist in `research/agents/prds/`. Product Manager must write the PRD before this task can move to Ready. See also PROP-0001.
