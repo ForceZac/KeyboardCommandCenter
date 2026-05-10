@@ -73,6 +73,10 @@ _(Project Manager keeps 2–3 tasks here at all times.)_
 
 _(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
 
+## In Review
+
+_(Developer moves tasks here when the draft PR is marked ready.)_
+
 ### TASK-0019: Overlay Settings UI Section
 - **Goal:** Goal 6 — Overlay Mode
 - **PRD:** research/agents/prds/goal-06-overlay-mode.md
@@ -89,29 +93,7 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
 - **PR:** #17
 - **Branch:** goals/19-overlay-settings-ui
 - **TRD:** research/plans/goals/19-overlay-settings-ui-trd.md — approved
-- **Notes:** Third Goal 6 task — PRD Flows 1 and 4. TASK-0019 was in local PM/Reviewer agent state but not yet committed to main; added here retroactively. TRD defines overlay store schema and OverlayController interface (see PROP-0005 for coordination note with TASK-0017).
-
-## In Review
-
-_(Developer moves tasks here when the draft PR is marked ready.)_
-
-### TASK-0015: Panel Search/Filter Input
-- **Goal:** Goal 5 — Shortcut Panel UI (Desktop)
-- **PRD:** research/agents/prds/goal-05-shortcut-panel-ui.md
-- **Scope:** Add a search/filter input to the shortcut panel, positioned below the app header and above the shortcut list. When the user types, filter the displayed shortcuts in real time — matching against command description text and key combo text (case-insensitive substring match). Context group headings with no matching shortcuts should be hidden during filtering. Display a "No matching shortcuts" message when the filter matches nothing. Clearing the input restores the full shortcut list. The search input should be focused and ready for typing when the panel opens. Target <50ms filter response per keystroke on lists of 200+ shortcuts. NOT in scope: fallback states for no-detection/unrecognized app (separate task), fuzzy matching or advanced search operators, overlay mode (Goal 6), user accounts (Goal 7).
-- **Acceptance:**
-  - Search input renders below app header, above shortcut list
-  - Search input is focused when the panel opens
-  - Typing filters shortcuts in real time by command description and key combo text
-  - Filtering is case-insensitive substring matching
-  - Context group headings with no matching results are hidden
-  - "No matching shortcuts" message displays when filter matches nothing
-  - Clearing input restores the full shortcut list
-  - Filter response <50ms per keystroke on 200+ shortcuts
-- **PR:** #15
-- **Branch:** goals/15-panel-search-filter
-- **TRD:** research/plans/goals/15-panel-search-filter-trd.md — approved
-- **Notes:** Third Goal 5 task — adds search/filter on top of the renderer from TASK-0013. See PRD Flow 2 for the full UX specification. Round 1 changes requested 2026-05-10: move #no-results outside #shortcuts-container (destroyed by innerHTML= on app-change), add regression test. Round 2 resubmit 2026-05-10: fix applied, regression test added, 146/146 pass.
+- **Notes:** Third Goal 6 task — PRD Flows 1 and 4. TRD defines overlay store schema and OverlayController interface (see PROP-0005 for TASK-0017 coordination).
 
 ## Changes Requested
 
@@ -163,6 +145,24 @@ _(Reviewer moves tasks here after approving the PR. You merge to main, then move
 ## Shipped
 
 _(You move tasks here after merging to main.)_
+
+### TASK-0018: Overlay Renderer — Compact Shortcut Display
+- **Goal:** Goal 6 — Overlay Mode
+- **PRD:** research/agents/prds/goal-06-overlay-mode.md
+- **PR:** #16
+- **Branch:** (unknown — added retroactively)
+- **TRD:** (unknown — added retroactively)
+- **Merged:** 2026-05-10
+- **Notes:** Added retroactively — PR #16 was built and merged outside the normal backlog flow. PM should reconstruct task details and verify TRD exists. No reviewer approval on record.
+
+### TASK-0015: Panel Search/Filter Input
+- **Goal:** Goal 5 — Shortcut Panel UI (Desktop)
+- **PRD:** research/agents/prds/goal-05-shortcut-panel-ui.md
+- **PR:** #15
+- **Branch:** goals/15-panel-search-filter
+- **TRD:** research/plans/goals/15-panel-search-filter-trd.md — approved
+- **Approved:** 2026-05-10 (Round 2 — reviewer approved via PR comment; GitHub blocked formal approval since author == reviewer)
+- **Merged:** 2026-05-10
 
 ### TASK-0013: Panel Content Renderer & Shortcut Key Caps
 - **Goal:** Goal 5 — Shortcut Panel UI (Desktop)

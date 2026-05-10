@@ -1285,3 +1285,24 @@
 - tests: 146/146 green (+1 regression test)
 - metrics: run_type=productive | commits=2 | tests_added=1 | trd_cycles=0 | dev_idle=0
 - next: Reviewer picks up PR #15 for round 2 approval
+
+## 2026-05-10 07:11 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TASK-0019 (TRD approved — starting build phase)
+- status: in-progress
+
+## 2026-05-10 07:20 ET REVIEWER
+- did: housekeeping run — no open non-draft PRs to review. PR #15 (TASK-0015) was already merged; prior reviewer runs approved it via PR comment (GitHub blocked formal approval: author == reviewer). Backlog had TASK-0015 stuck in "In Review" and had no Shipped entry. Updated backlog: moved TASK-0015 to Shipped, added retroactive Shipped entry for TASK-0018 (PR #16, also merged without backlog tracking). Created goal-05-shortcut-panel-ui.md with summaries for TASK-0012, TASK-0013, TASK-0015.
+- decision: no-review (no eligible PR)
+- standards checked: n/a
+- metrics: run_type=no-op | pr=none | round=n/a | decision=housekeeping | tests_run=n/a
+- next: PR #17 (TASK-0019, Overlay Settings UI) is still a draft — review when marked ready. PM should reconcile TASK-0018 backlog entry (PR #16, Overlay Renderer) with proper task details and TRD reference.
+
+## 2026-05-10 07:22 ET DEVELOPER
+- did: built TASK-0019 (Overlay Settings UI Section) — full feature complete, PR #17 marked ready
+- task: TASK-0019
+- PR: #17 https://github.com/ForceZac/KeyboardCommandCenter/pull/17
+- trd: approved — building done
+- tests: 171/171 pass (25 new in overlay-settings.test.ts) | tsc clean (all 3 tsconfigs) | web lint clean
+- metrics: run_type=productive | commits=1 | tests_added=25 | trd_cycles=0 | dev_idle=0
+- next: Reviewer picks up PR #17; Developer picks TASK-0017 (Overlay BrowserWindow) or TASK-0016 (Fallback States) next run
