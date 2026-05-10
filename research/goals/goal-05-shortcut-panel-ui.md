@@ -66,3 +66,24 @@ Added a real-time search/filter input (`#search-input`) to the panel renderer, p
 
 ### Reviewer notes
 Round 1 rejected for `#no-results` being inside `#shortcuts-container` (destroyed by `innerHTML=` on app-change). Round 2 fixed placement and added an explicit regression test. E2E not applicable — panel renderer runs in Electron, not accessible to Playwright in CI (same exception as TASK-0013 and TASK-0007).
+
+---
+
+## TASK-0016: Panel Fallback States — No Detection, Unrecognized App, No Shortcuts
+**PR:** #20 | **Branch:** goals/16-panel-fallback-states | **Approved:** 2026-05-10
+
+### What shipped
+Added a new `renderer/fallback.ts` module with pure HTML-rendering functions covering all three fallback states: `renderNoDetection` (no active window), `renderUnrecognizedApp` (process not in database), and `renderNoShortcuts` (recognized app with zero shortcuts). Each fallback state renders into a new `#fallback-container` element alongside a clickable list of up to 5 recently-detected apps fetched in parallel via the existing `getRecentApps` + `getShortcutsForApp` IPC. The `#search-container` is hidden in fallback states. A single delegated click listener on `#fallback-container` handles recent-app clicks without per-render listener leaks.
+
+### Key technical decisions
+- `fallback.ts` is pure (no DOM side-effects) — follows the exact pattern of `shortcut-list.ts`, fully unit-testable without a browser
+- No new IPC channels: reuses `getRecentApps()` + `getShortcutsForApp()` already exposed in preload; recent-app name lookup hits the TASK-0012 prefetch cache, so name resolution is ~0ms for recently-seen apps
+- Event delegation (`target.closest('.recent-app-item[data-slug]')`) on `#fallback-container` instead of per-entry listeners — avoids listener accumulation across state transitions
+- All user-visible strings HTML-escaped via `escHtml` (reused from keycap module) — XSS safe even for untrusted process names from the OS
+
+### Codebase areas touched
+- **Frontend:** `packages/desktop/src/renderer/fallback.ts` (new module), `renderer/index.ts` (handleAppChanged extended, showFallback/showShortcuts helpers), `renderer/index.html` (`#fallback-container` added), `renderer/app.css` (fallback styles)
+- **Tests:** `src/__tests__/fallback.test.ts` (20 unit tests — all five exports, edge cases, XSS escaping), `src/__tests__/fallback-integration.test.ts` (13 jsdom integration tests — DOM state, click delegation, nested child click, background no-op, empty state, happy-path restore)
+
+### Reviewer notes
+Goal 5 is now complete — all four tasks shipped. The integration tests work at the rendering-layer level rather than calling `handleAppChanged` end-to-end; this is consistent with the project's established Electron renderer test pattern since `window.kcc` IPC is not available in the Vitest jsdom environment. The routing logic in `handleAppChanged` is simple (four explicit branches) and clearly commented. Minor cosmetic note: `index.ts:53` passes `slug` as `processName` in the click handler; harmless since `processName` is unused in the recognized-app routing path.

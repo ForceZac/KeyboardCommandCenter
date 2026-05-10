@@ -53,7 +53,7 @@ export default async function CategoryPage({ params }: Props) {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
-      <header className="flex items-center gap-4 px-4 sm:px-6 py-4 border-b border-gray-200 dark:border-gray-800">
+      <nav aria-label="breadcrumb" className="flex items-center gap-4 px-4 sm:px-6 py-4 border-b border-gray-200 dark:border-gray-800">
         <Link
           href="/"
           className="text-sm text-indigo-600 dark:text-indigo-400 hover:underline"
@@ -63,7 +63,7 @@ export default async function CategoryPage({ params }: Props) {
         <span className="text-xl font-bold text-gray-900 dark:text-gray-100">
           {categoryName}
         </span>
-      </header>
+      </nav>
 
       <main className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
         <div className="mb-8">

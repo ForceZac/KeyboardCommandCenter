@@ -47,7 +47,7 @@ export default async function AppPage({ params }: Props) {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
-      <header className="flex items-center gap-4 px-4 sm:px-6 py-4 border-b border-gray-200 dark:border-gray-800">
+      <nav aria-label="breadcrumb" className="flex items-center gap-4 px-4 sm:px-6 py-4 border-b border-gray-200 dark:border-gray-800">
         <Link
           href={`/categories/${app.categorySlug}`}
           className="text-sm text-indigo-600 dark:text-indigo-400 hover:underline"
@@ -55,7 +55,7 @@ export default async function AppPage({ params }: Props) {
           ← Back
         </Link>
         <span className="text-xl font-bold text-gray-900 dark:text-gray-100">{app.name}</span>
-      </header>
+      </nav>
 
       <main className="max-w-3xl mx-auto px-4 sm:px-6 py-10">
         {app.description && (

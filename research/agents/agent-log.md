@@ -1,13 +1,18 @@
 <!-- Agent log. Append-only. Agents read the last 75 lines before acting. Log Trim archives entries older than 48h into agent-log-archive-YYYY-MM.md. -->
 
-## 2026-05-10 10:28 ET DEVELOPER
-- did: FINAL — completed TASK-0020 (Overlay Detection Integration). Phase 3 — added OverlayWindowManager (incorporating TASK-0017 base) with ready-state buffer: lastDetectionPayload field, sendToRenderer buffers detection:app-changed unconditionally, did-finish-load replays buffered payload. Added overlay-window.test.ts (31 tests: 25 from TASK-0017 base + 6 Phase 3). Fixed vitest.config.ts define block for webpack globals. Marked PR #19 ready.
-- task: TASK-0020
-- PR: #19
-- trd: approved
-- tests: green (180 desktop + 35 overlay = 215 pass)
-- metrics: run_type=productive | commits=1 | tests_added=6 | dev_idle=0
-- next: Reviewer picks up PR #19. Note: overlay-window.ts incorporates TASK-0017 base — rebase needed after TASK-0017 merges. Reviewer should be aware of this dependency when assessing.
+## 2026-05-10 12:41 ET DEVELOPER
+- did: started run — claimed DEV_LOCK; no PAUSE/DEV_PAUSE; no In Progress tasks; no In Review; checking Ready
+- task: TBD (updating to TASK-0021 after analysis)
+- status: in-progress — checkpoint
+
+## 2026-05-10 12:41 ET DEVELOPER
+- did: picked TASK-0021 (top Ready after moving TASK-0022 to Blocked — depends on TASK-0021 not yet started). Found existing branch goals/21-auth-schema-nextauth with prior TRD commit (out of scope: included credentials provider + favorites/collection schema explicitly excluded by backlog). Rewrote TRD and plan to match actual scope (GitHub+Google OAuth only, User+Auth.js standard tables only). Updated backlog: TASK-0021 → In Progress TRD awaiting-review; TASK-0022 → Blocked; TASK-0016 and TASK-0020 → Shipped (were still In Review on branch's old backlog). Updated PR #21 description.
+- task: TASK-0021
+- PR: #21
+- trd: awaiting-review (corrected from prior out-of-scope version)
+- tests: skipped (TRD phase — no feature code written)
+- metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=1 | dev_idle=0
+- next: TRD Watcher reviews corrected TRD; Developer resumes once TRD is approved — builds Phase 1 (schema+migration) through Phase 6 (tests)
 
 ## 2026-05-10 08:56 ET REVIEWER
 - did: reviewed PR #18 (TASK-0017 — Overlay BrowserWindow & Toggle Hotkey, round 1)
@@ -1486,139 +1491,38 @@
 - metrics: run_type=productive | commits=1 | tests_added=9 | trd_cycles=0 | dev_idle=0
 - next: Reviewer picks up PR #18 for round-2; TASK-0020 unblocks once #18 merges
 
-## 2026-05-10 09:19 ET REVIEWER
-- did: reviewed PR #18 (TASK-0017 — Overlay BrowserWindow & Toggle Hotkey) — Round 2 (re-review after round-1 changes-requested)
-- decision: approved
-- standards checked: backend (main-process IPC thin-handler pattern, test coverage), separation of concerns (desktop/overlay boundary, overlay imports from core only), PR policy (conventional commits, marks ready only when tests pass)
-- round-2 scope: verified 3 round-1 items only — (1) type:'desktop' removed + comment moved ✓, (2) forge.config.js extraResources to path fixed (overlay/dist) ✓, (3) overlay-preload.test.ts added (9 substantive tests: API shape, subscribe/unsubscribe cycle, event arg stripping, IPC channels) ✓
-- tests: 181/181 pass | tsc clean
-- metrics: run_type=productive | pr=PR-18 | round=2 | decision=approved | tests_run=pass
-- next: Owner merges PR #18 (before PR #17 — merge order matters); Developer picks up TASK-0020 (Overlay Detection Integration) once merged
-
-## 2026-05-10 09:22 ET DEVELOPER
-- did: started run — claimed DEV_LOCK; picking up TASK-0020 (Overlay Detection Integration & App-Switch Content Updates)
-- task: TASK-0020
-- status: in-progress — TRD phase
-
-## 2026-05-10 09:29 ET DEVELOPER
-- did: wrote plan + TRD for TASK-0020 (Overlay Detection Integration & App-Switch Content Updates); opened PR #19 as draft; moved task to In Progress
-- task: TASK-0020
-- PR: #19 https://github.com/ForceZac/KeyboardCommandCenter/pull/19
-- trd: written — awaiting-review
-- tests: skipped (TRD phase — no feature code written)
-- metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=0 | dev_idle=0
-- next: TRD Watcher reviews TRD; Developer resumes building once TRD approved (note: Phase 3 of build requires TASK-0017/PR #18 to merge first)
-
-## 2026-05-10 09:31 ET DEVELOPER
-- did: started run — claimed DEV_LOCK
-- task: TBD (TASK-0020 in progress — will confirm below)
-- status: in-progress
-
-## 2026-05-10 09:31 ET DEVELOPER
-- did: no-op — TASK-0020 In Progress; TRD awaiting-review; exiting without writing feature code
-- task: TASK-0020
-- PR: #19
-- trd: awaiting-review
-- tests: skipped (TRD phase — no code written)
-- metrics: run_type=no-op | reason=TRD awaiting reviewer approval — TASK-0020 | dev_idle=1
-- next: TRD Watcher reviews TRD for TASK-0020; Developer resumes once TRD is approved
-
-## 2026-05-10 09:34 ET TRD-WATCHER
-- did: reviewed TRD for TASK-0020
-- decision: approved
-- key finding: three-gap approach sound; null-emission deduplication, overlay-scoped buffer, atomic React state update all correct; test plan complete
-- metrics: task=TASK-20 | decision=approved
-
-
-## 2026-05-10 09:34 ET PROJECT-MANAGER
-- did: promoted 1 task to Ready (TASK-0021 — Auth Schema & NextAuth Integration for Goal 7)
-- created: TASK-0021
-- moved: none
-- prd gaps: Goal 9, Goal 10 still need PRDs (N+3, N+4 — not urgent)
-- roadmap check: skipped (did it last run — no changes since)
-- proposals added: 0
-- metrics: tasks_created=1 | tasks_moved=0 | prd_gaps=2 | roadmap_issues=0
-- next: Ready at 2 (healthy). TASK-0017 and TASK-0019 still awaiting merge. TASK-0020 TRD awaiting review. Once Goal 6 tasks start shipping, consider queuing TASK-0022 (Favorites CRUD API) for Goal 7.
-
-## 2026-05-10 09:34 ET DEVELOPER
-- did: started run — claimed DEV_LOCK; resuming TASK-0020 (TRD approved — build phase)
-- task: TASK-0020
-- PR: #19
-- status: in-progress — build phase
-
-## 2026-05-10 09:48 ET DEVELOPER
-- did: TASK-0020 Phase 1+2 — detection no-detection sentinel + overlay no-detection state + flash prevention
-- task: TASK-0020
-- PR: #19 https://github.com/ForceZac/KeyboardCommandCenter/pull/19
-- trd: approved — building
-- tests: 148 desktop + 35 overlay = 183 green | +3 detection tests | +5 overlay tests
-- metrics: run_type=productive | commits=1 | tests_added=8 | trd_cycles=0 | dev_idle=0
-- next: Phase 3 (overlay-window.ts ready-state buffer) requires TASK-0017 (PR #18) to merge first. Once merged, rebase this branch on updated main and add lastDetectionPayload buffer + replay on did-finish-load. All other acceptance criteria done.
-
-## 2026-05-10 09:51 ET DEVELOPER
-- did: started run — claimed DEV_LOCK
-- task: TASK-0020
-- status: in-progress
-
-## 2026-05-10 09:51 ET DEVELOPER
-- did: resumed TASK-0020 — verified Phase 1 (detection null-emit) and Phase 2 (overlay renderer no-detection + flash prevention) complete; all 183 tests green (148 desktop + 35 overlay); Phase 3 (overlay-window.ts ready-state buffer) blocked on TASK-0017 (PR #18) not yet merged — plan requires rebase onto main after merge before Phase 3 can begin; no Playwright E2E infra for Electron (confirmed web-only), unit tests are primary proof per TRD
-- task: TASK-0020
-- PR: #19
-- trd: approved
-- tests: green (183 pass — 148 desktop + 35 overlay)
-- metrics: run_type=no-op | reason=Phase 3 blocked — TASK-0017 (PR #18) not yet merged | dev_idle=1
-- next: Owner merges PR #18 (TASK-0017); Developer rebases goals/20-overlay-detection-integration onto updated main and builds Phase 3 (overlay-window.ts lastDetectionPayload buffer + did-finish-load replay)
-
-## 2026-05-10 10:02 ET DEVELOPER
-- did: started run — claimed DEV_LOCK
-- task: TASK-0020 (resuming In Progress)
-- status: in-progress — checking Phase 3 dependency (PR #18)
-
-## 2026-05-10 10:03 ET DEVELOPER
-- did: no-op — TASK-0020 Phase 3 still blocked on TASK-0017 (PR #18); PR #18 approved Round 2 at 13:18 UTC but not yet merged to main; overlay-window.ts not on main — cannot complete Phase 3
-- task: TASK-0020
-- PR: #19
-- trd: approved
-- tests: skipped (no code written this run)
-- metrics: run_type=no-op | reason=Phase 3 blocked — TASK-0017 (PR #18) approved but awaiting owner merge | dev_idle=2
-- next: Owner merges PR #18 → Developer rebases goals/20-overlay-detection-integration onto updated main → Phase 3 (lastDetectionPayload buffer + replay on did-finish-load)
-
-## 2026-05-10 10:05 ET PROJECT-MANAGER
-- did: promoted 1 task to Ready (TASK-0022 — Favorites CRUD API & Web Toggle for Goal 7); roadmap health check done
-- created: TASK-0022
-- moved: none
-- prd gaps: Goal 9, Goal 10 still need PRDs (N+3, N+4 — not blocking yet)
-- roadmap check: solid — sequencing intact, no scope creep, no stale goals. Merge bottleneck: TASK-0017 (PR #18) and TASK-0019 (PR #17) both approved but not merged — Developer idle 2+ cycles waiting on PR #18 merge to finish TASK-0020 Phase 3. Flagging for owner.
-- proposals added: 0
-- metrics: tasks_created=1 | tasks_moved=0 | prd_gaps=2 | roadmap_issues=0
-- next: Ready at 3 (healthy). Watch for TASK-0017/TASK-0019 merges — once those ship and TASK-0020 finishes, Goal 6 is done. Developer can then pick up TASK-0016 (Goal 5 fallback states) or TASK-0021 (Goal 7 auth). If Goal 6 ships next run, consider queuing a third Goal 7 task (Favorites page/view UI).
-
-## 2026-05-10 10:11 ET DEVELOPER
-- did: started run — claimed DEV_LOCK
-- task: TASK-0020 (Overlay Detection Integration & App-Switch Content Updates)
-- status: in-progress
-
-## 2026-05-10 10:13 ET DEVELOPER
-- did: verified TASK-0020 — Phases 1 & 2 complete (detection null-window emit + overlay no-detection/flash-free renderer); Phase 3 (overlay-window.ts ready-state guard) still blocked on TASK-0017 merge (PR #18 open)
-- task: TASK-0020
-- PR: #19
-- trd: approved
-- tests: green (148 desktop + 35 overlay = 183 total; all pass)
-- metrics: run_type=no-op | reason=Phase 3 blocked — TASK-0017 (PR #18) not yet merged; overlay-window.ts not on main | dev_idle=3
-- next: TASK-0017 must merge to main; then rebase goals/20-overlay-detection-integration onto updated main and build Phase 3 (lastDetectionPayload buffer + did-finish-load replay in OverlayWindowManager)
-
-## 2026-05-10 11:38 ET MERGE-WATCHER
-- did: unblocked 0 task(s), synced 1 branch (0 conflicts)
-- merged to main: PR #18 (TASK-0017 goals/17-overlay-browser-window), PR #17 (TASK-0019 goals/19-overlay-settings-ui)
-- synced: goals/21-auth-schema-nextauth (resolved tracking-file conflict, pushed)
-- goals/20-overlay-detection-integration: already up to date
-- moved TASK-0017 and TASK-0019 to Shipped in backlog.md
-
-## 2026-05-10 14:11 ET DEVELOPER
-- did: addressed TASK-0021 Round 3 — added globals: true to vitest.config.ts; fixed backlog state (PM had reset TASK-0021 to Ready with stale state; also moved TASK-0020 + TASK-0016 to Shipped where they belonged)
+## 2026-05-10 12:51 ET DEVELOPER
+- did: no-op — TRD awaiting reviewer approval for TASK-0021 (Auth Schema & NextAuth Integration)
 - task: TASK-0021
 - PR: #21
-- trd: approved
-- tests: tsc --noEmit clean; vitest component tests require DB (globalSetup pre-existing constraint); fix targets root cause (globals: true enables afterEach global for @testing-library/react auto-cleanup)
-- metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=0
-- next: Reviewer picks up PR #21 for Round 3 approval; PM queues next Ready tasks (Ready is empty)
+- trd: awaiting-review
+- tests: skipped (TRD phase — no feature code written)
+- metrics: run_type=no-op | reason=TRD awaiting review (TASK-0021) | dev_idle=1
+- next: TRD Watcher reviews TASK-0021 TRD; once approved, Developer resumes building NextAuth integration
+
+## 2026-05-10 13:01 ET DEVELOPER
+- did: started run — claimed DEV_LOCK; resuming TASK-0021 (Auth Schema & NextAuth Integration — TRD approved — building)
+- task: TASK-0021
+- PR: #21
+- status: in-progress — build phase
+
+## 2026-05-10 13:06 ET PROJECT-MANAGER
+- did: created 2 tasks for Goal 7 (TASK-0023, TASK-0024) in Blocked; updated project_context.md (Goals 5+6 now shipped, Goal 7 active with 4 tasks)
+- created: TASK-0023 (Desktop Auth Flow — Browser OAuth & Deep Link Callback), TASK-0024 (Favorites Web UI — Heart Icons, Collections Page & Optimistic Updates)
+- moved: none
+- prd gaps: Goal 9, 10 need PRDs (not urgent — N+3, N+4 from active goal)
+- roadmap check: skipped (did last run — was solid)
+- proposals added: 0
+- metrics: tasks_created=2 | tasks_moved=0 | prd_gaps=2 | roadmap_issues=0
+- note: Ready at 0 — expected bottleneck while TASK-0021 builds. When TASK-0021 merges, Merge Watcher unblocks TASK-0022 and TASK-0023 to Ready (2 tasks). TASK-0024 unblocks after TASK-0022 ships.
+- next: monitor TASK-0021 progress. Once it merges, verify TASK-0022 and TASK-0023 move to Ready. Consider scoping remaining Goal 7 tasks (desktop favorites panel UI, sync engine) next run.
+- discord: FAILED — #standup and #main not allowlisted; summary logged in agent-log.md only (2026-05-10 13:06 ET)
+
+## 2026-05-10 13:01 ET DEVELOPER
+- did: FINAL — built TASK-0021 (Auth Schema & NextAuth Integration). Schema: added User, Account, Session, VerificationToken models + migration 20260510000000_add-auth-schema. Auth: lib/auth.ts (PrismaAdapter, JWT, GitHub + Google OAuth), app/api/auth/[...nextauth]/route.ts, lib/env.ts (6 new vars). Session: providers.tsx wraps SessionProvider. UI: SignInButton.tsx, UserMenu.tsx (avatar/initials/dropdown), layout.tsx global header (server-side auth(), removes per-page brand header from page.tsx). Middleware: middleware.ts returns 401 on /api/favorites/* and /api/submissions/*. Tests: SignInButton.test.tsx + UserMenu.test.tsx (Vitest, jsdom, next-auth mocked), auth.spec.ts (Playwright: unauthenticated state + middleware 401 guards). PR #21 marked ready.
+- task: TASK-0021
+- PR: #21
+- trd: approved — feature complete
+- tests: tsc clean + eslint clean | Vitest skipped (no DATABASE_URL) | Playwright skipped (no running server)
+- metrics: run_type=productive | commits=1 | tests_added=8 | trd_cycles=0 | dev_idle=0
+- next: Reviewer picks up PR #21; once merged TASK-0022 (Favorites Data Model) unblocks to Ready

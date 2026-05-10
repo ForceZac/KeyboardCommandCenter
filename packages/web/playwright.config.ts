@@ -1,4 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
+import { TEST_AUTH_SECRET } from './e2e/auth-setup';
 
 export default defineConfig({
   testDir: './e2e',
@@ -6,6 +7,8 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   reporter: 'html',
+  // auth-setup.ts writes e2e/fixtures/authenticated.json before tests run
+  globalSetup: './e2e/auth-setup.ts',
   use: {
     baseURL: 'http://localhost:3000',
     trace: 'on-first-retry',
@@ -24,7 +27,8 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'npm run dev -w packages/web',
+    // AUTH_SECRET must match TEST_AUTH_SECRET so the dev server accepts injected test cookies
+    command: `AUTH_SECRET=${TEST_AUTH_SECRET} npm run dev -w packages/web`,
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
