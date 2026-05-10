@@ -33,6 +33,27 @@ Task IDs are monotonic. The Project Manager picks the next number.
 
 _(Project Manager keeps 2–3 tasks here at all times.)_
 
+### TASK-0011: Tray "Recent Apps" Submenu
+- **Goal:** Goal 4 — Active Window Process Detection
+- **PRD:** research/agents/prds/goal-04-process-detection.md
+- **Scope:** Add a "Recent Apps" submenu to the existing Electron tray context menu that displays the last 5 unique detected applications (PRD Flow 2). Each entry shows the app's display name; clicking an entry opens the shortcut panel pre-loaded with that app's shortcuts (sends the app slug to the renderer via IPC). The submenu queries the in-memory recent-apps list exposed by the polling service (TASK-0010) via IPC. When detection is disabled or no apps have been detected yet, the submenu shows a single disabled item ("No recent apps" / "Detection off"). The submenu rebuilds on each tray menu open to reflect the latest state. NOT in scope: the polling service or detection logic (TASK-0010), native module (TASK-0009), process mapping (TASK-0008), shortcut panel content or layout (Goal 5), overlay (Goal 6), Linux support (Goal 10), persisting the recent apps list across restarts.
+- **Acceptance:**
+  - Tray context menu includes a "Recent Apps" submenu between "Open" and "Settings"
+  - Submenu lists up to 5 recently-detected apps by display name, most recent first
+  - Clicking an app entry opens the shortcut panel with that app's shortcuts pre-loaded
+  - When no apps have been detected, submenu shows a disabled "No recent apps" item
+  - When detection is disabled in settings, submenu shows a disabled "Detection off" item
+  - Submenu updates on each tray menu open (reflects current session state)
+  - No crashes if the polling service has not started or returns an empty list
+- **PR:**
+- **Branch:**
+- **TRD:**
+- **Notes:** Depends on TASK-0010 (polling service provides the recent-apps list via IPC). This is the final piece of Goal 4's user-facing definition of done (PRD Flow 2: recently-detected apps in tray).
+
+## In Progress
+
+_(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
+
 ### TASK-0010: Detection Polling Service & IPC Integration
 - **Goal:** Goal 4 — Active Window Process Detection
 - **PRD:** research/agents/prds/goal-04-process-detection.md
@@ -48,36 +69,14 @@ _(Project Manager keeps 2–3 tasks here at all times.)_
   - Last 5 unique detected apps are tracked in memory and retrievable via IPC query (for tray integration)
   - CPU overhead of polling is <1% on a modern machine
   - No crashes or unhandled exceptions from native module failures (graceful degradation)
-- **PR:**
-- **Branch:**
-- **TRD:**
-- **Notes:** Depends on TASK-0008 (process map, in review) and TASK-0009 (native module). This is the integration layer that ties together detection + mapping + renderer communication. The tray "Recent Apps" submenu consumes the session app list but is scoped to a separate task.
-
-## In Progress
-
-_(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
+- **PR:** #10
+- **Branch:** goals/10-detection-polling-service
+- **TRD:** research/plans/goals/10-detection-polling-service-trd.md — awaiting-review
+- **Notes:** Depends on TASK-0008 (process map, approved) and TASK-0009 (native module, in review). This is the integration layer that ties together detection + mapping + renderer communication. The tray "Recent Apps" submenu consumes the session app list but is scoped to a separate task.
 
 ## In Review
 
 _(Developer moves tasks here when the draft PR is marked ready.)_
-
-### TASK-0009: Rust Native Module for Active Window Detection
-- **Goal:** Goal 4 — Active Window Process Detection
-- **PRD:** research/agents/prds/goal-04-process-detection.md
-- **Scope:** Set up a `napi-rs` project within the desktop package to build a native Node module exposing `getActiveWindow(): { processName: string, windowTitle: string, bundleId?: string }`. Implement platform adapters using a strategy pattern: Win32 adapter (`GetForegroundWindow` → `GetWindowThreadProcessId` → process name/exe path) and macOS adapter (`NSWorkspace.shared.frontmostApplication` → bundle ID and process name). Integrate the native module build with the existing Electron Forge webpack pipeline so `npm run make` produces a working binary. Generate TypeScript type definitions for the exported interface. NOT in scope: polling service, IPC to renderer, tray "Recent Apps" submenu, settings toggle, process-to-app mapping (TASK-0008), Linux support, overlay.
-- **Acceptance:**
-  - `napi-rs` project structure exists and compiles successfully
-  - `getActiveWindow()` returns the correct process name for the currently active window on the build platform
-  - Function returns window title and bundle ID (macOS) when available
-  - Native module `.node` binary is loadable from Electron's main process via `require()`
-  - Build integrates with Electron Forge — no manual steps beyond `npm run make`
-  - TypeScript type definitions are generated for the native interface
-  - Graceful error handling: returns `null` on detection failure, does not crash the Electron process
-  - Works on both Windows and macOS (platform-specific code behind adapter interface)
-- **PR:** #9
-- **Branch:** goals/9-rust-native-module
-- **TRD:** research/plans/goals/9-rust-native-module-trd.md — approved
-- **Notes:** Depends on Goal 3 infrastructure (TASK-0007 must ship first — Electron app with settings via electron-store). Uses `napi-rs` per PRD recommendation. The native module is consumed by the polling service (TASK-0010) and by TASK-0008's mapping layer.
 
 ## Changes Requested
 
@@ -90,6 +89,16 @@ _(TRD Watcher moves tasks here when a TRD needs rework.)_
 ## Approved
 
 _(Reviewer moves tasks here after approving the PR. You merge to main, then move to Shipped.)_
+
+### TASK-0009: Rust Native Module for Active Window Detection
+- **Goal:** Goal 4 — Active Window Process Detection
+- **PRD:** research/agents/prds/goal-04-process-detection.md
+- **Scope:** napi-rs Rust crate in `packages/desktop/native/` exposing `getActiveWindow()` with Win32 (QueryFullProcessImageNameW) and macOS (NSWorkspace) platform adapters behind `#[cfg(target_os)]`. TypeScript wrapper in `src/platform/active-window.ts` with graceful null. Integrates with Electron Forge webpack pipeline.
+- **PR:** #9
+- **Branch:** goals/9-rust-native-module
+- **TRD:** research/plans/goals/9-rust-native-module-trd.md — approved
+- **Approved:** 2026-05-10
+- **Notes:** Round-2 review. Both blockers resolved: Win32 API (QueryFullProcessImageNameW) and binary filename (--platform removed). 9/9 tests pass.
 
 ### TASK-0008: Process-to-App Mapping Table
 - **Goal:** Goal 4 — Active Window Process Detection

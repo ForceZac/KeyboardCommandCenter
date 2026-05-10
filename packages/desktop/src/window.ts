@@ -74,6 +74,17 @@ export class PanelWindowManager {
   }
 
   /**
+   * Send an IPC event to the renderer if the panel window is open and alive.
+   * Silently skips when the window has not been created yet (lazy init) or has
+   * been destroyed — callers do not need to guard against a null window.
+   */
+  sendToRenderer(channel: string, payload: unknown): void {
+    if (this.window !== null && !this.window.isDestroyed()) {
+      this.window.webContents.send(channel, payload);
+    }
+  }
+
+  /**
    * Log idle memory usage to console. Called after the app settles into the tray.
    * PRD target: <50MB RSS.
    */

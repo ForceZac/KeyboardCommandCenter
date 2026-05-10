@@ -1,5 +1,16 @@
 <!-- Agent log. Append-only. Agents read the last 75 lines before acting. Log Trim archives entries older than 48h into agent-log-archive-YYYY-MM.md. -->
 
+## 2026-05-09 22:39 ET REVIEWER
+- did: reviewed PR #9 (TASK-0009 — Rust Native Module for Active Window Detection, round 1)
+- decision: changes-requested (posted as comment — GitHub self-review restriction, same precedent as PR #8)
+- standards checked: separation-of-concerns (all code in packages/desktop/ ✓), scope/TRD match (napi-rs structure, cdylib, strategy pattern, graceful null, extraResources, committed .d.ts — all match ✓), PR policy (tests pass, TS clean ✓), scalability (synchronous O(1) ✓), readability (why-comments throughout ✓), test quality (9/9 pass, testable via exported createActiveWindowDetector ✓)
+- tests: `npm run test -w packages/desktop` → 9/9 PASS | `npm run typecheck` → clean
+- blockers: (1) windows.rs uses GetModuleFileNameExW with PROCESS_QUERY_LIMITED_INFORMATION — MSDN requires PROCESS_QUERY_INFORMATION | PROCESS_VM_READ; fix is QueryFullProcessImageNameW. (2) `napi build --platform` generates platform-suffixed filenames (kcc-native.darwin-arm64.node) but loadNativeModule() hardcodes kcc-native.node — wrapper will always return null even when binary exists.
+- backlog: moved TASK-0009 from In Review → Changes Requested
+- idle-reset: REV_IDLE → 0, DEV_PAUSE removed
+- metrics: run_type=productive | pr=PR-9 | round=1 | decision=changes-requested | tests_run=pass
+- next: Developer fixes Win32 API access mask and binary filename, recommits; Reviewer re-reviews (round 2 — scoped to whether the two blockers were addressed)
+
 ## 2026-05-09 22:08 ET REVIEWER
 - did: reviewed PR #8 (TASK-0008 — Process-to-App Mapping Table, round 1)
 - decision: approved (posted as comment — GitHub self-review restriction, same precedent as prior reviews)
@@ -924,3 +935,48 @@
 - tests: green (9/9 vitest unit tests, tsc noEmit clean)
 - metrics: run_type=productive | commits=2 | tests_added=9 | trd_cycles=0
 - next: Reviewer reviews PR #9; TASK-0010 (polling service + IPC) queued in Ready
+
+## 2026-05-09 22:35 ET PROJECT-MANAGER
+- did: created TASK-0011 (Tray "Recent Apps" Submenu) for Goal 4; updated TASK-0010 dependency notes to reflect TASK-0008 approved and TASK-0009 in review
+- created: TASK-0011
+- moved: none
+- prd gaps: Goal 5 (Shortcut Panel UI) — no PRD exists, blocks task creation for next goal; Goal 6 (Overlay Mode) — no PRD (N+2, lower urgency)
+- roadmap check: skipped (did last run)
+- proposals added: 0
+- stale: 3 approved PRs (PR #6, #7, #8) still awaiting /merge authorization from owner
+- note: TASK-0009 has moved to In Review (Developer completed build phase). project_context.md is stale (says Goal 1 active — actual is Goal 4).
+- metrics: tasks_created=1 | tasks_moved=0 | prd_gaps=2 | roadmap_issues=0
+- next: Ready queue at 2 (TASK-0010, TASK-0011) — healthy. Goal 5 PRD needed from Product Manager before next goal's tasks can be queued. Owner needs to /merge PR #6, #7, #8.
+
+## 2026-05-09 22:35 ET PROJECT-MANAGER (addendum)
+- discord: FAILED — #standup channel not allowlisted (PROP-0004 still open). Owner needs to run /discord:access.
+
+## 2026-05-09 22:43 ET DEVELOPER
+- did: fixed TASK-0009 changes-requested — both blockers addressed, pushed, moved back to In Review
+- task: TASK-0009
+- PR: #9
+- trd: approved — built
+- tests: green (9/9 vitest)
+- metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=0
+- next: Reviewer picks up PR #9 for re-review
+
+## 2026-05-09 22:50 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TBD (update below when known)
+- status: in-progress
+
+## 2026-05-09 23:01 ET REVIEWER
+- did: reviewed PR #9 (TASK-0009 — Rust Native Module for Active Window Detection, round 2)
+- decision: approved (posted as comment — GitHub self-review restriction, per precedent)
+- standards checked: Win32 API correctness (QueryFullProcessImageNameW with PROCESS_QUERY_LIMITED_INFORMATION), binary filename consistency (--platform removed), separation of concerns (all code in packages/desktop/), tests (9/9 pass, tsc clean), scope (no polling/IPC/settings — deferred to TASK-0010), TRD compliance
+- metrics: run_type=productive | pr=PR-9 | round=2 | decision=approved | tests_run=pass
+- next: Owner /merge PR #9 to unblock TASK-0010 (detection polling service, TRD in progress). Also pending: /merge PR #6, #7, #8.
+
+## 2026-05-09 22:50 ET DEVELOPER
+- did: picked TASK-0010 (Detection Polling Service & IPC Integration). Wrote 10-slice plan and TRD for DetectionService class with injected deps (testable), IPC channels (detection:app-changed, detection:get-recent-apps), electron-store settings, recent-apps list, and unrecognized-process logging. Opened draft PR #10. Moved task to In Progress. Also restored backlog integrity (TASK-0011 back in Ready, lost in stash-pop conflict).
+- task: TASK-0010
+- PR: #10
+- trd: written — awaiting-review
+- tests: n/a (TRD phase only)
+- metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=0 | dev_idle=0
+- next: TRD Watcher reviews TRD; once approved, Developer resumes to build DetectionService + IPC wiring
