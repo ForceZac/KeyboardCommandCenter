@@ -33,7 +33,21 @@ Task IDs are monotonic. The Project Manager picks the next number.
 
 _(Project Manager keeps 2–3 tasks here at all times.)_
 
-_(Empty — next goal (Goal 7) blocked on missing PRD. Product Manager must write `research/agents/prds/goal-07-accounts-favorites.md` before tasks can be created. Goals 5 and 6 remaining tasks are all in progress or in review.)_
+### TASK-0021: Auth Schema & NextAuth Integration
+- **Goal:** Goal 7 — User Accounts & Favorites Sync
+- **PRD:** research/agents/prds/goal-07-accounts-favorites.md
+- **Scope:** Add NextAuth.js (Auth.js v5) to the Next.js web app with GitHub and Google OAuth providers. Add a `User` model to the Prisma schema with id, email, name, image, and provider fields. Wire up NextAuth session handling (JWT strategy). Protect API routes that will require auth (favorites, submissions). Add sign-in/sign-out UI to the web app header. NOT in scope: favorites data model or CRUD (separate task), community submissions (Goal 8), Electron deep-link auth (separate task), email/password auth.
+- **Acceptance:**
+  - NextAuth configured with GitHub + Google providers
+  - User model added to Prisma schema, migration generated
+  - Session available server-side via `auth()` and client-side via `useSession()`
+  - Sign-in / sign-out buttons in web app header
+  - Protected API route middleware scaffold in place
+  - No regressions on existing public pages
+- **PR:** #21 (draft — TRD not yet written)
+- **Branch:** goals/21-auth-schema-nextauth
+- **TRD:**
+- **Notes:** PRD now exists (written 2026-05-10). Branch already open — developer should write TRD before building.
 
 ## In Progress
 
@@ -260,11 +274,3 @@ _(You move tasks here after merging to main.)_
 ## Blocked
 
 _(Waiting on an external dependency, a missing PRD, or owner decision.)_
-
-### TASK-0021: Auth Schema & NextAuth Integration
-- **Goal:** Goal 7 — User Accounts & Favorites Sync
-- **PRD:** research/agents/prds/goal-07-accounts-favorites.md (**DOES NOT EXIST** — blocked)
-- **PR:** #21 (draft — opened prematurely before PRD/task existed)
-- **Branch:** goals/21-auth-schema-nextauth
-- **TRD:**
-- **Notes:** Developer opened PR #21 before this task was created by PM and before Goal 7 PRD exists. Task cannot proceed until PRD is written. See PROP-0006.
