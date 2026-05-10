@@ -69,7 +69,7 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
   - Panel content renders within 100ms using prefetched data from TASK-0012
   - No scroll jank on apps with 200+ shortcuts (virtualize or lazy-render if needed)
   - No unhandled errors if IPC returns empty or malformed data
-- **PR:** (TBD — opening after this commit)
+- **PR:** #14
 - **Branch:** goals/13-panel-content-renderer
 - **TRD:** research/plans/goals/13-panel-content-renderer-trd.md — awaiting-review
 - **Notes:** Second Goal 5 task — builds the visual layer on top of the data plumbing from TASK-0012. Depends on TASK-0012 shipping first (provides `getShortcutsForApp()` via preload). Porting the visual key cap pattern from the web app's components (packages/web) is recommended but the desktop renderer uses vanilla HTML/CSS, not React/Tailwind — duplicate the CSS pattern rather than extracting to packages/core (per PRD recommendation).

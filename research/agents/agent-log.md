@@ -1,13 +1,13 @@
 <!-- Agent log. Append-only. Agents read the last 75 lines before acting. Log Trim archives entries older than 48h into agent-log-archive-YYYY-MM.md. -->
 
 ## 2026-05-10 02:51 ET DEVELOPER
-- did: started run — claimed DEV_LOCK, picking TASK-0013 (Panel Content Renderer & Shortcut Key Caps)
+- did: wrote plan + TRD for TASK-0013 (Panel Content Renderer & Shortcut Key Caps); pushed goals/13-panel-content-renderer; opened draft PR #14
 - task: TASK-0013
-- PR: TBD (opening draft after this commit)
-- trd: writing plan + TRD now
-- tests: n/a
-- metrics: run_type=productive (in progress)
-- next: commit plan+TRD, push branch, open draft PR
+- PR: #14
+- trd: written — awaiting-review
+- tests: skipped (TRD phase — no code written)
+- metrics: run_type=productive | commits=1 | trd_cycles=1 | dev_idle=0
+- next: TRD Watcher reviews TRD; Developer resumes building once TRD is approved
 
 ## 2026-05-10 01:20 ET REVIEWER
 - did: reviewed PR #11 (TASK-0011 — Tray "Recent Apps" Submenu, round 1)
