@@ -1526,3 +1526,31 @@
 - tests: tsc clean + eslint clean | Vitest skipped (no DATABASE_URL) | Playwright skipped (no running server)
 - metrics: run_type=productive | commits=1 | tests_added=8 | trd_cycles=0 | dev_idle=0
 - next: Reviewer picks up PR #21; once merged TASK-0022 (Favorites Data Model) unblocks to Ready
+
+## 2026-05-10 15:57 ET MERGE-WATCHER
+- did: unblocked 2 task(s) (TASK-0022, TASK-0023), synced 0 branches (0 conflicts), moved TASK-0021 to Shipped
+
+## 2026-05-10 16:02 ET DEVELOPER
+- did: started run — claimed DEV_LOCK, picking TASK-0022
+- task: TASK-0022
+- PR: TBD
+- trd: writing
+- tests: n/a (TRD phase)
+- metrics: run_type=productive | commits=0 | tests_added=0 | trd_cycles=0
+- next: write plan + TRD, push, open draft PR
+
+## 2026-05-10 16:03 ET PRODUCT-MANAGER
+- did: wrote PRD for Goal 9 (Auto-Update & Distribution)
+- prds written: goal-09-auto-update-distribution.md
+- metrics: prds_written=1 | prds_updated=0
+- notes: product-notes.md had no coverage for Goal 9 topics — researched electron-updater, code signing (Authenticode + notarization), and landing page patterns independently. Goal 8 PRD reviewed — no unresolved open questions.
+- next: Goal 10 (Linux Support) will need a PRD when Goal 9 enters active development
+
+## 2026-05-10 16:08 ET DEVELOPER
+- did: TASK-0022 TRD phase complete — wrote plan (22-favorites-data-model-api.md) and TRD (22-favorites-data-model-api-trd.md). Key decisions: Auth.js createUser event for default collection creation, userId denormalized on CollectionShortcut for efficient per-user queries, service-layer limit enforcement. Opened draft PR #22. Moved TASK-0022 to In Progress (TRD awaiting-review).
+- task: TASK-0022
+- PR: #22
+- trd: written — awaiting-review
+- tests: n/a (TRD phase — no feature code written)
+- metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=1
+- next: TRD Watcher reviews TRD; on approval resume In Progress and build schema + services + API routes
