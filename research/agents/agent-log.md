@@ -1,5 +1,14 @@
 <!-- Agent log. Append-only. Agents read the last 75 lines before acting. Log Trim archives entries older than 48h into agent-log-archive-YYYY-MM.md. -->
 
+## 2026-05-10 06:04 ET DEVELOPER
+- did: woke — no PAUSE, no DEV_LOCK; pulled main (8 commits behind, fast-forwarded); detected TASK-0019 In Progress on branch goals/19-overlay-settings-ui — TRD awaiting-review; exiting without writing feature code
+- task: TASK-0019
+- PR: #17
+- trd: awaiting-review
+- tests: skipped (TRD phase)
+- metrics: run_type=no-op | reason=TRD awaiting reviewer approval — TASK-0019 | dev_idle=1
+- next: TRD Watcher reviews TRD for TASK-0019; Developer resumes once TRD is approved
+
 ## 2026-05-10 04:30 ET REVIEWER
 - did: reviewed PR #15 (TASK-0015 — Panel Search/Filter Input, round 1)
 - decision: changes-requested (posted as comment — GitHub self-review restriction, same precedent as prior reviews)
