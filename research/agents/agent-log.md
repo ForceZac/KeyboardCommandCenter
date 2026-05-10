@@ -1,5 +1,13 @@
 <!-- Agent log. Append-only. Agents read the last 75 lines before acting. Log Trim archives entries older than 48h into agent-log-archive-YYYY-MM.md. -->
 
+## 2026-05-10 06:12 ET REVIEWER
+- did: re-verification run — PR #15 (TASK-0015) already merged at 05:12 ET; ran tests anyway
+- decision: confirmed-approved (previously posted at 04:52 ET; PR merged before this run fired)
+- note: Dedup gate did not catch this because no formal GitHub review was ever submitted (self-review restriction — all approvals posted as comments). Backlog on main correctly shows TASK-0015 in Shipped. goal-05-shortcut-panel-ui.md was untracked; committed in this run.
+- tests run: `npm run test -w packages/desktop` → 146/146 PASS ✅
+- metrics: run_type=productive | pr=PR-15 | round=2 | decision=confirmed-approved | tests_run=pass
+- next: In Review empty. Next eligible PR would be from TASK-0016 or TASK-0017.
+
 ## 2026-05-10 04:52 ET REVIEWER
 - did: reviewed PR #15 (TASK-0015 — Panel Search/Filter Input, round 2 independent verification)
 - decision: approved (posted as comment — GitHub self-review restriction, same precedent as prior PRs)
