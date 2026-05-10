@@ -73,6 +73,25 @@ _(Project Manager keeps 2–3 tasks here at all times.)_
 
 _(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
 
+### TASK-0018: Overlay Renderer — Compact Shortcut Display
+- **Goal:** Goal 6 — Overlay Mode
+- **PRD:** research/agents/prds/goal-06-overlay-mode.md
+- **Scope:** Build the overlay renderer content using React in the `packages/overlay` package (per PRD recommendation). The overlay window (from TASK-0017) loads this renderer. Display: app name (small, muted text) at top, shortcuts grouped by the top 3–4 context groups, compact format with command name left-aligned and key combo right-aligned. Show at most 8–12 shortcuts per visible group. If the app has more shortcuts than displayed, show a count indicator ("+ N more in panel"). Apply the user's configured opacity to the content container background (semi-transparent background with high-opacity text: `background: rgba(0,0,0, userOpacity)` with `color: rgba(255,255,255,0.95)`). Support "Compact" and "Standard" size presets controlling the number of visible shortcuts/groups. Expose an IPC listener for `detection:app-changed` to receive new shortcut data and re-render. Handle unrecognized app state: show "No shortcuts for [Process Name]" message. NOT in scope: settings UI for overlay preferences (separate task), BrowserWindow creation or hotkey registration (TASK-0017), detection service changes, live preview of opacity from settings, overlay positioning logic, multi-monitor support.
+- **Acceptance:**
+  - Overlay content renders in the overlay BrowserWindow with semi-transparent background
+  - App name displayed at top in muted text
+  - Shortcuts grouped by context (top 3–4 groups), compact layout: command left, key combo right
+  - "Standard" size shows more shortcuts/groups than "Compact"
+  - Overflow indicator shows "+ N more in panel" when shortcuts exceed display limit
+  - Unrecognized app shows "No shortcuts for [Process Name]" message
+  - Content updates when `detection:app-changed` fires with new app data
+  - Overlay content renders within 200ms
+  - Overlay renderer uses React (packages/overlay)
+- **PR:** (draft — TRD awaiting review)
+- **Branch:** goals/18-overlay-renderer
+- **TRD:** research/plans/goals/18-overlay-renderer-trd.md — awaiting-review
+- **Notes:** Second Goal 6 task — builds the renderer content for the overlay window shell from TASK-0017. Uses pre-fetched shortcut data from the existing IPC/prefetch layer (TASK-0012). Depends on TASK-0017.
+
 ## In Review
 
 _(Developer moves tasks here when the draft PR is marked ready.)_
