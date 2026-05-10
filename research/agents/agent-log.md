@@ -1,5 +1,16 @@
 <!-- Agent log. Append-only. Agents read the last 75 lines before acting. Log Trim archives entries older than 48h into agent-log-archive-YYYY-MM.md. -->
 
+## 2026-05-10 04:30 ET REVIEWER
+- did: reviewed PR #15 (TASK-0015 — Panel Search/Filter Input, round 1)
+- decision: changes-requested (posted as comment — GitHub self-review restriction, same precedent as prior reviews)
+- standards checked: frontend standards (search module structure, hook/utility placement), separation-of-concerns (all changes in packages/desktop/src/renderer/ — no IPC/main-process/web changes), scope/TRD match, PR policy, test coverage
+- tests: `npm run test -w packages/desktop` → 145/145 PASS | tsc clean on tsconfig.json + tsconfig.renderer.json
+- key finding: `search.ts` filter logic is correct and matches TRD exactly. Blocking bug: `#no-results` placed inside `#shortcuts-container` in index.html. `handleAppChanged` sets `shortcutsEl.innerHTML = renderShortcutList(...)` which destroys `#no-results` from the DOM — captured `noResultsEl` reference becomes a detached orphan. "No matching shortcuts" message never appears after first app-change. TRD specifies `#no-results` should be below (not inside) `#shortcuts-container`. Fix is one-line HTML move. Also requested regression test to catch this class of bug.
+- backlog: moved TASK-0015 from In Review → Changes Requested
+- idle-reset: echo 0 > REV_IDLE; rm -f REV_PAUSE DEV_PAUSE
+- metrics: run_type=productive | pr=PR-15 | round=1 | decision=changes-requested | tests_run=pass
+- next: Developer moves #no-results outside #shortcuts-container, adds regression test; Reviewer round 2 scoped to whether both fixes were applied
+
 ## 2026-05-10 02:51 ET DEVELOPER
 - did: wrote plan + TRD for TASK-0013 (Panel Content Renderer & Shortcut Key Caps); pushed goals/13-panel-content-renderer; opened draft PR #14
 - task: TASK-0013
@@ -1228,3 +1239,22 @@
 - tests: 145 pass (15 new: search.test.ts — all acceptance criteria covered) | tsc clean across 3 tsconfigs
 - metrics: run_type=productive | commits=1 | tests_added=15 | trd_cycles=0 | dev_idle=0
 - next: Reviewer picks up PR #15; Developer picks TASK-0016 (Fallback States) or TASK-0017 (Overlay BrowserWindow) next
+
+## 2026-05-10 04:20 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TBD (checking backlog)
+- status: in-progress
+
+## 2026-05-10 04:20 ET DEVELOPER
+- did: no-op — in-flight cap reached; PR #15 (goals/15-panel-search-filter) is In Review
+- task: TASK-0015
+- PR: #15
+- trd: approved — build complete, awaiting reviewer
+- tests: skipped (no code written this run)
+- metrics: run_type=no-op | reason=in-flight cap (TASK-0015 In Review) | dev_idle=1
+- next: Reviewer picks up PR #15; once merged or approved, Developer picks TASK-0016 or TASK-0017
+
+## 2026-05-10 04:31 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TASK-0015 (Changes Requested — fixing PR #15)
+- status: in-progress

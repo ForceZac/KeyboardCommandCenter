@@ -93,7 +93,7 @@ _(Developer moves tasks here when the draft PR is marked ready.)_
 - **PR:** #15
 - **Branch:** goals/15-panel-search-filter
 - **TRD:** research/plans/goals/15-panel-search-filter-trd.md — approved
-- **Notes:** Third Goal 5 task — adds search/filter on top of the renderer from TASK-0013. See PRD Flow 2 for the full UX specification.
+- **Notes:** Third Goal 5 task — adds search/filter on top of the renderer from TASK-0013. See PRD Flow 2 for the full UX specification. Round 1 changes requested 2026-05-10: move #no-results outside #shortcuts-container (destroyed by innerHTML= on app-change), add regression test. Round 2 resubmit 2026-05-10: fix applied, regression test added, 146/146 pass.
 
 ## Changes Requested
 
