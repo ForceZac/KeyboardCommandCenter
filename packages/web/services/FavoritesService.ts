@@ -49,6 +49,11 @@ export class FavoritesService {
       where: { userId },
     });
 
+    // Known edge case: count is checked before the upsert, so a user at exactly
+    // 1000 favorites who re-submits an already-favorited shortcut (which would
+    // be a no-op upsert) will receive a spurious 403. In practice the web UI
+    // (TASK-0024) won't POST for already-favorited shortcuts, so real impact is
+    // negligible. Fixing this would require a read-then-count atomic operation.
     if (count >= FAVORITES_LIMIT) {
       const err = new Error('Favorites limit reached');
       (err as NodeJS.ErrnoException).code = 'LIMIT_REACHED';

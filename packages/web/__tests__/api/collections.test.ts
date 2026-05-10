@@ -180,6 +180,15 @@ describe('PATCH /api/collections/:id', () => {
     expect(body.name).toBe('Renamed');
   });
 
+  it('returns 401 when unauthenticated', async () => {
+    mockAuth.mockResolvedValue(null);
+    const res = await PATCH(
+      makeRequest(`http://localhost/api/collections/${COLLECTION_ID}`, 'PATCH', { name: 'X' }),
+      { params: Promise.resolve({ id: COLLECTION_ID }) },
+    );
+    expect(res.status).toBe(401);
+  });
+
   it('returns 404 when collection is not found', async () => {
     mockPrisma.collection.findFirst.mockResolvedValue(null);
     const res = await PATCH(
@@ -217,6 +226,15 @@ describe('DELETE /api/collections/:id', () => {
     expect(res.status).toBe(400);
     const body = await res.json();
     expect(body.error).toMatch(/default/i);
+  });
+
+  it('returns 401 when unauthenticated', async () => {
+    mockAuth.mockResolvedValue(null);
+    const res = await DELETE(
+      makeRequest(`http://localhost/api/collections/${COLLECTION_ID}`, 'DELETE'),
+      { params: Promise.resolve({ id: COLLECTION_ID }) },
+    );
+    expect(res.status).toBe(401);
   });
 
   it('returns 404 when collection does not exist', async () => {
