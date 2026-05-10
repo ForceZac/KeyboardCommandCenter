@@ -33,24 +33,70 @@ Task IDs are monotonic. The Project Manager picks the next number.
 
 _(Project Manager keeps 2–3 tasks here at all times.)_
 
-### TASK-0013: Panel Content Renderer & Shortcut Key Caps
+### TASK-0016: Panel Fallback States — No Detection, Unrecognized App, No Shortcuts
 - **Goal:** Goal 5 — Shortcut Panel UI (Desktop)
 - **PRD:** research/agents/prds/goal-05-shortcut-panel-ui.md
-- **Scope:** Build the panel content renderer that displays shortcut data fetched via the IPC layer (TASK-0012). When the panel opens, render an app header with the detected app name, then list shortcuts grouped by context/scope (e.g. "General", "Editor", "Terminal", "Debug"). Each shortcut row shows the command description on the left and a visual key cap rendering on the right (styled `<kbd>` elements with monospace font and visual separators for chord sequences, matching the web app's KeyCap/KeyCombo pattern). Detect the user's OS at runtime and display platform-appropriate modifier keys (Cmd on Mac, Ctrl on Windows — no manual toggle needed on desktop). Context group headings should be collapsible. NOT in scope: search/filter input (separate task), fallback states for no-detection/unrecognized/no-shortcuts (separate task), recent apps fallback list, keyboard navigation beyond Escape to dismiss (existing behavior), overlay mode (Goal 6), user accounts (Goal 7), app icons (text-only for v1), theming/dark mode, Linux (Goal 10).
+- **Scope:** Handle all three fallback states in the panel renderer. (1) No app detected: display "No app detected" message with brief explanation, plus a list of recently-detected apps from the detection service that the user can click to load shortcuts manually. (2) Unrecognized app: display "Shortcuts not available for [Process Name]", plus recent apps list. (3) Recognized app with no shortcuts in the database: display "No shortcuts found for [App Name]", plus recent apps list. The recent apps list reuses data from the detection service's app history (exposed via existing IPC). Each recent app entry is clickable to load that app's shortcuts in the panel. NOT in scope: search/filter input (TASK-0015), overlay mode (Goal 6), user accounts (Goal 7), keyboard navigation within the fallback list (future task).
 - **Acceptance:**
-  - Panel displays shortcut data for the detected app, grouped by context/scope
-  - App header shows the detected app's display name at the top of the panel
-  - Shortcut rows show command description (left) and key cap rendering (right)
-  - Key caps use styled `<kbd>` elements with visual separators for chord sequences
-  - Platform-appropriate modifiers display correctly (Cmd on Mac, Ctrl on Windows)
-  - Context/scope groups render with clear headings that are collapsible
-  - Panel content renders within 100ms using prefetched data from TASK-0012
-  - No scroll jank on apps with 200+ shortcuts (virtualize or lazy-render if needed)
-  - No unhandled errors if IPC returns empty or malformed data
+  - Panel shows "No app detected" message when detection returns no active app
+  - Panel shows "Shortcuts not available for [Process Name]" when detected app is not in the database
+  - Panel shows "No shortcuts found for [App Name]" when recognized app has zero shortcuts
+  - Recent apps list displays up to 5 recently-detected apps in all three fallback states
+  - Clicking a recent app loads that app's shortcuts in the panel
+  - Fallback states render within 100ms (same perf target as normal panel content)
+  - No unhandled errors for edge cases (empty detection history, all recent apps unrecognized)
 - **PR:**
 - **Branch:**
 - **TRD:**
-- **Notes:** Second Goal 5 task — builds the visual layer on top of the data plumbing from TASK-0012. Depends on TASK-0012 shipping first (provides `getShortcutsForApp()` via preload). Porting the visual key cap pattern from the web app's components (packages/web) is recommended but the desktop renderer uses vanilla HTML/CSS, not React/Tailwind — duplicate the CSS pattern rather than extracting to packages/core (per PRD recommendation).
+- **Notes:** Fourth Goal 5 task — covers PRD Flows 3 and 4. Depends on TASK-0013 (panel content renderer) and TASK-0012 (IPC data layer). Should be buildable once TASK-0013 ships.
+
+## In Progress
+
+_(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
+
+### TASK-0015: Panel Search/Filter Input
+- **Goal:** Goal 5 — Shortcut Panel UI (Desktop)
+- **PRD:** research/agents/prds/goal-05-shortcut-panel-ui.md
+- **Scope:** Add a search/filter input to the shortcut panel, positioned below the app header and above the shortcut list. When the user types, filter the displayed shortcuts in real time — matching against command description text and key combo text (case-insensitive substring match). Context group headings with no matching shortcuts should be hidden during filtering. Display a "No matching shortcuts" message when the filter matches nothing. Clearing the input restores the full shortcut list. The search input should be focused and ready for typing when the panel opens. Target <50ms filter response per keystroke on lists of 200+ shortcuts. NOT in scope: fallback states for no-detection/unrecognized app (separate task), fuzzy matching or advanced search operators, overlay mode (Goal 6), user accounts (Goal 7).
+- **Acceptance:**
+  - Search input renders below app header, above shortcut list
+  - Search input is focused when the panel opens
+  - Typing filters shortcuts in real time by command description and key combo text
+  - Filtering is case-insensitive substring matching
+  - Context group headings with no matching results are hidden
+  - "No matching shortcuts" message displays when filter matches nothing
+  - Clearing input restores the full shortcut list
+  - Filter response <50ms per keystroke on 200+ shortcuts
+- **PR:** #15
+- **Branch:** goals/15-panel-search-filter
+- **TRD:** research/plans/goals/15-panel-search-filter-trd.md — awaiting-review
+- **Notes:** Third Goal 5 task — adds search/filter on top of the renderer from TASK-0013. Depends on TASK-0013 shipping first (provides the panel content and grouped shortcut list to filter against). See PRD Flow 2 for the full UX specification.
+
+## In Review
+
+_(Developer moves tasks here when the draft PR is marked ready.)_
+
+## Changes Requested
+
+_(Reviewer moves tasks here when a PR needs rework.)_
+
+## TRD Changes Requested
+
+_(TRD Watcher moves tasks here when a TRD needs rework.)_
+
+## Approved
+
+_(Reviewer moves tasks here after approving the PR. You merge to main, then move to Shipped.)_
+
+### TASK-0013: Panel Content Renderer & Shortcut Key Caps
+- **Goal:** Goal 5 — Shortcut Panel UI (Desktop)
+- **PRD:** research/agents/prds/goal-05-shortcut-panel-ui.md
+- **Scope:** Build the panel content renderer that displays shortcut data fetched via the IPC layer (TASK-0012). Renders app header, shortcuts grouped by context/scope, visual key cap rendering, collapsible context groups, platform-appropriate modifier keys (Cmd/Ctrl). Vanilla HTML/CSS/TypeScript — no React, no Tailwind.
+- **PR:** #14
+- **Branch:** goals/13-panel-content-renderer
+- **TRD:** research/plans/goals/13-panel-content-renderer-trd.md — approved
+- **Approved:** 2026-05-10 (Round 1 — reviewer approved, awaiting owner merge after #13)
+- **Notes:** Must merge after PR #13 (TASK-0012) — requires `window.kcc.getShortcutsForApp()` at runtime.
 
 ### TASK-0012: Shortcut Data IPC Layer & Prefetch
 - **Goal:** Goal 5 — Shortcut Panel UI (Desktop)
@@ -66,51 +112,39 @@ _(Project Manager keeps 2–3 tasks here at all times.)_
   - Response time <50ms for cached apps (no DB round-trip)
   - Handler returns empty result for unknown app slugs (no crash)
   - No unhandled exceptions if database is unreachable
-- **PR:**
-- **Branch:**
-- **TRD:**
-- **Notes:** First Goal 5 task — provides the data plumbing for the panel UI. Depends on Goal 4 shipping (detection service IPC provides the app slug). TASK-0011 is the last Goal 4 task; once it ships, this task is unblocked.
+- **PR:** #13
+- **Branch:** goals/12-shortcut-ipc-layer
+- **TRD:** research/plans/goals/12-shortcut-ipc-layer-trd.md — approved
+- **Approved:** 2026-05-10 (Round 1 — reviewer approved, awaiting owner merge)
 
-## In Progress
-
-_(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
-
-## In Review
-
-_(Developer moves tasks here when the draft PR is marked ready.)_
-
-### TASK-0011: Tray "Recent Apps" Submenu
+### TASK-0014: Reconcile Goal 4 Stubs — process-map.ts & active-window.ts
 - **Goal:** Goal 4 — Active Window Process Detection
 - **PRD:** research/agents/prds/goal-04-process-detection.md
-- **Scope:** Add a "Recent Apps" submenu to the existing Electron tray context menu that displays the last 5 unique detected applications (PRD Flow 2). Each entry shows the app's display name; clicking an entry opens the shortcut panel pre-loaded with that app's shortcuts (sends the app slug to the renderer via IPC). The submenu queries the in-memory recent-apps list exposed by the polling service (TASK-0010) via IPC. When detection is disabled or no apps have been detected yet, the submenu shows a single disabled item ("No recent apps" / "Detection off"). The submenu rebuilds on each tray menu open to reflect the latest state. NOT in scope: the polling service or detection logic (TASK-0010), native module (TASK-0009), process mapping (TASK-0008), shortcut panel content or layout (Goal 5), overlay (Goal 6), Linux support (Goal 10), persisting the recent apps list across restarts.
+- **Scope:** Write the real `lookupApp()` implementation in process-map.ts (bundleId-first lookup from process-map.json, normalized process name fallback, .exe stripping) and the real `loadNativeModule` + `createActiveWindowDetector` wrapper in active-window.ts (three-path binary probe for packaged/webpack-dev/non-webpack runtimes). Both were stubs on main causing 49 test failures. NOT in scope: changes to DetectionService, TrayManager, main.ts, process-map.json, or test files.
 - **Acceptance:**
-  - Tray context menu includes a "Recent Apps" submenu between "Open" and "Settings"
-  - Submenu lists up to 5 recently-detected apps by display name, most recent first
-  - Clicking an app entry opens the shortcut panel with that app's shortcuts pre-loaded
-  - When no apps have been detected, submenu shows a disabled "No recent apps" item
-  - When detection is disabled in settings, submenu shows a disabled "Detection off" item
-  - Submenu updates on each tray menu open (reflects current session state)
-  - No crashes if the polling service has not started or returns an empty list
-- **PR:** #11
-- **Branch:** goals/11-tray-recent-apps
-- **TRD:** research/plans/goals/11-tray-recent-apps-trd.md — approved
-- **Notes:** Depends on TASK-0010 (polling service provides the recent-apps list via IPC). This is the final piece of Goal 4's user-facing definition of done (PRD Flow 2: recently-detected apps in tray). Round 2: out-of-scope implementations reverted (real lookupApp → stub, active-window.ts → stub). PROP-0003 and PROP-0004 filed for dedicated reconciliation tasks.
-
-## Changes Requested
-
-_(Reviewer moves tasks here when a PR needs rework.)_
-
-## TRD Changes Requested
-
-_(TRD Watcher moves tasks here when a TRD needs rework.)_
-
-## Approved
-
-_(Reviewer moves tasks here after approving the PR. You merge to main, then move to Shipped.)_
+  - lookupApp() returns correct app slugs via bundleId-first lookup with process name fallback
+  - loadNativeModule probes three paths for the kcc-native .node binary
+  - createActiveWindowDetector returns a factory-pattern detector instance
+  - All 49 previously-failing tests pass (40 lookupApp + 9 active-window)
+  - No regressions in existing passing tests
+- **PR:** #12
+- **Branch:** goals/14-reconcile-goal4-stubs
+- **TRD:** research/plans/goals/14-reconcile-goal4-stubs-trd.md — approved
+- **Approved:** 2026-05-10 (Round 2 — reviewer approved, awaiting owner merge)
+- **Notes:** Added retroactively by PM — Developer opened this PR outside normal backlog flow. Addresses PROP-0003 and PROP-0004.
 
 ## Shipped
 
 _(You move tasks here after merging to main.)_
+
+### TASK-0011: Tray "Recent Apps" Submenu
+- **Goal:** Goal 4 — Active Window Process Detection
+- **PRD:** research/agents/prds/goal-04-process-detection.md
+- **PR:** #11
+- **Branch:** goals/11-tray-recent-apps
+- **TRD:** research/plans/goals/11-tray-recent-apps-trd.md — approved
+- **Approved:** 2026-05-10 (post-hoc — owner merged directly after round 2 resubmit)
+- **Merged:** 2026-05-10
 
 ### TASK-0010: Detection Polling Service & IPC Integration
 - **Goal:** Goal 4 — Active Window Process Detection
