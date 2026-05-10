@@ -1,21 +1,41 @@
-/**
- * STUB: Placeholder for the TASK-0008 (goals/8-process-map) implementation.
- * Reconcile at merge time — replace with the real file from that branch.
- *
- * The exported function signature is stable and matches the TASK-0008 TRD exactly.
- * DetectionService imports `lookupApp` from this path.
- */
+import mapData from './process-map.json';
+
+type ProcessMap = {
+  byProcess: Record<string, string>;
+  byBundleId: Record<string, string>;
+};
+
+const processMap: ProcessMap = mapData as ProcessMap;
 
 /**
- * Looks up an application slug from a raw process name and optional bundle ID.
- * Returns the database app slug (e.g. "vscode", "slack") or null for unknown processes.
+ * Look up an application slug from a raw process name and optional bundle ID.
  *
- * Stub implementation always returns null — real lookup in TASK-0008.
+ * Lookup order:
+ *   1. Bundle ID (macOS only — more stable across app updates).
+ *   2. Normalized process name (lowercased, trimmed, `.exe` suffix stripped).
+ *
+ * Returns the database app slug (e.g. "vscode", "slack") or `null` when no
+ * mapping exists for the given inputs.
  */
 export function lookupApp(
-  _processName: string,
-  _bundleId?: string,
+  processName: string,
+  bundleId?: string,
 ): string | null {
-  // Stub — process map from TASK-0008 not yet merged.
-  return null;
+  if (!processName && !bundleId) return null;
+
+  // Bundle ID path — try first when available (macOS).
+  if (bundleId) {
+    const slug = processMap.byBundleId[bundleId.trim()];
+    if (slug) return slug;
+  }
+
+  // Process name path — normalize to lowercase, trim, strip .exe suffix.
+  const normalized = processName
+    .toLowerCase()
+    .trim()
+    .replace(/\.exe$/i, '');
+
+  if (!normalized) return null;
+
+  return processMap.byProcess[normalized] ?? null;
 }
