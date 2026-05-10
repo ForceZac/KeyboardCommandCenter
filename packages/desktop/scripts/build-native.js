@@ -44,7 +44,7 @@ if (napiCheck.error || napiCheck.status !== 0) {
 console.log('[kcc-native] Building native module (this may take 30-60s on first build)...');
 
 try {
-  execSync('npx @napi-rs/cli build --platform --release --js false', {
+  execSync('npx @napi-rs/cli build --release --js false', {
     cwd: NATIVE_DIR,
     stdio: 'inherit',
   });

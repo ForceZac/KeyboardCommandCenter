@@ -4,12 +4,16 @@
 //!   1. `GetForegroundWindow()` — handle to the current foreground window
 //!   2. `GetWindowThreadProcessId()` — maps window handle to process ID
 //!   3. `OpenProcess()` — opens the process with PROCESS_QUERY_LIMITED_INFORMATION
-//!   4. `GetModuleFileNameExW()` — reads the full exe path from the process
+//!   4. `QueryFullProcessImageNameW()` — reads the full exe path from the process
 //!   5. `GetWindowTextW()` — reads the window title string
 //!
-//! The exe path is split on `\` and `//` to extract just the file name, and the
-//! `.exe` suffix is stripped for consistency with process names on macOS (where
-//! the executable name has no extension).
+//! `QueryFullProcessImageNameW` is used instead of `GetModuleFileNameExW` because
+//! it works correctly with `PROCESS_QUERY_LIMITED_INFORMATION`. The older
+//! `GetModuleFileNameExW` requires `PROCESS_QUERY_INFORMATION | PROCESS_VM_READ`,
+//! which is unavailable for protected or elevated processes on standard user accounts.
+//!
+//! The exe path is split on `\` to extract just the file name, and the `.exe`
+//! suffix is stripped for consistency with process names on macOS.
 
 #[cfg(target_os = "windows")]
 
@@ -18,9 +22,9 @@ use std::os::windows::ffi::OsStringExt;
 use std::path::Path;
 
 use windows::Win32::Foundation::{CloseHandle, HWND};
-use windows::Win32::System::ProcessStatus::GetModuleFileNameExW;
 use windows::Win32::System::Threading::{
-  OpenProcess, PROCESS_QUERY_LIMITED_INFORMATION,
+  OpenProcess, QueryFullProcessImageNameW, PROCESS_NAME_WIN32,
+  PROCESS_QUERY_LIMITED_INFORMATION,
 };
 use windows::Win32::UI::WindowsAndMessaging::{
   GetForegroundWindow, GetWindowTextW, GetWindowThreadProcessId,
@@ -44,20 +48,28 @@ pub fn get_active_window() -> Option<ActiveWindowData> {
       return None;
     }
 
-    // Step 3: Open the process. PROCESS_QUERY_LIMITED_INFORMATION is the
-    // minimum access right needed for GetModuleFileNameExW and avoids UAC
-    // elevation prompts for protected processes.
+    // Step 3: Open the process. PROCESS_QUERY_LIMITED_INFORMATION is sufficient
+    // for QueryFullProcessImageNameW and avoids UAC elevation prompts for
+    // protected processes. Unlike GetModuleFileNameExW, this API does not
+    // require PROCESS_VM_READ.
     let process_handle = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, false, pid).ok()?;
 
-    // Step 4: Get the full executable path.
-    let mut exe_path_buf = vec![0u16; 1024];
-    let path_len = GetModuleFileNameExW(process_handle, None, &mut exe_path_buf);
+    // Step 4: Get the full executable path using QueryFullProcessImageNameW.
+    // buf_len is an in/out parameter: in = buffer size, out = chars written.
+    let mut buf_len: u32 = 1024;
+    let mut exe_path_buf = vec![0u16; buf_len as usize];
+    let ok = QueryFullProcessImageNameW(
+      process_handle,
+      PROCESS_NAME_WIN32,
+      windows::core::PWSTR(exe_path_buf.as_mut_ptr()),
+      &mut buf_len,
+    );
 
     // Close the handle regardless of whether we got a path.
     let _ = CloseHandle(process_handle);
 
-    let process_name = if path_len > 0 {
-      let path_os = OsString::from_wide(&exe_path_buf[..path_len as usize]);
+    let process_name = if ok.is_ok() && buf_len > 0 {
+      let path_os = OsString::from_wide(&exe_path_buf[..buf_len as usize]);
       let path = Path::new(&path_os);
       // Extract the file stem (name without extension) for normalization.
       // e.g. "C:\Program Files\...\Code.exe" → "Code"
