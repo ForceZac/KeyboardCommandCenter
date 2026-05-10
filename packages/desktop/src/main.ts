@@ -7,13 +7,14 @@ import path from 'path';
 import Store from 'electron-store';
 import { TrayManager } from './tray';
 import { PanelWindowManager } from './window';
+import { SettingsWindowManager } from './settings-window';
 import { HotkeyManager, bindHotkeyLifecycle } from './hotkey';
 import { DetectionService } from './detection';
 import type { DetectionServiceStore } from './detection';
 // TASK-0009: real getActiveWindow loaded from native module at merge time.
 import { getActiveWindow } from './platform/active-window';
-// TASK-0008: real lookupApp loaded from process map at merge time.
-import { lookupApp } from './process-map';
+// TASK-0008: real lookupApp and TASK-0011: getDisplayName from process map.
+import { lookupApp, getDisplayName } from './process-map';
 // Validate @kcc/core cross-package dependency. IApplication and IShortcut types will be
 // used meaningfully in Goal 5 when real shortcut data is displayed in the panel.
 import type { IApplication } from '@kcc/core';
@@ -30,6 +31,7 @@ const store = new Store();
 
 let trayManager: TrayManager;
 let panelManager: PanelWindowManager;
+let settingsWindowManager: SettingsWindowManager;
 let hotkeyManager: HotkeyManager;
 let detectionService: DetectionService;
 
@@ -78,10 +80,25 @@ app.whenReady().then(() => {
   }
 
   panelManager = new PanelWindowManager();
+  settingsWindowManager = new SettingsWindowManager();
 
-  trayManager = new TrayManager(() => {
-    panelManager.show();
-  });
+  trayManager = new TrayManager(
+    // onOpenPanel: open the shortcut panel
+    () => { panelManager.show(); },
+    // onOpenSettings: open the settings window
+    () => { settingsWindowManager.show(); },
+    // getRecentApps: live list from DetectionService — read at menu-open time
+    () => detectionService.getRecentApps(),
+    // getDisplayName: slug → human-readable name
+    getDisplayName,
+    // isDetectionEnabled: reads electron-store at menu-open time
+    () => Boolean(store.get('detection.enabled', true)),
+    // onOpenPanelWithApp: show panel and send the selected app slug to renderer
+    (slug: string) => {
+      panelManager.show();
+      panelManager.sendToRenderer('detection:app-changed', { slug });
+    },
+  );
   trayManager.create();
 
   hotkeyManager = new HotkeyManager(() => {
