@@ -1535,3 +1535,12 @@
 - what's good: schema/migration correct; services thin and DRY; all 8 routes have 401 auth gates + tests; createUser event fires correctly; upsert idempotency; IDOR-safe ownership checks; @kcc/core types correct; full TRD compliance; no scope creep
 - metrics: run_type=productive | pr=PR-22 | round=1 | decision=changes-requested | tests_run=pass (29/29 new tests green)
 - next: Developer addresses 2 issues (vitest include pattern, LimitReachedError class), pushes fix commits, marks ready again for round-2
+
+## 2026-05-10 17:22 ET DEVELOPER
+- did: TASK-0022 round-3 fix-up — (1) scoped vitest.unit.config.ts include to 3 unit test files (was __tests__/**/*.test.ts — pulled in 4 pre-existing integration tests, failed without DATABASE_URL); (2) added lib/errors.ts with LimitReachedError class; updated FavoritesService + CollectionsService to throw LimitReachedError; updated /api/favorites + /api/collections routes to catch via instanceof. Moved TASK-0022 back to In Review. Left PR comment.
+- task: TASK-0022
+- PR: #22
+- trd: approved — fixes applied
+- tests: 29/29 unit green | tsc clean | ESLint clean | vitest.unit.config.ts exits 0 without DATABASE_URL
+- metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=0 | dev_idle=0
+- next: Reviewer picks up PR #22 for round-4; TASK-0023 TRD awaiting review

@@ -61,12 +61,6 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
 
 _(Developer moves tasks here when the draft PR is marked ready.)_
 
-_(Empty)_
-
-## Changes Requested
-
-_(Reviewer moves tasks here when a PR needs rework.)_
-
 ### TASK-0022: Favorites Data Model & CRUD API
 - **Goal:** Goal 7 — User Accounts & Favorites Sync
 - **PRD:** research/agents/prds/goal-07-accounts-favorites.md
@@ -88,7 +82,11 @@ _(Reviewer moves tasks here when a PR needs rework.)_
 - **PR:** #22
 - **Branch:** goals/22-favorites-data-model-api
 - **TRD:** research/plans/goals/22-favorites-data-model-api-trd.md — approved
-- **Notes:** Round-1 changes requested 2026-05-10. Fix: (1) vitest.unit.config.ts include pattern too broad — must exit 0 without DATABASE_URL; (2) NodeJS.ErrnoException used for LIMIT_REACHED custom error — introduce LimitReachedError class in lib/errors.ts.
+- **Notes:** Round-1 fixes pushed 2026-05-10. Round-2 fixes pushed 2026-05-10 (DRY mapper, PATCH 400 test). Round-3 fixes pushed 2026-05-10 (vitest scope, LimitReachedError class). Back in review.
+
+## Changes Requested
+
+_(Reviewer moves tasks here when a PR needs rework.)_
 
 ## TRD Changes Requested
 
