@@ -2,9 +2,18 @@
 import { app, ipcMain } from 'electron';
 app.disableHardwareAcceleration();
 
+import fs from 'fs';
+import path from 'path';
+import Store from 'electron-store';
 import { TrayManager } from './tray';
 import { PanelWindowManager } from './window';
 import { HotkeyManager, bindHotkeyLifecycle } from './hotkey';
+import { DetectionService } from './detection';
+import type { DetectionServiceStore } from './detection';
+// TASK-0009: real getActiveWindow loaded from native module at merge time.
+import { getActiveWindow } from './platform/active-window';
+// TASK-0008: real lookupApp loaded from process map at merge time.
+import { lookupApp } from './process-map';
 // Validate @kcc/core cross-package dependency. IApplication and IShortcut types will be
 // used meaningfully in Goal 5 when real shortcut data is displayed in the panel.
 import type { IApplication } from '@kcc/core';
@@ -17,9 +26,50 @@ if (!isFirstInstance) {
   process.exit(0);
 }
 
+const store = new Store();
+
 let trayManager: TrayManager;
 let panelManager: PanelWindowManager;
 let hotkeyManager: HotkeyManager;
+let detectionService: DetectionService;
+
+// ---------------------------------------------------------------------------
+// Unrecognized-process log writer (production implementation).
+// DetectionService calls this once per session per unknown process name.
+// ---------------------------------------------------------------------------
+const logFilePath = path.join(
+  app.getPath('home'),
+  '.shortcutvault',
+  'unrecognized-processes.log',
+);
+let logDirEnsured = false;
+
+function writeUnrecognizedProcessLog(processName: string): void {
+  const timestamp = new Date().toISOString();
+  const line = `${timestamp} ${processName}\n`;
+  const logDir = path.dirname(logFilePath);
+
+  const doWrite = (): void => {
+    fs.appendFile(logFilePath, line, (err) => {
+      if (err) {
+        console.error('[kcc] Failed to write unrecognized process log:', err);
+      }
+    });
+  };
+
+  if (logDirEnsured) {
+    doWrite();
+  } else {
+    fs.mkdir(logDir, { recursive: true }, (mkdirErr) => {
+      if (mkdirErr) {
+        console.error('[kcc] Failed to create log directory:', mkdirErr);
+        return;
+      }
+      logDirEnsured = true;
+      doWrite();
+    });
+  }
+}
 
 app.whenReady().then(() => {
   // Prevent the app from showing a dock icon on macOS — tray-only app.
@@ -45,6 +95,22 @@ app.whenReady().then(() => {
     panelManager.hide();
   });
 
+  // Detection polling service (Goal 4 — TASK-0010).
+  detectionService = new DetectionService({
+    getActiveWindow,
+    lookupApp,
+    emitToRenderer: (channel, payload) => panelManager.sendToRenderer(channel, payload),
+    store: store as DetectionServiceStore,
+    onUnrecognizedProcess: writeUnrecognizedProcessLog,
+  });
+
+  // IPC: renderer or tray (TASK-0011) queries the in-memory recent-apps list.
+  ipcMain.handle('detection:get-recent-apps', () => detectionService.getRecentApps());
+
+  if (store.get('detection.enabled', true)) {
+    detectionService.start();
+  }
+
   // Log idle memory usage after everything has settled.
   setTimeout(() => {
     panelManager.logMemoryUsage();
@@ -59,5 +125,6 @@ app.on('window-all-closed', () => {
 });
 
 app.on('before-quit', () => {
+  detectionService?.stop();
   trayManager?.destroy();
 });

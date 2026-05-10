@@ -7,11 +7,13 @@
     "dev": "electron-forge start",
     "build": "electron-forge make",
     "package": "electron-forge package",
+    "test": "vitest run",
     "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.renderer.json"
   },
   "dependencies": {
     "@kcc/core": "*",
-    "electron": "^28.0.0"
+    "electron": "^28.0.0",
+    "electron-store": "^7.0.3"
   },
   "devDependencies": {
     "@electron-forge/cli": "^7.0.0",
@@ -21,6 +23,7 @@
     "node-loader": "^2.0.0",
     "style-loader": "^3.0.0",
     "ts-loader": "^9.0.0",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "vitest": "^1.0.0"
   }
 }
