@@ -33,13 +33,27 @@ Task IDs are monotonic. The Project Manager picks the next number.
 
 _(Project Manager keeps 2–3 tasks here at all times.)_
 
-_(Empty — all Goal 7 tasks currently depend on TASK-0021 merging. When TASK-0021 merges, TASK-0022 unblocks to Ready.)_
-
 ## In Progress
 
 _(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
 
-_(Empty)_
+### TASK-0023: Desktop Auth Flow — Browser OAuth & Deep Link Callback
+- **Goal:** Goal 7 — User Accounts & Favorites Sync
+- **PRD:** research/agents/prds/goal-07-accounts-favorites.md
+- **Scope:** Register `shortcutvault://` custom protocol in Electron via `app.setAsDefaultProtocolClient()`. Add "Sign in" / "Sign out" entries to the system tray menu. When "Sign in" is clicked, open the default browser to the web app's NextAuth sign-in page with a callback parameter. Handle the `shortcutvault://auth/callback?token=...` deep link in the Electron main process. Validate and store the session token securely using Electron's safeStorage API via electron-store. Display signed-in state in the settings window (avatar, display name, sign-out button). On macOS, handle protocol via `open-url` event; on Windows, handle via `second-instance` event argv parsing. NOT in scope: favorites cache or sync engine (separate task), any web app auth changes (TASK-0021), desktop-only account creation, favorites UI in the panel.
+- **Acceptance:**
+  - `shortcutvault://` protocol registered on app start (macOS and Windows)
+  - Tray menu shows "Sign in" when unauthenticated, "Sign out" when authenticated
+  - Clicking "Sign in" opens default browser to the web app's OAuth page
+  - Deep link callback (`shortcutvault://auth/callback?token=...`) received and parsed correctly
+  - Session token stored encrypted via safeStorage in electron-store
+  - Settings window shows user avatar and display name when signed in
+  - "Sign out" clears stored token and resets tray menu and settings UI
+  - No regressions on existing desktop functionality (panel, overlay, detection)
+- **PR:** #23
+- **Branch:** goals/23-desktop-auth-flow
+- **TRD:** research/plans/goals/23-desktop-auth-flow-trd.md — awaiting-review
+- **Notes:** Unblocked by merge on 2026-05-10 (TASK-0021 shipped). Third Goal 7 task. PRD Flow 2 covers this scope.
 
 ## In Review
 
