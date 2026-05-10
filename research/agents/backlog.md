@@ -89,12 +89,24 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
   - Overlay renderer uses React (packages/overlay)
 - **PR:** (draft — TRD awaiting review)
 - **Branch:** goals/18-overlay-renderer
-- **TRD:** research/plans/goals/18-overlay-renderer-trd.md — awaiting-review
+- **TRD:** research/plans/goals/18-overlay-renderer-trd.md — approved
 - **Notes:** Second Goal 6 task — builds the renderer content for the overlay window shell from TASK-0017. Uses pre-fetched shortcut data from the existing IPC/prefetch layer (TASK-0012). Depends on TASK-0017.
 
 ## In Review
 
 _(Developer moves tasks here when the draft PR is marked ready.)_
+
+## Changes Requested
+
+_(Reviewer moves tasks here when a PR needs rework.)_
+
+## TRD Changes Requested
+
+_(TRD Watcher moves tasks here when a TRD needs rework.)_
+
+## Approved
+
+_(Reviewer moves tasks here after approving the PR. You merge to main, then move to Shipped.)_
 
 ### TASK-0015: Panel Search/Filter Input
 - **Goal:** Goal 5 — Shortcut Panel UI (Desktop)
@@ -112,19 +124,8 @@ _(Developer moves tasks here when the draft PR is marked ready.)_
 - **PR:** #15
 - **Branch:** goals/15-panel-search-filter
 - **TRD:** research/plans/goals/15-panel-search-filter-trd.md — approved
-- **Notes:** Third Goal 5 task — adds search/filter on top of the renderer from TASK-0013. See PRD Flow 2 for the full UX specification. Round 1 changes requested 2026-05-10: move #no-results outside #shortcuts-container (destroyed by innerHTML= on app-change), add regression test. Round 2 resubmit 2026-05-10: fix applied, regression test added, 146/146 pass.
-
-## Changes Requested
-
-_(Reviewer moves tasks here when a PR needs rework.)_
-
-## TRD Changes Requested
-
-_(TRD Watcher moves tasks here when a TRD needs rework.)_
-
-## Approved
-
-_(Reviewer moves tasks here after approving the PR. You merge to main, then move to Shipped.)_
+- **Approved:** 2026-05-10 (Round 2 — reviewer approved, awaiting owner merge)
+- **Notes:** Third Goal 5 task — adds search/filter on top of the renderer from TASK-0013. Round 1 changes requested: move #no-results outside #shortcuts-container, add regression test. Round 2: both fixed, 146/146 pass.
 
 ### TASK-0012: Shortcut Data IPC Layer & Prefetch
 - **Goal:** Goal 5 — Shortcut Panel UI (Desktop)
