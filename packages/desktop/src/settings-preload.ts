@@ -13,4 +13,34 @@ contextBridge.exposeInMainWorld('kccSettings', {
 
   setLoginStartup: (enabled: boolean): Promise<void> =>
     ipcRenderer.invoke('settings:set-login-startup', enabled),
+
+  overlay: {
+    getOverlay: (): Promise<{
+      enabled: boolean;
+      hotkey: string;
+      opacity: number;
+      position: string;
+      size: string;
+    }> => ipcRenderer.invoke('overlay:get'),
+
+    setEnabled: (enabled: boolean): Promise<void> =>
+      ipcRenderer.invoke('overlay:set-enabled', { enabled }),
+
+    setHotkey: (
+      accelerator: string,
+    ): Promise<{ success: boolean; conflict: boolean; message: string }> =>
+      ipcRenderer.invoke('overlay:set-hotkey', { accelerator }),
+
+    setOpacity: (opacity: number): Promise<void> =>
+      ipcRenderer.invoke('overlay:set-opacity', { opacity }),
+
+    setPosition: (position: string): Promise<void> =>
+      ipcRenderer.invoke('overlay:set-position', { position }),
+
+    setSize: (size: string): Promise<void> =>
+      ipcRenderer.invoke('overlay:set-size', { size }),
+
+    isSupported: (): Promise<boolean> =>
+      ipcRenderer.invoke('overlay:is-supported'),
+  },
 });

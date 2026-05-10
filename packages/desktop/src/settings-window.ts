@@ -15,7 +15,7 @@ export class SettingsWindowManager {
 
     this.window = new BrowserWindow({
       width: 480,
-      height: 320,
+      height: 560,
       resizable: false,
       minimizable: false,
       maximizable: false,
