@@ -55,6 +55,10 @@ _(Project Manager keeps 2–3 tasks here at all times.)_
 
 _(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
 
+## In Review
+
+_(Developer moves tasks here when the draft PR is marked ready.)_
+
 ### TASK-0022: Favorites Data Model & CRUD API
 - **Goal:** Goal 7 — User Accounts & Favorites Sync
 - **PRD:** research/agents/prds/goal-07-accounts-favorites.md
@@ -75,12 +79,8 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
   - All routes return <200ms under normal load
 - **PR:** #22
 - **Branch:** goals/22-favorites-data-model-api
-- **TRD:** research/plans/goals/22-favorites-data-model-api-trd.md — awaiting-review
+- **TRD:** research/plans/goals/22-favorites-data-model-api-trd.md — approved
 - **Notes:** Unblocked by merge on 2026-05-10 (TASK-0021 shipped). Second Goal 7 task.
-
-## In Review
-
-_(Developer moves tasks here when the draft PR is marked ready.)_
 
 ## Changes Requested
 
@@ -306,3 +306,44 @@ _(Waiting on an external dependency, a missing PRD, or owner decision.)_
 - **Branch:**
 - **TRD:**
 - **Notes:** Blocked — awaiting TASK-0022 (needs favorites/collections API routes and data model). Fourth Goal 7 task. PRD Flows 3 and 5 cover this scope.
+
+### TASK-0025: Desktop Favorites Sync Engine & Offline Cache
+- **Goal:** Goal 7 — User Accounts & Favorites Sync
+- **PRD:** research/agents/prds/goal-07-accounts-favorites.md
+- **Scope:** Implement a sync engine in the Electron main process that manages local caching and bidirectional sync of favorites and collections with the server API. Use electron-store (encrypted via safeStorage) to persist favorites and collections as JSON locally. On app start and network reconnection, pull remote changes from `GET /api/favorites` and `GET /api/collections` using the stored auth token from TASK-0023. When the user favorites/unfavorites a shortcut locally, queue the change with a timestamp and push to the server on next sync. Implement last-write-wins conflict resolution at the individual favorite level using timestamps. Sync interval: on app start, on reconnect, and every 15 minutes while online. Expose IPC handlers (`sync:getFavorites`, `sync:getCollections`, `sync:toggleFavorite`, `sync:addToCollection`, `sync:removeFromCollection`, `sync:forceSync`) for the renderer to query local cache. Local cache reads must complete in <10ms. Sync must not block the UI thread. NOT in scope: desktop panel favorites UI (separate task — TASK-0026), web app changes, auth flow (TASK-0023), API routes (TASK-0022), real-time WebSocket sync, collection reordering, guest favorites migration.
+- **Acceptance:**
+  - Favorites and collections stored locally in electron-store encrypted via safeStorage
+  - On app start (when signed in), sync engine pulls remote favorites/collections and updates local cache
+  - On network reconnection, sync engine automatically syncs pending changes
+  - Background sync runs every 15 minutes while online
+  - Local changes (favorite/unfavorite) are queued with timestamps and pushed on next sync
+  - Last-write-wins conflict resolution: most recent timestamp wins per shortcut
+  - IPC handlers exposed for renderer to read favorites/collections from local cache
+  - Local cache reads complete in <10ms
+  - Sync runs in the main process without blocking renderer
+  - Signed-out users: sync engine is inactive, no errors thrown
+  - No regressions on existing desktop functionality
+- **PR:**
+- **Branch:**
+- **TRD:**
+- **Notes:** Blocked — awaiting TASK-0022 (needs API routes to sync against) and TASK-0023 (needs desktop auth to identify user). Fifth Goal 7 task. PRD Flow 7 covers this scope.
+
+### TASK-0026: Desktop Panel Favorites View & Favorite Toggle
+- **Goal:** Goal 7 — User Accounts & Favorites Sync
+- **PRD:** research/agents/prds/goal-07-accounts-favorites.md
+- **Scope:** Add a favorites view to the desktop shortcut panel. Add a toggle or tab at the top of the panel to switch between "App Shortcuts" (current behavior — shortcuts for the detected active app) and "My Favorites" (user's saved shortcuts). In favorites view, display shortcuts grouped by collection with collection names as section headers. Each shortcut row shows the app name (since favorites span multiple apps) and the standard keycap display. Shortcut rows are searchable/filterable using the existing search input. Add a favorite toggle icon (heart/star, visible on hover) to each shortcut row in "App Shortcuts" mode. Clicking the icon calls the sync engine's `sync:toggleFavorite` IPC handler. Icon shows filled state for already-favorited shortcuts. Optimistic UI: icon fills/unfills instantly, reverts if the sync engine reports failure. If the user is not signed in, show a message in the favorites tab directing them to sign in via the tray menu. If offline, render favorites from local cache with no loading spinner. NOT in scope: sync engine logic (TASK-0025), desktop auth flow (TASK-0023), web favorites UI (TASK-0024), collection CRUD in the panel (read-only view), collection reordering, drag-and-drop.
+- **Acceptance:**
+  - Panel has a toggle/tab to switch between "App Shortcuts" and "My Favorites"
+  - "My Favorites" view shows shortcuts grouped by collection with section headers
+  - Each shortcut row in favorites view shows app name + shortcut keycap display
+  - Search/filter works in favorites view (filters across all collections)
+  - Heart/star icon visible on hover on each shortcut row in "App Shortcuts" mode
+  - Clicking favorite icon toggles favorite state with optimistic UI (<100ms perceived)
+  - Filled icon state for already-favorited shortcuts (reads from sync engine cache)
+  - Unauthenticated users see "Sign in to save favorites" prompt in favorites tab
+  - Offline: favorites render from local cache, no loading state
+  - No regressions on existing panel functionality (search, keycaps, fallback states)
+- **PR:**
+- **Branch:**
+- **TRD:**
+- **Notes:** Blocked — awaiting TASK-0025 (needs sync engine IPC handlers and local cache). Sixth Goal 7 task. PRD Flows 4 and 6 cover this scope.

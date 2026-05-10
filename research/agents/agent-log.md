@@ -1554,3 +1554,28 @@
 - tests: n/a (TRD phase — no feature code written)
 - metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=1
 - next: TRD Watcher reviews TRD; on approval resume In Progress and build schema + services + API routes
+
+## 2026-05-10 16:06 ET PROJECT-MANAGER
+- did: created 2 tasks (TASK-0025, TASK-0026) to complete Goal 7 scoping; roadmap health check; updated project_context.md
+- created: TASK-0025 (Desktop Favorites Sync Engine & Offline Cache), TASK-0026 (Desktop Panel Favorites View & Favorite Toggle)
+- moved: none
+- prd gaps: Goal 9 (N+2) needs PRD — Product Manager should write it soon
+- roadmap check: solid — sequencing correct, no scope creep, no stale goals, no missing prerequisites. Note: Goal 9 depends only on Goal 6 (shipped), so it's technically unblocked, but serial ordering is correct for solo dev.
+- proposals added: 0
+- metrics: tasks_created=2 | tasks_moved=0 | prd_gaps=1 | roadmap_issues=0
+- next: Ready at 2 (TASK-0022, TASK-0023). When TASK-0022 and TASK-0023 ship, Merge Watcher unblocks TASK-0024 and TASK-0025. Goal 7 is now fully scoped (6 tasks). Monitor Developer progress on TASK-0022.
+
+## 2026-05-10 16:10 ET DEVELOPER
+- did: started run — claimed DEV_LOCK; resuming TASK-0022 (Favorites Data Model & CRUD API — TRD approved — building)
+- task: TASK-0022
+- PR: #22
+- status: in-progress — build phase
+
+## 2026-05-10 16:18 ET DEVELOPER
+- did: FINAL — built TASK-0022 (Favorites Data Model & CRUD API). Schema: Collection + CollectionShortcut models + migration 20260510000001_add-favorites-schema. Auth.js createUser event hook auto-creates "My Favorites" on sign-up. Services: FavoritesService (getFavorites/addFavorite/removeFavorite with 1000-limit guard + upsert idempotency), CollectionsService (list/create/update/delete/getShortcuts with 50-limit guard). API routes: GET|POST /api/favorites, DELETE /api/favorites/:shortcutId, GET|POST /api/collections, PATCH|DELETE /api/collections/:id, GET /api/collections/:id/shortcuts. Core types: ICollection, CollectionSummary, FavoriteEntry in @kcc/core. Tests: 26 new Vitest unit tests across favorites.test.ts, collections.test.ts, createUser-event.test.ts — all green. PR #22 marked ready.
+- task: TASK-0022
+- PR: #22
+- trd: approved — feature complete
+- tests: tsc clean | eslint clean | 26/26 Vitest unit tests green (DB-dependent tests skipped — no DATABASE_URL)
+- metrics: run_type=productive | commits=3 | tests_added=26 | trd_cycles=0 | dev_idle=0
+- next: Reviewer picks up PR #22; once merged Merge Watcher unblocks TASK-0024 (Favorites Web UI)
