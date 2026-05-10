@@ -72,29 +72,12 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
   - No unhandled exceptions if database is unreachable
 - **PR:** #13
 - **Branch:** goals/12-shortcut-ipc-layer
-- **TRD:** research/plans/goals/12-shortcut-ipc-layer-trd.md — awaiting-review
+- **TRD:** research/plans/goals/12-shortcut-ipc-layer-trd.md — approved
 - **Notes:** First Goal 5 task — provides the data plumbing for the panel UI. Depends on Goal 4 shipping (detection service IPC provides the app slug). TASK-0011 is the last Goal 4 task; once it ships, this task is unblocked.
 
 ## In Review
 
 _(Developer moves tasks here when the draft PR is marked ready.)_
-
-### TASK-0011: Tray "Recent Apps" Submenu
-- **Goal:** Goal 4 — Active Window Process Detection
-- **PRD:** research/agents/prds/goal-04-process-detection.md
-- **Scope:** Add a "Recent Apps" submenu to the existing Electron tray context menu that displays the last 5 unique detected applications (PRD Flow 2). Each entry shows the app's display name; clicking an entry opens the shortcut panel pre-loaded with that app's shortcuts (sends the app slug to the renderer via IPC). The submenu queries the in-memory recent-apps list exposed by the polling service (TASK-0010) via IPC. When detection is disabled or no apps have been detected yet, the submenu shows a single disabled item ("No recent apps" / "Detection off"). The submenu rebuilds on each tray menu open to reflect the latest state. NOT in scope: the polling service or detection logic (TASK-0010), native module (TASK-0009), process mapping (TASK-0008), shortcut panel content or layout (Goal 5), overlay (Goal 6), Linux support (Goal 10), persisting the recent apps list across restarts.
-- **Acceptance:**
-  - Tray context menu includes a "Recent Apps" submenu between "Open" and "Settings"
-  - Submenu lists up to 5 recently-detected apps by display name, most recent first
-  - Clicking an app entry opens the shortcut panel with that app's shortcuts pre-loaded
-  - When no apps have been detected, submenu shows a disabled "No recent apps" item
-  - When detection is disabled in settings, submenu shows a disabled "Detection off" item
-  - Submenu updates on each tray menu open (reflects current session state)
-  - No crashes if the polling service has not started or returns an empty list
-- **PR:** #11
-- **Branch:** goals/11-tray-recent-apps
-- **TRD:** research/plans/goals/11-tray-recent-apps-trd.md — approved
-- **Notes:** Depends on TASK-0010 (polling service provides the recent-apps list via IPC). This is the final piece of Goal 4's user-facing definition of done (PRD Flow 2: recently-detected apps in tray). Round 2: out-of-scope implementations reverted (real lookupApp → stub, active-window.ts → stub). PROP-0003 and PROP-0004 filed for dedicated reconciliation tasks.
 
 ## Changes Requested
 
