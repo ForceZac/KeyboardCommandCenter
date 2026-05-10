@@ -5,6 +5,9 @@ import path from 'path';
 export default defineConfig({
   plugins: [react()],
   test: {
+    // Expose afterEach/beforeEach/etc. globally so @testing-library/react
+    // can register its auto-cleanup hook between component tests.
+    globals: true,
     // Integration tests hit a real test database — run serially to avoid
     // connection pool exhaustion and seed data races.
     pool: 'forks',
