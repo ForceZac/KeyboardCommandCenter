@@ -129,8 +129,17 @@ export class DetectionService {
 
   private tick(): void {
     const info = this.getActiveWindowFn();
-    // Native module unavailable or call failed — degrade gracefully.
-    if (!info) return;
+
+    if (!info) {
+      // Transition from a previously-detected app to no active window — emit
+      // once so the overlay and panel can show "No app detected" (PRD Flow 3/5).
+      // If lastDetected is already null there is nothing new to report.
+      if (this.lastDetected !== null) {
+        this.lastDetected = null;
+        this.emitToRenderer('detection:app-changed', { appSlug: null, processName: '', windowTitle: '' });
+      }
+      return;
+    }
 
     const { processName, windowTitle, bundleId } = info;
     const appSlug = this.lookupAppFn(processName, bundleId);

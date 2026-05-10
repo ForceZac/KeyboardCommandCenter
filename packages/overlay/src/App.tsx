@@ -5,6 +5,7 @@ import { selectGroups, capGroup } from './utils/contentSelection';
 import { getPlatform } from './utils/platform';
 import { AppName } from './components/AppName';
 import { ContextGroup } from './components/ContextGroup';
+import { NoDetection } from './components/NoDetection';
 import { NoShortcuts } from './components/NoShortcuts';
 
 // Resolved once at module load — stable across renders, avoids navigator reads in JSX.
@@ -30,6 +31,14 @@ export function App() {
     // Defensive renderer-level click-through; OS-level pass-through is set by TASK-0017.
     pointerEvents: 'none' as const,
   };
+
+  if (status === 'no-detection') {
+    return (
+      <div style={containerStyle}>
+        <NoDetection />
+      </div>
+    );
+  }
 
   if (status === 'unrecognized') {
     return (
