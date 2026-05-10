@@ -1131,3 +1131,12 @@
 - did: started run — claimed DEV_LOCK
 - task: TBD (checking state — no PAUSE, no lock, proceeding)
 - status: in-progress
+
+## 2026-05-10 01:44 ET DEVELOPER
+- did: picked TASK-0014 (Reconcile Goal 4 Stubs). Wrote 2-slice plan and TRD — lookupApp real lookup (byBundleId-first then byProcess normalized), active-window real wrapper (loadNativeModule + createActiveWindowDetector factory + getActiveWindow singleton). Opened draft PR #12. Moved task to In Progress. Woke TRD_PAUSE removed.
+- task: TASK-0014
+- PR: #12
+- trd: written — awaiting-review
+- tests: n/a (TRD phase only — 49 tests currently failing on main)
+- metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=0 | dev_idle=0
+- next: TRD Watcher reviews TRD for TASK-0014; once approved, Developer resumes to build (Slice 1: lookupApp, Slice 2: active-window wrapper)

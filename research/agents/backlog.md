@@ -33,20 +33,6 @@ Task IDs are monotonic. The Project Manager picks the next number.
 
 _(Project Manager keeps 2–3 tasks here at all times.)_
 
-### TASK-0014: Reconcile Goal 4 Stubs — process-map.ts & active-window.ts
-- **Goal:** Goal 4 — Active Window Process Detection
-- **PRD:** research/agents/prds/goal-04-process-detection.md
-- **Scope:** Implement the real `lookupApp()` function in process-map.ts (read from process-map.json, perform byProcess + byBundleId lookup with normalization and .exe stripping) and the real `loadNativeModule()` + `createActiveWindowDetector()` in active-window.ts (TypeScript wrapper for the kcc-native .node binary). Both files are stubs on main — the real implementations were written in PR #11 (TASK-0011) but correctly reverted as out-of-scope. 49 pre-existing tests fail on main because of these stubs. NOT in scope: modifying process-map.json data, changing detection polling service behavior, changing tray submenu behavior, new features — only making existing tests pass.
-- **Acceptance:**
-  - All 40 pre-existing lookupApp tests in process-map pass
-  - All 9 pre-existing active-window tests pass
-  - DetectionService resolves real app slugs via lookupApp()
-  - No regressions in existing passing tests
-- **PR:**
-- **Branch:**
-- **TRD:**
-- **Notes:** Addresses PROP-0003 and PROP-0004. The implementations were already written once in PR #11 and reverted — the developer can reference that commit for the exact code. This must ship before Goal 5 tasks so detection actually works end-to-end.
-
 ### TASK-0012: Shortcut Data IPC Layer & Prefetch
 - **Goal:** Goal 5 — Shortcut Panel UI (Desktop)
 - **PRD:** research/agents/prds/goal-05-shortcut-panel-ui.md
@@ -88,6 +74,20 @@ _(Project Manager keeps 2–3 tasks here at all times.)_
 ## In Progress
 
 _(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
+
+### TASK-0014: Reconcile Goal 4 Stubs — process-map.ts & active-window.ts
+- **Goal:** Goal 4 — Active Window Process Detection
+- **PRD:** research/agents/prds/goal-04-process-detection.md
+- **Scope:** Implement the real `lookupApp()` function in process-map.ts (read from process-map.json, perform byProcess + byBundleId lookup with normalization and .exe stripping) and the real `loadNativeModule()` + `createActiveWindowDetector()` in active-window.ts (TypeScript wrapper for the kcc-native .node binary). Both files are stubs on main — the real implementations were written in PR #11 (TASK-0011) but correctly reverted as out-of-scope. 49 pre-existing tests fail on main because of these stubs. NOT in scope: modifying process-map.json data, changing detection polling service behavior, changing tray submenu behavior, new features — only making existing tests pass.
+- **Acceptance:**
+  - All 40 pre-existing lookupApp tests in process-map pass
+  - All 9 pre-existing active-window tests pass
+  - DetectionService resolves real app slugs via lookupApp()
+  - No regressions in existing passing tests
+- **PR:** #12
+- **Branch:** goals/14-reconcile-goal4-stubs
+- **TRD:** research/plans/goals/14-reconcile-goal4-stubs-trd.md — awaiting-review
+- **Notes:** Addresses PROP-0003 and PROP-0004. The implementations were already written once in PR #11 and reverted — the developer can reference that commit for the exact code. This must ship before Goal 5 tasks so detection actually works end-to-end.
 
 ## In Review
 
