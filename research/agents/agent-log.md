@@ -1,5 +1,11 @@
 <!-- Agent log. Append-only. Agents read the last 75 lines before acting. Log Trim archives entries older than 48h into agent-log-archive-YYYY-MM.md. -->
 
+## 2026-05-10 01:50 ET TRD-WATCHER
+- did: reviewed TRD for TASK-0014 (Reconcile Goal 4 Stubs — process-map.ts & active-window.ts)
+- decision: approved
+- key finding: tight reconciliation scope, both implementations pre-validated in PR #11, 49 existing tests serve as complete test plan, bundleId-first and factory pattern correct per prior TRD decisions
+- metrics: task=TASK-0014 | decision=approved
+
 ## 2026-05-10 01:37 ET REVIEWER
 - did: reviewed PR #11 (TASK-0011 — Tray "Recent Apps" Submenu, round 2)
 - decision: approved (posted as comment — GitHub self-review restriction, same precedent as PR #8/9/10)

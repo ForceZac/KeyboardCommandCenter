@@ -86,7 +86,7 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
   - No regressions in existing passing tests
 - **PR:** #12
 - **Branch:** goals/14-reconcile-goal4-stubs
-- **TRD:** research/plans/goals/14-reconcile-goal4-stubs-trd.md — awaiting-review
+- **TRD:** research/plans/goals/14-reconcile-goal4-stubs-trd.md — approved
 - **Notes:** Addresses PROP-0003 and PROP-0004. The implementations were already written once in PR #11 and reverted — the developer can reference that commit for the exact code. This must ship before Goal 5 tasks so detection actually works end-to-end.
 
 ## In Review
