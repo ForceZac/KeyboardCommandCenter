@@ -2,8 +2,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 
-// Mock next-auth/react before importing the component
-const mockSignOut = vi.fn();
+// vi.hoisted ensures mockSignOut is defined before vi.mock's factory runs
+// (vi.mock is hoisted to the top of the file before any const/let initializations)
+const { mockSignOut } = vi.hoisted(() => ({ mockSignOut: vi.fn() }));
 let mockSession: { data: { user: { name?: string; email?: string; image?: string } } | null } = {
   data: null,
 };
