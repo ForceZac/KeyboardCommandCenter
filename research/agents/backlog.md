@@ -52,6 +52,10 @@ _(Project Manager keeps 2–3 tasks here at all times.)_
 - **TRD:**
 - **Notes:** Second Goal 5 task — builds the visual layer on top of the data plumbing from TASK-0012. Depends on TASK-0012 shipping first (provides `getShortcutsForApp()` via preload). Porting the visual key cap pattern from the web app's components (packages/web) is recommended but the desktop renderer uses vanilla HTML/CSS, not React/Tailwind — duplicate the CSS pattern rather than extracting to packages/core (per PRD recommendation).
 
+## In Progress
+
+_(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
+
 ### TASK-0012: Shortcut Data IPC Layer & Prefetch
 - **Goal:** Goal 5 — Shortcut Panel UI (Desktop)
 - **PRD:** research/agents/prds/goal-05-shortcut-panel-ui.md
@@ -66,14 +70,10 @@ _(Project Manager keeps 2–3 tasks here at all times.)_
   - Response time <50ms for cached apps (no DB round-trip)
   - Handler returns empty result for unknown app slugs (no crash)
   - No unhandled exceptions if database is unreachable
-- **PR:**
-- **Branch:**
-- **TRD:**
+- **PR:** (filled after draft PR is opened)
+- **Branch:** goals/12-shortcut-ipc-layer
+- **TRD:** research/plans/goals/12-shortcut-ipc-layer-trd.md — awaiting-review
 - **Notes:** First Goal 5 task — provides the data plumbing for the panel UI. Depends on Goal 4 shipping (detection service IPC provides the app slug). TASK-0011 is the last Goal 4 task; once it ships, this task is unblocked.
-
-## In Progress
-
-_(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
 
 ## In Review
 

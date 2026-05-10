@@ -1090,3 +1090,8 @@
 - tests: 34 pass / 49 fail (failures are pre-existing PROP-0003 identical to main; in-scope TASK-0011 tests all green)
 - metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=0 | dev_idle=0
 - next: Reviewer picks up PR #11 round 2; PM should create tasks for PROP-0003 (lookupApp reconciliation) and PROP-0004 (active-window.ts reconciliation)
+
+## 2026-05-10 02:21 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TASK-0012 (update below when known)
+- status: in-progress
