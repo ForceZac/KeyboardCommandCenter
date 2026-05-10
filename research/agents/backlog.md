@@ -33,22 +33,24 @@ Task IDs are monotonic. The Project Manager picks the next number.
 
 _(Project Manager keeps 2–3 tasks here at all times.)_
 
-### TASK-0011: Tray "Recent Apps" Submenu
-- **Goal:** Goal 4 — Active Window Process Detection
-- **PRD:** research/agents/prds/goal-04-process-detection.md
-- **Scope:** Add a "Recent Apps" submenu to the existing Electron tray context menu that displays the last 5 unique detected applications (PRD Flow 2). Each entry shows the app's display name; clicking an entry opens the shortcut panel pre-loaded with that app's shortcuts (sends the app slug to the renderer via IPC). The submenu queries the in-memory recent-apps list exposed by the polling service (TASK-0010) via IPC. When detection is disabled or no apps have been detected yet, the submenu shows a single disabled item ("No recent apps" / "Detection off"). The submenu rebuilds on each tray menu open to reflect the latest state. NOT in scope: the polling service or detection logic (TASK-0010), native module (TASK-0009), process mapping (TASK-0008), shortcut panel content or layout (Goal 5), overlay (Goal 6), Linux support (Goal 10), persisting the recent apps list across restarts.
+### TASK-0013: Panel Content Renderer & Shortcut Key Caps
+- **Goal:** Goal 5 — Shortcut Panel UI (Desktop)
+- **PRD:** research/agents/prds/goal-05-shortcut-panel-ui.md
+- **Scope:** Build the panel content renderer that displays shortcut data fetched via the IPC layer (TASK-0012). When the panel opens, render an app header with the detected app name, then list shortcuts grouped by context/scope (e.g. "General", "Editor", "Terminal", "Debug"). Each shortcut row shows the command description on the left and a visual key cap rendering on the right (styled `<kbd>` elements with monospace font and visual separators for chord sequences, matching the web app's KeyCap/KeyCombo pattern). Detect the user's OS at runtime and display platform-appropriate modifier keys (Cmd on Mac, Ctrl on Windows — no manual toggle needed on desktop). Context group headings should be collapsible. NOT in scope: search/filter input (separate task), fallback states for no-detection/unrecognized/no-shortcuts (separate task), recent apps fallback list, keyboard navigation beyond Escape to dismiss (existing behavior), overlay mode (Goal 6), user accounts (Goal 7), app icons (text-only for v1), theming/dark mode, Linux (Goal 10).
 - **Acceptance:**
-  - Tray context menu includes a "Recent Apps" submenu between "Open" and "Settings"
-  - Submenu lists up to 5 recently-detected apps by display name, most recent first
-  - Clicking an app entry opens the shortcut panel with that app's shortcuts pre-loaded
-  - When no apps have been detected, submenu shows a disabled "No recent apps" item
-  - When detection is disabled in settings, submenu shows a disabled "Detection off" item
-  - Submenu updates on each tray menu open (reflects current session state)
-  - No crashes if the polling service has not started or returns an empty list
+  - Panel displays shortcut data for the detected app, grouped by context/scope
+  - App header shows the detected app's display name at the top of the panel
+  - Shortcut rows show command description (left) and key cap rendering (right)
+  - Key caps use styled `<kbd>` elements with visual separators for chord sequences
+  - Platform-appropriate modifiers display correctly (Cmd on Mac, Ctrl on Windows)
+  - Context/scope groups render with clear headings that are collapsible
+  - Panel content renders within 100ms using prefetched data from TASK-0012
+  - No scroll jank on apps with 200+ shortcuts (virtualize or lazy-render if needed)
+  - No unhandled errors if IPC returns empty or malformed data
 - **PR:**
 - **Branch:**
 - **TRD:**
-- **Notes:** Depends on TASK-0010 (polling service provides the recent-apps list via IPC). This is the final piece of Goal 4's user-facing definition of done (PRD Flow 2: recently-detected apps in tray).
+- **Notes:** Second Goal 5 task — builds the visual layer on top of the data plumbing from TASK-0012. Depends on TASK-0012 shipping first (provides `getShortcutsForApp()` via preload). Porting the visual key cap pattern from the web app's components (packages/web) is recommended but the desktop renderer uses vanilla HTML/CSS, not React/Tailwind — duplicate the CSS pattern rather than extracting to packages/core (per PRD recommendation).
 
 ### TASK-0012: Shortcut Data IPC Layer & Prefetch
 - **Goal:** Goal 5 — Shortcut Panel UI (Desktop)
@@ -76,6 +78,23 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
 ## In Review
 
 _(Developer moves tasks here when the draft PR is marked ready.)_
+
+### TASK-0011: Tray "Recent Apps" Submenu
+- **Goal:** Goal 4 — Active Window Process Detection
+- **PRD:** research/agents/prds/goal-04-process-detection.md
+- **Scope:** Add a "Recent Apps" submenu to the existing Electron tray context menu that displays the last 5 unique detected applications (PRD Flow 2). Each entry shows the app's display name; clicking an entry opens the shortcut panel pre-loaded with that app's shortcuts (sends the app slug to the renderer via IPC). The submenu queries the in-memory recent-apps list exposed by the polling service (TASK-0010) via IPC. When detection is disabled or no apps have been detected yet, the submenu shows a single disabled item ("No recent apps" / "Detection off"). The submenu rebuilds on each tray menu open to reflect the latest state. NOT in scope: the polling service or detection logic (TASK-0010), native module (TASK-0009), process mapping (TASK-0008), shortcut panel content or layout (Goal 5), overlay (Goal 6), Linux support (Goal 10), persisting the recent apps list across restarts.
+- **Acceptance:**
+  - Tray context menu includes a "Recent Apps" submenu between "Open" and "Settings"
+  - Submenu lists up to 5 recently-detected apps by display name, most recent first
+  - Clicking an app entry opens the shortcut panel with that app's shortcuts pre-loaded
+  - When no apps have been detected, submenu shows a disabled "No recent apps" item
+  - When detection is disabled in settings, submenu shows a disabled "Detection off" item
+  - Submenu updates on each tray menu open (reflects current session state)
+  - No crashes if the polling service has not started or returns an empty list
+- **PR:** #11
+- **Branch:** goals/11-tray-recent-apps
+- **TRD:** research/plans/goals/11-tray-recent-apps-trd.md — approved
+- **Notes:** Depends on TASK-0010 (polling service provides the recent-apps list via IPC). This is the final piece of Goal 4's user-facing definition of done (PRD Flow 2: recently-detected apps in tray). Round 2: out-of-scope implementations reverted (real lookupApp → stub, active-window.ts → stub). PROP-0003 and PROP-0004 filed for dedicated reconciliation tasks.
 
 ## Changes Requested
 
