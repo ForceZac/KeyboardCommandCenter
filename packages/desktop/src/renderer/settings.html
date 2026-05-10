@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline';"
+    />
+    <title>Settings — Keyboard Command Center</title>
+  </head>
+  <body>
+    <div id="settings">
+      <h1>Settings</h1>
+
+      <section class="setting-row">
+        <div class="setting-label">
+          <span class="label-text">Global Hotkey</span>
+          <span id="hotkey-display" class="value-display"></span>
+        </div>
+        <div class="setting-controls">
+          <button id="change-hotkey-btn">Change Hotkey</button>
+          <span id="hotkey-feedback" class="feedback" aria-live="polite"></span>
+        </div>
+        <p id="recording-hint" class="hint hidden">Press any key combination…</p>
+      </section>
+
+      <section class="setting-row">
+        <div class="setting-label">
+          <span class="label-text">Start on Login</span>
+        </div>
+        <div class="setting-controls">
+          <label class="toggle">
+            <input type="checkbox" id="login-startup-toggle" />
+            <span class="toggle-track"></span>
+          </label>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>
