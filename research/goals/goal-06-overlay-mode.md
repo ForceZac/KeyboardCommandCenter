@@ -28,3 +28,23 @@ A complete React renderer in `packages/overlay` that displays a compact shortcut
 
 ### Reviewer notes
 PR #16 includes TASK-0015's desktop search changes in its diff (branch was built on top of `goals/15-panel-search-filter` before PR #15 landed on main) — merge PR #15 first, then PR #16. Round 2 added ShortcutRow platform tests (Windows path, no-match fallback, empty-array dash), a Compact-mode App-level test, and `pointerEvents: 'none'` on the container. The `useOverlayPrefs` hook has no `.catch()` on the `getOverlayPrefs()` promise — safe because defaults are applied on mount, but a follow-up `.catch(console.error)` would be tidy.
+
+## TASK-0017: Overlay BrowserWindow & Toggle Hotkey
+**PR:** #18 | **Branch:** goals/17-overlay-browser-window | **Approved:** 2026-05-10
+
+### What shipped
+`OverlayWindowManager` in `packages/desktop/src/overlay-window.ts` — a lazily-created Electron BrowserWindow (frameless, transparent, `alwaysOnTop: 'floating'`, full click-through via `setIgnoreMouseEvents`) that implements the `OverlayController` interface and manages the overlay global hotkey via `globalShortcut`. An `overlay-preload.ts` contextBridge script exposes `window.kccOverlay` (`onAppChanged`, `getShortcutsForApp`, `getOverlayPrefs`) to the overlay renderer. `main.ts` was extended to instantiate `OverlayWindowManager`, register it as the controller, forward detection events to `sendToRenderer`, and clean up in `before-quit`. The panel window's alwaysOnTop level was raised to `'pop-up-menu'` in `window.ts` to guarantee it sits above the overlay's `'floating'` level on both platforms.
+
+### Key technical decisions
+- **Lazy BrowserWindow creation:** window is created on first `show()`, not at startup — keeps idle memory near zero when overlay is disabled (the default). Meets the PRD <20MB target.
+- **Vite overlay renderer via `loadFile()`:** avoids adding a third webpack renderer entry; TASK-0018 already uses Vite for the overlay package, so `loadFile()` keeps build toolchains separate. Dev mode checks `OVERLAY_DEV_URL` env var first.
+- **Overlay hotkey managed directly by `OverlayWindowManager`:** `HotkeyManager` is panel-specific; rather than generalizing it, the overlay manages its own `globalShortcut` lifecycle (register/unregister/re-register on hotkey change). The two hotkeys are independent.
+- **Multi-monitor via cursor position:** detection payload doesn't include active window bounds; `screen.getDisplayNearestPoint(screen.getCursorScreenPoint())` is used as an accurate approximation for the overwhelmingly common case. A proposals.md entry flags extending the native module for exact bounds in a follow-on task.
+
+### Codebase areas touched
+- **Backend (main process):** `packages/desktop/src/overlay-window.ts` (new — OverlayWindowManager, 26 unit tests), `packages/desktop/src/overlay-preload.ts` (new — contextBridge bridge, 9 unit tests), `packages/desktop/src/overlay-controller.ts` (new — OverlayController interface + registry), `packages/desktop/src/main.ts` (extended — instantiation, registerOverlayController, detection forwarding, before-quit), `packages/desktop/src/window.ts` (panel alwaysOnTop → 'pop-up-menu')
+- **Config:** `packages/desktop/forge.config.js` (overlay entry + extraResources `to: 'overlay/dist'`), `globals.d.ts`, `vitest.config.ts`, `tsconfig.tests.json`
+- **Tests:** 181 total (181/181 pass). 26 new overlay-window tests (positioning presets, show/hide state, hotkey lifecycle, sendToRenderer guards), 9 new overlay-preload tests (API shape, subscribe/unsubscribe cycle, event arg stripping, IPC channel coverage).
+
+### Reviewer notes
+Merge PR #18 (TASK-0017) before PR #17 (TASK-0019) — both touch `settings.ts` and `overlay-controller.ts`; TASK-0017's versions are canonical and include all wiring. A non-blocking observation from round 1: the overlay hotkey is always registered at startup regardless of `overlay.enabled` (`setEnabled(false)` later unregisters it) — restart-after-disable re-registers it briefly. Minor UX inconsistency, not a blocker for this task's acceptance criteria.

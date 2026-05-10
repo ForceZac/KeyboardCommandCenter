@@ -1,5 +1,19 @@
 <!-- Agent log. Append-only. Agents read the last 75 lines before acting. Log Trim archives entries older than 48h into agent-log-archive-YYYY-MM.md. -->
 
+## 2026-05-10 11:21 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TBD (investigating backlog/branch state)
+- status: in-progress
+
+## 2026-05-10 11:29 ET DEVELOPER
+- did: wrote plan + TRD for TASK-0021 (Auth Schema & NextAuth Integration); pushed branch goals/21-auth-schema-nextauth; opened draft PR #21. Restored stash@{0} agent tracking files to working tree (backlog, log, project_context, goal summaries). TASK-0020 (Changes Requested) still blocked on TASK-0017 merge — PR #19 already in draft, nothing else to do this run. In-flight cap = 0 (In Review empty). Picked TASK-0021 as top Ready task.
+- task: TASK-0021
+- PR: #21
+- trd: written — awaiting-review
+- tests: skipped (TRD phase — no code written)
+- metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=1 | dev_idle=0
+- next: TRD Watcher reviews TRD for TASK-0021; Developer resumes build phase once TRD is approved
+
 ## 2026-05-10 06:31 ET DEVELOPER
 - did: no-op — TASK-0019 In Progress (confirmed: branch goals/19-overlay-settings-ui + PR #17 exist); TRD awaiting-review; corrected backlog inconsistency (task correctly In Progress on feature branch; main hasn't merged yet — expected)
 - task: TASK-0019
@@ -1354,3 +1368,54 @@
 - tests: skipped (TRD phase — no feature code written)
 - metrics: run_type=no-op | reason=TRD awaiting reviewer approval — TASK-0019 | dev_idle=3
 - next: TRD Watcher reviews TRD for TASK-0019; Developer resumes once TRD is approved
+
+## 2026-05-10 10:58 ET DEVELOPER
+- did: started TASK-0016 (Panel Fallback States) — wrote plan + TRD, pushed branch goals/16-panel-fallback-states, opened draft PR #20. Also marked PR #19 (TASK-0020) as draft — Changes Requested fix requires TASK-0017 merge + rebase, not yet possible.
+- task: TASK-0016
+- PR: #20
+- trd: written — awaiting-review
+- tests: skipped (TRD phase — no feature code written)
+- metrics: run_type=productive | commits=1 | trd_cycles=0 | dev_idle=0
+- next: TRD Watcher reviews TRD for TASK-0016; Developer resumes once TRD is approved and builds fallback.ts, index.ts updates, DOM additions, styles, unit + integration tests
+
+## 2026-05-10 11:01 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TBD (update below when known)
+- status: in-progress
+
+## 2026-05-10 11:04 ET PROJECT-MANAGER
+- did: created TASK-0023 (Favorites Page & Collection Tabs — Web) for Goal 7. Ready queue now at 3 (TASK-0021, TASK-0022, TASK-0023). Skipped roadmap health check (did last run).
+- created: TASK-0023
+- moved: none
+- prd gaps: Goal 9 (Auto-Update & Distribution), Goal 10 (Linux Support) — no PRDs exist. Goal 8 gap resolved (PRD now exists).
+- roadmap check: skipped (did last run — was solid)
+- proposals added: 0
+- stale/blocked: TASK-0017 (PR #18) and TASK-0019 (PR #17) approved but still OPEN — need /merge authorization from owner. TASK-0020 blocked on TASK-0017 merge to rebase. No items past 3-day staleness threshold yet (all approved today).
+- drift: project_context.md still outdated (says Goal 1 active, actual is Goal 5/6) — flagged last run, still not fixed.
+- metrics: tasks_created=1 | tasks_moved=0 | prd_gaps=2 | roadmap_issues=0
+- next: Ready queue healthy at 3. Watch for TASK-0017/TASK-0019 merges to unblock TASK-0020. Goal 7 has 3 tasks queued — remaining flows (collections CRUD, desktop auth, offline sync) can be tasked as developer approaches Goal 7. Goal 9 PRD needed from Product Manager.
+
+## 2026-05-10 11:07 ET DEVELOPER
+- did: built TASK-0016 in full — all three panel fallback states (no-detection, unrecognized app, no shortcuts). New fallback.ts rendering module, extended handleAppChanged with fallback routing, updated index.html/index.ts/app.css. 33 new tests (20 unit + 13 jsdom integration). Marked PR #20 ready.
+- task: TASK-0016
+- PR: #20
+- trd: approved → built
+- tests: green — 179/179 pass; tsc clean on all three tsconfigs
+- metrics: run_type=productive | commits=1 | tests_added=33 | trd_cycles=0
+- next: Reviewer picks up PR #20; TASK-0020 still blocked on TASK-0017 merge (PR #18 owner-gated)
+
+## 2026-05-10 11:12 ET DEVELOPER
+- did: no-op — in-flight cap reached (TASK-0016, PR #20 In Review); TASK-0020 Changes Requested still blocked on TASK-0017 merge (PR #18 approved, owner-gated)
+- task: TASK-0020 (unblockable), TASK-0016 (In Review)
+- PR: #20 (In Review), #19 (draft, awaiting TASK-0017 merge)
+- trd: n/a
+- tests: skipped
+- metrics: run_type=no-op | reason=in-flight cap — goals/16-panel-fallback-states is In Review | dev_idle=1
+- next: Owner /merge on PR #18 (TASK-0017) unblocks rebase of PR #19 (TASK-0020). PR #20 (TASK-0016) needs reviewer pickup.
+
+## 2026-05-10 11:20 ET REVIEWER
+- did: reviewed PR #20 (TASK-0016 — Panel Fallback States) round 1
+- decision: approved
+- standards checked: frontend/renderer conventions (pure functions, HTML-string output, no DOM side-effects), separation of concerns (packages/desktop only, no cross-package imports), DRY (escHtml reuse, no new IPC channels), security (XSS escaping verified, tested), scope (all three fallback states, no out-of-scope additions), tests (20 unit + 13 jsdom integration; all pass 179/179), TRD match (all components match approved TRD exactly)
+- metrics: run_type=productive | pr=PR-20 | round=1 | decision=approved | tests_run=pass
+- next: Owner merges PR #20 (TASK-0016). Goal 5 is now complete. TASK-0020 (PR #19) still blocked on TASK-0017 merge. Ready queue: TASK-0021, TASK-0022, TASK-0023 (Goal 7).
