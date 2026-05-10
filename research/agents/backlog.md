@@ -33,21 +33,6 @@ Task IDs are monotonic. The Project Manager picks the next number.
 
 _(Project Manager keeps 2–3 tasks here at all times.)_
 
-### TASK-0008: Process-to-App Mapping Table
-- **Goal:** Goal 4 — Active Window Process Detection
-- **PRD:** research/agents/prds/goal-04-process-detection.md
-- **Scope:** Create a static JSON mapping file (e.g. `packages/desktop/src/process-map.json`) that maps process names, executable names, and macOS bundle identifiers to application slugs in the shortcut database. Cover all 50+ apps in the existing seed data. Handle common process name variations per app (e.g. `code` / `Code.exe` / `Code Helper` → `vs-code`; `Photoshop` / `Adobe Photoshop 2024` → `photoshop`). Include a TypeScript module that loads the map and exports a `lookupApp(processName: string, bundleId?: string): string | null` function for use by the detection service. NOT in scope: Rust native module, active window detection, polling service, tray integration, detection settings UI, Linux process names.
-- **Acceptance:**
-  - JSON mapping file exists with entries for all 50+ seeded apps
-  - Each entry maps at least one process name or bundle ID to a database app slug
-  - Common aliases and variations are covered (verified against top 10 apps: VS Code, Chrome, Photoshop, Figma, Slack, Terminal, Finder/Explorer, Word, Excel, Spotify)
-  - TypeScript `lookupApp()` function returns correct slugs for test inputs and `null` for unrecognized process names
-  - File is loadable at runtime by the Electron main process without external dependencies
-- **PR:**
-- **Branch:**
-- **TRD:**
-- **Notes:** Foundational for TASK-0009 and the rest of Goal 4. Does not depend on Goal 3 Electron infrastructure — can be started immediately. App slugs should match existing database entries from seed data.
-
 ### TASK-0009: Rust Native Module for Active Window Detection
 - **Goal:** Goal 4 — Active Window Process Detection
 - **PRD:** research/agents/prds/goal-04-process-detection.md
@@ -69,6 +54,21 @@ _(Project Manager keeps 2–3 tasks here at all times.)_
 ## In Progress
 
 _(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
+
+### TASK-0008: Process-to-App Mapping Table
+- **Goal:** Goal 4 — Active Window Process Detection
+- **PRD:** research/agents/prds/goal-04-process-detection.md
+- **Scope:** Create a static JSON mapping file (e.g. `packages/desktop/src/process-map.json`) that maps process names, executable names, and macOS bundle identifiers to application slugs in the shortcut database. Cover all 50+ apps in the existing seed data. Handle common process name variations per app (e.g. `code` / `Code.exe` / `Code Helper` → `vs-code`; `Photoshop` / `Adobe Photoshop 2024` → `photoshop`). Include a TypeScript module that loads the map and exports a `lookupApp(processName: string, bundleId?: string): string | null` function for use by the detection service. NOT in scope: Rust native module, active window detection, polling service, tray integration, detection settings UI, Linux process names.
+- **Acceptance:**
+  - JSON mapping file exists with entries for all 50+ seeded apps
+  - Each entry maps at least one process name or bundle ID to a database app slug
+  - Common aliases and variations are covered (verified against top 10 apps: VS Code, Chrome, Photoshop, Figma, Slack, Terminal, Finder/Explorer, Word, Excel, Spotify)
+  - TypeScript `lookupApp()` function returns correct slugs for test inputs and `null` for unrecognized process names
+  - File is loadable at runtime by the Electron main process without external dependencies
+- **PR:** #8
+- **Branch:** goals/8-process-map
+- **TRD:** research/plans/goals/8-process-map-trd.md — approved
+- **Notes:** Foundational for TASK-0009 and the rest of Goal 4. Does not depend on Goal 3 Electron infrastructure — can be started immediately. App slugs should match existing database entries from seed data.
 
 ## In Review
 
