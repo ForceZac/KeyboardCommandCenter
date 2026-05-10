@@ -4,9 +4,11 @@ import path from 'path';
 export class TrayManager {
   private tray: Tray | null = null;
   private onOpenPanel: () => void;
+  private onOpenSettings: () => void;
 
-  constructor(onOpenPanel: () => void) {
+  constructor(onOpenPanel: () => void, onOpenSettings: () => void) {
     this.onOpenPanel = onOpenPanel;
+    this.onOpenSettings = onOpenSettings;
   }
 
   create(): void {
@@ -28,6 +30,10 @@ export class TrayManager {
       {
         label: 'Open Keyboard Command Center',
         click: () => this.onOpenPanel(),
+      },
+      {
+        label: 'Settings',
+        click: () => this.onOpenSettings(),
       },
       { type: 'separator' },
       {

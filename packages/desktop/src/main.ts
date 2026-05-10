@@ -5,6 +5,8 @@ app.disableHardwareAcceleration();
 import { TrayManager } from './tray';
 import { PanelWindowManager } from './window';
 import { HotkeyManager, bindHotkeyLifecycle } from './hotkey';
+import { SettingsWindowManager } from './settings-window';
+import { getLoginStartup, getHotkey, setLoginStartup } from './settings';
 // Validate @kcc/core cross-package dependency. IApplication and IShortcut types will be
 // used meaningfully in Goal 5 when real shortcut data is displayed in the panel.
 import type { IApplication } from '@kcc/core';
@@ -20,6 +22,7 @@ if (!isFirstInstance) {
 let trayManager: TrayManager;
 let panelManager: PanelWindowManager;
 let hotkeyManager: HotkeyManager;
+let settingsManager: SettingsWindowManager;
 
 app.whenReady().then(() => {
   // Prevent the app from showing a dock icon on macOS — tray-only app.
@@ -28,21 +31,52 @@ app.whenReady().then(() => {
   }
 
   panelManager = new PanelWindowManager();
+  settingsManager = new SettingsWindowManager();
 
-  trayManager = new TrayManager(() => {
-    panelManager.show();
-  });
+  trayManager = new TrayManager(
+    () => { panelManager.show(); },
+    () => { settingsManager.show(); },
+  );
   trayManager.create();
 
+  // HotkeyManager reads the persisted accelerator from electron-store on construction.
   hotkeyManager = new HotkeyManager(() => {
     panelManager.toggle();
   });
   hotkeyManager.register();
   bindHotkeyLifecycle(hotkeyManager);
 
-  // IPC: renderer sends 'hide-panel' when Escape is pressed.
+  // Apply the saved login startup preference on every launch.
+  app.setLoginItemSettings({ openAtLogin: getLoginStartup() });
+
+  // IPC: panel renderer sends 'hide-panel' when Escape is pressed.
   ipcMain.on('hide-panel', () => {
     panelManager.hide();
+  });
+
+  // IPC: settings renderer — get current settings.
+  ipcMain.handle('settings:get', () => ({
+    hotkey: getHotkey(),
+    loginStartup: getLoginStartup(),
+  }));
+
+  // IPC: settings renderer — change global hotkey binding.
+  ipcMain.handle('settings:set-hotkey', (_event, accelerator: string) => {
+    const result = hotkeyManager.changeBinding(accelerator);
+    if (result.success) {
+      return { success: true, conflict: false, message: `Hotkey set to ${accelerator}` };
+    }
+    return {
+      success: false,
+      conflict: true,
+      message: `"${accelerator}" is already in use by another app.`,
+    };
+  });
+
+  // IPC: settings renderer — toggle login startup preference.
+  ipcMain.handle('settings:set-login-startup', (_event, enabled: boolean) => {
+    setLoginStartup(enabled);
+    app.setLoginItemSettings({ openAtLogin: enabled });
   });
 
   // Log idle memory usage after everything has settled.

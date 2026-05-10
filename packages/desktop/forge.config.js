@@ -32,6 +32,14 @@ module.exports = {
                 js: './src/preload.ts',
               },
             },
+            {
+              html: './src/renderer/settings.html',
+              js: './src/renderer/settings.ts',
+              name: 'settings_window',
+              preload: {
+                js: './src/settings-preload.ts',
+              },
+            },
           ],
         },
       },
