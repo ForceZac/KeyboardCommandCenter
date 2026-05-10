@@ -51,9 +51,30 @@ _(Project Manager keeps 2–3 tasks here at all times.)_
 - **TRD:**
 - **Notes:** Third Goal 5 task — adds search/filter on top of the renderer from TASK-0013. Depends on TASK-0013 shipping first (provides the panel content and grouped shortcut list to filter against). See PRD Flow 2 for the full UX specification.
 
+### TASK-0016: Panel Fallback States — No Detection, Unrecognized App, No Shortcuts
+- **Goal:** Goal 5 — Shortcut Panel UI (Desktop)
+- **PRD:** research/agents/prds/goal-05-shortcut-panel-ui.md
+- **Scope:** Handle all three fallback states in the panel renderer. (1) No app detected: display "No app detected" message with brief explanation, plus a list of recently-detected apps from the detection service that the user can click to load shortcuts manually. (2) Unrecognized app: display "Shortcuts not available for [Process Name]", plus recent apps list. (3) Recognized app with no shortcuts in the database: display "No shortcuts found for [App Name]", plus recent apps list. The recent apps list reuses data from the detection service's app history (exposed via existing IPC). Each recent app entry is clickable to load that app's shortcuts in the panel. NOT in scope: search/filter input (TASK-0015), overlay mode (Goal 6), user accounts (Goal 7), keyboard navigation within the fallback list (future task).
+- **Acceptance:**
+  - Panel shows "No app detected" message when detection returns no active app
+  - Panel shows "Shortcuts not available for [Process Name]" when detected app is not in the database
+  - Panel shows "No shortcuts found for [App Name]" when recognized app has zero shortcuts
+  - Recent apps list displays up to 5 recently-detected apps in all three fallback states
+  - Clicking a recent app loads that app's shortcuts in the panel
+  - Fallback states render within 100ms (same perf target as normal panel content)
+  - No unhandled errors for edge cases (empty detection history, all recent apps unrecognized)
+- **PR:**
+- **Branch:**
+- **TRD:**
+- **Notes:** Fourth Goal 5 task — covers PRD Flows 3 and 4. Depends on TASK-0013 (panel content renderer) and TASK-0012 (IPC data layer). Should be buildable once TASK-0013 ships.
+
 ## In Progress
 
 _(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
+
+## In Review
+
+_(Developer moves tasks here when the draft PR is marked ready.)_
 
 ### TASK-0013: Panel Content Renderer & Shortcut Key Caps
 - **Goal:** Goal 5 — Shortcut Panel UI (Desktop)
@@ -71,12 +92,8 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
   - No unhandled errors if IPC returns empty or malformed data
 - **PR:** #14
 - **Branch:** goals/13-panel-content-renderer
-- **TRD:** research/plans/goals/13-panel-content-renderer-trd.md — awaiting-review
+- **TRD:** research/plans/goals/13-panel-content-renderer-trd.md — approved
 - **Notes:** Second Goal 5 task — builds the visual layer on top of the data plumbing from TASK-0012. Depends on TASK-0012 shipping first (provides `getShortcutsForApp()` via preload). Porting the visual key cap pattern from the web app's components (packages/web) is recommended but the desktop renderer uses vanilla HTML/CSS, not React/Tailwind — duplicate the CSS pattern rather than extracting to packages/core (per PRD recommendation).
-
-## In Review
-
-_(Developer moves tasks here when the draft PR is marked ready.)_
 
 ## Changes Requested
 
