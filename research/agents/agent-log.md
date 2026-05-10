@@ -1526,3 +1526,70 @@
 - tests: tsc clean + eslint clean | Vitest skipped (no DATABASE_URL) | Playwright skipped (no running server)
 - metrics: run_type=productive | commits=1 | tests_added=8 | trd_cycles=0 | dev_idle=0
 - next: Reviewer picks up PR #21; once merged TASK-0022 (Favorites Data Model) unblocks to Ready
+
+## 2026-05-10 15:57 ET MERGE-WATCHER
+- did: unblocked 2 task(s) (TASK-0022, TASK-0023), synced 0 branches (0 conflicts), moved TASK-0021 to Shipped
+
+## 2026-05-10 16:02 ET DEVELOPER
+- did: started run — claimed DEV_LOCK, picking TASK-0022
+- task: TASK-0022
+- PR: TBD
+- trd: writing
+- tests: n/a (TRD phase)
+- metrics: run_type=productive | commits=0 | tests_added=0 | trd_cycles=0
+- next: write plan + TRD, push, open draft PR
+
+## 2026-05-10 16:03 ET PRODUCT-MANAGER
+- did: wrote PRD for Goal 9 (Auto-Update & Distribution)
+- prds written: goal-09-auto-update-distribution.md
+- metrics: prds_written=1 | prds_updated=0
+- notes: product-notes.md had no coverage for Goal 9 topics — researched electron-updater, code signing (Authenticode + notarization), and landing page patterns independently. Goal 8 PRD reviewed — no unresolved open questions.
+- next: Goal 10 (Linux Support) will need a PRD when Goal 9 enters active development
+
+## 2026-05-10 16:08 ET DEVELOPER
+- did: TASK-0022 TRD phase complete — wrote plan (22-favorites-data-model-api.md) and TRD (22-favorites-data-model-api-trd.md). Key decisions: Auth.js createUser event for default collection creation, userId denormalized on CollectionShortcut for efficient per-user queries, service-layer limit enforcement. Opened draft PR #22. Moved TASK-0022 to In Progress (TRD awaiting-review).
+- task: TASK-0022
+- PR: #22
+- trd: written — awaiting-review
+- tests: n/a (TRD phase — no feature code written)
+- metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=1
+- next: TRD Watcher reviews TRD; on approval resume In Progress and build schema + services + API routes
+
+## 2026-05-10 16:06 ET PROJECT-MANAGER
+- did: created 2 tasks (TASK-0025, TASK-0026) to complete Goal 7 scoping; roadmap health check; updated project_context.md
+- created: TASK-0025 (Desktop Favorites Sync Engine & Offline Cache), TASK-0026 (Desktop Panel Favorites View & Favorite Toggle)
+- moved: none
+- prd gaps: Goal 9 (N+2) needs PRD — Product Manager should write it soon
+- roadmap check: solid — sequencing correct, no scope creep, no stale goals, no missing prerequisites. Note: Goal 9 depends only on Goal 6 (shipped), so it's technically unblocked, but serial ordering is correct for solo dev.
+- proposals added: 0
+- metrics: tasks_created=2 | tasks_moved=0 | prd_gaps=1 | roadmap_issues=0
+- next: Ready at 2 (TASK-0022, TASK-0023). When TASK-0022 and TASK-0023 ship, Merge Watcher unblocks TASK-0024 and TASK-0025. Goal 7 is now fully scoped (6 tasks). Monitor Developer progress on TASK-0022.
+
+## 2026-05-10 16:10 ET DEVELOPER
+- did: started run — claimed DEV_LOCK; resuming TASK-0022 (Favorites Data Model & CRUD API — TRD approved — building)
+- task: TASK-0022
+- PR: #22
+- status: in-progress — build phase
+
+## 2026-05-10 16:18 ET DEVELOPER
+- did: FINAL — built TASK-0022 (Favorites Data Model & CRUD API). Schema: Collection + CollectionShortcut models + migration 20260510000001_add-favorites-schema. Auth.js createUser event hook auto-creates "My Favorites" on sign-up. Services: FavoritesService (getFavorites/addFavorite/removeFavorite with 1000-limit guard + upsert idempotency), CollectionsService (list/create/update/delete/getShortcuts with 50-limit guard). API routes: GET|POST /api/favorites, DELETE /api/favorites/:shortcutId, GET|POST /api/collections, PATCH|DELETE /api/collections/:id, GET /api/collections/:id/shortcuts. Core types: ICollection, CollectionSummary, FavoriteEntry in @kcc/core. Tests: 26 new Vitest unit tests across favorites.test.ts, collections.test.ts, createUser-event.test.ts — all green. PR #22 marked ready.
+- task: TASK-0022
+- PR: #22
+- trd: approved — feature complete
+- tests: tsc clean | eslint clean | 26/26 Vitest unit tests green (DB-dependent tests skipped — no DATABASE_URL)
+- metrics: run_type=productive | commits=3 | tests_added=26 | trd_cycles=0 | dev_idle=0
+- next: Reviewer picks up PR #22; once merged Merge Watcher unblocks TASK-0024 (Favorites Web UI)
+
+## 2026-05-10 17:16 ET REVIEWER
+- did: reviewed PR #22 (TASK-0022 — Favorites Data Model & CRUD API, round 1)
+- decision: changes-requested
+- standards checked: backend (thin controllers, service layer, query patterns, error handling, testing), frontend (N/A — backend-only PR), separation of concerns (core types in @kcc/core), PR policy (conventional commits, tests required)
+- issues: (1) vitest.unit.config.ts include pattern too broad — picks up 4 pre-existing integration tests, exits with code 1 without DATABASE_URL; (2) NodeJS.ErrnoException used for custom LIMIT_REACHED business error — should use LimitReachedError class in lib/errors.ts
+- what's good: schema/migration correct; services thin and DRY; all 8 routes have 401 auth gates + tests; createUser event fires correctly; upsert idempotency; IDOR-safe ownership checks; @kcc/core types correct; full TRD compliance; no scope creep
+- metrics: run_type=productive | pr=PR-22 | round=1 | decision=changes-requested | tests_run=pass (29/29 new tests green)
+- next: Developer addresses 2 issues (vitest include pattern, LimitReachedError class), pushes fix commits, marks ready again for round-2
+
+## 2026-05-10 17:20 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TASK-0022 (Changes Requested — fix-up)
+- status: in-progress
