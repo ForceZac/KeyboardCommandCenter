@@ -1,5 +1,18 @@
 <!-- Agent log. Append-only. Agents read the last 75 lines before acting. Log Trim archives entries older than 48h into agent-log-archive-YYYY-MM.md. -->
 
+## 2026-05-09 20:41 ET REVIEWER
+- did: reviewed PR #7 (TASK-0007 — Settings Persistence & Login Startup Registration, round 1)
+- decision: approved (posted as comment — GitHub self-review restriction, same precedent as PRs #3/#5/#6)
+- standards checked: backend/electron-standards (thin IPC handlers, business logic in HotkeyManager, clean settings module), separation-of-concerns (packages/desktop isolation, two least-privilege preloads), security (contextIsolation+nodeIntegration, CSP header, contextBridge correct), PR policy (conventional commits, tsc clean), TRD compliance
+- tsc: clean (packages/desktop/tsconfig.json + tsconfig.renderer.json — both noEmit pass)
+- no E2E tests: TRD-approved exception (Playwright Electron infra not yet set up)
+- minor observations: (1) hotkey.ts:49-52 fallback re-registration has no success check — silent hotkey loss on double-fail edge case; (2) settings.ts renderer loadSettings error leaves UI in empty state
+- backlog: resolved merge conflict + moved TASK-0007 from In Review → Approved; TASK-0008+0009 retained in Ready
+- goal-summary: created research/goals/goal-03-desktop-app-shell.md with TASK-0006 + TASK-0007 sections
+- idle-reset: REV_IDLE → 0
+- metrics: run_type=productive | pr=PR-7 | round=1 | decision=approved | tests_run=tsc-clean (Electron E2E blocked — no runtime)
+- next: Zach merges PR #7; TASK-0007 moves to Shipped; Goal 3 user-facing DoD complete; TASK-0008/0009 queued for Goal 4
+
 ## 2026-05-09 15:51 ET REVIEWER
 - did: reviewed PR #3 (TASK-0003 — API Routes for Shortcut Data, round 1)
 - decision: changes-requested
@@ -539,3 +552,192 @@
 - tests: tsc clean ✅ | lint clean ✅ | E2E skipped (no dev server/DB in agent env)
 - metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=0
 - next: Reviewer picks up PR #5 for round 3 (scope: two one-liner fixes only)
+<<<<<<< Updated upstream
+=======
+
+## 2026-05-09 18:49 ET REVIEWER
+- did: reviewed PR #5 (goals/4-homepage-search) — round 3 (scoped re-review, rounds 1+2 requested changes)
+- decision: approved
+- standards checked: frontend-standards (server/client component split, atomic design, TanStack Query, lib/api.ts, hook naming, file naming), separation-of-concerns (no cross-package imports, env.ts gate), PR policy (conventional commits, TS clean, lint clean, build passes), TRD compliance (server-side category fetch, next-themes, keepPreviousData, SearchSection wrapper, results!==undefined guard, observable-state E2E)
+- metrics: run_type=productive | pr=PR-5 | round=3 | decision=approved | tests_run=ts-clean+lint-clean+build-pass (DB/E2E blocked by env, same constraint as rounds 1+2)
+- next: Zach merges PR #5 to main; TASK-0005 (per-app and category browse pages) is next in Ready queue
+
+## 2026-05-09 18:50 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TBD (TASK-0005 likely — checking backlog)
+- status: in-progress
+
+
+## 2026-05-09 19:04 ET PROJECT-MANAGER
+- did: moved TASK-0004 to Shipped (PR #5 merged), moved TASK-0007 from Ready to Blocked (Goal 3 PRD missing), roadmap health check
+- created: none
+- moved: TASK-0004 Approved→Shipped, TASK-0007 Ready→Blocked
+- prd gaps: Goal 3 (urgent — TASK-0007 blocked, PROP-0001 still open), Goals 4–10 (upcoming)
+- roadmap check: Goal 2 nearly done (TASK-0005 in progress, final task). Goal 3 partially shipped but no PRD — remaining DoD items (configurable hotkey, <50MB RAM, CI builds) unclear whether PR #4 covered them. Goals 4+ sequencing looks correct. No scope creep or stale goals detected. Upcoming PRD gap: Goals 3 and 4 both need PRDs before PM can queue tasks.
+- proposals added: 0
+- note: Ready is now empty — cannot stock it without PRDs for Goals 3+. Product Manager is the bottleneck. Goal 3 PRD is the single most urgent deliverable for unblocking the pipeline.
+- note: project_context.md still stale (flagged 4th consecutive run) — says "Pre-development — awaiting first PRD" but Goals 1+2 nearly shipped, Goal 3 partially shipped.
+- metrics: tasks_created=0 | tasks_moved=2 | prd_gaps=8 | roadmap_issues=0
+- next: once Goal 3 PRD lands, unblock TASK-0007 and move to Ready. If Goal 2 TASK-0005 ships, verify Goal 2 DoD is met and update project context.
+
+## 2026-05-09 19:04 ET PROJECT-MANAGER (addendum)
+- discord: failed to post summary — #standup and #main channels not allowlisted (same as last run). Summary logged above. Owner needs to run /discord:access to allowlist channels.
+
+## 2026-05-09 19:11 ET DEVELOPER
+- did: no-op — DEV_LOCK held by prior run (age ~13 min, task TASK-0005)
+- task: N/A
+- PR: n/a
+- trd: n/a
+- tests: n/a
+- metrics: run_type=no-op | reason=DEV_LOCK held | dev_idle=2
+- next: retry next cron fire; if lock is stale (>25 min), next run will override
+
+## 2026-05-09 19:21 ET DEVELOPER
+- did: no-op — DEV_LOCK held by prior run (age ~23 min, TASK-0005 — within 25-min threshold)
+- task: N/A
+- PR: n/a
+- trd: n/a
+- tests: n/a
+- metrics: run_type=no-op | reason=DEV_LOCK held | dev_idle=3
+- next: retry next cron fire; if lock is still held at >25 min, next run will override
+
+## 2026-05-09 19:30 ET DEVELOPER
+- did: started run — overrode stale DEV_LOCK (was 32 min old, TASK-0005), claimed new lock; merged main into feature branch to pick up TASK-0004 foundation
+- task: TASK-0005 (building feature — TRD approved)
+- status: in-progress (checkpoint)
+
+## 2026-05-09 19:36 ET PROJECT-MANAGER
+- did: verified backlog state after merge conflict resolution — TASK-0005 in progress (DRAFT PR #6), TASK-0007 correctly blocked (no Goal 3 PRD), Ready empty; ran roadmap health check
+- created: none
+- moved: none
+- prd gaps: Goals 3–10 (8 goals); Goal 3 most urgent — work shipped without PRD (PROP-0001 still open)
+- roadmap check: solid — Goal 2 one task from completion (TASK-0005), Goal 3 shell shipped, sequencing intact, no scope creep or stale goals. PRD gap for Goals 3–4 remains the primary blocker for new task creation.
+- proposals added: 0
+- note: Ready at 0 tasks — below target of 2–3. Cannot create new tasks until Product Manager writes Goal 3 PRD. This has been flagged for 4 consecutive PM runs.
+- note: TASK-0005 PR field is empty in backlog but DRAFT PR #6 exists — Developer should update
+- note: project_context.md still stale (flagged 4 runs now) — says "Pre-development" but Goal 1 shipped, Goal 2 nearly done, Goal 3 partially shipped
+- metrics: tasks_created=0 | tasks_moved=0 | prd_gaps=8 | roadmap_issues=0
+- idle: PM_IDLE incremented to 1
+- next: once Goal 3 PRD lands, create 1–2 Goal 3 tasks and unblock TASK-0007. Product Manager needs to prioritize goal-03 PRD immediately.
+- discord: failed — #standup and #main channels not allowlisted. Owner needs to run /discord:access to allowlist channels. (Same issue every PM run since 12:03 ET.)
+
+## 2026-05-09 19:31 ET DEVELOPER
+- did: built TASK-0005 in full — all 10 acceptance criteria met; TSC clean; lint clean; E2E tests written (skipped in agent env, no dev server)
+- task: TASK-0005
+- PR: #6 https://github.com/ForceZac/KeyboardCommandCenter/pull/6
+- trd: approved — built
+- tests: tsc clean ✅ | lint clean ✅ | E2E written (category-page.spec.ts + app-page.spec.ts) — skipped (no dev server in agent env)
+- metrics: run_type=productive | commits=3 | tests_added=2 (E2E spec files) | trd_cycles=0
+- next: Reviewer picks up PR #6 — completes Goal 2 definition of done if approved
+
+## 2026-05-09 19:50 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TASK-0005 (Changes Requested fix-up)
+- status: in-progress
+
+## 2026-05-09 19:53 ET DEVELOPER
+- did: addressed round 1 reviewer feedback for TASK-0005 — 3 fixes applied
+- task: TASK-0005
+- PR: #6
+- trd: approved (no TRD changes needed)
+- tests: tsc clean, eslint clean (E2E requires live server)
+- metrics: run_type=productive | commits=2 | tests_added=1 | trd_cycles=0
+- next: TRD Watcher / Reviewer picks up PR #6 for round 2 review
+
+## 2026-05-09 20:01 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TBD (update below when known)
+- status: in-progress (checkpoint)
+
+## 2026-05-09 20:01 ET DEVELOPER
+- did: no-op — Ready is empty, In Progress empty, Changes Requested empty, In Review empty. TASK-0005 is Approved (PR #6, awaiting merge by Reviewer).
+- task: N/A
+- PR: n/a
+- trd: n/a
+- tests: n/a
+- metrics: run_type=no-op | reason=no ready tasks | dev_idle=1
+- next: pipeline unblocked once Goal 3 PRD is written (PM bottleneck) — TASK-0007 can move to Ready; alternatively Reviewer can merge TASK-0005 PR #6 to ship Goal 2
+
+## 2026-05-09 20:03 ET PRODUCT-MANAGER
+- did: wrote PRD for Goal 3 (Desktop App Shell) and PRD for Goal 4 (Active Window Process Detection)
+- prds written: goal-03-desktop-app-shell.md, goal-04-process-detection.md
+- notes: product-notes.md had no Domain Researcher findings — wrote PRDs using roadmap DoD, backlog TASK-0007 scope, and existing codebase analysis. Goal 3 PRD accounts for TASK-0006 already shipped (shell, tray, hotkey, panel) and focuses remaining scope on settings persistence, configurable hotkey, and login startup. Goal 4 PRD covers Rust native module for process detection, process-to-app mapping, and tray recent apps.
+- unblocks: TASK-0007 (was blocked on missing Goal 3 PRD) — Project Manager can now move it to Ready
+- flags: project_context.md still stale (says "Pre-development — awaiting first PRD" but Goals 1+2 shipped, Goal 3 partially shipped)
+- metrics: prds_written=2 | prds_updated=0
+- next: Goal 5 (Shortcut Panel UI) will need a PRD next — it depends on Goal 4
+
+## 2026-05-09 20:04 ET PROJECT-MANAGER
+- did: unblocked TASK-0007 (Goal 3 PRD now exists), moved Blocked → Ready. Ready queue now has 1 task.
+- created: none
+- moved: TASK-0007 Blocked → Ready
+- prd gaps: Goal 4 (Active Window Process Detection) — no PRD at research/agents/prds/goal-04-process-detection.md
+- roadmap check: Goal 3 CI build pipeline (Win+Mac) is in roadmap DoD but not covered by any PRD or task — gap noted. Sequencing Goals 3→4→5 remains sound. No scope creep detected.
+- proposals added: 0
+- metrics: tasks_created=0 | tasks_moved=1 | prd_gaps=1 | roadmap_issues=1
+- next: once PR #6 merges (TASK-0005 → Shipped, Goal 2 done), look ahead to Goal 4 tasks — pending PRD from Product Manager. Consider creating a Goal 3 CI task once PRD coverage exists.
+- discord: FAILED — #standup and #main channels not allowlisted. Run /discord:access to fix.
+
+## 2026-05-09 20:10 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TBD (determining below)
+- status: in-progress
+
+## 2026-05-09 20:15 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TASK-0007
+- status: in-progress — writing TRD
+
+## 2026-05-09 20:16 ET DEVELOPER
+- did: picked up TASK-0007 (Settings Persistence & Login Startup) — wrote plan + TRD, opened draft PR #7, moved task to In Progress
+- task: TASK-0007
+- PR: #7
+- branch: goals/7-settings-persistence
+- trd: written — awaiting-review
+- tests: n/a (TRD phase)
+- metrics: run_type=productive | commits=2 | tests_added=0 | trd_cycles=1
+- next: TRD Watcher reviews TRD; if approved Developer resumes to build electron-store settings module, dynamic HotkeyManager, SettingsWindowManager, settings preload+renderer, tray menu update
+
+## 2026-05-09 20:16 ET DEVELOPER
+- discord: FAILED — #main channel not allowlisted. Run /discord:access to fix.
+
+## 2026-05-09 20:20 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TASK-0007
+- status: in-progress — TRD approved, resuming build phase
+
+## 2026-05-09 20:20 ET DEVELOPER
+- did: built TASK-0007 complete — electron-store settings module, dynamic HotkeyManager, SettingsWindowManager, settings preload + renderer, tray menu update, login startup init, IPC handlers, forge second webpack entry
+- task: TASK-0007
+- PR: #7
+- trd: approved — built
+- tests: tsc clean ✅ (both tsconfigs) | No automated E2E (Playwright+Electron infra out of scope per TRD)
+- metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=0
+- next: Reviewer picks up PR #7 — completes Goal 3 definition of done if approved
+
+## 2026-05-09 20:30 ET DEVELOPER
+- did: no-op — in-flight cap reached (TASK-0007 PR #7 is In Review, goals/7-settings-persistence)
+- task: TASK-0007
+- PR: #7
+- trd: approved — built
+- tests: n/a
+- metrics: run_type=no-op | reason=in-flight cap (1 PR in In Review) | dev_idle=1
+- next: Reviewer picks up PR #7 to complete Goal 3; once merged and Ready queue has a new task, Developer resumes
+
+## 2026-05-09 20:36 ET PROJECT-MANAGER
+- did: created 2 tasks for Goal 4 (Process Detection), stocked Ready queue from 0 → 2
+- created: TASK-0008 (Process-to-App Mapping Table), TASK-0009 (Rust Native Module for Active Window Detection)
+- moved: none
+- prd gaps: Goal 5 (Shortcut Panel UI) — no PRD yet, Product Manager should write it next
+- roadmap check: solid — Goal 3→4→5 sequencing holds. CI build gap (Goal 3 DoD vs PRD out-of-scope) acknowledged, likely deferred to Goal 9. No scope creep, no stale goals. project_context.md still stale (says Goal 1 active, pre-dev) — needs update.
+- proposals added: 0
+- stale items: TASK-0005 (PR #6) approved 2026-05-09, awaiting /merge to complete Goal 2
+- metrics: tasks_created=2 | tasks_moved=0 | prd_gaps=1 | roadmap_issues=0
+- next: once TASK-0007 ships (Goal 3 done), Developer picks up TASK-0008. Watch for Goal 5 PRD from Product Manager.
+>>>>>>> Stashed changes
+
+## 2026-05-09 20:41 ET DEVELOPER
+- did: no-op — DEV_LOCK held by another instance (age <25 min, modified 00:39 UTC)
+- task: n/a
+- metrics: run_type=no-op | reason=DEV_LOCK held | dev_idle=2
+- next: DEV_LOCK holder finishes; next run picks up from where it left off
