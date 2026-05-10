@@ -1526,3 +1526,12 @@
 - tests: tsc clean + eslint clean | Vitest skipped (no DATABASE_URL) | Playwright skipped (no running server)
 - metrics: run_type=productive | commits=1 | tests_added=8 | trd_cycles=0 | dev_idle=0
 - next: Reviewer picks up PR #21; once merged TASK-0022 (Favorites Data Model) unblocks to Ready
+
+## 2026-05-10 17:16 ET REVIEWER
+- did: reviewed PR #22 (TASK-0022 — Favorites Data Model & CRUD API, round 1)
+- decision: changes-requested
+- standards checked: backend (thin controllers, service layer, query patterns, error handling, testing), frontend (N/A — backend-only PR), separation of concerns (core types in @kcc/core), PR policy (conventional commits, tests required)
+- issues: (1) vitest.unit.config.ts include pattern too broad — picks up 4 pre-existing integration tests, exits with code 1 without DATABASE_URL; (2) NodeJS.ErrnoException used for custom LIMIT_REACHED business error — should use LimitReachedError class in lib/errors.ts
+- what's good: schema/migration correct; services thin and DRY; all 8 routes have 401 auth gates + tests; createUser event fires correctly; upsert idempotency; IDOR-safe ownership checks; @kcc/core types correct; full TRD compliance; no scope creep
+- metrics: run_type=productive | pr=PR-22 | round=1 | decision=changes-requested | tests_run=pass (29/29 new tests green)
+- next: Developer addresses 2 issues (vitest include pattern, LimitReachedError class), pushes fix commits, marks ready again for round-2

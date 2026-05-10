@@ -33,37 +33,62 @@ Task IDs are monotonic. The Project Manager picks the next number.
 
 _(Project Manager keeps 2–3 tasks here at all times.)_
 
-_(Empty — all Goal 7 tasks currently depend on TASK-0021 merging. When TASK-0021 merges, TASK-0022 unblocks to Ready.)_
+_(Empty — TASK-0023 is In Progress (TRD phase). When TASK-0022 and TASK-0023 ship, TASK-0024/0025/0026 unblock.)_
 
 ## In Progress
 
 _(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
 
-_(Empty)_
+### TASK-0023: Desktop Auth Flow — Browser OAuth & Deep Link Callback
+- **Goal:** Goal 7 — User Accounts & Favorites Sync
+- **PRD:** research/agents/prds/goal-07-accounts-favorites.md
+- **Scope:** Register `shortcutvault://` custom protocol in Electron via `app.setAsDefaultProtocolClient()`. Add "Sign in" / "Sign out" entries to the system tray menu. When "Sign in" is clicked, open the default browser to the web app's NextAuth sign-in page with a callback parameter. Handle the `shortcutvault://auth/callback?token=...` deep link in the Electron main process. Validate and store the session token securely using Electron's safeStorage API via electron-store. Display signed-in state in the settings window (avatar, display name, sign-out button). On macOS, handle protocol via `open-url` event; on Windows, handle via `second-instance` event argv parsing. NOT in scope: favorites cache or sync engine (separate task), any web app auth changes (TASK-0021), desktop-only account creation, favorites UI in the panel.
+- **Acceptance:**
+  - `shortcutvault://` protocol registered on app start (macOS and Windows)
+  - Tray menu shows "Sign in" when unauthenticated, "Sign out" when authenticated
+  - Clicking "Sign in" opens default browser to the web app's OAuth page
+  - Deep link callback (`shortcutvault://auth/callback?token=...`) received and parsed correctly
+  - Session token stored encrypted via safeStorage in electron-store
+  - Settings window shows user avatar and display name when signed in
+  - "Sign out" clears stored token and resets tray menu and settings UI
+  - No regressions on existing desktop functionality (panel, overlay, detection)
+- **PR:** #23 (draft)
+- **Branch:** goals/23-desktop-auth-flow
+- **TRD:** research/plans/goals/23-desktop-auth-flow-trd.md — awaiting-review
+- **Notes:** Unblocked by TASK-0021 merge (2026-05-10). Third Goal 7 task. PRD Flow 2 covers this scope.
 
 ## In Review
 
 _(Developer moves tasks here when the draft PR is marked ready.)_
 
-### TASK-0021: Auth Schema & NextAuth Integration
-- **Goal:** Goal 7 — User Accounts & Favorites Sync
-- **PRD:** research/agents/prds/goal-07-accounts-favorites.md
-- **Scope:** Add NextAuth.js (Auth.js v5) to the Next.js web app with GitHub and Google OAuth providers. Add a `User` model to the Prisma schema with id, email, name, image, and provider fields (Auth.js standard tables: User, Account, Session, VerificationToken). Wire up NextAuth session handling (JWT strategy). Protect API routes that will require auth (favorites, submissions). Add sign-in/sign-out UI to the web app header. NOT in scope: favorites data model or CRUD (separate task), community submissions (Goal 8), Electron deep-link auth (separate task), email/password auth.
-- **Acceptance:**
-  - NextAuth configured with GitHub + Google providers
-  - User model added to Prisma schema, migration generated
-  - Session available server-side via `auth()` and client-side via `useSession()`
-  - Sign-in / sign-out buttons in web app header
-  - Protected API route middleware scaffold in place
-  - No regressions on existing public pages
-- **PR:** #21
-- **Branch:** goals/21-auth-schema-nextauth
-- **TRD:** research/plans/goals/21-auth-schema-nextauth-trd.md — approved
-- **Notes:** PRD exists (written 2026-05-10). Feature complete 2026-05-10. Reviewer: verify OAuth-only scope (no credentials provider, no Favorite/Collection schema). Migration file created manually (no live DB in CI). tsc + eslint clean.
+_(Empty)_
 
 ## Changes Requested
 
 _(Reviewer moves tasks here when a PR needs rework.)_
+
+### TASK-0022: Favorites Data Model & CRUD API
+- **Goal:** Goal 7 — User Accounts & Favorites Sync
+- **PRD:** research/agents/prds/goal-07-accounts-favorites.md
+- **Scope:** Add Collection and CollectionShortcut models to the Prisma schema (Collection: id, userId, name, description, isDefault, createdAt, updatedAt; CollectionShortcut: join table linking userId + collectionId + shortcutId with createdAt timestamp for last-write-wins sync). Generate migration. Implement API routes: `GET/POST/DELETE /api/favorites` (add/remove a shortcut from the user's default "My Favorites" collection), `GET/POST/PATCH/DELETE /api/collections` (CRUD for named collections), `GET /api/collections/:id/shortcuts` (list shortcuts in a collection). Auto-create a "My Favorites" default collection when a new User record is created (via Prisma middleware or Auth.js event callback). Enforce server-side limits: max 50 collections per user, max 1000 total favorites per user. All routes require authenticated session. NOT in scope: web UI components (separate task), desktop client or sync engine (separate task), desktop auth flow (separate task), collection reordering, import/export, guest favorites migration.
+- **Acceptance:**
+  - Collection and CollectionShortcut models added to Prisma schema with proper relations
+  - Migration generated and applies cleanly
+  - "My Favorites" default collection auto-created on new user sign-up
+  - `POST /api/favorites` adds a shortcut to the user's default collection (returns 201)
+  - `DELETE /api/favorites/:shortcutId` removes a favorite (returns 204)
+  - `GET /api/favorites` returns the user's favorited shortcuts with collection info
+  - `POST /api/collections` creates a named collection (returns 201)
+  - `PATCH /api/collections/:id` renames or updates description (returns 200)
+  - `DELETE /api/collections/:id` deletes a collection (returns 204; cannot delete default)
+  - `GET /api/collections/:id/shortcuts` returns shortcuts in a specific collection
+  - Server returns 403 if user exceeds 50 collections or 1000 favorites
+  - All routes return 401 for unauthenticated requests
+  - All routes return <200ms under normal load
+- **PR:** #22
+- **Branch:** goals/22-favorites-data-model-api
+- **TRD:** research/plans/goals/22-favorites-data-model-api-trd.md — approved
+- **Notes:** Round-1 changes requested 2026-05-10. Fix: (1) vitest.unit.config.ts include pattern too broad — must exit 0 without DATABASE_URL; (2) NodeJS.ErrnoException used for LIMIT_REACHED custom error — introduce LimitReachedError class in lib/errors.ts.
 
 ## TRD Changes Requested
 
@@ -76,6 +101,15 @@ _(Reviewer moves tasks here after approving the PR. You merge to main, then move
 ## Shipped
 
 _(You move tasks here after merging to main.)_
+
+### TASK-0021: Auth Schema & NextAuth Integration
+- **Goal:** Goal 7 — User Accounts & Favorites Sync
+- **PRD:** research/agents/prds/goal-07-accounts-favorites.md
+- **PR:** #21
+- **Branch:** goals/21-auth-schema-nextauth
+- **TRD:** research/plans/goals/21-auth-schema-nextauth-trd.md — approved
+- **Approved:** 2026-05-10
+- **Merged:** 2026-05-10
 
 ### TASK-0020: Overlay Detection Integration & App-Switch Content Updates
 - **Goal:** Goal 6 — Overlay Mode
@@ -256,47 +290,6 @@ _(You move tasks here after merging to main.)_
 ## Blocked
 
 _(Waiting on an external dependency, a missing PRD, or owner decision.)_
-
-### TASK-0022: Favorites Data Model & CRUD API
-- **Goal:** Goal 7 — User Accounts & Favorites Sync
-- **PRD:** research/agents/prds/goal-07-accounts-favorites.md
-- **Scope:** Add Collection and CollectionShortcut models to the Prisma schema (Collection: id, userId, name, description, isDefault, createdAt, updatedAt; CollectionShortcut: join table linking userId + collectionId + shortcutId with createdAt timestamp for last-write-wins sync). Generate migration. Implement API routes: `GET/POST/DELETE /api/favorites` (add/remove a shortcut from the user's default "My Favorites" collection), `GET/POST/PATCH/DELETE /api/collections` (CRUD for named collections), `GET /api/collections/:id/shortcuts` (list shortcuts in a collection). Auto-create a "My Favorites" default collection when a new User record is created (via Prisma middleware or Auth.js event callback). Enforce server-side limits: max 50 collections per user, max 1000 total favorites per user. All routes require authenticated session. NOT in scope: web UI components (separate task), desktop client or sync engine (separate task), desktop auth flow (separate task), collection reordering, import/export, guest favorites migration.
-- **Acceptance:**
-  - Collection and CollectionShortcut models added to Prisma schema with proper relations
-  - Migration generated and applies cleanly
-  - "My Favorites" default collection auto-created on new user sign-up
-  - `POST /api/favorites` adds a shortcut to the user's default collection (returns 201)
-  - `DELETE /api/favorites/:shortcutId` removes a favorite (returns 204)
-  - `GET /api/favorites` returns the user's favorited shortcuts with collection info
-  - `POST /api/collections` creates a named collection (returns 201)
-  - `PATCH /api/collections/:id` renames or updates description (returns 200)
-  - `DELETE /api/collections/:id` deletes a collection (returns 204; cannot delete default)
-  - `GET /api/collections/:id/shortcuts` returns shortcuts in a specific collection
-  - Server returns 403 if user exceeds 50 collections or 1000 favorites
-  - All routes return 401 for unauthenticated requests
-  - All routes return <200ms under normal load
-- **PR:**
-- **Branch:**
-- **TRD:**
-- **Notes:** Blocked — awaiting TASK-0021 (auth schema + User model must be in place for user relations). Second Goal 7 task.
-
-### TASK-0023: Desktop Auth Flow — Browser OAuth & Deep Link Callback
-- **Goal:** Goal 7 — User Accounts & Favorites Sync
-- **PRD:** research/agents/prds/goal-07-accounts-favorites.md
-- **Scope:** Register `shortcutvault://` custom protocol in Electron via `app.setAsDefaultProtocolClient()`. Add "Sign in" / "Sign out" entries to the system tray menu. When "Sign in" is clicked, open the default browser to the web app's NextAuth sign-in page with a callback parameter. Handle the `shortcutvault://auth/callback?token=...` deep link in the Electron main process. Validate and store the session token securely using Electron's safeStorage API via electron-store. Display signed-in state in the settings window (avatar, display name, sign-out button). On macOS, handle protocol via `open-url` event; on Windows, handle via `second-instance` event argv parsing. NOT in scope: favorites cache or sync engine (separate task), any web app auth changes (TASK-0021), desktop-only account creation, favorites UI in the panel.
-- **Acceptance:**
-  - `shortcutvault://` protocol registered on app start (macOS and Windows)
-  - Tray menu shows "Sign in" when unauthenticated, "Sign out" when authenticated
-  - Clicking "Sign in" opens default browser to the web app's OAuth page
-  - Deep link callback (`shortcutvault://auth/callback?token=...`) received and parsed correctly
-  - Session token stored encrypted via safeStorage in electron-store
-  - Settings window shows user avatar and display name when signed in
-  - "Sign out" clears stored token and resets tray menu and settings UI
-  - No regressions on existing desktop functionality (panel, overlay, detection)
-- **PR:**
-- **Branch:**
-- **TRD:**
-- **Notes:** Blocked — awaiting TASK-0021 (needs NextAuth endpoints and User model on main). Third Goal 7 task. PRD Flow 2 covers this scope.
 
 ### TASK-0024: Favorites Web UI — Heart Icons, Collections Page & Optimistic Updates
 - **Goal:** Goal 7 — User Accounts & Favorites Sync
