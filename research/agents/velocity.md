@@ -12,3 +12,4 @@
 | 2026-05-10 | TASK-0011 | Goal 4 | — | main | fix: write Goal 4 PRD and unblock TASK-0011 — move from Blocked to Ready |
 | 2026-05-10 | TASK-0017 | Goal 6 | #18 | goals/17-overlay-browser-window | Merge pull request #18 from ForceZac/goals/17-overlay-browser-window |
 | 2026-05-10 | TASK-0019 | Goal 6 | #17 | goals/19-overlay-settings-ui | Merge pull request #17 from ForceZac/goals/19-overlay-settings-ui |
+| 2026-05-10 | TASK-0021 | Goal 7 | #21 | goals/21-auth-schema-nextauth | Merge pull request #21 from ForceZac/goals/21-auth-schema-nextauth |
