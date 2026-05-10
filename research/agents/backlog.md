@@ -94,7 +94,7 @@ _(Developer moves tasks here when the draft PR is marked ready.)_
 - **PR:** #11
 - **Branch:** goals/11-tray-recent-apps
 - **TRD:** research/plans/goals/11-tray-recent-apps-trd.md — approved
-- **Notes:** Depends on TASK-0010 (polling service provides the recent-apps list via IPC). This is the final piece of Goal 4's user-facing definition of done (PRD Flow 2: recently-detected apps in tray).
+- **Notes:** Depends on TASK-0010 (polling service provides the recent-apps list via IPC). This is the final piece of Goal 4's user-facing definition of done (PRD Flow 2: recently-detected apps in tray). Round 2: out-of-scope implementations reverted (real lookupApp → stub, active-window.ts → stub). PROP-0003 and PROP-0004 filed for dedicated reconciliation tasks.
 
 ## Changes Requested
 

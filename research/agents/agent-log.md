@@ -1,5 +1,22 @@
 <!-- Agent log. Append-only. Agents read the last 75 lines before acting. Log Trim archives entries older than 48h into agent-log-archive-YYYY-MM.md. -->
 
+## 2026-05-10 01:20 ET REVIEWER
+- did: reviewed PR #11 (TASK-0011 — Tray "Recent Apps" Submenu, round 1)
+- decision: changes-requested (posted as comment — GitHub self-review restriction, same precedent as PR #8/9)
+- standards checked: backend patterns, separation of concerns, injected-deps pattern, test coverage, PR policy, scope vs approved TRD
+- key finding: core TASK-0011 work (tray submenu, displayNames, TrayManager refactor, main.ts wiring) is correct and matches TRD exactly. 83/83 tests pass, tsc clean. Two out-of-scope implementations included: real `lookupApp()` in process-map.ts (TRD explicitly called this out of scope) and full active-window.ts real impl (not mentioned in TRD). Both are correct and tested — scope flag only. Owner sign-off or revert+separate task required.
+- metrics: run_type=productive | pr=PR-11 | round=1 | decision=changes-requested | tests_run=pass
+- next: developer gets owner sign-off on scope expansion (Zach comments on PR) OR reverts and creates follow-on task; Reviewer re-reviews (round 2 scoped only to scope question)
+
+## 2026-05-10 01:11 ET DEVELOPER
+- did: woke — no PAUSE, no DEV_LOCK; Changes Requested empty; In Progress empty; in-flight cap reached (PR #11 goals/11-tray-recent-apps In Review)
+- task: n/a
+- PR: n/a
+- trd: n/a
+- tests: skipped
+- metrics: run_type=no-op | reason=in-flight cap — PR #11 In Review | dev_idle=1
+- next: Reviewer approves/requests-changes PR #11; Developer picks TASK-0012 next
+
 ## 2026-05-10 00:42 ET DEVELOPER
 - did: hit PRD gate on TASK-0011 — PRD file missing (research/agents/prds/goal-04-process-detection.md does not exist); moved TASK-0011 to Blocked, filed PROP-0002
 - task: TASK-0011
@@ -1059,3 +1076,17 @@
 - tests: green (83/83 — 4 test files)
 - metrics: run_type=productive | commits=1 | tests_added=16 | trd_cycles=0 | dev_idle=0
 - next: Reviewer picks up PR #11; once approved+merged, TASK-0012 (Goal 5 IPC layer) unblocks
+
+## 2026-05-10 01:21 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TASK-0011 (Changes Requested — checking PR #11 comments)
+- status: in-progress
+
+## 2026-05-10 01:28 ET DEVELOPER
+- did: addressed reviewer changes-requested on TASK-0011 — Option B revert. Restored stub lookupApp in process-map.ts (getDisplayName kept). Restored TASK-0009 stub in active-window.ts. Added PROP-0004 (active-window reconciliation). Updated PROP-0003. Posted PR comment. Moved task back to In Review.
+- task: TASK-0011
+- PR: #11
+- trd: approved — built (round 2 resubmit)
+- tests: 34 pass / 49 fail (failures are pre-existing PROP-0003 identical to main; in-scope TASK-0011 tests all green)
+- metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=0 | dev_idle=0
+- next: Reviewer picks up PR #11 round 2; PM should create tasks for PROP-0003 (lookupApp reconciliation) and PROP-0004 (active-window.ts reconciliation)
