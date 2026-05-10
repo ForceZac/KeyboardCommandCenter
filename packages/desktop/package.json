@@ -11,7 +11,8 @@
   },
   "dependencies": {
     "@kcc/core": "*",
-    "electron": "^28.0.0"
+    "electron": "^28.0.0",
+    "electron-store": "^7.0.3"
   },
   "devDependencies": {
     "@electron-forge/cli": "^7.0.0",

@@ -1,14 +1,14 @@
 import { globalShortcut, app } from 'electron';
+import { getHotkey, setHotkey } from './settings';
 
 export class HotkeyManager {
-  // Platform default: Cmd+Shift+Space on macOS, Ctrl+Shift+Space on Windows.
-  private readonly accelerator: string =
-    process.platform === 'darwin' ? 'Cmd+Shift+Space' : 'Ctrl+Shift+Space';
-
+  // Current accelerator string — read from settings on construction.
+  private accelerator: string;
   private onTriggered: () => void;
 
   constructor(onTriggered: () => void) {
     this.onTriggered = onTriggered;
+    this.accelerator = getHotkey();
   }
 
   register(): void {
@@ -18,7 +18,6 @@ export class HotkeyManager {
 
     if (!registered) {
       // Log a warning but do not crash — the OS may have a conflict.
-      // A settings UI for remapping the hotkey is a follow-on Goal 3 task.
       console.warn(
         `[HotkeyManager] Failed to register global hotkey "${this.accelerator}". ` +
           'Another application may be using this shortcut.',
@@ -26,6 +25,31 @@ export class HotkeyManager {
     } else {
       console.log(`[HotkeyManager] Registered global hotkey: ${this.accelerator}`);
     }
+  }
+
+  /**
+   * Hot-swap the global hotkey binding at runtime.
+   * Unregisters the current binding, attempts the new one, and persists on success.
+   * If the new binding is already claimed, re-registers the old one and returns conflict.
+   */
+  changeBinding(accelerator: string): { success: boolean; conflict: boolean } {
+    globalShortcut.unregister(this.accelerator);
+
+    const registered = globalShortcut.register(accelerator, () => {
+      this.onTriggered();
+    });
+
+    if (registered) {
+      this.accelerator = accelerator;
+      setHotkey(accelerator);
+      return { success: true, conflict: false };
+    }
+
+    // New binding failed — restore the previous one.
+    globalShortcut.register(this.accelerator, () => {
+      this.onTriggered();
+    });
+    return { success: false, conflict: true };
   }
 
   unregisterAll(): void {
