@@ -50,7 +50,7 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
   - Startup preference is toggleable in Settings and persisted
   - Settings stored via `electron-store` in a local JSON file
   - All settings survive app restart (kill + relaunch)
-- **PR:**
+- **PR:** #7
 - **Branch:** goals/7-settings-persistence
 - **TRD:** research/plans/goals/7-settings-persistence-trd.md — awaiting-review
 - **Notes:** Completes Goal 3 user-facing DoD alongside TASK-0006 (shell, tray, hotkey, panel). Depends on TASK-0006 being shipped first (done). CI build pipeline deferred to a separate task.
