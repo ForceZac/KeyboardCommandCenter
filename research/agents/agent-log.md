@@ -1,5 +1,39 @@
 <!-- Agent log. Append-only. Agents read the last 75 lines before acting. Log Trim archives entries older than 48h into agent-log-archive-YYYY-MM.md. -->
 
+## 2026-05-10 01:37 ET REVIEWER
+- did: reviewed PR #11 (TASK-0011 — Tray "Recent Apps" Submenu, round 2)
+- decision: approved (posted as comment — GitHub self-review restriction, same precedent as PR #8/9/10)
+- standards checked: round-2 scoped — verified original feedback addressed only (no new nits)
+- key finding: lookupApp reverted to stub ✅, active-window.ts stub restored ✅, PROP-0003/PROP-0004 filed ✅. All 16 in-scope TASK-0011 tests pass (7 tray + 9 getDisplayName). 49 pre-existing failures identical to main (PROP-0003/PROP-0004 stubs).
+- metrics: run_type=productive | pr=PR-11 | round=2 | decision=approved | tests_run=pass
+- next: Zach merges PR #11; Developer picks TASK-0012 (Goal 5 IPC layer); PM should queue dedicated TASK-0014/TASK-0015 for PROP-0003/PROP-0004 reconciliation
+
+## 2026-05-10 01:20 ET REVIEWER
+- did: reviewed PR #11 (TASK-0011 — Tray "Recent Apps" Submenu, round 1)
+- decision: changes-requested (posted as comment — GitHub self-review restriction, same precedent as PR #8/9)
+- standards checked: backend patterns, separation of concerns, injected-deps pattern, test coverage, PR policy, scope vs approved TRD
+- key finding: core TASK-0011 work (tray submenu, displayNames, TrayManager refactor, main.ts wiring) is correct and matches TRD exactly. 83/83 tests pass, tsc clean. Two out-of-scope implementations included: real `lookupApp()` in process-map.ts (TRD explicitly called this out of scope) and full active-window.ts real impl (not mentioned in TRD). Both are correct and tested — scope flag only. Owner sign-off or revert+separate task required.
+- metrics: run_type=productive | pr=PR-11 | round=1 | decision=changes-requested | tests_run=pass
+- next: developer gets owner sign-off on scope expansion (Zach comments on PR) OR reverts and creates follow-on task; Reviewer re-reviews (round 2 scoped only to scope question)
+
+## 2026-05-10 01:11 ET DEVELOPER
+- did: woke — no PAUSE, no DEV_LOCK; Changes Requested empty; In Progress empty; in-flight cap reached (PR #11 goals/11-tray-recent-apps In Review)
+- task: n/a
+- PR: n/a
+- trd: n/a
+- tests: skipped
+- metrics: run_type=no-op | reason=in-flight cap — PR #11 In Review | dev_idle=1
+- next: Reviewer approves/requests-changes PR #11; Developer picks TASK-0012 next
+
+## 2026-05-10 00:42 ET DEVELOPER
+- did: hit PRD gate on TASK-0011 — PRD file missing (research/agents/prds/goal-04-process-detection.md does not exist); moved TASK-0011 to Blocked, filed PROP-0002
+- task: TASK-0011
+- PR: none
+- trd: not started (PRD gate blocked)
+- tests: skipped (no code written)
+- metrics: run_type=productive | commits=0 | reason=PRD missing — TASK-0011 blocked
+- next: PM writes goal-04-process-detection.md PRD, moves TASK-0011 back to Ready; next dev run picks TASK-0012 (goal-05, PRD exists)
+
 ## 2026-05-09 22:39 ET REVIEWER
 - did: reviewed PR #9 (TASK-0009 — Rust Native Module for Active Window Detection, round 1)
 - decision: changes-requested (posted as comment — GitHub self-review restriction, same precedent as PR #8)
@@ -980,3 +1014,120 @@
 - tests: n/a (TRD phase only)
 - metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=0 | dev_idle=0
 - next: TRD Watcher reviews TRD; once approved, Developer resumes to build DetectionService + IPC wiring
+
+## 2026-05-10 00:30 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TASK-0010 (Detection Polling Service & IPC Integration)
+- status: in-progress — TRD phase (awaiting review)
+
+## 2026-05-10 00:30 ET DEVELOPER
+- did: TRD awaiting reviewer approval — no code written; released DEV_LOCK
+- task: TASK-0010
+- PR: #10
+- trd: awaiting-review
+- tests: skipped (TRD phase — no code yet)
+- metrics: run_type=no-op | reason=TRD awaiting review (TASK-0010) | dev_idle=1
+- next: TRD Watcher approves TRD for TASK-0010; Developer resumes build phase on next run
+
+## 2026-05-10 00:32 ET PROJECT-MANAGER
+- did: moved 5 tasks to Shipped (TASK-0005/0007/0008/0009/0010 — all PRs merged); created TASK-0012 (Shortcut Data IPC Layer & Prefetch) for Goal 5
+- created: TASK-0012
+- moved: TASK-0005, TASK-0007, TASK-0008, TASK-0009 (Approved → Shipped); TASK-0010 (In Progress → Shipped)
+- prd gaps: Goal 7 (User Accounts & Favorites Sync) — no PRD, N+2 from active goal, Product Manager should write it
+- roadmap check: solid — sequencing intact, no scope creep, no stale goals. Goal 4 PRD (goal-04-process-detection.md) missing from prds/ but all Goal 4 work shipped or nearly shipped (historical gap). project_context.md stale (says Goal 1 active, actual is Goal 4→5).
+- proposals added: 0
+- stale: none — all approved PRs now merged
+- metrics: tasks_created=1 | tasks_moved=5 | prd_gaps=1 | roadmap_issues=0
+- next: Ready queue healthy at 2 (TASK-0011, TASK-0012). TASK-0011 completes Goal 4. Once Goal 4 ships, TASK-0012 unblocks for Goal 5. Goal 7 PRD needed from Product Manager before Goal 7 tasks can be queued.
+
+## 2026-05-10 00:32 ET PROJECT-MANAGER (addendum)
+- discord: FAILED — both #standup and #main channels not allowlisted. Owner needs to run /discord:access.
+
+## 2026-05-10 00:51 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TBD (update below when known)
+- status: in-progress
+
+## 2026-05-10 00:51 ET MERGE-WATCHER
+- did: detected 1 commit on main (fix: write Goal 4 PRD and unblock TASK-0011); no blocked tasks to move (Blocked section already empty); no open PRs to sync; logged to velocity.md; reset MW_IDLE
+
+## 2026-05-10 00:55 ET DEVELOPER
+- did: picked TASK-0011 (Tray "Recent Apps" Submenu). Wrote 5-slice plan and TRD — dynamic menu rebuild via popUpContextMenu, display names from extended process-map.json, four injected deps on TrayManager, reuses detection:app-changed IPC. Opened draft PR #11. Moved task to In Progress. Also resolved PROP-0002 (PRD now exists) and filed PROP-0003 (process-map.ts stub not reconciled after TASK-0008 merge). Removed TRD_PAUSE to wake TRD Watcher.
+- task: TASK-0011
+- PR: #11
+- trd: written — awaiting-review
+- tests: n/a (TRD phase only)
+- metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=0 | dev_idle=0
+- next: TRD Watcher reviews TRD for TASK-0011; once approved, Developer resumes to build (slices 1–4: display names, TrayManager refactor, main.ts wiring, unit tests)
+
+## 2026-05-10 01:00 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TASK-0011 (Tray "Recent Apps" Submenu)
+- status: in-progress — TRD approved, building slices 1-4
+
+## 2026-05-10 01:04 ET PROJECT-MANAGER
+- did: created TASK-0013 (Panel Content Renderer & Shortcut Key Caps) for Goal 5 — Ready queue now at 2 tasks
+- created: TASK-0013
+- moved: none
+- prd gaps: Goal 7 (User Accounts & Favorites Sync) — still no PRD at research/agents/prds/goal-07-accounts-favorites.md, N+2 from active work. Product Manager should write it.
+- roadmap check: skipped (did it last run)
+- proposals added: 0
+- stale context: project_context.md still says "Active goal: Goal 1" — actual is Goal 4→5. Not PM's file to edit but flagging again.
+- metrics: tasks_created=1 | tasks_moved=0 | prd_gaps=1 | roadmap_issues=0
+- next: Ready queue healthy at 2 (TASK-0013, TASK-0012). Once TASK-0011 ships (completes Goal 4), TASK-0012 unblocks. TASK-0013 depends on TASK-0012. May need a third Goal 5 task next run (search/filter + fallback states).
+
+## 2026-05-10 01:08 ET DEVELOPER
+- did: built TASK-0011 — Recent Apps submenu complete. Fixed PROP-0003 (real lookupApp impl), PROP-0003-adjacent (real active-window.ts impl), added displayNames + getDisplayName to process-map, refactored TrayManager with 4 new injected deps + dynamic menu rebuild, wired deps in main.ts (including SettingsWindowManager), wrote 7 tray tests + 9 getDisplayName tests. PR marked ready.
+- task: TASK-0011
+- PR: #11
+- trd: approved — built
+- tests: green (83/83 — 4 test files)
+- metrics: run_type=productive | commits=1 | tests_added=16 | trd_cycles=0 | dev_idle=0
+- next: Reviewer picks up PR #11; once approved+merged, TASK-0012 (Goal 5 IPC layer) unblocks
+
+## 2026-05-10 01:21 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TASK-0011 (Changes Requested — checking PR #11 comments)
+- status: in-progress
+
+## 2026-05-10 01:28 ET DEVELOPER
+- did: addressed reviewer changes-requested on TASK-0011 — Option B revert. Restored stub lookupApp in process-map.ts (getDisplayName kept). Restored TASK-0009 stub in active-window.ts. Added PROP-0004 (active-window reconciliation). Updated PROP-0003. Posted PR comment. Moved task back to In Review.
+- task: TASK-0011
+- PR: #11
+- trd: approved — built (round 2 resubmit)
+- tests: 34 pass / 49 fail (failures are pre-existing PROP-0003 identical to main; in-scope TASK-0011 tests all green)
+- metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=0 | dev_idle=0
+- next: Reviewer picks up PR #11 round 2; PM should create tasks for PROP-0003 (lookupApp reconciliation) and PROP-0004 (active-window.ts reconciliation)
+
+## 2026-05-10 01:31 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TBD (checking state)
+- status: in-progress
+
+## 2026-05-10 01:31 ET DEVELOPER
+- did: in-flight cap reached — PR #11 (goals/11-tray-recent-apps) is open and In Review
+- task: TASK-0011
+- PR: #11
+- trd: approved — built
+- tests: n/a (no work done this run)
+- metrics: run_type=no-op | reason=in-flight cap — goals/11-tray-recent-apps In Review | dev_idle=1
+- next: Reviewer approves/merges PR #11; once merged, TASK-0012 and TASK-0013 (Goal 5) unblock
+
+## 2026-05-10 01:34 ET PROJECT-MANAGER
+- did: created TASK-0014 (Reconcile Goal 4 Stubs — process-map.ts & active-window.ts), reordered Ready to dependency order (TASK-0014 → TASK-0012 → TASK-0013), addressed PROP-0003 and PROP-0004
+- created: TASK-0014
+- moved: TASK-0013 reordered below TASK-0012 (TASK-0013 depends on TASK-0012)
+- prd gaps: Goal 7 (User Accounts & Favorites Sync) — still no PRD. N+2 from active work. Product Manager should write it.
+- roadmap check: done — sequencing solid. Goal 5 PRD covers search/filter (Flow 2) and fallback states (Flows 3/4) but no tasks exist yet for those — will need 1-2 more Goal 5 tasks after TASK-0012 and TASK-0013 ship. Goal 6 PRD exists. Goal 7 PRD still missing (flagged again). project_context.md still says "Active goal: Goal 1" — stale, flagging again.
+- proposals added: 0 (addressed 2 existing: PROP-0003, PROP-0004 → TASK-0014)
+- stale: PROP-0001 (Goal 3 shipped without PRD) — note: goal-03-desktop-app-shell.md PRD now exists, so first recommendation is resolved. Remaining question (full Goal 3 DoD coverage) still open for owner.
+- metrics: tasks_created=1 | tasks_moved=1 | prd_gaps=1 | roadmap_issues=0
+- next: Ready queue healthy at 3 (TASK-0014, TASK-0012, TASK-0013). Once TASK-0011 ships, TASK-0014 unblocks first (Goal 4 cleanup), then TASK-0012 and TASK-0013 (Goal 5). Will need search/filter + fallback state tasks for Goal 5 in a future run.
+
+## 2026-05-10 01:34 ET PROJECT-MANAGER (addendum)
+- discord: FAILED — #standup and #main channels still not allowlisted. Owner needs to run /discord:access to add channels.
+
+## 2026-05-10 01:40 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TBD (checking state — no PAUSE, no lock, proceeding)
+- status: in-progress
