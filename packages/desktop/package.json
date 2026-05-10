@@ -7,7 +7,10 @@
     "dev": "electron-forge start",
     "build": "electron-forge make",
     "package": "electron-forge package",
-    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.renderer.json"
+    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.renderer.json",
+    "test": "vitest run",
+    "build:native": "napi build --platform --release --js false --cwd native",
+    "postinstall": "node scripts/build-native.js"
   },
   "dependencies": {
     "@kcc/core": "*",
@@ -16,11 +19,13 @@
   "devDependencies": {
     "@electron-forge/cli": "^7.0.0",
     "@electron-forge/plugin-webpack": "^7.0.0",
+    "@napi-rs/cli": "^3.0.0",
     "@types/node": "^20.0.0",
     "css-loader": "^6.0.0",
     "node-loader": "^2.0.0",
     "style-loader": "^3.0.0",
     "ts-loader": "^9.0.0",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "vitest": "^1.0.0"
   }
 }
