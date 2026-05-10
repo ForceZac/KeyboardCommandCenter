@@ -19,6 +19,17 @@ import { lookupApp, getDisplayName } from './process-map';
 // TASK-0012: shortcut data IPC layer.
 import { ShortcutService, ShortcutCache } from './shortcut-service';
 import type { ShortcutDb } from './shortcut-service';
+// TASK-0019: overlay settings store + controller registry.
+import {
+  getHotkey,
+  getOverlayPrefs,
+  setOverlayEnabled,
+  setOverlayHotkey,
+  setOverlayOpacity,
+  setOverlayPosition,
+  setOverlaySize,
+} from './settings';
+import * as overlayControllerModule from './overlay-controller';
 
 // Enforce single-instance: if another instance is already running, quit immediately.
 const isFirstInstance = app.requestSingleInstanceLock();
@@ -171,6 +182,49 @@ app.whenReady().then(() => {
 
   // IPC: renderer or tray (TASK-0011) queries the in-memory recent-apps list.
   ipcMain.handle('detection:get-recent-apps', () => detectionService.getRecentApps());
+
+  // ---------------------------------------------------------------------------
+  // Overlay settings IPC handlers (TASK-0019).
+  // All persist to electron-store and forward to overlayController when available.
+  // overlayController is null until TASK-0017 registers the overlay BrowserWindow.
+  // ---------------------------------------------------------------------------
+
+  ipcMain.handle('overlay:get', () => getOverlayPrefs());
+
+  ipcMain.handle('overlay:set-enabled', (_event, { enabled }: { enabled: boolean }) => {
+    setOverlayEnabled(enabled);
+    overlayControllerModule.overlayController?.setEnabled(enabled);
+  });
+
+  ipcMain.handle('overlay:set-hotkey', (_event, { accelerator }: { accelerator: string }) => {
+    // Conflict check: overlay hotkey must not match the panel hotkey.
+    const panelHotkey = getHotkey();
+    if (accelerator === panelHotkey) {
+      return {
+        success: false,
+        conflict: true,
+        message: `"${accelerator}" is already used as the panel hotkey.`,
+      };
+    }
+    setOverlayHotkey(accelerator);
+    overlayControllerModule.overlayController?.setHotkey(accelerator);
+    return { success: true, conflict: false, message: 'Overlay hotkey saved.' };
+  });
+
+  ipcMain.handle('overlay:set-opacity', (_event, { opacity }: { opacity: number }) => {
+    setOverlayOpacity(opacity); // clamped inside setOverlayOpacity
+    overlayControllerModule.overlayController?.setOpacity(opacity);
+  });
+
+  ipcMain.handle('overlay:set-position', (_event, { position }: { position: string }) => {
+    setOverlayPosition(position);
+    overlayControllerModule.overlayController?.setPosition(position);
+  });
+
+  ipcMain.handle('overlay:set-size', (_event, { size }: { size: string }) => {
+    setOverlaySize(size);
+    overlayControllerModule.overlayController?.setSize(size);
+  });
 
   if (store.get('detection.enabled', true)) {
     detectionService.start();

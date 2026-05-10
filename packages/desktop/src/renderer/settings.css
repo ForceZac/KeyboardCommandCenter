@@ -147,3 +147,82 @@ button:disabled {
 .toggle input:checked + .toggle-track::after {
   transform: translateX(18px);
 }
+
+/* Overlay section */
+.overlay-fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.setting-section-heading {
+  font-size: 15px;
+  font-weight: 600;
+  color: #c8c8c8;
+  margin-bottom: 14px;
+  padding: 0;
+}
+
+.overlay-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.overlay-row:last-child {
+  margin-bottom: 0;
+}
+
+.overlay-hotkey-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.overlay-slider-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.overlay-slider-controls input[type="range"] {
+  width: 120px;
+  accent-color: #2a5ea3;
+}
+
+select {
+  background: #2d2d2d;
+  color: #e0e0e0;
+  border: 1px solid #444;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+select:focus {
+  outline: none;
+  border-color: #2a5ea3;
+}
+
+.overlay-size-controls {
+  display: flex;
+  gap: 16px;
+}
+
+.radio-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  color: #e0e0e0;
+}
+
+.radio-label input[type="radio"] {
+  accent-color: #2a5ea3;
+  cursor: pointer;
+}

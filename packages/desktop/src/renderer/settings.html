@@ -36,6 +36,63 @@
           </label>
         </div>
       </section>
+
+      <fieldset id="overlay-section" class="setting-row overlay-fieldset">
+        <legend class="setting-section-heading">Overlay</legend>
+
+        <div class="overlay-row">
+          <span class="label-text">Enable overlay mode</span>
+          <label class="toggle">
+            <input type="checkbox" id="overlay-enabled" />
+            <span class="toggle-track"></span>
+          </label>
+        </div>
+
+        <div class="overlay-row">
+          <span class="label-text">Overlay Hotkey</span>
+          <div class="overlay-hotkey-controls">
+            <button id="overlay-hotkey-btn">
+              <span id="overlay-hotkey-display"></span>
+            </button>
+            <p id="overlay-recording-hint" class="hint hidden">Press any key combination…</p>
+            <span id="overlay-hotkey-error" class="feedback error" aria-live="polite"></span>
+          </div>
+        </div>
+
+        <div class="overlay-row">
+          <span class="label-text">Opacity</span>
+          <div class="overlay-slider-controls">
+            <input type="range" id="overlay-opacity" min="20" max="80" step="1" />
+            <span id="overlay-opacity-display" class="value-display"></span>
+          </div>
+        </div>
+
+        <div class="overlay-row">
+          <span class="label-text">Position</span>
+          <select id="overlay-position">
+            <option value="Top Right">Top Right</option>
+            <option value="Top Left">Top Left</option>
+            <option value="Bottom Right">Bottom Right</option>
+            <option value="Bottom Left">Bottom Left</option>
+            <option value="Center Right">Center Right</option>
+            <option value="Center Left">Center Left</option>
+          </select>
+        </div>
+
+        <div class="overlay-row">
+          <span class="label-text">Size</span>
+          <div class="overlay-size-controls">
+            <label class="radio-label">
+              <input type="radio" name="overlay-size" value="Standard" />
+              Standard
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="overlay-size" value="Compact" />
+              Compact
+            </label>
+          </div>
+        </div>
+      </fieldset>
     </div>
   </body>
 </html>

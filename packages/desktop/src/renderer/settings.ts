@@ -6,12 +6,35 @@ const hotkeyFeedback = document.getElementById('hotkey-feedback') as HTMLSpanEle
 const recordingHint = document.getElementById('recording-hint') as HTMLParagraphElement;
 const loginStartupToggle = document.getElementById('login-startup-toggle') as HTMLInputElement;
 
+// Overlay controls
+const overlayEnabled = document.getElementById('overlay-enabled') as HTMLInputElement;
+const overlayHotkeyBtn = document.getElementById('overlay-hotkey-btn') as HTMLButtonElement;
+const overlayHotkeyDisplay = document.getElementById('overlay-hotkey-display') as HTMLSpanElement;
+const overlayHotkeyError = document.getElementById('overlay-hotkey-error') as HTMLSpanElement;
+const overlayRecordingHint = document.getElementById('overlay-recording-hint') as HTMLParagraphElement;
+const overlayOpacity = document.getElementById('overlay-opacity') as HTMLInputElement;
+const overlayOpacityDisplay = document.getElementById('overlay-opacity-display') as HTMLSpanElement;
+const overlayPosition = document.getElementById('overlay-position') as HTMLSelectElement;
+const overlaySizeRadios = document.querySelectorAll<HTMLInputElement>('input[name="overlay-size"]');
+
 let recording = false;
+let overlayRecording = false;
 
 async function loadSettings(): Promise<void> {
   const settings = await window.kccSettings.getSettings();
   hotkeyDisplay.textContent = settings.hotkey;
   loginStartupToggle.checked = settings.loginStartup;
+
+  const overlayPrefs = await window.kccSettings.overlay.getOverlay();
+  overlayEnabled.checked = overlayPrefs.enabled;
+  overlayHotkeyDisplay.textContent = overlayPrefs.hotkey;
+  // Opacity stored as 0.2–0.8 float; slider is 20–80 int.
+  overlayOpacity.value = String(Math.round(overlayPrefs.opacity * 100));
+  overlayOpacityDisplay.textContent = `${Math.round(overlayPrefs.opacity * 100)}%`;
+  overlayPosition.value = overlayPrefs.position;
+  overlaySizeRadios.forEach((radio) => {
+    radio.checked = radio.value === overlayPrefs.size;
+  });
 }
 
 function setFeedback(message: string, type: 'success' | 'error' | ''): void {
@@ -32,6 +55,20 @@ function stopRecording(): void {
   changeHotkeyBtn.disabled = false;
   changeHotkeyBtn.textContent = 'Change Hotkey';
   recordingHint.classList.add('hidden');
+}
+
+function startOverlayRecording(): void {
+  overlayRecording = true;
+  overlayHotkeyBtn.textContent = 'Recording…';
+  overlayRecordingHint.classList.remove('hidden');
+  overlayHotkeyError.textContent = '';
+}
+
+function stopOverlayRecording(): void {
+  overlayRecording = false;
+  overlayHotkeyBtn.textContent = '';
+  overlayHotkeyBtn.appendChild(overlayHotkeyDisplay);
+  overlayRecordingHint.classList.add('hidden');
 }
 
 /**
@@ -69,25 +106,41 @@ function eventToAccelerator(event: KeyboardEvent): string | null {
 }
 
 document.addEventListener('keydown', async (event: KeyboardEvent) => {
-  if (!recording) return;
+  if (recording) {
+    event.preventDefault();
+    event.stopPropagation();
 
-  event.preventDefault();
-  event.stopPropagation();
+    const accelerator = eventToAccelerator(event);
+    if (accelerator === null) return; // incomplete combo — keep recording
 
-  const accelerator = eventToAccelerator(event);
-  if (accelerator === null) {
-    // Incomplete combo (e.g. just Shift held) — keep recording.
+    stopRecording();
+
+    const result = await window.kccSettings.setHotkey(accelerator);
+    if (result.success) {
+      hotkeyDisplay.textContent = accelerator;
+      setFeedback('Hotkey saved.', 'success');
+    } else {
+      setFeedback(result.message, 'error');
+    }
     return;
   }
 
-  stopRecording();
+  if (overlayRecording) {
+    event.preventDefault();
+    event.stopPropagation();
 
-  const result = await window.kccSettings.setHotkey(accelerator);
-  if (result.success) {
-    hotkeyDisplay.textContent = accelerator;
-    setFeedback('Hotkey saved.', 'success');
-  } else {
-    setFeedback(result.message, 'error');
+    const accelerator = eventToAccelerator(event);
+    if (accelerator === null) return; // incomplete combo — keep recording
+
+    stopOverlayRecording();
+    overlayHotkeyDisplay.textContent = accelerator;
+
+    const result = await window.kccSettings.overlay.setHotkey(accelerator);
+    if (result.conflict) {
+      overlayHotkeyError.textContent = result.message;
+    } else {
+      overlayHotkeyError.textContent = '';
+    }
   }
 });
 
@@ -97,6 +150,37 @@ changeHotkeyBtn.addEventListener('click', () => {
   } else {
     startRecording();
   }
+});
+
+overlayHotkeyBtn.addEventListener('click', () => {
+  if (overlayRecording) {
+    stopOverlayRecording();
+  } else {
+    startOverlayRecording();
+  }
+});
+
+overlayEnabled.addEventListener('change', async () => {
+  await window.kccSettings.overlay.setEnabled(overlayEnabled.checked);
+});
+
+overlayOpacity.addEventListener('input', async () => {
+  const sliderVal = Number(overlayOpacity.value);
+  overlayOpacityDisplay.textContent = `${sliderVal}%`;
+  // Convert slider 20–80 to float 0.2–0.8 for the IPC layer.
+  await window.kccSettings.overlay.setOpacity(sliderVal / 100);
+});
+
+overlayPosition.addEventListener('change', async () => {
+  await window.kccSettings.overlay.setPosition(overlayPosition.value);
+});
+
+overlaySizeRadios.forEach((radio) => {
+  radio.addEventListener('change', async () => {
+    if (radio.checked) {
+      await window.kccSettings.overlay.setSize(radio.value);
+    }
+  });
 });
 
 loginStartupToggle.addEventListener('change', async () => {
