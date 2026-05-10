@@ -70,7 +70,7 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
   - TypeScript type definitions are generated for the native interface
   - Graceful error handling: returns `null` on detection failure, does not crash the Electron process
   - Works on both Windows and macOS (platform-specific code behind adapter interface)
-- **PR:**
+- **PR:** #9
 - **Branch:** goals/9-rust-native-module
 - **TRD:** research/plans/goals/9-rust-native-module-trd.md — awaiting-review
 - **Notes:** Depends on Goal 3 infrastructure (TASK-0007 must ship first — Electron app with settings via electron-store). Uses `napi-rs` per PRD recommendation. The native module is consumed by the polling service (TASK-0010) and by TASK-0008's mapping layer.
