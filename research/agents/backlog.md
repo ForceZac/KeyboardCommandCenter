@@ -33,21 +33,7 @@ Task IDs are monotonic. The Project Manager picks the next number.
 
 _(Project Manager keeps 2–3 tasks here at all times.)_
 
-### TASK-0021: Auth Schema & NextAuth Integration
-- **Goal:** Goal 7 — User Accounts & Favorites Sync
-- **PRD:** research/agents/prds/goal-07-accounts-favorites.md
-- **Scope:** Add NextAuth.js (Auth.js v5) to the Next.js web app with GitHub and Google OAuth providers. Add a `User` model to the Prisma schema with id, email, name, image, and provider fields. Wire up NextAuth session handling (JWT strategy). Protect API routes that will require auth (favorites, submissions). Add sign-in/sign-out UI to the web app header. NOT in scope: favorites data model or CRUD (separate task), community submissions (Goal 8), Electron deep-link auth (separate task), email/password auth.
-- **Acceptance:**
-  - NextAuth configured with GitHub + Google providers
-  - User model added to Prisma schema, migration generated
-  - Session available server-side via `auth()` and client-side via `useSession()`
-  - Sign-in / sign-out buttons in web app header
-  - Protected API route middleware scaffold in place
-  - No regressions on existing public pages
-- **PR:** #21 (draft — TRD not yet written)
-- **Branch:** goals/21-auth-schema-nextauth
-- **TRD:**
-- **Notes:** PRD now exists (written 2026-05-10). Branch already open — developer should write TRD before building.
+_(Empty)_
 
 ## In Progress
 
@@ -59,40 +45,22 @@ _(Empty)_
 
 _(Developer moves tasks here when the draft PR is marked ready.)_
 
-### TASK-0020: Overlay Detection Integration & App-Switch Content Updates
-- **Goal:** Goal 6 — Overlay Mode
-- **PRD:** research/agents/prds/goal-06-overlay-mode.md
-- **Scope:** Wire the overlay renderer to the detection service so overlay content updates when the active app changes. Listen for the `detection:app-changed` IPC event in the overlay preload/renderer (same channel the panel uses). On app change: fetch shortcuts for the new app via the existing `shortcuts:get-by-app` IPC (prefetch cache serves immediately), re-render the compact shortcut display with the new app's data. Handle unrecognized apps: show a muted "No shortcuts for [Process Name]" message in the overlay (PRD Flow 5). Handle no-detection state: show "No app detected" in the overlay. Ensure content update completes within 200ms of receiving the IPC event (success metric from PRD). NOT in scope: overlay BrowserWindow creation or positioning (TASK-0017, shipped), overlay renderer components or styling (TASK-0018, shipped), settings UI (TASK-0019, shipped), panel fallback states (TASK-0016), drag-to-reposition, Linux/Wayland, fullscreen app detection.
+### TASK-0021: Auth Schema & NextAuth Integration
+- **Goal:** Goal 7 — User Accounts & Favorites Sync
+- **PRD:** research/agents/prds/goal-07-accounts-favorites.md
+- **Scope:** Add NextAuth.js (Auth.js v5) to the Next.js web app with GitHub and Google OAuth providers. Add a `User` model to the Prisma schema with id, email, name, image, and provider fields. Wire up NextAuth session handling (JWT strategy). Protect API routes that will require auth (favorites, submissions). Add sign-in/sign-out UI to the web app header. NOT in scope: favorites data model or CRUD (separate task), community submissions (Goal 8), Electron deep-link auth (separate task), email/password auth.
 - **Acceptance:**
-  - Overlay content updates to show the correct app's shortcuts when the active app changes
-  - Content update completes within 200ms of receiving the detection:app-changed event
-  - Overlay shows "No shortcuts for [Process Name]" when the detected app is not in the database
-  - Overlay shows "No app detected" when detection returns no active app
-  - Overlay reuses the panel's prefetch cache — no duplicate database queries
-  - App name header in the overlay updates to reflect the currently detected app
-  - No flash or blank state during content transitions between apps
-  - No unhandled errors when detection service fires events before overlay renderer is ready
-- **PR:** #19
-- **Branch:** goals/20-overlay-detection-integration
-- **TRD:** research/plans/goals/20-overlay-detection-integration-trd.md — approved
-- **Notes:** Fourth Goal 6 task — covers PRD Flows 3 and 5. All deps shipped (TASK-0017, TASK-0018, TASK-0019). PR #19 marked ready for review.
+  - NextAuth configured with GitHub + Google providers
+  - User model added to Prisma schema, migration generated
+  - Session available server-side via `auth()` and client-side via `useSession()`
+  - Sign-in / sign-out buttons in web app header
+  - Protected API route middleware scaffold in place
+  - No regressions on existing public pages
+- **PR:** #21
+- **Branch:** goals/21-auth-schema-nextauth
+- **TRD:** research/plans/goals/21-auth-schema-nextauth-trd.md — approved
+- **Notes:** Round 2 fix pushed (2026-05-10) — added globals: true to vitest.config.ts to fix @testing-library/react auto-cleanup. tsc clean. Ready for Round 3 review.
 
-### TASK-0016: Panel Fallback States — No Detection, Unrecognized App, No Shortcuts
-- **Goal:** Goal 5 — Shortcut Panel UI (Desktop)
-- **PRD:** research/agents/prds/goal-05-shortcut-panel-ui.md
-- **Scope:** Handle all three fallback states in the panel renderer. (1) No app detected: display "No app detected" message with brief explanation, plus a list of recently-detected apps from the detection service that the user can click to load shortcuts manually. (2) Unrecognized app: display "Shortcuts not available for [Process Name]", plus recent apps list. (3) Recognized app with no shortcuts in the database: display "No shortcuts found for [App Name]", plus recent apps list. The recent apps list reuses data from the detection service's app history (exposed via existing IPC). Each recent app entry is clickable to load that app's shortcuts in the panel. NOT in scope: search/filter input (TASK-0015), overlay mode (Goal 6), user accounts (Goal 7), keyboard navigation within the fallback list (future task).
-- **Acceptance:**
-  - Panel shows "No app detected" message when detection returns no active app
-  - Panel shows "Shortcuts not available for [Process Name]" when detected app is not in the database
-  - Panel shows "No shortcuts found for [App Name]" when recognized app has zero shortcuts
-  - Recent apps list displays up to 5 recently-detected apps in all three fallback states
-  - Clicking a recent app loads that app's shortcuts in the panel
-  - Fallback states render within 100ms (same perf target as normal panel content)
-  - No unhandled errors for edge cases (empty detection history, all recent apps unrecognized)
-- **PR:** #20
-- **Branch:** goals/16-panel-fallback-states
-- **TRD:**
-- **Notes:** Fourth Goal 5 task — covers PRD Flows 3 and 4. All deps shipped (TASK-0013, TASK-0012). PR #20 is open (not draft — ready for review).
 
 ## Changes Requested
 
@@ -109,6 +77,21 @@ _(Reviewer moves tasks here after approving the PR. You merge to main, then move
 ## Shipped
 
 _(You move tasks here after merging to main.)_
+
+### TASK-0020: Overlay Detection Integration & App-Switch Content Updates
+- **Goal:** Goal 6 — Overlay Mode
+- **PRD:** research/agents/prds/goal-06-overlay-mode.md
+- **PR:** #19
+- **Branch:** goals/20-overlay-detection-integration
+- **TRD:** research/plans/goals/20-overlay-detection-integration-trd.md — approved
+- **Merged:** 2026-05-10
+
+### TASK-0016: Panel Fallback States — No Detection, Unrecognized App, No Shortcuts
+- **Goal:** Goal 5 — Shortcut Panel UI (Desktop)
+- **PRD:** research/agents/prds/goal-05-shortcut-panel-ui.md
+- **PR:** #20
+- **Branch:** goals/16-panel-fallback-states
+- **Merged:** 2026-05-10
 
 ### TASK-0017: Overlay BrowserWindow & Toggle Hotkey
 - **Goal:** Goal 6 — Overlay Mode

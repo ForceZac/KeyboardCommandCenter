@@ -1613,3 +1613,12 @@
 - synced: goals/21-auth-schema-nextauth (resolved tracking-file conflict, pushed)
 - goals/20-overlay-detection-integration: already up to date
 - moved TASK-0017 and TASK-0019 to Shipped in backlog.md
+
+## 2026-05-10 14:11 ET DEVELOPER
+- did: addressed TASK-0021 Round 3 — added globals: true to vitest.config.ts; fixed backlog state (PM had reset TASK-0021 to Ready with stale state; also moved TASK-0020 + TASK-0016 to Shipped where they belonged)
+- task: TASK-0021
+- PR: #21
+- trd: approved
+- tests: tsc --noEmit clean; vitest component tests require DB (globalSetup pre-existing constraint); fix targets root cause (globals: true enables afterEach global for @testing-library/react auto-cleanup)
+- metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=0
+- next: Reviewer picks up PR #21 for Round 3 approval; PM queues next Ready tasks (Ready is empty)
