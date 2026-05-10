@@ -33,11 +33,17 @@ Task IDs are monotonic. The Project Manager picks the next number.
 
 _(Project Manager keeps 2–3 tasks here at all times.)_
 
-_(Empty — TASK-0021 moved to In Progress; TASK-0022 moved to Blocked pending TASK-0021)_
+_(Empty — all Goal 7 tasks currently depend on TASK-0021 merging. When TASK-0021 merges, TASK-0022 unblocks to Ready.)_
 
 ## In Progress
 
 _(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
+
+_(Empty)_
+
+## In Review
+
+_(Developer moves tasks here when the draft PR is marked ready.)_
 
 ### TASK-0021: Auth Schema & NextAuth Integration
 - **Goal:** Goal 7 — User Accounts & Favorites Sync
@@ -52,14 +58,8 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
   - No regressions on existing public pages
 - **PR:** #21
 - **Branch:** goals/21-auth-schema-nextauth
-- **TRD:** research/plans/goals/21-auth-schema-nextauth-trd.md — awaiting-review
-- **Notes:** PRD exists (written 2026-05-10). Branch and draft PR already open. Previous TRD was out of scope (included credentials provider and favorites/collection schema) — corrected TRD written 2026-05-10. Reviewer: check TRD stays within scope (OAuth-only, User+Auth.js tables only, no Favorite/Collection).
-
-## In Review
-
-_(Developer moves tasks here when the draft PR is marked ready.)_
-
-_(Empty)_
+- **TRD:** research/plans/goals/21-auth-schema-nextauth-trd.md — approved
+- **Notes:** PRD exists (written 2026-05-10). Feature complete 2026-05-10. Reviewer: verify OAuth-only scope (no credentials provider, no Favorite/Collection schema). Migration file created manually (no live DB in CI). tsc + eslint clean.
 
 ## Changes Requested
 
@@ -279,3 +279,42 @@ _(Waiting on an external dependency, a missing PRD, or owner decision.)_
 - **Branch:**
 - **TRD:**
 - **Notes:** Blocked — awaiting TASK-0021 (auth schema + User model must be in place for user relations). Second Goal 7 task.
+
+### TASK-0023: Desktop Auth Flow — Browser OAuth & Deep Link Callback
+- **Goal:** Goal 7 — User Accounts & Favorites Sync
+- **PRD:** research/agents/prds/goal-07-accounts-favorites.md
+- **Scope:** Register `shortcutvault://` custom protocol in Electron via `app.setAsDefaultProtocolClient()`. Add "Sign in" / "Sign out" entries to the system tray menu. When "Sign in" is clicked, open the default browser to the web app's NextAuth sign-in page with a callback parameter. Handle the `shortcutvault://auth/callback?token=...` deep link in the Electron main process. Validate and store the session token securely using Electron's safeStorage API via electron-store. Display signed-in state in the settings window (avatar, display name, sign-out button). On macOS, handle protocol via `open-url` event; on Windows, handle via `second-instance` event argv parsing. NOT in scope: favorites cache or sync engine (separate task), any web app auth changes (TASK-0021), desktop-only account creation, favorites UI in the panel.
+- **Acceptance:**
+  - `shortcutvault://` protocol registered on app start (macOS and Windows)
+  - Tray menu shows "Sign in" when unauthenticated, "Sign out" when authenticated
+  - Clicking "Sign in" opens default browser to the web app's OAuth page
+  - Deep link callback (`shortcutvault://auth/callback?token=...`) received and parsed correctly
+  - Session token stored encrypted via safeStorage in electron-store
+  - Settings window shows user avatar and display name when signed in
+  - "Sign out" clears stored token and resets tray menu and settings UI
+  - No regressions on existing desktop functionality (panel, overlay, detection)
+- **PR:**
+- **Branch:**
+- **TRD:**
+- **Notes:** Blocked — awaiting TASK-0021 (needs NextAuth endpoints and User model on main). Third Goal 7 task. PRD Flow 2 covers this scope.
+
+### TASK-0024: Favorites Web UI — Heart Icons, Collections Page & Optimistic Updates
+- **Goal:** Goal 7 — User Accounts & Favorites Sync
+- **PRD:** research/agents/prds/goal-07-accounts-favorites.md
+- **Scope:** Add a favorite toggle (heart/star icon) to each shortcut row on per-app shortcut pages. Clicking the icon calls `POST/DELETE /api/favorites` with optimistic UI (instant visual toggle, rollback on API error). Add a "My Collections" page accessible from the user nav/profile menu, displaying all collections as cards with shortcut counts. Implement collection CRUD UI: create (name + optional description), rename, delete (prevent deleting the default "My Favorites" collection). Add a collection detail view showing shortcuts in that collection with individual remove capability. Add a dropdown on the favorite icon to assign a shortcut to a specific named collection. All favorite/collection actions require an authenticated session — show a sign-in prompt for unauthenticated users attempting to favorite. NOT in scope: desktop panel favorites view (separate task), desktop sync engine, collection reordering/drag-and-drop, import/export, guest favorites migration, public/shared collections.
+- **Acceptance:**
+  - Heart/star icon visible on each shortcut row on per-app pages
+  - Clicking the icon favorites/unfavorites with immediate visual feedback (<100ms perceived)
+  - Optimistic UI: icon fills instantly, reverts if API call fails
+  - Dropdown on the favorite icon allows adding to a specific named collection
+  - "My Collections" page accessible from nav when signed in
+  - Collections displayed as cards with names, descriptions, and shortcut counts
+  - Create new collection with name and optional description
+  - Rename and delete collections (default "My Favorites" cannot be deleted)
+  - Collection detail page lists shortcuts with individual remove buttons
+  - Unauthenticated users see a sign-in prompt when attempting to favorite
+  - No regressions on existing shortcut browse/search pages
+- **PR:**
+- **Branch:**
+- **TRD:**
+- **Notes:** Blocked — awaiting TASK-0022 (needs favorites/collections API routes and data model). Fourth Goal 7 task. PRD Flows 3 and 5 cover this scope.

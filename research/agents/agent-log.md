@@ -1490,3 +1490,39 @@
 - tests: 181/181 green (+9 preload tests) | tsc clean (all configs implied)
 - metrics: run_type=productive | commits=1 | tests_added=9 | trd_cycles=0 | dev_idle=0
 - next: Reviewer picks up PR #18 for round-2; TASK-0020 unblocks once #18 merges
+
+## 2026-05-10 12:51 ET DEVELOPER
+- did: no-op — TRD awaiting reviewer approval for TASK-0021 (Auth Schema & NextAuth Integration)
+- task: TASK-0021
+- PR: #21
+- trd: awaiting-review
+- tests: skipped (TRD phase — no feature code written)
+- metrics: run_type=no-op | reason=TRD awaiting review (TASK-0021) | dev_idle=1
+- next: TRD Watcher reviews TASK-0021 TRD; once approved, Developer resumes building NextAuth integration
+
+## 2026-05-10 13:01 ET DEVELOPER
+- did: started run — claimed DEV_LOCK; resuming TASK-0021 (Auth Schema & NextAuth Integration — TRD approved — building)
+- task: TASK-0021
+- PR: #21
+- status: in-progress — build phase
+
+## 2026-05-10 13:06 ET PROJECT-MANAGER
+- did: created 2 tasks for Goal 7 (TASK-0023, TASK-0024) in Blocked; updated project_context.md (Goals 5+6 now shipped, Goal 7 active with 4 tasks)
+- created: TASK-0023 (Desktop Auth Flow — Browser OAuth & Deep Link Callback), TASK-0024 (Favorites Web UI — Heart Icons, Collections Page & Optimistic Updates)
+- moved: none
+- prd gaps: Goal 9, 10 need PRDs (not urgent — N+3, N+4 from active goal)
+- roadmap check: skipped (did last run — was solid)
+- proposals added: 0
+- metrics: tasks_created=2 | tasks_moved=0 | prd_gaps=2 | roadmap_issues=0
+- note: Ready at 0 — expected bottleneck while TASK-0021 builds. When TASK-0021 merges, Merge Watcher unblocks TASK-0022 and TASK-0023 to Ready (2 tasks). TASK-0024 unblocks after TASK-0022 ships.
+- next: monitor TASK-0021 progress. Once it merges, verify TASK-0022 and TASK-0023 move to Ready. Consider scoping remaining Goal 7 tasks (desktop favorites panel UI, sync engine) next run.
+- discord: FAILED — #standup and #main not allowlisted; summary logged in agent-log.md only (2026-05-10 13:06 ET)
+
+## 2026-05-10 13:01 ET DEVELOPER
+- did: FINAL — built TASK-0021 (Auth Schema & NextAuth Integration). Schema: added User, Account, Session, VerificationToken models + migration 20260510000000_add-auth-schema. Auth: lib/auth.ts (PrismaAdapter, JWT, GitHub + Google OAuth), app/api/auth/[...nextauth]/route.ts, lib/env.ts (6 new vars). Session: providers.tsx wraps SessionProvider. UI: SignInButton.tsx, UserMenu.tsx (avatar/initials/dropdown), layout.tsx global header (server-side auth(), removes per-page brand header from page.tsx). Middleware: middleware.ts returns 401 on /api/favorites/* and /api/submissions/*. Tests: SignInButton.test.tsx + UserMenu.test.tsx (Vitest, jsdom, next-auth mocked), auth.spec.ts (Playwright: unauthenticated state + middleware 401 guards). PR #21 marked ready.
+- task: TASK-0021
+- PR: #21
+- trd: approved — feature complete
+- tests: tsc clean + eslint clean | Vitest skipped (no DATABASE_URL) | Playwright skipped (no running server)
+- metrics: run_type=productive | commits=1 | tests_added=8 | trd_cycles=0 | dev_idle=0
+- next: Reviewer picks up PR #21; once merged TASK-0022 (Favorites Data Model) unblocks to Ready
