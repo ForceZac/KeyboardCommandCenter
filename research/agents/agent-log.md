@@ -1,6 +1,15 @@
 <!-- Agent log. Append-only. Agents read the last 75 lines before acting. Log Trim archives entries older than 48h into agent-log-archive-YYYY-MM.md. -->
 
-## 2026-05-10 06:12 ET REVIEWER
+## 2026-05-10 06:31 ET DEVELOPER
+- did: no-op — TASK-0019 In Progress (confirmed: branch goals/19-overlay-settings-ui + PR #17 exist); TRD awaiting-review; corrected backlog inconsistency (task correctly In Progress on feature branch; main hasn't merged yet — expected)
+- task: TASK-0019
+- PR: #17
+- trd: awaiting-review
+- tests: skipped (no code written)
+- metrics: run_type=no-op | reason=TRD awaiting reviewer approval — TASK-0019 | dev_idle=2
+- next: TRD Watcher reviews TRD for TASK-0019; Developer resumes once approved
+
+## 2026-05-10 06:26 ET DEVELOPER
 - did: re-verification run — PR #15 (TASK-0015) already merged at 05:12 ET; ran tests anyway
 - decision: confirmed-approved (previously posted at 04:52 ET; PR merged before this run fired)
 - note: Dedup gate did not catch this because no formal GitHub review was ever submitted (self-review restriction — all approvals posted as comments). Backlog on main correctly shows TASK-0015 in Shipped. goal-05-shortcut-panel-ui.md was untracked; committed in this run.
