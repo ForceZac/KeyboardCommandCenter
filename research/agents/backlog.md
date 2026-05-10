@@ -50,29 +50,28 @@ _(Project Manager keeps 2–3 tasks here at all times.)_
 - **TRD:**
 - **Notes:** Depends on TASK-0010 (polling service provides the recent-apps list via IPC). This is the final piece of Goal 4's user-facing definition of done (PRD Flow 2: recently-detected apps in tray).
 
+### TASK-0012: Shortcut Data IPC Layer & Prefetch
+- **Goal:** Goal 5 — Shortcut Panel UI (Desktop)
+- **PRD:** research/agents/prds/goal-05-shortcut-panel-ui.md
+- **Scope:** Add a `shortcuts:get-by-app` IPC handler in the Electron main process that accepts an app slug, queries PostgreSQL via Prisma for all shortcuts belonging to that app, groups results by context/scope, and returns structured data to the renderer. Expose a `getShortcutsForApp(slug)` method via contextBridge preload. Add prefetch logic: when the detection service fires an app-changed event, the main process proactively fetches and caches shortcut data for the new app so it's ready when the panel opens (meeting the 100ms render target from the PRD). Cache the most recent 5 app results in memory; invalidate on slug change. NOT in scope: panel UI rendering or visual components (separate task), search/filter UI, fallback state UI, overlay mode (Goal 6), user accounts (Goal 7), Linux (Goal 10).
+- **Acceptance:**
+  - `shortcuts:get-by-app` IPC handler accepts an app slug and returns grouped shortcut data
+  - Preload exposes `getShortcutsForApp(slug)` via contextBridge
+  - Data is fetched from PostgreSQL via Prisma ORM
+  - Shortcuts are grouped by context/scope in the response
+  - Prefetch fires automatically on detection app-changed event
+  - Cached results serve immediately for recently-detected apps (up to 5)
+  - Response time <50ms for cached apps (no DB round-trip)
+  - Handler returns empty result for unknown app slugs (no crash)
+  - No unhandled exceptions if database is unreachable
+- **PR:**
+- **Branch:**
+- **TRD:**
+- **Notes:** First Goal 5 task — provides the data plumbing for the panel UI. Depends on Goal 4 shipping (detection service IPC provides the app slug). TASK-0011 is the last Goal 4 task; once it ships, this task is unblocked.
+
 ## In Progress
 
 _(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
-
-### TASK-0010: Detection Polling Service & IPC Integration
-- **Goal:** Goal 4 — Active Window Process Detection
-- **PRD:** research/agents/prds/goal-04-process-detection.md
-- **Scope:** Build the background polling service in the Electron main process that calls `getActiveWindow()` (TASK-0009) on a configurable interval (default 1–2 seconds), passes the result through `lookupApp()` (TASK-0008) to resolve the database app slug, and sends the detected app identity to the renderer via an IPC channel. Add electron-store settings for detection enable/disable toggle and polling interval. When detection is disabled, polling stops and the renderer receives no detection events. Handle unknown processes: send an "unknown" app identity to the renderer with the raw process name, and append unrecognized process names to a local log file for future database expansion. Track the last 5 unique detected apps in session memory (in-memory array, not persisted) for consumption by the tray submenu (separate task). NOT in scope: tray "Recent Apps" submenu UI (separate task), shortcut panel UI changes (Goal 5), renderer-side panel content or layout, Linux support, overlay mode, keystroke detection.
-- **Acceptance:**
-  - Polling service starts automatically when detection is enabled and stops when disabled
-  - Polling interval is configurable via electron-store (default 1500ms)
-  - Service calls `getActiveWindow()` and `lookupApp()` each tick, sends result to renderer via IPC
-  - Renderer receives `{ appSlug: string | null, processName: string, windowTitle: string }` on each detection change
-  - IPC only fires when the detected app changes (not on every tick — debounce duplicate detections)
-  - Settings toggle for enable/disable persists across restarts via electron-store
-  - Unknown processes: IPC sends `appSlug: null` with the raw process name; process name is appended to a local log file (`~/.shortcutvault/unrecognized-processes.log` or similar)
-  - Last 5 unique detected apps are tracked in memory and retrievable via IPC query (for tray integration)
-  - CPU overhead of polling is <1% on a modern machine
-  - No crashes or unhandled exceptions from native module failures (graceful degradation)
-- **PR:** #10
-- **Branch:** goals/10-detection-polling-service
-- **TRD:** research/plans/goals/10-detection-polling-service-trd.md — awaiting-review
-- **Notes:** Depends on TASK-0008 (process map, approved) and TASK-0009 (native module, in review). This is the integration layer that ties together detection + mapping + renderer communication. The tray "Recent Apps" submenu consumes the session app list but is scoped to a separate task.
 
 ## In Review
 
@@ -90,74 +89,54 @@ _(TRD Watcher moves tasks here when a TRD needs rework.)_
 
 _(Reviewer moves tasks here after approving the PR. You merge to main, then move to Shipped.)_
 
+## Shipped
+
+_(You move tasks here after merging to main.)_
+
+### TASK-0010: Detection Polling Service & IPC Integration
+- **Goal:** Goal 4 — Active Window Process Detection
+- **PRD:** research/agents/prds/goal-04-process-detection.md
+- **PR:** #10
+- **Branch:** goals/10-detection-polling-service
+- **TRD:** research/plans/goals/10-detection-polling-service-trd.md — approved
+- **Approved:** 2026-05-10
+- **Merged:** 2026-05-10
+
 ### TASK-0009: Rust Native Module for Active Window Detection
 - **Goal:** Goal 4 — Active Window Process Detection
 - **PRD:** research/agents/prds/goal-04-process-detection.md
-- **Scope:** napi-rs Rust crate in `packages/desktop/native/` exposing `getActiveWindow()` with Win32 (QueryFullProcessImageNameW) and macOS (NSWorkspace) platform adapters behind `#[cfg(target_os)]`. TypeScript wrapper in `src/platform/active-window.ts` with graceful null. Integrates with Electron Forge webpack pipeline.
 - **PR:** #9
 - **Branch:** goals/9-rust-native-module
 - **TRD:** research/plans/goals/9-rust-native-module-trd.md — approved
 - **Approved:** 2026-05-10
-- **Notes:** Round-2 review. Both blockers resolved: Win32 API (QueryFullProcessImageNameW) and binary filename (--platform removed). 9/9 tests pass.
+- **Merged:** 2026-05-10
 
 ### TASK-0008: Process-to-App Mapping Table
 - **Goal:** Goal 4 — Active Window Process Detection
 - **PRD:** research/agents/prds/goal-04-process-detection.md
-- **Scope:** Create a static JSON mapping file (e.g. `packages/desktop/src/process-map.json`) that maps process names, executable names, and macOS bundle identifiers to application slugs in the shortcut database. Cover all 50+ apps in the existing seed data. Handle common process name variations per app (e.g. `code` / `Code.exe` / `Code Helper` → `vs-code`; `Photoshop` / `Adobe Photoshop 2024` → `photoshop`). Include a TypeScript module that loads the map and exports a `lookupApp(processName: string, bundleId?: string): string | null` function for use by the detection service. NOT in scope: Rust native module, active window detection, polling service, tray integration, detection settings UI, Linux process names.
-- **Acceptance:**
-  - JSON mapping file exists with entries for all 50+ seeded apps
-  - Each entry maps at least one process name or bundle ID to a database app slug
-  - Common aliases and variations are covered (verified against top 10 apps: VS Code, Chrome, Photoshop, Figma, Slack, Terminal, Finder/Explorer, Word, Excel, Spotify)
-  - TypeScript `lookupApp()` function returns correct slugs for test inputs and `null` for unrecognized process names
-  - File is loadable at runtime by the Electron main process without external dependencies
 - **PR:** #8
 - **Branch:** goals/8-process-map
 - **TRD:** research/plans/goals/8-process-map-trd.md — approved
 - **Approved:** 2026-05-09
-- **Notes:** Foundational for TASK-0009 and the rest of Goal 4. Does not depend on Goal 3 Electron infrastructure — can be started immediately. App slugs should match existing database entries from seed data.
+- **Merged:** 2026-05-10
 
 ### TASK-0007: Settings Persistence & Login Startup Registration
 - **Goal:** Goal 3 — Desktop App Shell (Electron + Tray)
 - **PRD:** research/agents/prds/goal-03-desktop-app-shell.md
-- **Scope:** Complete the user-facing Goal 3 PRD items not covered by TASK-0006: (1) Add `electron-store` for local settings persistence — store hotkey binding (Electron accelerator string) and login-startup preference as a JSON file. (2) Wire configurable hotkey into HotkeyManager — Settings window accessible from tray context menu lets user record a new key combo, re-registers the global shortcut on change, and notifies user if the binding is already claimed by another app. (3) Login startup registration via `app.setLoginItemSettings` — enabled by default, toggleable in Settings, persisted via electron-store. (4) Add "Settings" item to tray context menu between "Open" and "Quit". NOT in scope: CI build pipeline (separate task), real shortcut panel content (Goal 5), process detection (Goal 4), overlay (Goal 6), code signing (Goal 9), Linux (Goal 10), auto-update, installer UX.
-- **Acceptance:**
-  - Tray context menu includes "Settings" option that opens a Settings window
-  - Settings window shows current hotkey binding and startup preference
-  - User can change the hotkey binding — new binding persists across app restarts
-  - App handles hotkey conflicts gracefully (shows notification if binding is taken by another app)
-  - App registers for login startup on Windows and macOS via `app.setLoginItemSettings`
-  - Startup preference is toggleable in Settings and persisted
-  - Settings stored via `electron-store` in a local JSON file
-  - All settings survive app restart (kill + relaunch)
 - **PR:** #7
 - **Branch:** goals/7-settings-persistence
 - **TRD:** research/plans/goals/7-settings-persistence-trd.md — approved
 - **Approved:** 2026-05-10
-- **Notes:** Completes Goal 3 user-facing DoD alongside TASK-0006 (shell, tray, hotkey, panel). Depends on TASK-0006 being shipped first (done). CI build pipeline deferred to a separate task.
+- **Merged:** 2026-05-10
 
 ### TASK-0005: Per-App Shortcut Pages, Category Browse Pages & Platform Toggle
 - **Goal:** Goal 2 — Web Search & Browse Interface
 - **PRD:** research/agents/prds/goal-02-web-search-browse.md
-- **Scope:** Build the remaining Goal 2 frontend pages in `packages/web/app/`: (1) Per-app shortcut page at `/apps/[slug]` — fetches `GET /api/apps/[slug]`, displays all shortcuts grouped by context/scope, includes in-app search/filter, keyboard key styling (visual key caps), and platform filter toggle (Win/Mac/Linux). (2) Category browse page at `/categories/[slug]` — fetches `GET /api/categories` and `GET /api/apps?category=`, displays grid of apps in the selected category. (3) Persistent platform toggle component — defaults to user's detected OS, persists selection across navigation (localStorage), switches displayed modifier keys (Cmd vs Ctrl). All pages must be dark-mode compatible, mobile-responsive (320px+), and include SEO meta tags. NOT in scope: user accounts, favorites, community submissions, admin panel, SSR of search results, analytics.
-- **Acceptance:**
-  - `/apps/[slug]` renders all shortcuts for the given app, grouped by context
-  - Shortcuts display styled keyboard key caps (visual rendering of key combos)
-  - Platform toggle on app page filters shortcuts to selected OS and shows correct modifiers
-  - Platform selection persists in localStorage and carries across page navigations
-  - In-app search/filter narrows displayed shortcuts client-side in real time
-  - `/categories/[slug]` renders a grid of apps in that category with correct counts
-  - Category page app tiles link to `/apps/[slug]`
-  - Both pages render correctly in dark and light mode
-  - Both pages are usable on 320px-wide screens
-  - App pages include semantic HTML and meta tags for SEO
 - **PR:** #6
 - **Branch:** goals/5-per-app-category-pages
 - **TRD:** research/plans/goals/5-per-app-category-pages-trd.md — approved
 - **Approved:** 2026-05-09
-
-## Shipped
-
-_(You move tasks here after merging to main.)_
+- **Merged:** 2026-05-10
 
 ### TASK-0004: Homepage & Global Search UI
 - **Goal:** Goal 2 — Web Search & Browse Interface
