@@ -86,7 +86,7 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
   - Panel window renders above overlay when both are visible (higher z-order)
   - Overlay does not increase idle memory by more than 20MB
   - No crash when overlay hotkey is pressed before detection service is running
-- **PR:**
+- **PR:** #18
 - **Branch:** goals/17-overlay-browser-window
 - **TRD:** research/plans/goals/17-overlay-browser-window-trd.md — awaiting-review
 - **Notes:** First Goal 6 task — the overlay window shell. Depends on Goal 5 completion (panel and detection infrastructure must be on main). Look-ahead task queued while Goal 5 wraps up so the Developer doesn't idle between goals. **Re: PROP-0005:** The overlay electron-store schema (overlay.enabled, overlay.hotkey, overlay.opacity, overlay.position, overlay.size with defaults) is already defined by TASK-0019's implementation. Do NOT redefine it — use the existing schema. The `OverlayController` interface registered by TASK-0019 is the integration point this task implements.
