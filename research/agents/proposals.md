@@ -28,13 +28,22 @@ Off-roadmap ideas and system-improvement suggestions surfaced by the agents. The
 - **Proposal:** Product Manager should write `research/agents/prds/goal-04-process-detection.md` covering the full Goal 4 definition (process detection, native module, polling service, tray submenu). Once the file exists, move TASK-0011 back to Ready. Developer will proceed on the next run.
 - **Status:** resolved — PRD written (commit 6b72654), TASK-0011 moved back to Ready
 
+### PROP-0004: active-window.ts stub not reconciled after TASK-0009 merge
+- **Source:** Developer
+- **Date:** 2026-05-10
+- **Impact:** 4
+- **Effort:** 2
+- **Evidence:** TASK-0009 (goals/9-rust-native-module, PR #9) was merged to main 2026-05-10. active-window.test.ts exists on main and tests `createActiveWindowDetector`, `loadNativeModule`, and `NativeModule` — none of which are exported by the current stub. These 9 tests fail on main (pre-existing). PR #11 (TASK-0011) wrote the real implementation but the Reviewer correctly flagged it as out-of-scope and requested it be reverted. Developer reverted it 2026-05-10 per changes-requested feedback.
+- **Proposal:** PM should create a task to reconcile active-window.ts — write and TRD the real `loadNativeModule` + `createActiveWindowDetector` implementation (TypeScript wrapper for the kcc-native .node binary). Goal: make the 9 pre-existing active-window tests pass on main. Assign to Goal 4 (Active Window Process Detection).
+- **Status:** open
+
 ### PROP-0003: process-map.ts stub not reconciled after TASK-0008 merge
 - **Source:** Developer
 - **Date:** 2026-05-10
 - **Impact:** 3
 - **Effort:** 2
-- **Evidence:** TASK-0008 (goals/8-process-map, PR #8) was merged to main on 2026-05-10. process-map.json now contains real byProcess and byBundleId data. However, process-map.ts at HEAD is still the original stub that always returns null for lookupApp(). The TASK-0008 branch must have left the stub in place rather than replacing it with a real implementation. DetectionService on main currently never resolves any app slug.
-- **Proposal:** Owner or Developer should reconcile process-map.ts — either by cherry-picking the real implementation from goals/8-process-map if it exists there, or by writing a fresh implementation that reads from the existing process-map.json. This is a separate task from TASK-0011 and should be tracked. TASK-0011 adds getDisplayName() to process-map.ts but leaves lookupApp() as-is (still a stub).
+- **Evidence:** TASK-0008 (goals/8-process-map, PR #8) was merged to main on 2026-05-10. process-map.json now contains real byProcess and byBundleId data. However, process-map.ts at HEAD is still the original stub that always returns null for lookupApp(). The TASK-0008 branch must have left the stub in place rather than replacing it with a real implementation. DetectionService on main currently never resolves any app slug. PR #11 (TASK-0011) wrote the real lookupApp but Reviewer flagged it as out-of-scope and it was reverted 2026-05-10.
+- **Proposal:** PM should create a task to reconcile process-map.ts — write the real lookupApp() implementation reading from process-map.json (byProcess + byBundleId lookup, normalization, .exe stripping). PRD is research/agents/prds/goal-04-process-detection.md. Goal: make the 40 pre-existing lookupApp tests pass on main.
 - **Status:** open
 
 ### PROP-0001: Goal 3 work shipped without PRD or backlog tracking

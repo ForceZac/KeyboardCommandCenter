@@ -14,36 +14,18 @@ export type ProcessMap = {
 const processMap: ProcessMap = mapData as ProcessMap;
 
 /**
- * Look up an application slug from a raw process name and optional bundle ID.
+ * Looks up an application slug from a raw process name and optional bundle ID.
+ * Returns the database app slug (e.g. "vscode", "slack") or null for unknown processes.
  *
- * Lookup order:
- *   1. Bundle ID (macOS only — more stable across app updates).
- *   2. Normalized process name (lowercased, `.exe` suffix stripped).
- *
- * Returns the database app slug (e.g. "vscode", "slack") or `null` when no
- * mapping exists for the given inputs.
+ * Stub implementation always returns null — real lookup pending PROP-0003 reconciliation.
+ * See: research/agents/proposals.md#PROP-0003
  */
 export function lookupApp(
-  processName: string,
-  bundleId?: string,
+  _processName: string,
+  _bundleId?: string,
 ): string | null {
-  if (!processName && !bundleId) return null;
-
-  // Bundle ID path — try first when available (macOS).
-  if (bundleId) {
-    const slug = processMap.byBundleId[bundleId.trim()];
-    if (slug) return slug;
-  }
-
-  // Process name path — normalize to lowercase and strip .exe suffix.
-  const normalized = processName
-    .toLowerCase()
-    .trim()
-    .replace(/\.exe$/i, '');
-
-  if (!normalized) return null;
-
-  return processMap.byProcess[normalized] ?? null;
+  // Stub — TASK-0008 reconciliation still pending (see PROP-0003).
+  return null;
 }
 
 /**
