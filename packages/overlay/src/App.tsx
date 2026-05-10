@@ -27,6 +27,8 @@ export function App() {
     minWidth: '220px',
     maxWidth: '320px',
     fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+    // Defensive renderer-level click-through; OS-level pass-through is set by TASK-0017.
+    pointerEvents: 'none' as const,
   };
 
   if (status === 'unrecognized') {
