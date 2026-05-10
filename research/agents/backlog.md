@@ -33,6 +33,10 @@ Task IDs are monotonic. The Project Manager picks the next number.
 
 _(Project Manager keeps 2–3 tasks here at all times.)_
 
+## In Progress
+
+_(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
+
 ### TASK-0023: Desktop Auth Flow — Browser OAuth & Deep Link Callback
 - **Goal:** Goal 7 — User Accounts & Favorites Sync
 - **PRD:** research/agents/prds/goal-07-accounts-favorites.md
@@ -46,14 +50,10 @@ _(Project Manager keeps 2–3 tasks here at all times.)_
   - Settings window shows user avatar and display name when signed in
   - "Sign out" clears stored token and resets tray menu and settings UI
   - No regressions on existing desktop functionality (panel, overlay, detection)
-- **PR:**
-- **Branch:**
-- **TRD:**
+- **PR:** #23
+- **Branch:** goals/23-desktop-auth-flow
+- **TRD:** research/plans/goals/23-desktop-auth-flow-trd.md — awaiting-review
 - **Notes:** Unblocked by merge on 2026-05-10 (TASK-0021 shipped). Third Goal 7 task. PRD Flow 2 covers this scope.
-
-## In Progress
-
-_(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
 
 ## In Review
 
