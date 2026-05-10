@@ -41,6 +41,36 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
 
 _(Developer moves tasks here when the draft PR is marked ready.)_
 
+### TASK-0007: Settings Persistence & Login Startup Registration
+- **Goal:** Goal 3 — Desktop App Shell (Electron + Tray)
+- **PRD:** research/agents/prds/goal-03-desktop-app-shell.md
+- **Scope:** Complete the user-facing Goal 3 PRD items not covered by TASK-0006: (1) Add `electron-store` for local settings persistence — store hotkey binding (Electron accelerator string) and login-startup preference as a JSON file. (2) Wire configurable hotkey into HotkeyManager — Settings window accessible from tray context menu lets user record a new key combo, re-registers the global shortcut on change, and notifies user if the binding is already claimed by another app. (3) Login startup registration via `app.setLoginItemSettings` — enabled by default, toggleable in Settings, persisted via electron-store. (4) Add "Settings" item to tray context menu between "Open" and "Quit". NOT in scope: CI build pipeline (separate task), real shortcut panel content (Goal 5), process detection (Goal 4), overlay (Goal 6), code signing (Goal 9), Linux (Goal 10), auto-update, installer UX.
+- **Acceptance:**
+  - Tray context menu includes "Settings" option that opens a Settings window
+  - Settings window shows current hotkey binding and startup preference
+  - User can change the hotkey binding — new binding persists across app restarts
+  - App handles hotkey conflicts gracefully (shows notification if binding is taken by another app)
+  - App registers for login startup on Windows and macOS via `app.setLoginItemSettings`
+  - Startup preference is toggleable in Settings and persisted
+  - Settings stored via `electron-store` in a local JSON file
+  - All settings survive app restart (kill + relaunch)
+- **PR:** #7
+- **Branch:** goals/7-settings-persistence
+- **TRD:** research/plans/goals/7-settings-persistence-trd.md — approved
+- **Notes:** Completes Goal 3 user-facing DoD alongside TASK-0006 (shell, tray, hotkey, panel). Depends on TASK-0006 being shipped first (done). CI build pipeline deferred to a separate task.
+
+## Changes Requested
+
+_(Reviewer moves tasks here when a PR needs rework.)_
+
+## TRD Changes Requested
+
+_(TRD Watcher moves tasks here when a TRD needs rework.)_
+
+## Approved
+
+_(Reviewer moves tasks here after approving the PR. You merge to main, then move to Shipped.)_
+
 ### TASK-0005: Per-App Shortcut Pages, Category Browse Pages & Platform Toggle
 - **Goal:** Goal 2 — Web Search & Browse Interface
 - **PRD:** research/agents/prds/goal-02-web-search-browse.md
@@ -59,19 +89,7 @@ _(Developer moves tasks here when the draft PR is marked ready.)_
 - **PR:** #6
 - **Branch:** goals/5-per-app-category-pages
 - **TRD:** research/plans/goals/5-per-app-category-pages-trd.md — approved
-- **Notes:** Round 1 fixed 2026-05-09 — platform state isolation, dead groupContext prop, E2E content test added.
-
-## Changes Requested
-
-_(Reviewer moves tasks here when a PR needs rework.)_
-
-## TRD Changes Requested
-
-_(TRD Watcher moves tasks here when a TRD needs rework.)_
-
-## Approved
-
-_(Reviewer moves tasks here after approving the PR. You merge to main, then move to Shipped.)_
+- **Approved:** 2026-05-09
 
 ## Shipped
 
@@ -124,22 +142,3 @@ _(You move tasks here after merging to main.)_
 ## Blocked
 
 _(Waiting on an external dependency, a missing PRD, or owner decision.)_
-
-### TASK-0007: Settings Persistence & Login Startup Registration
-- **Goal:** Goal 3 — Desktop App Shell (Electron + Tray)
-- **PRD:** research/agents/prds/goal-03-desktop-app-shell.md — **MISSING** (does not exist)
-- **Scope:** Complete the user-facing Goal 3 PRD items not covered by TASK-0006: (1) Add `electron-store` for local settings persistence — store hotkey binding (Electron accelerator string) and login-startup preference as a JSON file. (2) Wire configurable hotkey into HotkeyManager — Settings window accessible from tray context menu lets user record a new key combo, re-registers the global shortcut on change, and notifies user if the binding is already claimed by another app. (3) Login startup registration via `app.setLoginItemSettings` — enabled by default, toggleable in Settings, persisted via electron-store. (4) Add "Settings" item to tray context menu between "Open" and "Quit". NOT in scope: CI build pipeline (separate task), real shortcut panel content (Goal 5), process detection (Goal 4), overlay (Goal 6), code signing (Goal 9), Linux (Goal 10), auto-update, installer UX.
-- **Acceptance:**
-  - Tray context menu includes "Settings" option that opens a Settings window
-  - Settings window shows current hotkey binding and startup preference
-  - User can change the hotkey binding — new binding persists across app restarts
-  - App handles hotkey conflicts gracefully (shows notification if binding is taken by another app)
-  - App registers for login startup on Windows and macOS via `app.setLoginItemSettings`
-  - Startup preference is toggleable in Settings and persisted
-  - Settings stored via `electron-store` in a local JSON file
-  - All settings survive app restart (kill + relaunch)
-- **PR:**
-- **Branch:**
-- **TRD:**
-- **Notes:** Completes Goal 3 user-facing DoD alongside TASK-0006 (shell, tray, hotkey, panel). Depends on TASK-0006 being shipped first. CI build pipeline deferred to a separate task.
-- **Blocked reason:** Goal 3 PRD (`goal-03-desktop-app-shell.md`) does not exist in `research/agents/prds/`. Product Manager must write the PRD before this task can move to Ready. See also PROP-0001.

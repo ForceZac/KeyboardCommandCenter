@@ -1,5 +1,17 @@
 <!-- Agent log. Append-only. Agents read the last 75 lines before acting. Log Trim archives entries older than 48h into agent-log-archive-YYYY-MM.md. -->
 
+## 2026-05-09 19:57 ET REVIEWER
+- did: reviewed PR #6 (TASK-0005 — Per-App Shortcut Pages, Category Browse Pages & Platform Toggle, round 2)
+- decision: approved (posted as comment — GitHub self-approval restriction)
+- standards checked: frontend-standards (controlled component pattern, behavioral E2E test), PR policy (tsc clean, lint clean)
+- tsc: clean (packages/web --noEmit) | ESLint: clean
+- round-2 items: (1) [BLOCKING FIXED] AppPageClient now owns [platform, setPlatform]; PlatformToggle is pure controlled component — no internal usePlatform() call; (2) [MINOR FIXED] groupContext prop removed from ShortcutRow and ContextGroup pass-through; (3) [MINOR FIXED] E2E test `platform toggle changes displayed shortcut key combos` added — captures kbd text before/after toggle, asserts at least one changed
+- backlog: moved TASK-0005 from In Review → Approved
+- goal-summary: appended TASK-0005 section to research/goals/goal-02-web-search-browse.md
+- idle-reset: REV_IDLE → 0
+- metrics: run_type=productive | pr=PR-6 | round=2 | decision=approved | tests_run=tsc-clean+lint-clean (E2E blocked — no dev server/DB in agent env)
+- next: Zach merges PR #6; TASK-0005 moves to Shipped; Goal 2 fully shipped
+
 ## 2026-05-09 19:49 ET REVIEWER
 - did: reviewed PR #6 (TASK-0005 — Per-App Shortcut Pages, Category Browse Pages & Platform Toggle, round 1)
 - decision: changes-requested (posted as comment — GitHub self-approval restriction)
@@ -523,3 +535,74 @@
 - tests: tsc clean, eslint clean (E2E requires live server)
 - metrics: run_type=productive | commits=2 | tests_added=1 | trd_cycles=0
 - next: TRD Watcher / Reviewer picks up PR #6 for round 2 review
+
+## 2026-05-09 20:01 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TBD (update below when known)
+- status: in-progress (checkpoint)
+
+## 2026-05-09 20:01 ET DEVELOPER
+- did: no-op — Ready is empty, In Progress empty, Changes Requested empty, In Review empty. TASK-0005 is Approved (PR #6, awaiting merge by Reviewer).
+- task: N/A
+- PR: n/a
+- trd: n/a
+- tests: n/a
+- metrics: run_type=no-op | reason=no ready tasks | dev_idle=1
+- next: pipeline unblocked once Goal 3 PRD is written (PM bottleneck) — TASK-0007 can move to Ready; alternatively Reviewer can merge TASK-0005 PR #6 to ship Goal 2
+
+## 2026-05-09 20:03 ET PRODUCT-MANAGER
+- did: wrote PRD for Goal 3 (Desktop App Shell) and PRD for Goal 4 (Active Window Process Detection)
+- prds written: goal-03-desktop-app-shell.md, goal-04-process-detection.md
+- notes: product-notes.md had no Domain Researcher findings — wrote PRDs using roadmap DoD, backlog TASK-0007 scope, and existing codebase analysis. Goal 3 PRD accounts for TASK-0006 already shipped (shell, tray, hotkey, panel) and focuses remaining scope on settings persistence, configurable hotkey, and login startup. Goal 4 PRD covers Rust native module for process detection, process-to-app mapping, and tray recent apps.
+- unblocks: TASK-0007 (was blocked on missing Goal 3 PRD) — Project Manager can now move it to Ready
+- flags: project_context.md still stale (says "Pre-development — awaiting first PRD" but Goals 1+2 shipped, Goal 3 partially shipped)
+- metrics: prds_written=2 | prds_updated=0
+- next: Goal 5 (Shortcut Panel UI) will need a PRD next — it depends on Goal 4
+
+## 2026-05-09 20:04 ET PROJECT-MANAGER
+- did: unblocked TASK-0007 (Goal 3 PRD now exists), moved Blocked → Ready. Ready queue now has 1 task.
+- created: none
+- moved: TASK-0007 Blocked → Ready
+- prd gaps: Goal 4 (Active Window Process Detection) — no PRD at research/agents/prds/goal-04-process-detection.md
+- roadmap check: Goal 3 CI build pipeline (Win+Mac) is in roadmap DoD but not covered by any PRD or task — gap noted. Sequencing Goals 3→4→5 remains sound. No scope creep detected.
+- proposals added: 0
+- metrics: tasks_created=0 | tasks_moved=1 | prd_gaps=1 | roadmap_issues=1
+- next: once PR #6 merges (TASK-0005 → Shipped, Goal 2 done), look ahead to Goal 4 tasks — pending PRD from Product Manager. Consider creating a Goal 3 CI task once PRD coverage exists.
+- discord: FAILED — #standup and #main channels not allowlisted. Run /discord:access to fix.
+
+## 2026-05-09 20:10 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TBD (determining below)
+- status: in-progress
+
+## 2026-05-09 20:15 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TASK-0007
+- status: in-progress — writing TRD
+
+## 2026-05-09 20:16 ET DEVELOPER
+- did: picked up TASK-0007 (Settings Persistence & Login Startup) — wrote plan + TRD, opened draft PR #7, moved task to In Progress
+- task: TASK-0007
+- PR: #7
+- branch: goals/7-settings-persistence
+- trd: written — awaiting-review
+- tests: n/a (TRD phase)
+- metrics: run_type=productive | commits=2 | tests_added=0 | trd_cycles=1
+- next: TRD Watcher reviews TRD; if approved Developer resumes to build electron-store settings module, dynamic HotkeyManager, SettingsWindowManager, settings preload+renderer, tray menu update
+
+## 2026-05-09 20:16 ET DEVELOPER
+- discord: FAILED — #main channel not allowlisted. Run /discord:access to fix.
+
+## 2026-05-09 20:20 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TASK-0007
+- status: in-progress — TRD approved, resuming build phase
+
+## 2026-05-09 20:20 ET DEVELOPER
+- did: built TASK-0007 complete — electron-store settings module, dynamic HotkeyManager, SettingsWindowManager, settings preload + renderer, tray menu update, login startup init, IPC handlers, forge second webpack entry
+- task: TASK-0007
+- PR: #7
+- trd: approved — built
+- tests: tsc clean ✅ (both tsconfigs) | No automated E2E (Playwright+Electron infra out of scope per TRD)
+- metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=0
+- next: Reviewer picks up PR #7 — completes Goal 3 definition of done if approved
