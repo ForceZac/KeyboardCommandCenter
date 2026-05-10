@@ -2,6 +2,9 @@
 // This file is included in tsconfig.renderer.json so the renderer's TypeScript
 // knows the shape of window.kcc without importing from the main process.
 
+// AppDetail is defined in @kcc/core and available via tsconfig.renderer.json paths.
+import type { AppDetail } from '@kcc/core';
+
 /** Payload received on each active-app change event. */
 interface DetectionPayload {
   /** Database app slug, or null when the process is unrecognized. */
@@ -26,6 +29,16 @@ interface KccAPI {
    * Used by the tray "Recent Apps" submenu (TASK-0011).
    */
   getRecentApps: () => Promise<string[]>;
+
+  /**
+   * Fetch shortcut data for the given app slug.
+   * Served from the main process cache when available; otherwise queries the DB.
+   * Returns null for unknown slugs or when the database is unreachable.
+   * All platform bindings are included; the renderer filters by OS at display time.
+   *
+   * Added by TASK-0012.
+   */
+  getShortcutsForApp: (slug: string) => Promise<AppDetail | null>;
 }
 
 declare global {
