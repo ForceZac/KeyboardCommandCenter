@@ -75,6 +75,10 @@ _(Project Manager keeps 2–3 tasks here at all times.)_
 
 _(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
 
+## In Review
+
+_(Developer moves tasks here when the draft PR is marked ready.)
+
 ### TASK-0014: Reconcile Goal 4 Stubs — process-map.ts & active-window.ts
 - **Goal:** Goal 4 — Active Window Process Detection
 - **PRD:** research/agents/prds/goal-04-process-detection.md
@@ -87,11 +91,7 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
 - **PR:** #12
 - **Branch:** goals/14-reconcile-goal4-stubs
 - **TRD:** research/plans/goals/14-reconcile-goal4-stubs-trd.md — approved
-- **Notes:** Addresses PROP-0003 and PROP-0004. The implementations were already written once in PR #11 and reverted — the developer can reference that commit for the exact code. This must ship before Goal 5 tasks so detection actually works end-to-end.
-
-## In Review
-
-_(Developer moves tasks here when the draft PR is marked ready.)
+- **Notes:** Addresses PROP-0003 and PROP-0004.
 
 ## Changes Requested
 
