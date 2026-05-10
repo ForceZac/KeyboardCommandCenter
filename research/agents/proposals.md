@@ -19,6 +19,24 @@ Off-roadmap ideas and system-improvement suggestions surfaced by the agents. The
 
 ## Open
 
+### PROP-0002: TASK-0011 has no PRD — Product Manager must write one before this task can start
+- **Source:** Developer
+- **Date:** 2026-05-10
+- **Impact:** 3
+- **Effort:** 2
+- **Evidence:** TASK-0011 (Tray "Recent Apps" Submenu) references PRD `research/agents/prds/goal-04-process-detection.md` in backlog.md. File does not exist in the prds directory. The same PRD path was referenced by shipped Goal 4 tasks TASK-0008, TASK-0009, TASK-0010 — it is unclear whether the file was never created or was deleted after those tasks shipped. Developer hit the PRD gate and moved TASK-0011 to Blocked.
+- **Proposal:** Product Manager should write `research/agents/prds/goal-04-process-detection.md` covering the full Goal 4 definition (process detection, native module, polling service, tray submenu). Once the file exists, move TASK-0011 back to Ready. Developer will proceed on the next run.
+- **Status:** resolved — PRD written (commit 6b72654), TASK-0011 moved back to Ready
+
+### PROP-0003: process-map.ts stub not reconciled after TASK-0008 merge
+- **Source:** Developer
+- **Date:** 2026-05-10
+- **Impact:** 3
+- **Effort:** 2
+- **Evidence:** TASK-0008 (goals/8-process-map, PR #8) was merged to main on 2026-05-10. process-map.json now contains real byProcess and byBundleId data. However, process-map.ts at HEAD is still the original stub that always returns null for lookupApp(). The TASK-0008 branch must have left the stub in place rather than replacing it with a real implementation. DetectionService on main currently never resolves any app slug.
+- **Proposal:** Owner or Developer should reconcile process-map.ts — either by cherry-picking the real implementation from goals/8-process-map if it exists there, or by writing a fresh implementation that reads from the existing process-map.json. This is a separate task from TASK-0011 and should be tracked. TASK-0011 adds getDisplayName() to process-map.ts but leaves lookupApp() as-is (still a stub).
+- **Status:** open
+
 ### PROP-0001: Goal 3 work shipped without PRD or backlog tracking
 - **Source:** Project Manager
 - **Date:** 2026-05-09
