@@ -91,7 +91,7 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
   - Clicking a recent app loads that app's shortcuts in the panel
   - Fallback states render within 100ms (same perf target as normal panel content)
   - No unhandled errors for edge cases (empty detection history, all recent apps unrecognized)
-- **PR:** (draft — TRD awaiting review)
+- **PR:** #20
 - **Branch:** goals/16-panel-fallback-states
 - **TRD:** research/plans/goals/16-panel-fallback-states-trd.md — awaiting-review
 - **Notes:** Fourth Goal 5 task — covers PRD Flows 3 and 4. Depends on TASK-0013 (panel content renderer) and TASK-0012 (IPC data layer). Both shipped.

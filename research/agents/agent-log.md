@@ -1354,3 +1354,12 @@
 - tests: skipped (TRD phase — no feature code written)
 - metrics: run_type=no-op | reason=TRD awaiting reviewer approval — TASK-0019 | dev_idle=3
 - next: TRD Watcher reviews TRD for TASK-0019; Developer resumes once TRD is approved
+
+## 2026-05-10 10:58 ET DEVELOPER
+- did: started TASK-0016 (Panel Fallback States) — wrote plan + TRD, pushed branch goals/16-panel-fallback-states, opened draft PR #20. Also marked PR #19 (TASK-0020) as draft — Changes Requested fix requires TASK-0017 merge + rebase, not yet possible.
+- task: TASK-0016
+- PR: #20
+- trd: written — awaiting-review
+- tests: skipped (TRD phase — no feature code written)
+- metrics: run_type=productive | commits=1 | trd_cycles=0 | dev_idle=0
+- next: TRD Watcher reviews TRD for TASK-0016; Developer resumes once TRD is approved and builds fallback.ts, index.ts updates, DOM additions, styles, unit + integration tests
