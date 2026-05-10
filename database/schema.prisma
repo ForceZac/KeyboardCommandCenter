@@ -48,6 +48,7 @@ model Shortcut {
   command       String               // human-readable description
   context       String?              // optional scope: "Global", "Editor", "Normal Mode", etc.
   bindings      ShortcutKeyBinding[]
+  collections   CollectionShortcut[]
 
   @@map("shortcuts")
 }
@@ -84,15 +85,47 @@ model ShortcutKeyStep {
 // never written at runtime; the table is present for adapter compatibility only.
 
 model User {
-  id            String    @id @default(cuid())
+  id            String       @id @default(cuid())
   name          String?
-  email         String    @unique
+  email         String       @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
+  collections   Collection[]
 
   @@map("users")
+}
+
+// A named group of shortcuts saved by a user. One collection per user is
+// flagged isDefault=true ("My Favorites") and is auto-created on sign-up.
+model Collection {
+  id          String              @id @default(cuid())
+  userId      String
+  name        String
+  description String?
+  isDefault   Boolean             @default(false)
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  user        User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  shortcuts   CollectionShortcut[]
+
+  @@map("collections")
+}
+
+// Join table linking a shortcut to a collection. userId is denormalized for
+// efficient per-user queries without joining through Collection.
+model CollectionShortcut {
+  id           String     @id @default(cuid())
+  userId       String
+  collectionId String
+  shortcutId   String
+  createdAt    DateTime   @default(now())
+  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  shortcut     Shortcut   @relation(fields: [shortcutId], references: [id], onDelete: Cascade)
+
+  @@unique([collectionId, shortcutId])
+  @@map("collection_shortcuts")
 }
 
 model Account {

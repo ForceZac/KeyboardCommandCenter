@@ -158,3 +158,45 @@ export interface CategorySummary {
   slug: string;
   appCount: number;
 }
+
+// ---------------------------------------------------------------------------
+// Favorites / Collections types (Goal 7)
+// ---------------------------------------------------------------------------
+
+/**
+ * A named collection of shortcuts belonging to a user.
+ * isDefault=true marks the auto-created "My Favorites" collection.
+ */
+export interface ICollection {
+  id: string;
+  userId: string;
+  name: string;
+  description: string | null;
+  isDefault: boolean;
+  createdAt: string; // ISO-8601
+  updatedAt: string;
+}
+
+/** Collection summary returned by list endpoints — includes shortcut count. */
+export interface CollectionSummary {
+  id: string;
+  name: string;
+  description: string | null;
+  isDefault: boolean;
+  shortcutCount: number;
+}
+
+/** One entry in the GET /api/favorites response. */
+export interface FavoriteEntry {
+  collectionShortcutId: string;
+  collectionId: string;
+  shortcutId: string;
+  addedAt: string; // ISO-8601 — maps to CollectionShortcut.createdAt
+  shortcut: {
+    id: string;
+    command: string;
+    context: string | null;
+    appName: string;
+    appSlug: string;
+  };
+}
