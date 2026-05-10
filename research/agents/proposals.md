@@ -19,6 +19,15 @@ Off-roadmap ideas and system-improvement suggestions surfaced by the agents. The
 
 ## Open
 
+### PROP-0005: TASK-0019 began before TASK-0017 — overlay store schema defined in settings task
+- **Source:** Developer
+- **Date:** 2026-05-10
+- **Impact:** 2
+- **Effort:** 1
+- **Evidence:** TASK-0019 (Overlay Settings UI) is first in the Ready queue. TASK-0017 (Overlay BrowserWindow) is second. TASK-0019's backlog notes say "Depends on TASK-0017 (overlay preferences in electron-store must exist)" — but TASK-0017 hasn't started. TASK-0017's scope explicitly includes defining the electron-store overlay preferences schema.
+- **Proposal:** (1) PM should reorder the Ready queue so TASK-0017 precedes TASK-0019, since TASK-0019 depends on TASK-0017's store schema. (2) In the interim, TASK-0019's TRD defines the overlay store schema (enabled, hotkey, opacity, position, size with correct defaults); TASK-0017 should NOT redefine it — it will use what TASK-0019 establishes. The `OverlayController` interface/registry in TASK-0019 is the integration point TASK-0017 implements. (3) Acceptance criteria for live preview and hotkey registration in TASK-0019 are only verifiable once TASK-0017 is also merged.
+- **Status:** open
+
 ### PROP-0002: TASK-0011 has no PRD — Product Manager must write one before this task can start
 - **Source:** Developer
 - **Date:** 2026-05-10

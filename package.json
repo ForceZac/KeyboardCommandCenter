@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "npm run dev -w packages/web",
     "build": "npm run build -w packages/web",
+    "build:overlay": "npm run build -w @kcc/overlay",
     "lint": "eslint . --ext .ts,.tsx",
     "test": "npm run test -w packages/web"
   },
