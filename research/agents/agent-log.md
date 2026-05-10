@@ -1,19 +1,5 @@
 <!-- Agent log. Append-only. Agents read the last 75 lines before acting. Log Trim archives entries older than 48h into agent-log-archive-YYYY-MM.md. -->
 
-## 2026-05-10 01:50 ET TRD-WATCHER
-- did: reviewed TRD for TASK-0014 (Reconcile Goal 4 Stubs — process-map.ts & active-window.ts)
-- decision: approved
-- key finding: tight reconciliation scope, both implementations pre-validated in PR #11, 49 existing tests serve as complete test plan, bundleId-first and factory pattern correct per prior TRD decisions
-- metrics: task=TASK-0014 | decision=approved
-
-## 2026-05-10 01:37 ET REVIEWER
-- did: reviewed PR #11 (TASK-0011 — Tray "Recent Apps" Submenu, round 2)
-- decision: approved (posted as comment — GitHub self-review restriction, same precedent as PR #8/9/10)
-- standards checked: round-2 scoped — verified original feedback addressed only (no new nits)
-- key finding: lookupApp reverted to stub ✅, active-window.ts stub restored ✅, PROP-0003/PROP-0004 filed ✅. All 16 in-scope TASK-0011 tests pass (7 tray + 9 getDisplayName). 49 pre-existing failures identical to main (PROP-0003/PROP-0004 stubs).
-- metrics: run_type=productive | pr=PR-11 | round=2 | decision=approved | tests_run=pass
-- next: Zach merges PR #11; Developer picks TASK-0012 (Goal 5 IPC layer); PM should queue dedicated TASK-0014/TASK-0015 for PROP-0003/PROP-0004 reconciliation
-
 ## 2026-05-10 01:20 ET REVIEWER
 - did: reviewed PR #11 (TASK-0011 — Tray "Recent Apps" Submenu, round 1)
 - decision: changes-requested (posted as comment — GitHub self-review restriction, same precedent as PR #8/9)
@@ -1105,49 +1091,7 @@
 - metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=0 | dev_idle=0
 - next: Reviewer picks up PR #11 round 2; PM should create tasks for PROP-0003 (lookupApp reconciliation) and PROP-0004 (active-window.ts reconciliation)
 
-## 2026-05-10 01:31 ET DEVELOPER
+## 2026-05-10 02:21 ET DEVELOPER
 - did: started run — claimed DEV_LOCK
-- task: TBD (checking state)
-- status: in-progress
-
-## 2026-05-10 01:31 ET DEVELOPER
-- did: in-flight cap reached — PR #11 (goals/11-tray-recent-apps) is open and In Review
-- task: TASK-0011
-- PR: #11
-- trd: approved — built
-- tests: n/a (no work done this run)
-- metrics: run_type=no-op | reason=in-flight cap — goals/11-tray-recent-apps In Review | dev_idle=1
-- next: Reviewer approves/merges PR #11; once merged, TASK-0012 and TASK-0013 (Goal 5) unblock
-
-## 2026-05-10 01:34 ET PROJECT-MANAGER
-- did: created TASK-0014 (Reconcile Goal 4 Stubs — process-map.ts & active-window.ts), reordered Ready to dependency order (TASK-0014 → TASK-0012 → TASK-0013), addressed PROP-0003 and PROP-0004
-- created: TASK-0014
-- moved: TASK-0013 reordered below TASK-0012 (TASK-0013 depends on TASK-0012)
-- prd gaps: Goal 7 (User Accounts & Favorites Sync) — still no PRD. N+2 from active work. Product Manager should write it.
-- roadmap check: done — sequencing solid. Goal 5 PRD covers search/filter (Flow 2) and fallback states (Flows 3/4) but no tasks exist yet for those — will need 1-2 more Goal 5 tasks after TASK-0012 and TASK-0013 ship. Goal 6 PRD exists. Goal 7 PRD still missing (flagged again). project_context.md still says "Active goal: Goal 1" — stale, flagging again.
-- proposals added: 0 (addressed 2 existing: PROP-0003, PROP-0004 → TASK-0014)
-- stale: PROP-0001 (Goal 3 shipped without PRD) — note: goal-03-desktop-app-shell.md PRD now exists, so first recommendation is resolved. Remaining question (full Goal 3 DoD coverage) still open for owner.
-- metrics: tasks_created=1 | tasks_moved=1 | prd_gaps=1 | roadmap_issues=0
-- next: Ready queue healthy at 3 (TASK-0014, TASK-0012, TASK-0013). Once TASK-0011 ships, TASK-0014 unblocks first (Goal 4 cleanup), then TASK-0012 and TASK-0013 (Goal 5). Will need search/filter + fallback state tasks for Goal 5 in a future run.
-
-## 2026-05-10 01:34 ET PROJECT-MANAGER (addendum)
-- discord: FAILED — #standup and #main channels still not allowlisted. Owner needs to run /discord:access to add channels.
-
-## 2026-05-10 01:40 ET DEVELOPER
-- did: started run — claimed DEV_LOCK
-- task: TBD (checking state — no PAUSE, no lock, proceeding)
-- status: in-progress
-
-## 2026-05-10 01:44 ET DEVELOPER
-- did: picked TASK-0014 (Reconcile Goal 4 Stubs). Wrote 2-slice plan and TRD — lookupApp real lookup (byBundleId-first then byProcess normalized), active-window real wrapper (loadNativeModule + createActiveWindowDetector factory + getActiveWindow singleton). Opened draft PR #12. Moved task to In Progress. Woke TRD_PAUSE removed.
-- task: TASK-0014
-- PR: #12
-- trd: written — awaiting-review
-- tests: n/a (TRD phase only — 49 tests currently failing on main)
-- metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=0 | dev_idle=0
-- next: TRD Watcher reviews TRD for TASK-0014; once approved, Developer resumes to build (Slice 1: lookupApp, Slice 2: active-window wrapper)
-
-## 2026-05-10 01:50 ET DEVELOPER
-- did: started run — claimed DEV_LOCK
-- task: TASK-0014 (resuming — TRD approved, build phase)
+- task: TASK-0012 (update below when known)
 - status: in-progress

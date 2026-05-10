@@ -1,5 +1,6 @@
 import { contextBridge, ipcRenderer } from 'electron';
 import type { DetectionPayload } from './detection';
+import type { AppDetail } from '@kcc/core';
 
 // Expose a minimal, typed API to the renderer process.
 // contextIsolation: true — renderer cannot access Node.js APIs directly.
@@ -32,5 +33,16 @@ contextBridge.exposeInMainWorld('kcc', {
    */
   getRecentApps: (): Promise<string[]> => {
     return ipcRenderer.invoke('detection:get-recent-apps') as Promise<string[]>;
+  },
+
+  /**
+   * Fetch shortcut data for the given app slug from the main process cache or DB.
+   * Returns null when the slug is unknown or the database is unreachable.
+   * Data includes all platform bindings; the renderer filters by OS at display time.
+   *
+   * Added by TASK-0012.
+   */
+  getShortcutsForApp: (slug: string): Promise<AppDetail | null> => {
+    return ipcRenderer.invoke('shortcuts:get-by-app', slug) as Promise<AppDetail | null>;
   },
 });

@@ -33,25 +33,6 @@ Task IDs are monotonic. The Project Manager picks the next number.
 
 _(Project Manager keeps 2–3 tasks here at all times.)_
 
-### TASK-0012: Shortcut Data IPC Layer & Prefetch
-- **Goal:** Goal 5 — Shortcut Panel UI (Desktop)
-- **PRD:** research/agents/prds/goal-05-shortcut-panel-ui.md
-- **Scope:** Add a `shortcuts:get-by-app` IPC handler in the Electron main process that accepts an app slug, queries PostgreSQL via Prisma for all shortcuts belonging to that app, groups results by context/scope, and returns structured data to the renderer. Expose a `getShortcutsForApp(slug)` method via contextBridge preload. Add prefetch logic: when the detection service fires an app-changed event, the main process proactively fetches and caches shortcut data for the new app so it's ready when the panel opens (meeting the 100ms render target from the PRD). Cache the most recent 5 app results in memory; invalidate on slug change. NOT in scope: panel UI rendering or visual components (separate task), search/filter UI, fallback state UI, overlay mode (Goal 6), user accounts (Goal 7), Linux (Goal 10).
-- **Acceptance:**
-  - `shortcuts:get-by-app` IPC handler accepts an app slug and returns grouped shortcut data
-  - Preload exposes `getShortcutsForApp(slug)` via contextBridge
-  - Data is fetched from PostgreSQL via Prisma ORM
-  - Shortcuts are grouped by context/scope in the response
-  - Prefetch fires automatically on detection app-changed event
-  - Cached results serve immediately for recently-detected apps (up to 5)
-  - Response time <50ms for cached apps (no DB round-trip)
-  - Handler returns empty result for unknown app slugs (no crash)
-  - No unhandled exceptions if database is unreachable
-- **PR:**
-- **Branch:**
-- **TRD:**
-- **Notes:** First Goal 5 task — provides the data plumbing for the panel UI. Depends on Goal 4 shipping (detection service IPC provides the app slug). TASK-0011 is the last Goal 4 task; once it ships, this task is unblocked.
-
 ### TASK-0013: Panel Content Renderer & Shortcut Key Caps
 - **Goal:** Goal 5 — Shortcut Panel UI (Desktop)
 - **PRD:** research/agents/prds/goal-05-shortcut-panel-ui.md
@@ -71,27 +52,49 @@ _(Project Manager keeps 2–3 tasks here at all times.)_
 - **TRD:**
 - **Notes:** Second Goal 5 task — builds the visual layer on top of the data plumbing from TASK-0012. Depends on TASK-0012 shipping first (provides `getShortcutsForApp()` via preload). Porting the visual key cap pattern from the web app's components (packages/web) is recommended but the desktop renderer uses vanilla HTML/CSS, not React/Tailwind — duplicate the CSS pattern rather than extracting to packages/core (per PRD recommendation).
 
+### TASK-0015: Panel Search/Filter Input
+- **Goal:** Goal 5 — Shortcut Panel UI (Desktop)
+- **PRD:** research/agents/prds/goal-05-shortcut-panel-ui.md
+- **Scope:** Add a search/filter input to the shortcut panel, positioned below the app header and above the shortcut list. When the user types, filter the displayed shortcuts in real time — matching against command description text and key combo text (case-insensitive substring match). Context group headings with no matching shortcuts should be hidden during filtering. Display a "No matching shortcuts" message when the filter matches nothing. Clearing the input restores the full shortcut list. The search input should be focused and ready for typing when the panel opens. Target <50ms filter response per keystroke on lists of 200+ shortcuts. NOT in scope: fallback states for no-detection/unrecognized app (separate task), fuzzy matching or advanced search operators, overlay mode (Goal 6), user accounts (Goal 7).
+- **Acceptance:**
+  - Search input renders below app header, above shortcut list
+  - Search input is focused when the panel opens
+  - Typing filters shortcuts in real time by command description and key combo text
+  - Filtering is case-insensitive substring matching
+  - Context group headings with no matching results are hidden
+  - "No matching shortcuts" message displays when filter matches nothing
+  - Clearing input restores the full shortcut list
+  - Filter response <50ms per keystroke on 200+ shortcuts
+- **PR:**
+- **Branch:**
+- **TRD:**
+- **Notes:** Third Goal 5 task — adds search/filter on top of the renderer from TASK-0013. Depends on TASK-0013 shipping first (provides the panel content and grouped shortcut list to filter against). See PRD Flow 2 for the full UX specification.
+
 ## In Progress
 
 _(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
 
 ## In Review
 
-_(Developer moves tasks here when the draft PR is marked ready.)
+_(Developer moves tasks here when the draft PR is marked ready.)_
 
-### TASK-0014: Reconcile Goal 4 Stubs — process-map.ts & active-window.ts
-- **Goal:** Goal 4 — Active Window Process Detection
-- **PRD:** research/agents/prds/goal-04-process-detection.md
-- **Scope:** Implement the real `lookupApp()` function in process-map.ts (read from process-map.json, perform byProcess + byBundleId lookup with normalization and .exe stripping) and the real `loadNativeModule()` + `createActiveWindowDetector()` in active-window.ts (TypeScript wrapper for the kcc-native .node binary). Both files are stubs on main — the real implementations were written in PR #11 (TASK-0011) but correctly reverted as out-of-scope. 49 pre-existing tests fail on main because of these stubs. NOT in scope: modifying process-map.json data, changing detection polling service behavior, changing tray submenu behavior, new features — only making existing tests pass.
+### TASK-0012: Shortcut Data IPC Layer & Prefetch
+- **Goal:** Goal 5 — Shortcut Panel UI (Desktop)
+- **PRD:** research/agents/prds/goal-05-shortcut-panel-ui.md
+- **Scope:** Add a `shortcuts:get-by-app` IPC handler in the Electron main process that accepts an app slug, queries PostgreSQL via Prisma for all shortcuts belonging to that app, groups results by context/scope, and returns structured data to the renderer. Expose a `getShortcutsForApp(slug)` method via contextBridge preload. Add prefetch logic: when the detection service fires an app-changed event, the main process proactively fetches and caches shortcut data for the new app so it's ready when the panel opens (meeting the 100ms render target from the PRD). Cache the most recent 5 app results in memory; invalidate on slug change. NOT in scope: panel UI rendering or visual components (separate task), search/filter UI, fallback state UI, overlay mode (Goal 6), user accounts (Goal 7), Linux (Goal 10).
 - **Acceptance:**
-  - All 40 pre-existing lookupApp tests in process-map pass
-  - All 9 pre-existing active-window tests pass
-  - DetectionService resolves real app slugs via lookupApp()
-  - No regressions in existing passing tests
-- **PR:** #12
-- **Branch:** goals/14-reconcile-goal4-stubs
-- **TRD:** research/plans/goals/14-reconcile-goal4-stubs-trd.md — approved
-- **Notes:** Addresses PROP-0003 and PROP-0004.
+  - `shortcuts:get-by-app` IPC handler accepts an app slug and returns grouped shortcut data
+  - Preload exposes `getShortcutsForApp(slug)` via contextBridge
+  - Data is fetched from PostgreSQL via Prisma ORM
+  - Shortcuts are grouped by context/scope in the response
+  - Prefetch fires automatically on detection app-changed event
+  - Cached results serve immediately for recently-detected apps (up to 5)
+  - Response time <50ms for cached apps (no DB round-trip)
+  - Handler returns empty result for unknown app slugs (no crash)
+  - No unhandled exceptions if database is unreachable
+- **PR:** #13
+- **Branch:** goals/12-shortcut-ipc-layer
+- **TRD:** research/plans/goals/12-shortcut-ipc-layer-trd.md — approved
 
 ## Changes Requested
 
@@ -105,18 +108,34 @@ _(TRD Watcher moves tasks here when a TRD needs rework.)_
 
 _(Reviewer moves tasks here after approving the PR. You merge to main, then move to Shipped.)_
 
+### TASK-0014: Reconcile Goal 4 Stubs — process-map.ts & active-window.ts
+- **Goal:** Goal 4 — Active Window Process Detection
+- **PRD:** research/agents/prds/goal-04-process-detection.md
+- **Scope:** Write the real `lookupApp()` implementation in process-map.ts (bundleId-first lookup from process-map.json, normalized process name fallback, .exe stripping) and the real `loadNativeModule` + `createActiveWindowDetector` wrapper in active-window.ts (three-path binary probe for packaged/webpack-dev/non-webpack runtimes). Both were stubs on main causing 49 test failures. NOT in scope: changes to DetectionService, TrayManager, main.ts, process-map.json, or test files.
+- **Acceptance:**
+  - lookupApp() returns correct app slugs via bundleId-first lookup with process name fallback
+  - loadNativeModule probes three paths for the kcc-native .node binary
+  - createActiveWindowDetector returns a factory-pattern detector instance
+  - All 49 previously-failing tests pass (40 lookupApp + 9 active-window)
+  - No regressions in existing passing tests
+- **PR:** #12
+- **Branch:** goals/14-reconcile-goal4-stubs
+- **TRD:** research/plans/goals/14-reconcile-goal4-stubs-trd.md — approved
+- **Approved:** 2026-05-10 (Round 2 — reviewer approved, awaiting owner merge)
+- **Notes:** Added retroactively by PM — Developer opened this PR outside normal backlog flow. Addresses PROP-0003 and PROP-0004.
+
+## Shipped
+
+_(You move tasks here after merging to main.)_
+
 ### TASK-0011: Tray "Recent Apps" Submenu
 - **Goal:** Goal 4 — Active Window Process Detection
 - **PRD:** research/agents/prds/goal-04-process-detection.md
 - **PR:** #11
 - **Branch:** goals/11-tray-recent-apps
 - **TRD:** research/plans/goals/11-tray-recent-apps-trd.md — approved
-- **Approved:** 2026-05-10
-- **Notes:** Completes Goal 4's user-facing definition of done (PRD Flow 2). PROP-0003 (lookupApp stub) and PROP-0004 (active-window.ts stub) filed for follow-on reconciliation tasks (TASK-0014).
-
-## Shipped
-
-_(You move tasks here after merging to main.)_
+- **Approved:** 2026-05-10 (post-hoc — owner merged directly after round 2 resubmit)
+- **Merged:** 2026-05-10
 
 ### TASK-0010: Detection Polling Service & IPC Integration
 - **Goal:** Goal 4 — Active Window Process Detection
