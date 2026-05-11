@@ -1983,3 +1983,36 @@
 - metrics: tasks_created=1 | tasks_moved=0 | prd_gaps=0 | roadmap_issues=0
 - notes: Backlog on main was empty for active sections — restored from stash@{0} (goals/33-electron-updater-auto-update branch had the most recent state). Ready now has TASK-0034 + TASK-0035 + TASK-0036 (3 tasks — healthy). TASK-0033 in In Review (round 2 approved). TASK-0026/0027 in Approved awaiting /merge. TASK-0028–0032 Blocked on TASK-0027.
 - next: verify Developer moves TASK-0034 to In Progress on next Dev run (PR #29 already open). After TASK-0027 merges, confirm Merge Watcher unblocks Goal 8 tasks. Consider TASK-0037 (Wayland detection) for Goal 10 if Ready drops below 2.
+
+## 2026-05-11 07:20 ET DEVELOPER
+- did: picked TASK-0036 (top Ready task on main) — wrote plan + TRD for Linux X11 active window detection; committed to goals/36-linux-x11-detection; opened draft PR #31; moved task to In Progress with TRD awaiting-review
+- task: TASK-0036
+- PR: #31
+- trd: written — awaiting-review
+- tests: skipped (TRD phase — no feature code written)
+- metrics: run_type=productive | commits=2 | tests_added=0 | trd_cycles=0 | dev_idle=0
+- next: TRD Watcher reviews TRD; if approved, Developer resumes to implement linux.rs adapter, Cargo.toml update, mod.rs dispatch, process-map.json extensions, and unit/integration tests
+
+## 2026-05-11 07:30 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TASK-0036 (In Progress, TRD approved — resuming build)
+- status: in-progress — checkpoint
+
+## 2026-05-11 07:38 ET PROJECT-MANAGER
+- did: moved TASK-0034 and TASK-0035 from Ready to Approved (both had open PRs and reviewer approvals — backlog was stale). Created TASK-0037 (Wayland Active Window Detection) and TASK-0038 (Overlay X11 Compatibility) for Goal 10. Ready now has 2 tasks.
+- created: TASK-0037, TASK-0038
+- moved: TASK-0034 Ready→Approved | TASK-0035 Ready→Approved
+- prd gaps: none — all 10 goals have PRDs
+- roadmap check: solid — Goal 9 fully approved (3/3 tasks), Goal 10 progressing, Goal 8 blocked on TASK-0027 merge. 5 PRs in Approved awaiting /merge — no roadmap issue but merge throughput is a bottleneck for Goal 8 unblocking.
+- proposals added: 0
+- metrics: tasks_created=2 | tasks_moved=2 | prd_gaps=0 | roadmap_issues=0
+- next: Once TASK-0036 ships, Developer picks TASK-0037 (Wayland detection) from Ready. Once TASK-0027 merges, Merge Watcher unblocks Goal 8 tasks (TASK-0028-0032). Future runs: create packaging task (TASK-0039) and CI Linux job task once Ready drops below 2.
+
+## 2026-05-11 07:42 ET DEVELOPER
+- did: built TASK-0036 (Linux X11 active window detection) — full feature complete
+- task: TASK-0036
+- PR: #31 (marked ready, title stripped of WIP)
+- trd: approved (built against approved TRD)
+- tests: green — 319/319 pass (added 31 new Linux process-map lookup tests)
+- metrics: run_type=productive | commits=3 | tests_added=31 | trd_cycles=0 | dev_idle=0
+- next: Reviewer picks up PR #31 — reviews Rust linux.rs adapter + process-map additions
