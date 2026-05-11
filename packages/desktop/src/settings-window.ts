@@ -42,4 +42,15 @@ export class SettingsWindowManager {
     // Remove the default application menu from the settings window.
     this.window.setMenu(null);
   }
+
+  /**
+   * Sends an IPC push to the settings renderer.
+   * No-op when the settings window is not open — the renderer calls getAuthState()
+   * on load to get the current state, so missed pushes are recovered on next open.
+   */
+  sendToRenderer(channel: string, payload: unknown): void {
+    if (this.window !== null && !this.window.isDestroyed()) {
+      this.window.webContents.send(channel, payload);
+    }
+  }
 }
