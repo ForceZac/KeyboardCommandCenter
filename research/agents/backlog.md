@@ -404,51 +404,6 @@ _(You move tasks here after merging to main.)_
 
 _(Waiting on an external dependency, a missing PRD, or owner decision.)_
 
-### TASK-0028: Submission Form UI — New Shortcut & Key Recorder
-- **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
-- **PRD:** research/agents/prds/goal-08-community-contributions.md
-- **Scope:** Add a "Submit a shortcut" button to per-app shortcut pages. Build a submission form (modal or inline) with fields: command name (required, max 100 chars), key combination (required, captured via custom key recorder input), platform (required, dropdown), context/scope (optional), notes (optional). Implement a key recorder component: captures actual keystrokes via `keydown` event listeners, normalizes modifier key names to match database conventions (Ctrl/Cmd, Shift, Alt/Option), displays formatted key combo string. Implement client-side duplicate detection: debounced API call on key combo change checking existing shortcuts for the same app + platform + key combo; show inline warning for exact matches ("This shortcut already exists — did you mean to submit a correction?") and softer hint for fuzzy matches. Form submits via `POST /api/submissions` (from TASK-0027). Show confirmation message on success. Handle rate limit errors (429) with user-friendly message. Requires authenticated session — show sign-in prompt for unauthenticated users. NOT in scope: correction form (separate task), app request form (separate task), admin review queue UI, contributor profile, server-side duplicate detection (TASK-0027), notification system, mobile key recorder.
-- **Acceptance:**
-  - "Submit a shortcut" button visible on per-app shortcut pages
-  - Form includes command name, key combo (recorder), platform, context, and notes fields
-  - Key recorder captures actual keystrokes and displays normalized key combo
-  - Key recorder handles modifier keys (Ctrl/Cmd, Shift, Alt/Option) correctly
-  - Client-side duplicate detection fires on key combo change with <200ms response
-  - Exact match warning shows existing shortcut command name
-  - Fuzzy match shows softer hint
-  - Duplicate warnings do not block submission
-  - Successful submission shows confirmation message
-  - Rate limit (429) shows user-friendly error
-  - Unauthenticated users see sign-in prompt when clicking submit button
-  - No regressions on existing per-app shortcut pages
-- **PR:**
-- **Branch:**
-- **TRD:**
-- **Notes:** Unblocked by merge on 2026-05-11 (PR #27 merged). Second Goal 8 task. PRD Flows 1 and 6 cover this scope.
-
-### TASK-0029: Admin Review Queue UI
-- **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
-- **PRD:** research/agents/prds/goal-08-community-contributions.md
-- **Scope:** Build the admin review queue page at `/admin/review`. Protected route accessible only to users with `isAdmin=true` on User model (from TASK-0027). Display all pending submissions sorted oldest-first. Each submission card shows: type badge (New Shortcut / Correction / App Request), submitter display name, app name, and submitted data fields. For corrections: render a diff view comparing original shortcut values vs proposed values (changed fields highlighted). For server-flagged duplicates: show a warning badge linking to the existing entry. Three actions per submission: Approve (applies submission to shortcuts table via `PATCH /api/admin/submissions/:id`), Edit & Approve (inline editing of submission fields before applying), Reject (with optional reviewer reason text field). After any action, the submission is removed from the visible queue. Paginate if pending count exceeds 100. Page must load in <500ms. NOT in scope: keyboard shortcuts for review actions (v2), batch approve/reject, spam detection, email notifications, contributor notification system, submission API routes (TASK-0027), submission form (TASK-0028).
-- **Acceptance:**
-  - `/admin/review` route exists and renders the review queue page
-  - Non-admin users receive 403 or redirect to home
-  - Pending submissions displayed sorted oldest-first
-  - Type badge visible on each card (New Shortcut, Correction, App Request)
-  - Submitter name and app name shown on each submission card
-  - Correction submissions show diff view (original vs proposed, changed fields highlighted)
-  - Duplicate warning badge shown when server flagged a duplicate
-  - Approve action calls admin API and removes submission from queue
-  - Edit & Approve allows inline field modification before applying
-  - Reject action includes optional reason text field
-  - Pagination renders when pending count exceeds 100
-  - Page loads in <500ms
-  - No regressions on existing pages
-- **PR:**
-- **Branch:**
-- **TRD:**
-- **Notes:** Unblocked by merge on 2026-05-11 (PR #27 merged). Third Goal 8 task. PRD Flow 4 covers this scope.
-
 ### TASK-0030: Correction Form UI — Suggest Edit & Pre-filled Submission
 - **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
 - **PRD:** research/agents/prds/goal-08-community-contributions.md
@@ -466,7 +421,7 @@ _(Waiting on an external dependency, a missing PRD, or owner decision.)_
 - **PR:**
 - **Branch:**
 - **TRD:**
-- **Notes:** Blocked — awaiting TASK-0028 (needs key recorder component and submission form patterns) and TASK-0027 (needs submission API). Fourth Goal 8 task. PRD Flow 2 covers this scope.
+- **Notes:** Blocked — awaiting TASK-0028 (needs key recorder component and submission form patterns). TASK-0027 dependency shipped (PR #27 merged 2026-05-11). Fourth Goal 8 task. PRD Flow 2 covers this scope.
 
 ### TASK-0031: App Request Form & "No Results" Request Button
 - **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
@@ -484,7 +439,7 @@ _(Waiting on an external dependency, a missing PRD, or owner decision.)_
 - **PR:**
 - **Branch:**
 - **TRD:**
-- **Notes:** Unblocked by merge on 2026-05-11 (PR #27 merged). Fifth Goal 8 task. PRD Flow 3 covers this scope.
+- **Notes:** Unblocked — dependency TASK-0027 shipped (PR #27 merged 2026-05-11). Waiting for Ready slot. Fifth Goal 8 task. PRD Flow 3 covers this scope.
 
 ### TASK-0032: Contributor Profile Page
 - **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
@@ -503,5 +458,5 @@ _(Waiting on an external dependency, a missing PRD, or owner decision.)_
 - **PR:**
 - **Branch:**
 - **TRD:**
-- **Notes:** Unblocked by merge on 2026-05-11 (PR #27 merged). Sixth Goal 8 task. PRD Flow 5 covers this scope.
+- **Notes:** Unblocked — dependency TASK-0027 shipped (PR #27 merged 2026-05-11). Waiting for Ready slot. Sixth Goal 8 task. PRD Flow 5 covers this scope.
 

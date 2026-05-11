@@ -73,6 +73,15 @@ Off-roadmap ideas and system-improvement suggestions surfaced by the agents. The
 - **Proposal:** PM should review and either: (1) assign Linux Packaging a new task ID (TASK-0039) and add it to Ready, or (2) confirm the TASK-0036 branch's definition of TASK-0038 (Overlay X11) is correct and Linux Packaging is intentionally deferred/dropped. Linux Packaging (AppImage/deb + CI job) was in the Goal 10 PRD and is needed before Linux support can ship.
 - **Status:** resolved — addressed by TASK-0039 (Linux Packaging — AppImage & .deb + CI Job, added to Ready)
 
+### PROP-0008: Goals 9 & 10 missing PRDs — tasks created and shipped in violation of hard scope rule
+- **Source:** Project Manager
+- **Date:** 2026-05-11
+- **Impact:** 4
+- **Effort:** 2
+- **Evidence:** `research/agents/prds/goal-09-auto-update-distribution.md` and `research/agents/prds/goal-10-linux-support.md` do not exist on main or any branch. Confirmed via `git log --all --diff-filter=A` — neither file was ever committed. Yet TASK-0033/0034/0035 (Goal 9) were created, approved, and merged; TASK-0036/0037/0038/0039 (Goal 10) were created with some shipped. All reference these non-existent PRDs. Prior PM runs (08:35 ET, 09:04 ET) incorrectly logged "all 10 goals have PRDs."
+- **Proposal:** (1) Product Manager should write `goal-09-auto-update-distribution.md` (retroactive — all Goal 9 tasks shipped) and `goal-10-linux-support.md` (active — TASK-0038 approved, TASK-0039 in Ready, TASK-0031/0032 in Blocked) as soon as possible. (2) Goal 10 PRD is higher priority since active tasks reference it. (3) Process check: how did prior PM runs pass the PRD gate? The agent-log claims PRDs existed — this suggests the check was against the roadmap's `PRD:` field (which lists the expected path) rather than actually verifying the file exists on disk. Future PM runs must verify file existence, not just path references.
+- **Status:** open
+
 ### PROP-0001: Goal 3 work shipped without PRD or backlog tracking
 - **Source:** Project Manager
 - **Date:** 2026-05-09

@@ -2078,3 +2078,13 @@
 - tests: green (22 Vitest tests, 3 TypeScript typechecks clean)
 - metrics: run_type=productive | commits=3 | tests_added=6 | trd_cycles=0 | dev_idle=0
 - next: Reviewer picks up PR #32; Ready has TASK-0038 (X11 overlay) + TASK-0039 (Linux packaging)
+
+## 2026-05-11 10:39 ET PROJECT-MANAGER
+- did: adopted uncommitted Reviewer changes (TASK-0037/0038→Approved, TASK-0028/0029→Ready). Fixed duplicate entries (0028/0029 were in both Ready and Blocked). Updated TASK-0030/0031/0032 blocking notes. Filed PROP-0008 — Goals 9 & 10 have NO PRDs (never written, never committed). Updated project_context.md.
+- created: none
+- moved: TASK-0028 Blocked→Ready (confirmed), TASK-0029 Blocked→Ready (confirmed), removed duplicate Blocked entries
+- prd gaps: Goal 9 (goal-09-auto-update-distribution.md) and Goal 10 (goal-10-linux-support.md) — NEITHER FILE EXISTS. Prior PM runs incorrectly claimed all 10 goals had PRDs. Filed PROP-0008.
+- roadmap check: Goals 9 & 10 have active/shipped tasks referencing non-existent PRDs — process violation. Sequencing otherwise sound. No scope creep or stale goals detected.
+- proposals added: 1 (PROP-0008)
+- metrics: tasks_created=0 | tasks_moved=2 | prd_gaps=2 | roadmap_issues=1
+- next: Product Manager must write goal-10-linux-support.md urgently (active tasks reference it). goal-09 PRD is lower priority (all Goal 9 tasks shipped). Ready at 3 (TASK-0028, 0029, 0039) — healthy. TASK-0031/0032 can promote to Ready next run when slots open.
