@@ -68,16 +68,16 @@ test.describe('Correction form — authenticated', () => {
     await row.getByRole('button', { name: /suggest edit/i }).click();
 
     await expect(page.getByText(/suggest a correction/i)).toBeVisible({ timeout: 3000 });
-    await expect(page.getByLabelText(/command name/i)).toBeVisible();
+    await expect(page.getByLabel(/command name/i)).toBeVisible();
 
     // Command should be pre-filled (not empty)
     const commandInput = page.getByLabel(/command name/i);
     await expect(commandInput).not.toHaveValue('');
 
-    await expect(page.getByLabelText(/platform/i)).toBeVisible();
-    await expect(page.getByLabelText(/key combination/i)).toBeVisible();
-    await expect(page.getByLabelText(/context/i)).toBeVisible();
-    await expect(page.getByLabelText(/reason for correction/i)).toBeVisible();
+    await expect(page.getByLabel(/platform/i)).toBeVisible();
+    await expect(page.getByLabel(/key combination/i)).toBeVisible();
+    await expect(page.getByLabel(/context/i)).toBeVisible();
+    await expect(page.getByLabel(/reason for correction/i)).toBeVisible();
   });
 
   test('submit correction button is enabled with pre-filled data', async ({ page }) => {
