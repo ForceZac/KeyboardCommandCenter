@@ -2,6 +2,12 @@ import { contextBridge, ipcRenderer } from 'electron';
 import type { DetectionPayload } from './detection';
 import type { AppDetail, FavoriteEntry, CollectionSummary } from '@kcc/core';
 
+// TASK-0037: Wayland manual app selector entry shape.
+export interface AppEntry {
+  slug: string;
+  name: string;
+}
+
 // Expose a minimal, typed API to the renderer process.
 // contextIsolation: true — renderer cannot access Node.js APIs directly.
 contextBridge.exposeInMainWorld('kcc', {
@@ -104,5 +110,35 @@ contextBridge.exposeInMainWorld('kcc', {
    */
   notifyNetworkOnline: (): void => {
     ipcRenderer.send('sync:network-reconnected');
+  },
+
+  // ── TASK-0037: Wayland manual app selector IPC ──────────────────────────
+
+  /**
+   * Subscribe to Wayland detection-unavailable events.
+   * Fired when the Rust layer cannot identify the focused window (unsupported
+   * Wayland compositor or all DBus calls failed). Returns an unsubscribe fn.
+   */
+  onDetectionUnavailable: (callback: () => void): (() => void) => {
+    const listener = (): void => { callback(); };
+    ipcRenderer.on('detection:unavailable', listener);
+    return () => { ipcRenderer.removeListener('detection:unavailable', listener); };
+  },
+
+  /**
+   * Returns all known app slug+name pairs sorted alphabetically by name.
+   * Used to populate the manual app selector dropdown on Wayland.
+   */
+  getAllApps: (): Promise<AppEntry[]> => {
+    return ipcRenderer.invoke('detection:get-all-apps') as Promise<AppEntry[]>;
+  },
+
+  /**
+   * Sends the user-selected app slug to the main process.
+   * DetectionService immediately emits detection:app-changed so the panel updates.
+   * The selection persists for the session (until app restart).
+   */
+  setManualApp: (slug: string): Promise<void> => {
+    return ipcRenderer.invoke('detection:set-manual-app', slug) as Promise<void>;
   },
 });

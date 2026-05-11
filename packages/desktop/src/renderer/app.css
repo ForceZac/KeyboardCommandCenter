@@ -424,6 +424,106 @@ details[open] > .context-rows {
   color: #444;
 }
 
+/* ── Wayland detection-unavailable UI (TASK-0037) ───────────────────────── */
+
+.wayland-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: #1c2333;
+  border: 1px solid #2a3a55;
+  border-radius: 6px;
+  padding: 8px 10px;
+  margin-bottom: 14px;
+  font-size: 11px;
+  color: #8ab4d8;
+}
+
+.wayland-banner-text {
+  flex: 1;
+  line-height: 1.4;
+}
+
+.wayland-banner-dismiss {
+  background: none;
+  border: none;
+  color: #8ab4d8;
+  cursor: pointer;
+  font-size: 11px;
+  padding: 0 2px;
+  opacity: 0.6;
+  flex-shrink: 0;
+}
+
+.wayland-banner-dismiss:hover {
+  opacity: 1;
+}
+
+.manual-app-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.manual-app-selector-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #555;
+  margin: 0;
+}
+
+.manual-app-search {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 6px 10px;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 6px;
+  color: #e0e0e0;
+  font-size: 12px;
+  outline: none;
+}
+
+.manual-app-search:focus {
+  border-color: #555;
+}
+
+.manual-app-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.manual-app-item {
+  padding: 6px 10px;
+  font-size: 12px;
+  color: #c0c0c0;
+  border-radius: 6px;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.manual-app-item:hover {
+  background: #262626;
+  color: #e0e0e0;
+}
+
+.manual-app-item--last-used {
+  color: #8ab4d8;
+  font-weight: 500;
+}
+
+.manual-app-item--last-used:hover {
+  color: #aaccee;
+}
+
 /* ── Key caps ───────────────────────────────────────────────────────────── */
 
 /* Ported from web app KeyCap component — adapted to dark panel palette. */
