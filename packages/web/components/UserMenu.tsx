@@ -71,6 +71,15 @@ export default function UserMenu() {
           >
             My Collections
           </Link>
+          {session?.user?.id && (
+            <Link
+              href={`/profile/${session.user.id}`}
+              onClick={() => setOpen(false)}
+              className="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            >
+              My Profile
+            </Link>
+          )}
           <button
             onClick={() => signOut()}
             className="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
