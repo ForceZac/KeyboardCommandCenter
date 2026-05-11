@@ -2004,3 +2004,12 @@
 - did: started run — claimed DEV_LOCK; no PAUSE/DEV_PAUSE; no in-flight lock; reconciling stale backlog (TASK-0034/0035/0036 approved on GitHub but still showing Ready on main)
 - task: backlog-reconciliation
 - status: in-progress
+
+## 2026-05-11 08:38 ET DEVELOPER
+- did: reconciled stale main backlog — TASK-0034/0035/0036 were all approved on GitHub (PRs #29/#30/#31) but still showed as Ready on main; moved all three to Approved, replaced Ready with TASK-0037/TASK-0038 from goals/36 branch, filed PROP-0007 for displaced Linux Packaging task
+- task: backlog-reconciliation (no code task claimed)
+- PR: n/a
+- trd: n/a
+- tests: skipped (backlog/proposals only)
+- metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=0 | dev_idle=0
+- next: Ready has TASK-0037 (Wayland detection) — PRD exists at goal-10-linux-support.md; next run picks it up and writes TRD. PM should review PROP-0007 re Linux Packaging gap
