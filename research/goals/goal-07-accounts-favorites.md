@@ -93,3 +93,25 @@ PR was merged before review completed (solo project). `parseTokenPayload` is a p
 
 ### Reviewer notes
 The renderer-side `window.addEventListener('online', () => kcc.notifyNetworkOnline())` listener is TASK-0026's responsibility — the IPC infrastructure is complete. Minor inconsistency: `pullCollections()` writes to the store internally (load-bearing for `addToCollection`/`removeFromCollection` callers) AND `pull()` redundantly writes the same returned value. Not a functional issue but worth cleaning up. TASK-0026 (panel favorites UI) is now unblocked.
+
+---
+
+## TASK-0026: Desktop Panel Favorites View & Favorite Toggle
+**PR:** #26 | **Branch:** goals/26-desktop-panel-favorites | **Approved:** 2026-05-11 (Round 3)
+
+### What shipped
+Two-tab toggle (App Shortcuts / My Favorites) added to the panel header, replacing the single-view layout. `favorites-list.ts` is a new pure render module — `renderFavoritesView` groups FavoriteEntry[] by collection and renders section-headered rows with app name, command, and a filled `.fav-btn`; `renderSignInPrompt` and `renderNoFavorites` cover the unauthenticated and empty states. `index.ts` gains delegated click listeners on both `#shortcuts-container` (optimistic toggle without re-render) and `#favorites-container` (toggle then re-render so unfavorited rows disappear), tab switching handlers with double-click guards, a view-aware `showFallback` that keeps the fallback overlay hidden when the user is on the My Favorites tab, and `renderFavoritesTab` which calls `sync.isSignedIn / getFavorites / getCollections` via the TASK-0025 IPC cache. `search.ts` extended to filter `.fav-row` elements by `data-cmd` and `data-app` when in favorites view.
+
+### Key technical decisions
+- All reads from the synchronous in-memory SyncStore cache — no network latency in the render hot path; the panel never blocks waiting for the API
+- Delegated event listener pattern on both containers (not per-row listeners): consistent with existing fallback click delegation and avoids listener leaks on `innerHTML` replacement
+- View-aware `showFallback`: content always written for fast tab-switch; overlay only shown in app-shortcuts view — favorites view is unaffected by app-changed events
+- `renderFavoritesView` sorts default collection first regardless of array order; falls back to "Favorites" section name for orphaned entries from unknown collections
+
+### Codebase areas touched
+- **Backend:** None — all data via TASK-0025 SyncEngine IPC
+- **Frontend (Electron renderer):** `packages/desktop/src/renderer/favorites-list.ts` (new), `packages/desktop/src/renderer/index.ts` (tab wiring, delegated fav-btn listeners, view-aware showFallback, renderFavoritesTab), `packages/desktop/src/renderer/index.html` (`#favorites-container`, `#tab-app-shortcuts`, `#tab-my-favorites`), `packages/desktop/src/renderer/app.css` (`.view-tabs`, `.tab`, `.fav-btn`, `.fav-btn.favorited`, `.favorites-section-header`, `.fav-row-app`), `packages/desktop/src/renderer/search.ts` (favorites-view filter path), `packages/desktop/src/renderer/shortcut-list.ts` (`renderShortcutRow` gains `shortcutId` + `isFavorited` params), `packages/desktop/src/preload.ts` (`kcc.sync.isSignedIn`)
+- **Tests:** `favorites-list.test.ts` (14 Vitest unit tests for render functions including XSS-escape coverage), `favorites-integration.test.ts` (26 behavioral tests: showFallback view-awareness, tab switching, renderFavoritesTab async paths, optimistic toggle), `index-integration.test.ts` (19 tests: same behaviors via real DOM `.click()` events mirroring index.ts line references). 364 total desktop tests pass.
+
+### Reviewer notes
+`FavoriteEntry` from the core types does not include platform bindings, so favorites rows cannot show key combos — the row renders app name + command only. The TRD documents this as a known limitation pending a TASK-0025 follow-up. The `window.addEventListener('online', () => kcc.notifyNetworkOnline())` wiring is present in this PR (renderer side), completing the reconnect flow from TASK-0025. This PR completes Goal 7 — all six tasks shipped.

@@ -21,6 +21,7 @@ export interface AuthSignedInPayload {
   avatarUrl: string | null;
 }
 
+
 interface KccSettingsAPI {
   getSettings: () => Promise<{ hotkey: string; loginStartup: boolean }>;
   setHotkey: (accelerator: string) => Promise<{ success: boolean; conflict: boolean; message: string }>;
@@ -42,9 +43,23 @@ interface KccSettingsAPI {
     onSignedIn: (callback: (payload: AuthSignedInPayload) => void) => void;
     onSignedOut: (callback: () => void) => void;
   };
+  // TASK-0033: update namespace
+  update: {
+    getStatus: () => Promise<UpdateStatus>;
+    checkNow: () => Promise<void>;
+    restartAndInstall: () => Promise<void>;
+    onStatusChanged: (callback: (status: UpdateStatus) => void) => void;
+  };
+  // TASK-0033: app namespace
+  app: {
+    getVersion: () => Promise<string>;
+  };
 }
 
 declare global {
+  // TASK-0033: Update lifecycle status — in global scope so renderer code can use it without imports.
+  type UpdateStatus = 'idle' | 'checking' | 'available' | 'downloading' | 'ready' | 'error';
+
   interface Window {
     kccSettings: KccSettingsAPI;
   }
