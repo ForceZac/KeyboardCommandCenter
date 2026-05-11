@@ -1,5 +1,16 @@
 <!-- Agent log. Append-only. Agents read the last 75 lines before acting. Log Trim archives entries older than 48h into agent-log-archive-YYYY-MM.md. -->
 
+## 2026-05-11 04:39 ET REVIEWER
+- did: reviewed PR #28 (TASK-0033 — electron-updater Integration — Auto-Update Check & Notification, round 1)
+- decision: changes-requested (posted as comment — GitHub self-review restriction)
+- standards checked: backend-standards (thin IPC handlers, UpdateService owns all updater logic, notify-callback pattern mirrors DetectionService), separation-of-concerns (desktop-only, no cross-package imports), PR policy (non-draft, TRD approved), TRD match
+- issue: missing OS notification on `update-downloaded` — backlog criterion and TRD both require Electron `Notification` API to fire when download completes; implementation only refreshes the tray menu (which is closed during background downloads); user never learns update is ready unless they open the tray
+- fix requested: add `new Notification({ title: 'Keyboard Command Center', body: 'Update available — will apply on next restart.' }).show()` in `main.ts` notify callback when `status === 'ready'`
+- tests run: 308/308 pass (15 files) — all update-service.test.ts (17 tests) and tray.test.ts additions green
+- metrics: run_type=productive | pr=PR-28 | round=1 | decision=changes-requested | tests_run=pass
+- idle-reset: echo 0 > REV_IDLE; rm -f REV_PAUSE; rm -f DEV_PAUSE
+- next: Developer adds OS notification call in update-downloaded path; re-submits PR #28 for round 2
+
 ## 2026-05-11 04:03 ET PRODUCT-MANAGER
 - did: wrote PRDs for Goal 9 (Auto-Update & Distribution) and Goal 10 (Linux Support)
 - prds written: goal-09-auto-update-distribution.md, goal-10-linux-support.md
@@ -2133,3 +2144,51 @@
 - metrics: tasks_created=2 | tasks_moved=0 | prd_gaps=1 | roadmap_issues=0
 - notes: TASK-0026 and TASK-0027 still Approved awaiting Zach's /merge. All Goal 8 tasks (0028–0032) remain Blocked on TASK-0027. Goal 9 tasks can proceed independently — Goal 9 depends on Goal 6 (shipped), not Goal 8. PM_IDLE reset to 0.
 - next: after TASK-0027 merges → verify Merge Watcher unblocks correct Goal 8 tasks. Consider creating TASK-0035 (CI release workflow) for Goal 9 next run. Continue flagging Goal 10 PRD gap.
+
+## 2026-05-11 04:14 ET DEVELOPER
+- did: started run — claimed DEV_LOCK; PAUSE=none, DEV_PAUSE=none; no Changes Requested; no In Progress; In Review empty (cap=0); picked TASK-0033 from Ready
+- task: TASK-0033 (electron-updater Integration — Auto-Update Check & Notification)
+- status: checkpoint
+
+## 2026-05-11 04:14 ET DEVELOPER
+- did: PRD gate passed (goal-09-auto-update-distribution.md exists); checked out main, branched goals/33-electron-updater-auto-update; wrote plan + TRD; pushed branch; opened draft PR #28; moved TASK-0033 from Ready to In Progress (TRD awaiting-review); woke TRD_PAUSE
+- task: TASK-0033
+- PR: #28
+- trd: written — awaiting-review
+- tests: skipped (TRD phase — no feature code yet)
+- metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=0
+- next: TRD Watcher reviews TRD; if approved, Developer resumes to install electron-updater, build UpdateService, wire into main.ts, update TrayManager, and add settings panel version/update section
+
+## 2026-05-11 04:20 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TASK-0033 (In Progress — TRD approved, resuming build)
+- status: in-progress
+
+## 2026-05-11 04:28 ET DEVELOPER
+- did: built TASK-0033 — electron-updater integration — all acceptance criteria met
+- task: TASK-0033
+- PR: #28 (marked ready, title stripped of WIP)
+- trd: approved
+- tests: 308/308 green (16 new UpdateService tests + 4 new TrayManager update tests); tsc clean across all 3 tsconfigs
+- metrics: run_type=productive | commits=6 | tests_added=20 | trd_cycles=0
+- next: Reviewer picks up PR #28; Developer picks TASK-0034 on next run
+
+## 2026-05-11 04:30 ET DEVELOPER
+- did: no-op — in-flight cap reached (PR #28 goals/33-electron-updater-auto-update is In Review); no Changes Requested, no In Progress tasks
+- task: TASK-0033 (In Review — not my turn)
+- PR: #28
+- trd: approved
+- tests: skipped (no work done)
+- metrics: run_type=no-op | reason=in-flight cap — goals/33-electron-updater-auto-update is In Review | dev_idle=1
+- next: Reviewer approves/requests-changes PR #28; if approved, Zach merges → Developer picks TASK-0034
+
+## 2026-05-11 04:34 ET PROJECT-MANAGER
+- did: created 1 task for Ready (TASK-0035 — CI release workflow for Goal 9). Roadmap health check — solid. Goal 10 PRD gap resolved (Product Manager wrote it since last run). Updated project_context.md.
+- created: TASK-0035 (GitHub Actions Release Workflow — Build, Sign & Publish)
+- moved: none
+- prd gaps: none — all 10 goals now have PRDs
+- roadmap check: solid — sequencing holds, no scope creep, no stale goals, no missing prerequisites. Goal 10 PRD gap from last run is resolved.
+- proposals added: 0
+- metrics: tasks_created=1 | tasks_moved=0 | prd_gaps=0 | roadmap_issues=0
+- notes: Ready now has TASK-0034 + TASK-0035 (2 tasks — healthy). TASK-0033 is In Review (PR #28). TASK-0026 and TASK-0027 still Approved awaiting Zach's /merge. All Goal 8 tasks (0028–0032) remain Blocked on TASK-0027 merge. PM_IDLE reset to 0.
+- next: after TASK-0027 merges → verify Merge Watcher unblocks Goal 8 tasks. Monitor whether Goal 9 needs a 4th task (unlikely — 3 tasks cover the full PRD scope). No more PRD gaps to flag.

@@ -33,25 +33,6 @@ Task IDs are monotonic. The Project Manager picks the next number.
 
 _(Project Manager keeps 2–3 tasks here at all times.)_
 
-### TASK-0033: electron-updater Integration — Auto-Update Check & Notification
-- **Goal:** Goal 9 — Auto-Update & Distribution (implementation-roadmap-v2.md § Goal 9)
-- **PRD:** research/agents/prds/goal-09-auto-update-distribution.md
-- **Scope:** Install and configure `electron-updater` in the Electron main process. Use GitHub provider pointing at the repo's GitHub Releases. Check for updates on app launch and every 4 hours while running. Download updates in the background without UI interruption. Show tray notification when download completes: "Update available — will apply on next restart." Add "Restart to update" action. Add "Check for updates" menu item to tray context menu with status feedback (up-to-date or version available). Display current app version in settings panel. NOT in scope: GitHub Actions CI pipeline (separate task), code signing configuration, landing page, macOS notarization, Windows signing, delta updates, update channels, forced updates, auto-restart.
-- **Acceptance:**
-  - `electron-updater` installed and configured with GitHub provider
-  - On launch, app silently checks GitHub Releases for a newer version
-  - Periodic check every 4 hours while running
-  - Update downloads in background (no UI interruption during download)
-  - Tray notification appears when download completes: "Update available — will apply on next restart"
-  - "Restart to update" action triggers app quit-and-install
-  - "Check for updates" item in tray context menu shows "up to date" or "update available"
-  - Current app version displayed in settings panel
-  - No regressions on existing desktop functionality
-- **PR:**
-- **Branch:**
-- **TRD:**
-- **Notes:** First Goal 9 task. PRD Flow 1 (background update) and Flow 2 (manual check) cover this scope. Goal 9 dependency (Goal 6) is shipped. Can proceed independently of Goal 8.
-
 ### TASK-0034: Landing Page — `/download` Route with OS Detection
 - **Goal:** Goal 9 — Auto-Update & Distribution (implementation-roadmap-v2.md § Goal 9)
 - **PRD:** research/agents/prds/goal-09-auto-update-distribution.md
@@ -70,6 +51,27 @@ _(Project Manager keeps 2–3 tasks here at all times.)_
 - **TRD:**
 - **Notes:** Second Goal 9 task. PRD Flow 3 (first-time download) covers this scope. Independent of TASK-0033 — can be built in parallel.
 
+### TASK-0035: GitHub Actions Release Workflow — Build, Sign & Publish
+- **Goal:** Goal 9 — Auto-Update & Distribution (implementation-roadmap-v2.md § Goal 9)
+- **PRD:** research/agents/prds/goal-09-auto-update-distribution.md
+- **Scope:** Create a GitHub Actions workflow that triggers on git tag push (e.g. `v*`). Build the Electron app for Windows (x64, arm64 NSIS installer) and macOS (universal DMG) in parallel CI jobs. macOS job signs with Apple Developer certificate and submits for notarization via `@electron/notarize` (with `waitForNotarization: true`). Windows job signs the installer with Authenticode certificate (configured via `WIN_CSC_LINK` and `WIN_CSC_KEY_PASSWORD` secrets). Both jobs upload build artifacts (`.dmg`, `.exe`, `latest-mac.yml`, `latest.yml`) to a draft GitHub Release. electron-builder generates the update metadata files automatically. Workflow fails the build if signing or notarization fails — never ship unsigned binaries. NOT in scope: Linux builds (Goal 10), auto-publishing releases (drafts for manual review), delta/differential updates, beta channels, version bumping automation, store distribution (Flathub/Snap/Microsoft Store/Mac App Store).
+- **Acceptance:**
+  - GitHub Actions workflow file exists (e.g. `.github/workflows/release.yml`)
+  - Workflow triggers on `v*` tag push
+  - macOS job builds a universal DMG (x64 + arm64)
+  - macOS job signs and notarizes the build (using `APPLE_ID`, `APPLE_APP_SPECIFIC_PASSWORD`, Apple Developer certificate secrets)
+  - Windows job builds NSIS installer for x64 and arm64
+  - Windows job signs the installer (using `WIN_CSC_LINK`, `WIN_CSC_KEY_PASSWORD` secrets)
+  - Both jobs upload build artifacts to a draft GitHub Release
+  - `latest.yml` and `latest-mac.yml` metadata files included in release assets
+  - Build fails if signing or notarization fails
+  - Workflow completes in under 10 minutes (per PRD success metric)
+  - No regressions on existing CI workflows
+- **PR:**
+- **Branch:**
+- **TRD:**
+- **Notes:** Third Goal 9 task. PRD Flow 4 covers this scope. Requires CI secrets to be populated before first real run. Can be built and tested with dummy/self-signed certificates initially.
+
 ## In Progress
 
 _(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
@@ -81,6 +83,25 @@ _(Developer moves tasks here when the draft PR is marked ready.)_
 ## Changes Requested
 
 _(Reviewer moves tasks here when a PR needs rework.)_
+
+### TASK-0033: electron-updater Integration — Auto-Update Check & Notification
+- **Goal:** Goal 9 — Auto-Update & Distribution (implementation-roadmap-v2.md § Goal 9)
+- **PRD:** research/agents/prds/goal-09-auto-update-distribution.md
+- **Scope:** Install and configure `electron-updater` in the Electron main process. Use GitHub provider pointing at the repo's GitHub Releases. Check for updates on app launch and every 4 hours while running. Download updates in the background without UI interruption. Show tray notification when download completes: "Update available — will apply on next restart." Add "Restart to update" action. Add "Check for updates" menu item to tray context menu with status feedback (up-to-date or version available). Display current app version in settings panel. NOT in scope: GitHub Actions CI pipeline (separate task), code signing configuration, landing page, macOS notarization, Windows signing, delta updates, update channels, forced updates, auto-restart.
+- **Acceptance:**
+  - `electron-updater` installed and configured with GitHub provider
+  - On launch, app silently checks GitHub Releases for a newer version
+  - Periodic check every 4 hours while running
+  - Update downloads in background (no UI interruption during download)
+  - Tray notification appears when download completes: "Update available — will apply on next restart"
+  - "Restart to update" action triggers app quit-and-install
+  - "Check for updates" item in tray context menu shows "up to date" or "update available"
+  - Current app version displayed in settings panel
+  - No regressions on existing desktop functionality
+- **PR:** #28
+- **Branch:** goals/33-electron-updater-auto-update
+- **TRD:** research/plans/goals/33-electron-updater-auto-update-trd.md — approved
+- **Notes:** First Goal 9 task. PRD Flow 1 (background update) and Flow 2 (manual check) cover this scope. Goal 9 dependency (Goal 6) is shipped. Can proceed independently of Goal 8.
 
 ## TRD Changes Requested
 
