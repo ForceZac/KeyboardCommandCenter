@@ -1,5 +1,14 @@
 <!-- Agent log. Append-only. Agents read the last 75 lines before acting. Log Trim archives entries older than 48h into agent-log-archive-YYYY-MM.md. -->
 
+## 2026-05-11 01:11 ET DEVELOPER
+- did: no-op — in-flight cap reached (PR #25 goals/25-desktop-favorites-sync is In Review); no Changes Requested, no In Progress tasks
+- task: TASK-0025 (In Review — not my turn)
+- PR: #25
+- trd: approved
+- tests: skipped (no work done)
+- metrics: run_type=no-op | reason=in-flight cap — goals/25-desktop-favorites-sync is In Review | dev_idle=1
+- next: Reviewer approves/requests-changes PR #25; if approved, Zach merges → TASK-0026 unblocks
+
 ## 2026-05-10 12:41 ET DEVELOPER
 - did: started run — claimed DEV_LOCK; no PAUSE/DEV_PAUSE; no In Progress tasks; no In Review; checking Ready
 - task: TBD (updating to TASK-0021 after analysis)
@@ -1821,3 +1830,35 @@
 - metrics: run_type=productive | pr=PR-25 | round=1 | decision=changes-requested | tests_run=pass
 - idle-reset: echo 0 > REV_IDLE; rm -f REV_PAUSE; rm -f DEV_PAUSE
 - next: Developer fixes push() 401 handling + updates test, pushes fix, marks ready for round 2
+
+## 2026-05-11 01:00 ET DEVELOPER
+- did: fixed TASK-0025 changes-requested — patched push() 401 handler to re-queue all not-yet-attempted pending changes (switch to indexed for loop, pending.slice(i)); added missing sc-2 assertion to test; 288/288 pass; pushed; PR comment left; moved task In Review
+- task: TASK-0025
+- PR: #25
+- trd: approved
+- tests: green (288/288)
+- metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=0 | dev_idle=0
+- next: Reviewer picks up PR #25 round 2; if approved, TASK-0025 merges and TASK-0026 unblocks
+
+## 2026-05-11 01:06 ET PROJECT-MANAGER
+- did: no-op — Ready empty, all tasks blocked on TASK-0025 merge (In Review, round 2 pending). Ran roadmap health check. Closed 2 stale proposals (PROP-0001, PROP-0005).
+- created: none
+- moved: none
+- prd gaps: none — all 10 goals have PRDs
+- roadmap check: solid — sequencing correct, no scope creep, no stale goals. One flag: Goal 9 requires Apple Developer Program + Windows signing certs with lead time; owner should start enrollment. Goal 9 PRD has 4 open questions to resolve before task scoping.
+- proposals added: 0 (closed 2 stale: PROP-0001, PROP-0005)
+- metrics: tasks_created=0 | tasks_moved=0 | prd_gaps=0 | roadmap_issues=0 | proposals_closed=2
+- next: TASK-0025 round 2 review completes → merge → Merge Watcher unblocks TASK-0026 + TASK-0027 → Ready restocks. Scope Goal 9 tasks once Goal 8 is active.
+
+## 2026-05-11 01:13 ET REVIEWER
+- did: reviewed PR #25 (TASK-0025 — Desktop Favorites Sync Engine & Offline Cache, round 2)
+- decision: approved (posted as GitHub comment — self-review restriction; same precedent as PR #23)
+- standards checked: round-2 scope only — checked whether round-1 feedback was addressed
+- round-1 issues resolved:
+  - (1) push() 401 handling: loop switched from for-of to indexed; `remaining.push(...pending.slice(i))` now re-queues the triggering change AND all not-yet-attempted changes ✓
+  - (2) incomplete test: sc-2 assertion added (`expect(lastPending.some(c => c.shortcutId === 'sc-2')).toBe(true)`) ✓
+- tests run: 288/288 vitest pass | tsc --noEmit clean (tsconfig.json + tsconfig.tests.json + tsconfig.renderer.json)
+- backlog: TASK-0025 In Review → Approved; goal summary updated (Round 1 → Round 2)
+- metrics: run_type=productive | pr=PR-25 | round=2 | decision=approved | tests_run=pass
+- idle-reset: echo 0 > REV_IDLE; rm -f REV_PAUSE; rm -f DEV_PAUSE
+- next: Owner merges PR #25 to main → move TASK-0025 to Shipped → Merge Watcher unblocks TASK-0026 + TASK-0027

@@ -45,14 +45,6 @@ _(Developer moves tasks here when the draft PR is marked ready.)_
 
 _(Reviewer moves tasks here when a PR needs rework.)_
 
-### TASK-0025: Desktop Favorites Sync Engine & Offline Cache
-- **Goal:** Goal 7 — User Accounts & Favorites Sync
-- **PRD:** research/agents/prds/goal-07-accounts-favorites.md
-- **PR:** #25
-- **Branch:** goals/25-desktop-favorites-sync
-- **TRD:** research/plans/goals/25-desktop-favorites-sync-trd.md — approved
-- **Changes Requested:** 2026-05-11 (Round 1) — push() 401 handling drops subsequent pending changes; incomplete test
-
 ## TRD Changes Requested
 
 _(TRD Watcher moves tasks here when a TRD needs rework.)_
@@ -60,6 +52,14 @@ _(TRD Watcher moves tasks here when a TRD needs rework.)_
 ## Approved
 
 _(Reviewer moves tasks here after approving the PR. You merge to main, then move to Shipped.)_
+
+### TASK-0025: Desktop Favorites Sync Engine & Offline Cache
+- **Goal:** Goal 7 — User Accounts & Favorites Sync
+- **PRD:** research/agents/prds/goal-07-accounts-favorites.md
+- **PR:** #25
+- **Branch:** goals/25-desktop-favorites-sync
+- **TRD:** research/plans/goals/25-desktop-favorites-sync-trd.md — approved
+- **Approved:** 2026-05-11 (Round 2)
 
 ## Shipped
 
