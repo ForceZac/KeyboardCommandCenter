@@ -320,8 +320,8 @@ describe('lookupApp — Linux process names', () => {
     expect(lookupApp('gnome-terminal')).toBe('gnome-terminal');
   });
 
-  it('gnome-termina (15-char truncation of gnome-terminal-server) → gnome-terminal', () => {
-    expect(lookupApp('gnome-termina')).toBe('gnome-terminal');
+  it('gnome-terminal- (15-char truncation of gnome-terminal-server) → gnome-terminal', () => {
+    expect(lookupApp('gnome-terminal-')).toBe('gnome-terminal');
   });
 
   it('konsole → konsole', () => {

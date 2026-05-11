@@ -15,7 +15,7 @@
 //! appear truncated in comm (`google-chrome-s`). Reading cmdline for those
 //! cases gives the full binary path, from which the basename is extracted.
 
-#[cfg(target_os = "linux")]
+#![cfg(target_os = "linux")]
 
 use std::fs;
 use std::path::Path;
