@@ -121,7 +121,7 @@ _(Developer moves tasks here when the draft PR is marked ready.)_
 - **PR:** #34
 - **Branch:** goals/28-submission-form-ui
 - **TRD:** research/plans/goals/28-submission-form-ui-trd.md — approved
-- **Notes:** Unblocked by TASK-0027 merge (PR #27, 2026-05-11). Second Goal 8 task. PRD Flows 1 and 6 cover this scope.
+- **Notes:** Unblocked by TASK-0027 merge (PR #27, 2026-05-11). Second Goal 8 task. PRD Flows 1 and 6 cover this scope. Review feedback addressed 2026-05-11: ESC handler + E2E test added; TRD deviation documented in PR description.
 
 ## Changes Requested
 
