@@ -1,10 +1,16 @@
 /**
  * index.ts — Panel renderer entry point.
  *
- * Wires the onAppChanged IPC listener to the shortcut renderer modules.
+ * Wires the onAppChanged IPC listener to the shortcut renderer modules,
+ * and the My Favorites tab (TASK-0026) to the favorites renderer.
+ *
  * On each app-changed event: fetches shortcut data (served from main-process
  * cache by TASK-0012, so typically <1ms), then renders the app header and
  * shortcut list into the DOM — or one of three fallback states (TASK-0016).
+ *
+ * Tab switching (TASK-0026): clicking "My Favorites" fetches the cached favorites
+ * list via sync IPC and renders it. Clicking "App Shortcuts" returns to the
+ * shortcut list for the currently detected app.
  */
 
 import './app.css';
@@ -12,13 +18,18 @@ import './app.css';
 import { getPlatform } from './platform';
 import { renderAppHeader, clearAppHeader } from './app-header';
 import { renderShortcutList } from './shortcut-list';
-import { initSearch, resetFilter } from './search';
+import { initSearch, resetFilter, type ActiveView } from './search';
 import {
   renderNoDetection,
   renderUnrecognizedApp,
   renderNoShortcuts,
   type RecentAppEntry,
 } from './fallback';
+import {
+  renderFavoritesView,
+  renderSignInPrompt,
+} from './favorites-list';
+import type { FavoriteEntry, CollectionSummary } from './types';
 
 // Escape key dismisses the panel via IPC → main process hides the BrowserWindow.
 document.addEventListener('keydown', (event: KeyboardEvent) => {
@@ -31,18 +42,23 @@ document.addEventListener('DOMContentLoaded', () => {
   const platformSlug = getPlatform();
   const appNameEl = document.getElementById('app-name');
   const shortcutsEl = document.getElementById('shortcuts-container') as HTMLElement;
+  const favoritesEl = document.getElementById('favorites-container') as HTMLElement;
   const searchContainerEl = document.getElementById('search-container') as HTMLElement;
   const searchInput = document.getElementById('search-input') as HTMLInputElement;
   const noResultsEl = document.getElementById('no-results') as HTMLElement;
   const fallbackEl = document.getElementById('fallback-container') as HTMLElement;
+  const tabAppShortcuts = document.getElementById('tab-app-shortcuts') as HTMLButtonElement;
+  const tabMyFavorites = document.getElementById('tab-my-favorites') as HTMLButtonElement;
 
-  // Attach search listener once — applyFilter runs on every keystroke.
-  if (searchInput && shortcutsEl && noResultsEl) {
-    initSearch(searchInput, shortcutsEl, noResultsEl);
+  // Track which view is active so the search filter knows which rows to target.
+  let currentView: ActiveView = 'app-shortcuts';
+
+  // Attach search listener once — reads currentView at filter time.
+  if (searchInput && shortcutsEl && favoritesEl && noResultsEl) {
+    initSearch(searchInput, shortcutsEl, favoritesEl, noResultsEl, () => currentView);
   }
 
   // Single delegated click listener for recent-app entries in the fallback view.
-  // Avoids re-attaching listeners on every re-render.
   if (fallbackEl) {
     fallbackEl.addEventListener('click', (event: MouseEvent) => {
       const target = event.target as Element;
@@ -55,9 +71,101 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // ── Delegated favorite toggle listener (App Shortcuts view) ───────────────
+  // Handles clicks on .fav-btn inside #shortcuts-container.
+  // Optimistic: icon toggles immediately; toggleFavorite write is async.
+  if (shortcutsEl) {
+    shortcutsEl.addEventListener('click', (event: MouseEvent) => {
+      const target = event.target as Element;
+      const btn = target.closest<HTMLElement>('.fav-btn[data-shortcut-id]');
+      if (!btn) return;
+      const shortcutId = btn.dataset['shortcutId'];
+      if (!shortcutId) return;
+
+      // Optimistic update.
+      btn.classList.toggle('favorited');
+
+      void window.kcc.sync.toggleFavorite(shortcutId);
+    });
+  }
+
+  // ── Delegated favorite toggle listener (My Favorites view) ────────────────
+  // After unfavoriting in the favorites view, re-render the list so the row
+  // disappears immediately.
+  if (favoritesEl) {
+    favoritesEl.addEventListener('click', (event: MouseEvent) => {
+      const target = event.target as Element;
+      const btn = target.closest<HTMLElement>('.fav-btn[data-shortcut-id]');
+      if (!btn) return;
+      const shortcutId = btn.dataset['shortcutId'];
+      if (!shortcutId) return;
+
+      void (async () => {
+        await window.kcc.sync.toggleFavorite(shortcutId);
+        // Re-render favorites list so the unfavorited shortcut disappears.
+        await renderFavoritesTab();
+      })();
+    });
+  }
+
+  // ── Tab switching ─────────────────────────────────────────────────────────
+
+  if (tabAppShortcuts) {
+    tabAppShortcuts.addEventListener('click', () => {
+      if (currentView === 'app-shortcuts') return;
+      currentView = 'app-shortcuts';
+      tabAppShortcuts.classList.add('active');
+      tabMyFavorites?.classList.remove('active');
+      if (shortcutsEl) shortcutsEl.hidden = false;
+      if (favoritesEl) favoritesEl.hidden = true;
+      // Clear any search query so the shortcut list is fully visible.
+      if (searchInput && shortcutsEl && favoritesEl && noResultsEl) {
+        resetFilter(searchInput, shortcutsEl, favoritesEl, noResultsEl, 'app-shortcuts');
+      }
+    });
+  }
+
+  if (tabMyFavorites) {
+    tabMyFavorites.addEventListener('click', () => {
+      if (currentView === 'favorites') return;
+      currentView = 'favorites';
+      tabMyFavorites.classList.add('active');
+      tabAppShortcuts?.classList.remove('active');
+      if (shortcutsEl) shortcutsEl.hidden = true;
+      if (favoritesEl) favoritesEl.hidden = false;
+      // Clear search so we show all favorites on tab switch.
+      if (searchInput && noResultsEl) {
+        searchInput.value = '';
+        noResultsEl.hidden = true;
+      }
+      void renderFavoritesTab();
+    });
+  }
+
+  /** Fetches and renders the favorites view into #favorites-container. */
+  async function renderFavoritesTab(): Promise<void> {
+    try {
+      const signedIn = await window.kcc.sync.isSignedIn();
+      if (!signedIn) {
+        if (favoritesEl) favoritesEl.innerHTML = renderSignInPrompt();
+        return;
+      }
+      const [favorites, collections]: [FavoriteEntry[], CollectionSummary[]] =
+        await Promise.all([
+          window.kcc.sync.getFavorites(),
+          window.kcc.sync.getCollections(),
+        ]);
+      if (favoritesEl) {
+        favoritesEl.innerHTML = renderFavoritesView(collections, favorites);
+      }
+    } catch (err) {
+      console.error('[kcc] renderFavoritesTab error:', err);
+    }
+  }
+
   /** Shows the shortcut (happy-path) UI elements; hides the fallback container. */
   function showShortcuts(): void {
-    if (shortcutsEl) shortcutsEl.hidden = false;
+    if (shortcutsEl && currentView === 'app-shortcuts') shortcutsEl.hidden = false;
     if (searchContainerEl) searchContainerEl.hidden = false;
     if (fallbackEl) fallbackEl.hidden = true;
   }
@@ -74,7 +182,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /**
    * Fetches names for up to 5 recent app slugs from the prefetch cache.
-   * Slugs whose lookup returns null are omitted (DB edge case or unknown app).
    */
   async function fetchRecentApps(): Promise<RecentAppEntry[]> {
     const slugs = await window.kcc.getRecentApps();
@@ -91,10 +198,14 @@ document.addEventListener('DOMContentLoaded', () => {
   /**
    * Handles an app-changed event from the detection service.
    *
+   * Always re-renders #shortcuts-container regardless of the active tab.
+   * Does not reset the active tab — users stay on My Favorites if that's what
+   * they were viewing when the app changed.
+   *
    * Detection payload semantics:
-   *   { appSlug: null, processName: '' }           → no active window
+   *   { appSlug: null, processName: '' }            → no active window
    *   { appSlug: null, processName: 'SomeApp.exe' } → unrecognized process
-   *   { appSlug: 'vscode', ... }                   → recognized app (may have no shortcuts)
+   *   { appSlug: 'vscode', ... }                    → recognized app (may have no shortcuts)
    */
   async function handleAppChanged(payload: {
     appSlug: string | null;
@@ -121,11 +232,10 @@ document.addEventListener('DOMContentLoaded', () => {
       // ── Recognized app — fetch shortcut data ──────────────────────────────
       const appDetail = await window.kcc.getShortcutsForApp(payload.appSlug);
 
-      // ── Case 3a: appSlug valid but DB returned null (DB unreachable etc.) ──
+      // ── Case 3a: appSlug valid but DB returned null ───────────────────────
       if (!appDetail) {
         if (appNameEl) appNameEl.innerHTML = clearAppHeader();
         const recentApps = await fetchRecentApps();
-        // Use slug as display name when the real name is unavailable.
         showFallback(renderNoShortcuts(payload.appSlug, recentApps));
         return;
       }
@@ -141,11 +251,24 @@ document.addEventListener('DOMContentLoaded', () => {
       // ── Happy path: recognized app with shortcuts ─────────────────────────
       if (appNameEl) appNameEl.innerHTML = renderAppHeader(appDetail.name);
       showShortcuts();
-      if (shortcutsEl) shortcutsEl.innerHTML = renderShortcutList(appDetail, platformSlug);
+
+      // Fetch favorited IDs to render filled hearts on shortcut rows.
+      let favoritedIds = new Set<string>();
+      try {
+        const favorites = await window.kcc.sync.getFavorites();
+        favoritedIds = new Set(favorites.map((f) => f.shortcutId));
+      } catch {
+        // Non-fatal: if the sync cache is unavailable, render without filled icons.
+      }
+
+      if (shortcutsEl) {
+        shortcutsEl.innerHTML = renderShortcutList(appDetail, platformSlug, favoritedIds);
+      }
 
       // Reset search and focus the input so the user can type immediately.
-      if (searchInput && shortcutsEl && noResultsEl) {
-        resetFilter(searchInput, shortcutsEl, noResultsEl);
+      // Only reset when in App Shortcuts view — don't interrupt favorites search.
+      if (currentView === 'app-shortcuts' && searchInput && shortcutsEl && favoritesEl && noResultsEl) {
+        resetFilter(searchInput, shortcutsEl, favoritesEl, noResultsEl, 'app-shortcuts');
         searchInput.focus();
       }
     } catch (err) {
