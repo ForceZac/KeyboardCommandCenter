@@ -71,7 +71,7 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
   - Unit tests for session type detection and DBus response parsing pass
   - Existing X11 and Windows/macOS detection tests unaffected
   - Crate compiles on Linux with `libdbus-1-dev` installed
-- **PR:** (pending)
+- **PR:** #32
 - **Branch:** goals/37-wayland-active-window-detection
 - **TRD:** research/plans/goals/37-wayland-active-window-detection-trd.md — awaiting-review
 - **Notes:** Second Goal 10 task. PRD Flow 4 (Wayland detection) covers this scope. Extends TASK-0036's Rust native module with Wayland-specific adapter. Uses `zbus` (pure-Rust, no libdbus-1-dev needed). Branch created from main — will need rebase onto goals/36-linux-x11-detection before build phase since that branch not yet merged.
