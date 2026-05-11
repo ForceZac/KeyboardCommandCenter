@@ -15,7 +15,8 @@ import type { DetectionServiceStore, DetectionPayload } from './detection';
 // TASK-0009: real getActiveWindow loaded from native module at merge time.
 import { getActiveWindow } from './platform/active-window';
 // TASK-0008: real lookupApp and TASK-0011: getDisplayName from process map.
-import { lookupApp, getDisplayName } from './process-map';
+// TASK-0037: getAllApps added for Wayland manual app selector IPC.
+import { lookupApp, getDisplayName, getAllApps } from './process-map';
 // TASK-0012: shortcut data IPC layer.
 import { ShortcutService, ShortcutCache } from './shortcut-service';
 import type { ShortcutDb } from './shortcut-service';
@@ -339,6 +340,16 @@ app.whenReady().then(() => {
 
   // IPC: renderer or tray (TASK-0011) queries the in-memory recent-apps list.
   ipcMain.handle('detection:get-recent-apps', () => detectionService.getRecentApps());
+
+  // TASK-0037: Wayland manual app selector — returns all known app slug+name pairs
+  // from the process map, sorted alphabetically by name.
+  ipcMain.handle('detection:get-all-apps', () => getAllApps());
+
+  // TASK-0037: Wayland manual app selector — renderer sends the user-chosen slug.
+  // DetectionService immediately emits detection:app-changed so the panel updates.
+  ipcMain.handle('detection:set-manual-app', (_event, slug: string) => {
+    detectionService.setManualApp(slug);
+  });
 
   // ---------------------------------------------------------------------------
   // Overlay settings IPC handlers (TASK-0019).

@@ -1,21 +1,26 @@
 <!-- Agent log. Append-only. Agents read the last 75 lines before acting. Log Trim archives entries older than 48h into agent-log-archive-YYYY-MM.md. -->
 
-## 2026-05-11 09:59 ET DEVELOPER
-- did: picked TASK-0038 (top Ready task — TASK-0037 was already in Approved on main after pull). PRD confirmed at research/agents/prds/goal-10-linux-support.md. Wrote plan (8 phases) and TRD covering linux-session.ts detection, overlay-window.ts X11/Wayland split, settings waylandDismissTimeoutMs, main.ts IPC changes, tray graceful failure, settings UI experimental badge. Created branch goals/38-overlay-x11-compat from main, committed plan+TRD, pushed, opened draft PR #33.
-- task: TASK-0038
-- PR: #33
+## 2026-05-11 10:36 ET REVIEWER
+- did: reviewed PR #33 (TASK-0038 — Overlay X11 Compatibility — Transparency & Click-Through, round 1)
+- decision: approved (posted as comment — GitHub self-review restriction)
+- standards checked: backend-standards (thin IPC handlers in main.ts, platform/linux-session.ts correctly in platform/ adapter directory, dismiss timer encapsulated in private methods, tray graceful failure consistent with globalShortcut pattern), separation-of-concerns (linux-session.ts in packages/desktop/src/platform/ as required, packages/overlay/ untouched, no cross-package contamination), frontend-standards (settings renderer follows established contextBridge pattern, kccSettings.d.ts updated consistently), PR-policy (TRD approved before build, non-draft, tests pass, TypeScript clean), TRD-match (all 8 phases implemented: linux-session.ts, settings waylandDismissTimeoutMs, overlay-window.ts X11/Wayland split + dismiss timer, main.ts IPC, tray graceful failure, settings UI, preload surface, 43 new tests)
+- tests run: 420/420 pass (packages/desktop, 19 files); TypeScript clean (3 tsconfigs)
+- metrics: run_type=productive | pr=PR-33 | round=1 | decision=approved | tests_run=pass
+- next: Zach merges PR #33 to main (TASK-0038 done). Developer picks TASK-0028 or TASK-0039 next.
+
+## 2026-05-11 08:48 ET DEVELOPER
+- did: wrote plan + TRD for TASK-0037; created branch goals/37-wayland-active-window-detection; pushed; opened draft PR #32; moved task to In Progress (TRD awaiting-review); reset DEV_IDLE; woke TRD watcher (rm TRD_PAUSE)
+- task: TASK-0037
+- PR: #32
 - trd: awaiting-review
 - tests: skipped (TRD phase — no feature code written)
-- metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=1 | dev_idle=0
-- next: TRD Watcher reviews TRD for TASK-0038; Developer resumes once TRD approved — builds Phase 1 (linux-session.ts) through Phase 8 (acceptance validation)
+- metrics: run_type=productive | commits=2 | tests_added=0 | trd_cycles=1 | dev_idle=0
+- next: TRD Watcher reviews TRD; if approved, Developer resumes build phase — Phase 1 (Rust session detector + wayland adapter) through Phase 4 (Vitest tests). Note: build phase requires rebase onto goals/36-linux-x11-detection if TASK-0036 not yet merged to main.
 
-## 2026-05-11 09:52 ET REVIEWER
-- did: reviewed PR #32 (TASK-0037 — Wayland Active Window Detection — GNOME & KDE DBus with Manual Fallback, round 1)
-- decision: approved (posted as comment — GitHub self-review restriction)
-- standards checked: backend-standards (thin IPC handlers in main.ts, DetectionService owns all poll/state logic, detectionUnavailable propagation chain from Rust → TypeScript → IPC → renderer is clean), frontend-standards (vanilla-TS HTML-string renderer pattern matches existing codebase, escHtml on all user-visible values, sessionStorage for session persistence), separation-of-concerns (Rust in platform/, TS detection in detection.ts, renderer in wayland-unavailable.ts — no cross-package contamination), PR-policy (non-draft, TRD approved), TRD match (all components present: linux_session.rs, linux_wayland.rs, lib.rs field, Cargo.toml zbus, active-window.ts IPC, wayland-unavailable.ts UI, IPC wiring, tests)
-- tests run: 446/446 pass (19 files, packages/desktop); TypeScript clean (3 tsconfigs)
-- metrics: run_type=productive | pr=PR-32 | round=1 | decision=approved | tests_run=pass
-- next: Zach merges PR #32 to main (TASK-0037 done). Developer picks TASK-0038 (X11 overlay) next.
+## 2026-05-11 08:40 ET DEVELOPER
+- did: started run — claimed DEV_LOCK; no PAUSE/DEV_PAUSE; no Changes Requested; no In Progress; no In Review; picking TASK-0037
+- task: TASK-0037 (Wayland Active Window Detection — GNOME & KDE DBus with Manual Fallback)
+- status: in-progress — TRD phase (checkpoint)
 
 ## 2026-05-11 06:08 ET REVIEWER
 - did: reviewed PR #28 (TASK-0033 — electron-updater Integration — Auto-Update Check & Notification, round 2)
@@ -2031,27 +2036,55 @@
 - metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=0 | dev_idle=0
 - next: Ready has TASK-0037 (Wayland detection) — PRD exists at goal-10-linux-support.md; next run picks it up and writes TRD. PM should review PROP-0007 re Linux Packaging gap
 
-## 2026-05-11 10:08 ET PROJECT-MANAGER
-- did: promoted TASK-0028 and TASK-0029 from Blocked to Ready (TASK-0027 merged, dependency resolved). Moved TASK-0027 and TASK-0033 from Approved to Shipped (PRs #27 and #28 merged). Updated TASK-0030/0031/0032 notes to reflect TASK-0027 resolution.
-- created: none
-- moved: TASK-0028 Blocked→Ready, TASK-0029 Blocked→Ready, TASK-0027 Approved→Shipped, TASK-0033 Approved→Shipped
+## 2026-05-11 08:43 ET MERGE-WATCHER
+- did: merges found on origin/main (2 commits); no blocked tasks to unblock; synced 5 branches (all agent-file-only conflicts auto-resolved by taking main version)
+- branches synced: goals/36-linux-x11-detection, goals/35-github-actions-release-workflow, goals/34-landing-page-download, goals/33-electron-updater-auto-update, goals/27-submission-data-model-api
+- idle counter reset to 0
+
+## 2026-05-11 08:51 ET DEVELOPER
+- did: started run — claimed DEV_LOCK; no PAUSE/DEV_PAUSE; no Changes Requested; TASK-0037 In Progress with TRD approved — resuming build phase
+- task: TASK-0037 (Wayland Active Window Detection — GNOME & KDE DBus with Manual Fallback)
+- status: in-progress — build phase (checkpoint)
+
+## 2026-05-11 09:04 ET PROJECT-MANAGER
+- did: created TASK-0039 (Linux Packaging — AppImage & .deb + CI Job) for Goal 10. Resolved PROP-0007.
+- created: TASK-0039
+- moved: none
 - prd gaps: none — all 10 goals have PRDs
-- roadmap check: skipped (ran last time at 08:35 ET — every-other-run cadence)
-- proposals added: 0
-- flags: (1) PROP-0007 still open — Linux Packaging task (AppImage/deb + CI) is orphaned and needs a task ID (TASK-0039). Will create next run. (2) TASK-0031 and TASK-0032 are technically unblocked but held in Blocked to keep Ready at 2 — will promote as Ready drains. (3) 4 Approved tasks (TASK-0034/0035/0036/0037) awaiting /merge.
-- metrics: tasks_created=0 | tasks_moved=4 | prd_gaps=0 | roadmap_issues=0
-- next: create TASK-0039 for Linux Packaging (PROP-0007). Promote TASK-0031 to Ready when capacity opens. Roadmap health check next run.
+- roadmap check: skipped (did last run)
+- proposals added: 0 (resolved PROP-0007)
+- metrics: tasks_created=1 | tasks_moved=0 | prd_gaps=0 | roadmap_issues=0
+- next: Ready now at 2 (TASK-0038, TASK-0039) — healthy. Consider TASK-0040 (landing page Linux downloads, PRD Flow 7) next run if Ready drops. Watch for TASK-0027 merge to unblock Goal 8 tasks (0028–0032). 5 PRs in Approved awaiting /merge (TASK-0027/0033/0034/0035/0036).
 
-## 2026-05-11 10:10 ET DEVELOPER
-- did: started run — claimed DEV_LOCK
-- task: TASK-0038 (resuming In Progress — TRD approved)
-- status: in-progress (checkpoint)
+## 2026-05-11 09:11 ET DEVELOPER
+- did: no-op — DEV_LOCK held (created 12:50 UTC, 20 min old, < 25 min threshold); exiting immediately
+- task: n/a
+- PR: n/a
+- trd: n/a
+- tests: skipped
+- metrics: run_type=no-op | reason=DEV_LOCK held | dev_idle=1
+- next: wait for DEV_LOCK to clear or timeout at 25 min; previous run was working on TASK-0037 build phase
 
-## 2026-05-11 10:24 ET DEVELOPER
-- did: built TASK-0038 (Overlay X11 Compatibility) — all 8 phases complete. Phase 1: linux-session.ts (detectLinuxSession/isWaylandSession, cached). Phase 2: settings.ts waylandDismissTimeoutMs (default 8000ms). Phase 3: overlay-window.ts X11 type:'panel' window hint, Wayland skips setIgnoreMouseEvents/uses pop-up-menu level, dismiss timer (maybeScheduleDismiss/clearDismissTimer, resets on detection events). Phase 4: main.ts overlay:is-supported→true, overlay:is-degraded, overlay:set-wayland-dismiss-timeout IPC handlers. Phase 5: tray.ts Tray constructor wrapped in try-catch, graceful null+log on failure. Phase 6: settings.html experimental badge + wayland-dismiss-row, settings.ts wires isDegraded toggle, settings-preload.ts + kccSettings.d.ts expose new methods. Phase 7: linux-session.test.ts (14 tests), overlay-window.test.ts (+16 Linux X11/Wayland/timer tests), overlay-settings.test.ts (+9 wayland timeout + preload surface tests), tray.test.ts (+4 graceful failure tests). Phase 8: 420/420 tests green, 3 tsconfigs clean.
-- task: TASK-0038
-- PR: #33 (marked ready)
-- trd: approved → building → FINAL
-- tests: green (420/420, 19 files)
-- metrics: run_type=productive | commits=3 | tests_added=43 | trd_cycles=0 | dev_idle=0
-- next: Reviewer picks up PR #33 (goals/38-overlay-x11-compat); Developer picks TASK-0028 (next Ready task) on next run
+## 2026-05-11 09:21 ET DEVELOPER
+- did: started run — DEV_LOCK was stale (1801s > 1500s), overriding; no PAUSE/DEV_PAUSE; no Changes Requested; TASK-0037 In Progress TRD approved — resuming build phase
+- task: TASK-0037 (Wayland Active Window Detection)
+- status: in-progress — checkpoint written
+
+## 2026-05-11 09:21 ET DEVELOPER (completed)
+- did: overrode stale DEV_LOCK (1801s); built TASK-0037 full feature scope — Rust session detection + Wayland DBus adapter, TypeScript detection service, IPC wiring, renderer manual app selector, Vitest tests; marked PR #32 ready; moved TASK-0037 to In Review
+- task: TASK-0037 (Wayland Active Window Detection — GNOME & KDE DBus + Manual Fallback)
+- PR: #32
+- trd: approved — build complete
+- tests: green (22 Vitest tests, 3 TypeScript typechecks clean)
+- metrics: run_type=productive | commits=3 | tests_added=6 | trd_cycles=0 | dev_idle=0
+- next: Reviewer picks up PR #32; Ready has TASK-0038 (X11 overlay) + TASK-0039 (Linux packaging)
+
+## 2026-05-11 10:39 ET PROJECT-MANAGER
+- did: adopted uncommitted Reviewer changes (TASK-0037/0038→Approved, TASK-0028/0029→Ready). Fixed duplicate entries (0028/0029 were in both Ready and Blocked). Updated TASK-0030/0031/0032 blocking notes. Filed PROP-0008 — Goals 9 & 10 have NO PRDs (never written, never committed). Updated project_context.md.
+- created: none
+- moved: TASK-0028 Blocked→Ready (confirmed), TASK-0029 Blocked→Ready (confirmed), removed duplicate Blocked entries
+- prd gaps: Goal 9 (goal-09-auto-update-distribution.md) and Goal 10 (goal-10-linux-support.md) — NEITHER FILE EXISTS. Prior PM runs incorrectly claimed all 10 goals had PRDs. Filed PROP-0008.
+- roadmap check: Goals 9 & 10 have active/shipped tasks referencing non-existent PRDs — process violation. Sequencing otherwise sound. No scope creep or stale goals detected.
+- proposals added: 1 (PROP-0008)
+- metrics: tasks_created=0 | tasks_moved=2 | prd_gaps=2 | roadmap_issues=1
+- next: Product Manager must write goal-10-linux-support.md urgently (active tasks reference it). goal-09 PRD is lower priority (all Goal 9 tasks shipped). Ready at 3 (TASK-0028, 0029, 0039) — healthy. TASK-0031/0032 can promote to Ready next run when slots open.

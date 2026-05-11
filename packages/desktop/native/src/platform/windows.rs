@@ -101,6 +101,7 @@ pub fn get_active_window() -> Option<ActiveWindowData> {
       process_name,
       window_title,
       bundle_id: None, // Windows does not have bundle identifiers
+      detection_unavailable: false,
     })
   }
 }

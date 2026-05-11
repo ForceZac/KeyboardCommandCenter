@@ -8,11 +8,12 @@ Keyboard Command Center is a comprehensive keyboard shortcut database and backgr
 
 ## Current status
 
-- **Shipped goals:** Goal 1 (Schema & Seed), Goal 2 (Web Search & Browse), Goal 3 (Desktop App Shell), Goal 4 (Active Window Detection), Goal 5 (Shortcut Panel UI), Goal 6 (Overlay Mode)
-- **Active goal:** Goal 8 — Community Contributions & Shortcut Submissions (TASK-0027 Approved awaiting /merge; TASK-0028–0032 Blocked on TASK-0027)
-- **Pending merge:** Goal 7 — TASK-0026 Approved, PR #26 awaiting Zach's `/merge` (Goal 7 complete once merged)
-- **Queued:** Goal 9 — Auto-Update & Distribution (TASK-0033 Approved PR #28, TASK-0034 Approved PR #29, TASK-0035/0036 Ready), Goal 10 — Linux Support (PRD written, TASK-0036 in Ready)
-- **Stage:** Active development — Goals 1–7 shipped (Goal 7 pending final merge), Goal 8 underway
+- **Shipped goals:** Goal 1 (Schema & Seed), Goal 2 (Web Search & Browse), Goal 3 (Desktop App Shell), Goal 4 (Active Window Detection), Goal 5 (Shortcut Panel UI), Goal 6 (Overlay Mode), Goal 7 (User Accounts & Favorites Sync)
+- **Active goals:** Goal 8 — Community Contributions (TASK-0028/0029 Ready, TASK-0030 Blocked on 0028, TASK-0031/0032 unblocked waiting for Ready slot); Goal 10 — Linux Support (TASK-0038 Approved PR #33, TASK-0039 Ready)
+- **Shipped in parallel:** Goal 9 — Auto-Update & Distribution (TASK-0033/0034/0035 all merged)
+- **Approved awaiting /merge:** TASK-0038 (PR #33), TASK-0037 (PR #32 merged), TASK-0036 (PR #31 merged), TASK-0035 (PR #30 merged), TASK-0034 (PR #29 merged), TASK-0033 (PR #28 merged), TASK-0027 (PR #27 merged)
+- **PRD gaps:** Goals 9 and 10 have no PRDs in `research/agents/prds/` — see PROP-0008
+- **Stage:** Active development — Goals 1–9 shipped, Goal 8 & 10 active
 
 ## Architecture decisions
 
