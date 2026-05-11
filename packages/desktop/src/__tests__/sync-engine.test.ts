@@ -469,9 +469,10 @@ describe('SyncEngine', () => {
 
       await engine.forceSync();
 
-      // sc-1 (the one that got 401) must be re-queued.
+      // Both sc-1 (the one that got 401) and sc-2 (not yet attempted) must be re-queued.
       const lastPending = vi.mocked(syncStore.setPendingChanges).mock.lastCall![0];
       expect(lastPending.some((c: PendingChange) => c.shortcutId === 'sc-1')).toBe(true);
+      expect(lastPending.some((c: PendingChange) => c.shortcutId === 'sc-2')).toBe(true);
     });
   });
 

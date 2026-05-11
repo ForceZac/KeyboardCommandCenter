@@ -317,7 +317,8 @@ export class SyncEngine {
 
     const remaining: PendingChange[] = [];
 
-    for (const change of pending) {
+    for (let i = 0; i < pending.length; i++) {
+      const change = pending[i];
       try {
         let res: Response;
         if (change.action === 'add') {
@@ -341,8 +342,8 @@ export class SyncEngine {
 
         if (res.status === 401) {
           console.error('[SyncEngine] push: 401 — token expired, backing off');
-          // Stop pushing; re-queue this change and all remaining.
-          remaining.push(change);
+          // Re-queue this change and all subsequent ones not yet attempted.
+          remaining.push(...pending.slice(i));
           break;
         }
 
