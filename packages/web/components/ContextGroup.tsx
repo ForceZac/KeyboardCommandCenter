@@ -5,13 +5,20 @@ interface Props {
   context: string;
   shortcuts: ShortcutEntry[];
   platform: PlatformSlug;
+  /** Pass true on per-app pages to show the FavoriteToggle heart on each row. */
+  showFavoriteToggle?: boolean;
 }
 
 /**
  * ContextGroup — a labelled section of shortcuts sharing the same context/scope.
  * Renders the context name as a heading followed by ShortcutRow items.
  */
-export default function ContextGroup({ context, shortcuts, platform }: Props) {
+export default function ContextGroup({
+  context,
+  shortcuts,
+  platform,
+  showFavoriteToggle = false,
+}: Props) {
   return (
     <section className="mb-6">
       <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1 px-3">
@@ -23,6 +30,7 @@ export default function ContextGroup({ context, shortcuts, platform }: Props) {
             key={shortcut.id}
             shortcut={shortcut}
             platform={platform}
+            showFavoriteToggle={showFavoriteToggle}
           />
         ))}
       </div>
