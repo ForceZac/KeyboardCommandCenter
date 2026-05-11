@@ -29,13 +29,14 @@ model Platform {
 
 // An application whose shortcuts are cataloged (e.g. VS Code, Figma)
 model Application {
-  id          String     @id @default(cuid())
+  id          String       @id @default(cuid())
   name        String
-  slug        String     @unique
+  slug        String       @unique
   description String?
   categoryId  String
-  category    Category   @relation(fields: [categoryId], references: [id])
+  category    Category     @relation(fields: [categoryId], references: [id])
   shortcuts   Shortcut[]
+  submissions Submission[]
 
   @@map("applications")
 }
@@ -49,6 +50,7 @@ model Shortcut {
   context       String?              // optional scope: "Global", "Editor", "Normal Mode", etc.
   bindings      ShortcutKeyBinding[]
   collections   CollectionShortcut[]
+  submissions   Submission[]
 
   @@map("shortcuts")
 }
@@ -90,9 +92,11 @@ model User {
   email         String       @unique
   emailVerified DateTime?
   image         String?
+  isAdmin       Boolean      @default(false)
   accounts      Account[]
   sessions      Session[]
   collections   Collection[]
+  submissions   Submission[]
 
   @@map("users")
 }
@@ -164,4 +168,43 @@ model VerificationToken {
 
   @@unique([identifier, token])
   @@map("verification_tokens")
+}
+
+// ─── Community Contributions (Goal 8) ────────────────────────────────────────
+
+enum SubmissionType {
+  NEW_SHORTCUT
+  CORRECTION
+  APP_REQUEST
+}
+
+enum SubmissionStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+// A community-submitted contribution — new shortcut, correction, or app request.
+// The `data` JSON field carries the submitted field values (shape varies by type).
+// For NEW_SHORTCUT/CORRECTION, appId is required; for APP_REQUEST it is null
+// since the requested app doesn't exist in the database yet.
+model Submission {
+  id            String           @id @default(cuid())
+  type          SubmissionType
+  status        SubmissionStatus @default(PENDING)
+  submitterId   String
+  submitter     User             @relation(fields: [submitterId], references: [id], onDelete: Cascade)
+  appId         String?
+  app           Application?     @relation(fields: [appId], references: [id], onDelete: SetNull)
+  // Populated for CORRECTION only — the shortcut being corrected
+  shortcutId    String?
+  shortcut      Shortcut?        @relation(fields: [shortcutId], references: [id], onDelete: SetNull)
+  data          Json             // submitted field values; shape depends on type
+  reviewerNotes String?
+  reviewedBy    String?          // admin userId
+  reviewedAt    DateTime?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  @@map("submissions")
 }
