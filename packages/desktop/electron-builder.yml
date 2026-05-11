@@ -72,9 +72,46 @@ nsis:
   createStartMenuShortcut: true
 
 # ---------------------------------------------------------------------------
+# Linux — AppImage (universal, no-install) + .deb (Debian/Ubuntu) for x64
+#
+# No code signing for Linux — checksums in latest-linux.yml are sufficient.
+# libappindicator3-1 is a recommends (not depends) so the app installs even
+# when no tray indicator library is present — the global hotkey still works.
+# ---------------------------------------------------------------------------
+linux:
+  target:
+    - target: AppImage
+      arch:
+        - x64
+    - target: deb
+      arch:
+        - x64
+  category: Utility
+  icon: assets/icon.png
+  desktop:
+    Name: Keyboard Command Center
+    Comment: Keyboard shortcuts for every app
+    Categories: Utility
+    StartupNotify: 'true'
+  extraResources:
+    - from: native/kcc-native.linux-x64-gnu.node
+      to: native/kcc-native.node
+
+deb:
+  depends:
+    - libx11-6
+    - libdbus-1-3
+  recommends:
+    - libappindicator3-1
+    - libayatana-appindicator3-1
+
+appImage:
+  artifactName: '${productName}-${version}-${arch}.AppImage'
+
+# ---------------------------------------------------------------------------
 # GitHub Releases publisher — creates a draft release and uploads artifacts
-# (DMG, NSIS exe, latest-mac.yml, latest.yml).
-# electron-updater (TASK-0033) polls for latest-mac.yml / latest.yml on update check.
+# (DMG, NSIS exe, AppImage, .deb, latest-mac.yml, latest.yml, latest-linux.yml).
+# electron-updater (TASK-0033) polls for latest-mac.yml / latest.yml / latest-linux.yml on update check.
 # Requires GH_TOKEN env var in CI.
 # macOS and Windows jobs both publish to the same draft release — electron-builder
 # finds the existing draft and appends artifacts rather than creating a duplicate.

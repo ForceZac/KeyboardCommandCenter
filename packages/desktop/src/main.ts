@@ -1,5 +1,5 @@
 // Must be called before app.whenReady() — eliminates the GPU process (~20-40MB RAM savings).
-import { app, ipcMain, Notification } from 'electron';
+import { app, dialog, ipcMain, Notification } from 'electron';
 app.disableHardwareAcceleration();
 
 import fs from 'fs';
@@ -52,6 +52,8 @@ import { SyncEngine } from './sync-engine';
 // TASK-0033: auto-update service.
 import { UpdateService } from './update-service';
 import type { UpdateStatus } from './update-service';
+// TASK-0039: Linux XDG autostart manager.
+import { isAutostartEnabled, setAutostart } from './platform/linux-autostart';
 
 // Enforce single-instance: if another instance is already running, quit immediately.
 const isFirstInstance = app.requestSingleInstanceLock();
@@ -414,6 +416,34 @@ app.whenReady().then(() => {
   // no GitHub Release + latest.yml, so autoUpdater would throw immediately.
   if (app.isPackaged) {
     updateService.start();
+  }
+
+  // TASK-0039: Linux XDG autostart — on first launch, prompt the user to enable
+  // login startup. Uses a separate electron-store key so the prompt only fires once.
+  if (process.platform === 'linux' && !store.get('linux.autostartPrompted')) {
+    store.set('linux.autostartPrompted', true);
+    dialog
+      .showMessageBox({
+        type: 'question',
+        buttons: ['Enable', 'Not now'],
+        defaultId: 0,
+        title: 'Start on login?',
+        message: 'Would you like Keyboard Command Center to start automatically when you log in?',
+      })
+      .then(({ response }) => {
+        if (response === 0) {
+          setAutostart(true);
+          store.set('loginStartup', true);
+        }
+      });
+  }
+
+  // TASK-0039: Linux autostart IPC — settings UI can toggle autostart on Linux.
+  if (process.platform === 'linux') {
+    ipcMain.handle('linux:get-autostart', () => isAutostartEnabled());
+    ipcMain.handle('linux:set-autostart', (_event, enabled: boolean) => {
+      setAutostart(enabled);
+    });
   }
 
   // Log idle memory usage after everything has settled.

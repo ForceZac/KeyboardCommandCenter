@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Keyboard Command Center
+Comment=Keyboard shortcuts for every app
+Exec=keyboard-command-center %U
+Icon=keyboard-command-center
+Type=Application
+Categories=Utility;
+StartupNotify=true
+MimeType=x-scheme-handler/shortcutvault;
