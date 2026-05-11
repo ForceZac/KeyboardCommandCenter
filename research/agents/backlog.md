@@ -33,9 +33,34 @@ Task IDs are monotonic. The Project Manager picks the next number.
 
 _(Project Manager keeps 2–3 tasks here at all times.)_
 
+### TASK-0024: Favorites Web UI — Heart Icons, Collections Page & Optimistic Updates
+- **Goal:** Goal 7 — User Accounts & Favorites Sync
+- **PRD:** research/agents/prds/goal-07-accounts-favorites.md
+- **Scope:** Add a favorite toggle (heart/star icon) to each shortcut row on per-app shortcut pages. Clicking the icon calls `POST/DELETE /api/favorites` with optimistic UI (instant visual toggle, rollback on API error). Add a "My Collections" page accessible from the user nav/profile menu, displaying all collections as cards with shortcut counts. Implement collection CRUD UI: create (name + optional description), rename, delete (prevent deleting the default "My Favorites" collection). Add a collection detail view showing shortcuts in that collection with individual remove capability. Add a dropdown on the favorite icon to assign a shortcut to a specific named collection. All favorite/collection actions require an authenticated session — show a sign-in prompt for unauthenticated users attempting to favorite. NOT in scope: desktop panel favorites view (separate task), desktop sync engine, collection reordering/drag-and-drop, import/export, guest favorites migration, public/shared collections.
+- **Acceptance:**
+  - Heart/star icon visible on each shortcut row on per-app pages
+  - Clicking the icon favorites/unfavorites with immediate visual feedback (<100ms perceived)
+  - Optimistic UI: icon fills instantly, reverts if API call fails
+  - Dropdown on the favorite icon allows adding to a specific named collection
+  - "My Collections" page accessible from nav when signed in
+  - Collections displayed as cards with names, descriptions, and shortcut counts
+  - Create new collection with name and optional description
+  - Rename and delete collections (default "My Favorites" cannot be deleted)
+  - Collection detail page lists shortcuts with individual remove buttons
+  - Unauthenticated users see a sign-in prompt when attempting to favorite
+  - No regressions on existing shortcut browse/search pages
+- **PR:**
+- **Branch:**
+- **TRD:**
+- **Notes:** Unblocked — TASK-0022 merged 2026-05-10. Fourth Goal 7 task. PRD Flows 3 and 5 cover this scope.
+
 ## In Progress
 
 _(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
+
+## In Review
+
+_(Developer moves tasks here when the draft PR is marked ready.)_
 
 ### TASK-0023: Desktop Auth Flow — Browser OAuth & Deep Link Callback
 - **Goal:** Goal 7 — User Accounts & Favorites Sync
@@ -52,35 +77,8 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
   - No regressions on existing desktop functionality (panel, overlay, detection)
 - **PR:** #23
 - **Branch:** goals/23-desktop-auth-flow
-- **TRD:** research/plans/goals/23-desktop-auth-flow-trd.md — awaiting-review
+- **TRD:** research/plans/goals/23-desktop-auth-flow-trd.md — approved
 - **Notes:** Unblocked by merge on 2026-05-10 (TASK-0021 shipped). Third Goal 7 task. PRD Flow 2 covers this scope.
-
-## In Review
-
-_(Developer moves tasks here when the draft PR is marked ready.)_
-
-### TASK-0022: Favorites Data Model & CRUD API
-- **Goal:** Goal 7 — User Accounts & Favorites Sync
-- **PRD:** research/agents/prds/goal-07-accounts-favorites.md
-- **Scope:** Add Collection and CollectionShortcut models to the Prisma schema (Collection: id, userId, name, description, isDefault, createdAt, updatedAt; CollectionShortcut: join table linking userId + collectionId + shortcutId with createdAt timestamp for last-write-wins sync). Generate migration. Implement API routes: `GET/POST/DELETE /api/favorites` (add/remove a shortcut from the user's default "My Favorites" collection), `GET/POST/PATCH/DELETE /api/collections` (CRUD for named collections), `GET /api/collections/:id/shortcuts` (list shortcuts in a collection). Auto-create a "My Favorites" default collection when a new User record is created (via Prisma middleware or Auth.js event callback). Enforce server-side limits: max 50 collections per user, max 1000 total favorites per user. All routes require authenticated session. NOT in scope: web UI components (separate task), desktop client or sync engine (separate task), desktop auth flow (separate task), collection reordering, import/export, guest favorites migration.
-- **Acceptance:**
-  - Collection and CollectionShortcut models added to Prisma schema with proper relations
-  - Migration generated and applies cleanly
-  - "My Favorites" default collection auto-created on new user sign-up
-  - `POST /api/favorites` adds a shortcut to the user's default collection (returns 201)
-  - `DELETE /api/favorites/:shortcutId` removes a favorite (returns 204)
-  - `GET /api/favorites` returns the user's favorited shortcuts with collection info
-  - `POST /api/collections` creates a named collection (returns 201)
-  - `PATCH /api/collections/:id` renames or updates description (returns 200)
-  - `DELETE /api/collections/:id` deletes a collection (returns 204; cannot delete default)
-  - `GET /api/collections/:id/shortcuts` returns shortcuts in a specific collection
-  - Server returns 403 if user exceeds 50 collections or 1000 favorites
-  - All routes return 401 for unauthenticated requests
-  - All routes return <200ms under normal load
-- **PR:** #22
-- **Branch:** goals/22-favorites-data-model-api
-- **TRD:** research/plans/goals/22-favorites-data-model-api-trd.md — approved
-- **Notes:** Unblocked by merge on 2026-05-10 (TASK-0021 shipped). Second Goal 7 task.
 
 ## Changes Requested
 
@@ -97,6 +95,15 @@ _(Reviewer moves tasks here after approving the PR. You merge to main, then move
 ## Shipped
 
 _(You move tasks here after merging to main.)_
+
+### TASK-0022: Favorites Data Model & CRUD API
+- **Goal:** Goal 7 — User Accounts & Favorites Sync
+- **PRD:** research/agents/prds/goal-07-accounts-favorites.md
+- **PR:** #22
+- **Branch:** goals/22-favorites-data-model-api
+- **TRD:** research/plans/goals/22-favorites-data-model-api-trd.md — approved
+- **Approved:** 2026-05-10 (Round 4)
+- **Merged:** 2026-05-10
 
 ### TASK-0021: Auth Schema & NextAuth Integration
 - **Goal:** Goal 7 — User Accounts & Favorites Sync
@@ -286,27 +293,6 @@ _(You move tasks here after merging to main.)_
 
 _(Waiting on an external dependency, a missing PRD, or owner decision.)_
 
-### TASK-0024: Favorites Web UI — Heart Icons, Collections Page & Optimistic Updates
-- **Goal:** Goal 7 — User Accounts & Favorites Sync
-- **PRD:** research/agents/prds/goal-07-accounts-favorites.md
-- **Scope:** Add a favorite toggle (heart/star icon) to each shortcut row on per-app shortcut pages. Clicking the icon calls `POST/DELETE /api/favorites` with optimistic UI (instant visual toggle, rollback on API error). Add a "My Collections" page accessible from the user nav/profile menu, displaying all collections as cards with shortcut counts. Implement collection CRUD UI: create (name + optional description), rename, delete (prevent deleting the default "My Favorites" collection). Add a collection detail view showing shortcuts in that collection with individual remove capability. Add a dropdown on the favorite icon to assign a shortcut to a specific named collection. All favorite/collection actions require an authenticated session — show a sign-in prompt for unauthenticated users attempting to favorite. NOT in scope: desktop panel favorites view (separate task), desktop sync engine, collection reordering/drag-and-drop, import/export, guest favorites migration, public/shared collections.
-- **Acceptance:**
-  - Heart/star icon visible on each shortcut row on per-app pages
-  - Clicking the icon favorites/unfavorites with immediate visual feedback (<100ms perceived)
-  - Optimistic UI: icon fills instantly, reverts if API call fails
-  - Dropdown on the favorite icon allows adding to a specific named collection
-  - "My Collections" page accessible from nav when signed in
-  - Collections displayed as cards with names, descriptions, and shortcut counts
-  - Create new collection with name and optional description
-  - Rename and delete collections (default "My Favorites" cannot be deleted)
-  - Collection detail page lists shortcuts with individual remove buttons
-  - Unauthenticated users see a sign-in prompt when attempting to favorite
-  - No regressions on existing shortcut browse/search pages
-- **PR:**
-- **Branch:**
-- **TRD:**
-- **Notes:** Blocked — awaiting TASK-0022 (needs favorites/collections API routes and data model). Fourth Goal 7 task. PRD Flows 3 and 5 cover this scope.
-
 ### TASK-0025: Desktop Favorites Sync Engine & Offline Cache
 - **Goal:** Goal 7 — User Accounts & Favorites Sync
 - **PRD:** research/agents/prds/goal-07-accounts-favorites.md
@@ -326,7 +312,52 @@ _(Waiting on an external dependency, a missing PRD, or owner decision.)_
 - **PR:**
 - **Branch:**
 - **TRD:**
-- **Notes:** Blocked — awaiting TASK-0022 (needs API routes to sync against) and TASK-0023 (needs desktop auth to identify user). Fifth Goal 7 task. PRD Flow 7 covers this scope.
+- **Notes:** Blocked — TASK-0022 merged 2026-05-10; still awaiting TASK-0023 (needs desktop auth to identify user). Fifth Goal 7 task. PRD Flow 7 covers this scope.
+
+### TASK-0027: Submission Data Model, Service Layer & API Routes
+- **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
+- **PRD:** research/agents/prds/goal-08-community-contributions.md
+- **Scope:** Add Submission Prisma model with type enum (NEW_SHORTCUT, CORRECTION, APP_REQUEST), status enum (PENDING, APPROVED, REJECTED), submitterId, appId, shortcutId (nullable — for corrections), data JSON field (stores submitted shortcut fields), reviewerNotes, reviewedBy, createdAt, updatedAt, reviewedAt. Add `isAdmin` boolean to User model (default false). Generate migration. Implement SubmissionsService: create (with rate limiting — max 20/user/day, server-side duplicate detection on app + platform + key combo), getByUser (user's own submissions), getPending (admin — oldest first), approve (apply to shortcuts table — insert or update), editAndApprove, reject. Implement API routes: `POST /api/submissions` (create), `GET /api/submissions` (list user's own), `GET /api/admin/submissions` (list pending, admin-only), `PATCH /api/admin/submissions/:id` (approve/reject/edit-and-approve, admin-only). All routes require auth; admin routes require `isAdmin`. NOT in scope: submission form UI, key recorder component, correction diff view, app request form, admin review queue UI, contributor profile, in-app notifications, duplicate detection client-side.
+- **Acceptance:**
+  - Submission model added to Prisma schema with proper enums and relations
+  - `isAdmin` boolean added to User model
+  - Migration generated and applies cleanly
+  - `POST /api/submissions` creates a pending submission (returns 201)
+  - Server rejects submissions beyond 20/day for the same user (returns 429)
+  - Server-side duplicate detection flags exact matches on app + platform + key combo
+  - `GET /api/submissions` returns the authenticated user's submissions
+  - `GET /api/admin/submissions` returns pending submissions sorted oldest-first (admin-only, returns 403 for non-admin)
+  - `PATCH /api/admin/submissions/:id` with action=approve applies the submission to the shortcuts table
+  - `PATCH /api/admin/submissions/:id` with action=reject marks the submission as rejected
+  - Edit-and-approve flow modifies submission data before applying
+  - All routes return 401 for unauthenticated requests
+  - Corrections update the existing shortcut row; original data preserved in the Submission record
+- **PR:**
+- **Branch:**
+- **TRD:**
+- **Notes:** Blocked — awaiting Goal 7 completion (needs auth infrastructure and User model). First Goal 8 task. PRD covers Flows 1–4 and duplicate detection.
+
+### TASK-0028: Submission Form UI — New Shortcut & Key Recorder
+- **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
+- **PRD:** research/agents/prds/goal-08-community-contributions.md
+- **Scope:** Add a "Submit a shortcut" button to per-app shortcut pages. Build a submission form (modal or inline) with fields: command name (required, max 100 chars), key combination (required, captured via custom key recorder input), platform (required, dropdown), context/scope (optional), notes (optional). Implement a key recorder component: captures actual keystrokes via `keydown` event listeners, normalizes modifier key names to match database conventions (Ctrl/Cmd, Shift, Alt/Option), displays formatted key combo string. Implement client-side duplicate detection: debounced API call on key combo change checking existing shortcuts for the same app + platform + key combo; show inline warning for exact matches ("This shortcut already exists — did you mean to submit a correction?") and softer hint for fuzzy matches. Form submits via `POST /api/submissions` (from TASK-0027). Show confirmation message on success. Handle rate limit errors (429) with user-friendly message. Requires authenticated session — show sign-in prompt for unauthenticated users. NOT in scope: correction form (separate task), app request form (separate task), admin review queue UI, contributor profile, server-side duplicate detection (TASK-0027), notification system, mobile key recorder.
+- **Acceptance:**
+  - "Submit a shortcut" button visible on per-app shortcut pages
+  - Form includes command name, key combo (recorder), platform, context, and notes fields
+  - Key recorder captures actual keystrokes and displays normalized key combo
+  - Key recorder handles modifier keys (Ctrl/Cmd, Shift, Alt/Option) correctly
+  - Client-side duplicate detection fires on key combo change with <200ms response
+  - Exact match warning shows existing shortcut command name
+  - Fuzzy match shows softer hint
+  - Duplicate warnings do not block submission
+  - Successful submission shows confirmation message
+  - Rate limit (429) shows user-friendly error
+  - Unauthenticated users see sign-in prompt when clicking submit button
+  - No regressions on existing per-app shortcut pages
+- **PR:**
+- **Branch:**
+- **TRD:**
+- **Notes:** Blocked — awaiting TASK-0027 (needs submission API routes and data model). Second Goal 8 task. PRD Flows 1 and 6 cover this scope.
 
 ### TASK-0026: Desktop Panel Favorites View & Favorite Toggle
 - **Goal:** Goal 7 — User Accounts & Favorites Sync
