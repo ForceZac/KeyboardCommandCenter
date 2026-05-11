@@ -6,7 +6,6 @@ import type { IAdminSubmission } from '@kcc/core';
 import { useAdminAction } from '../hooks/useAdminAction';
 import SubmissionTypeBadge from './SubmissionTypeBadge';
 import CorrectionDiffView from './CorrectionDiffView';
-import DuplicateBadge from './DuplicateBadge';
 
 interface Props {
   submission: IAdminSubmission;
@@ -71,9 +70,13 @@ export default function SubmissionCard({ submission }: Props) {
   const [showEdit, setShowEdit] = useState(false);
   const [editData, setEditData] = useState<Record<string, string>>(() => {
     const d = submission.data;
+    const editableKeys =
+      submission.type === 'APP_REQUEST'
+        ? ['appName', 'website']
+        : ['command', 'keyCombo', 'context'];
     const initial: Record<string, string> = {};
-    for (const key of Object.keys(d)) {
-      if (d[key] != null) initial[key] = String(d[key]);
+    for (const key of editableKeys) {
+      if (d[key] != null && typeof d[key] === 'string') initial[key] = d[key] as string;
     }
     return initial;
   });
@@ -103,7 +106,6 @@ export default function SubmissionCard({ submission }: Props) {
   if (dismissed) return null;
 
   const isCorrection = submission.type === 'CORRECTION';
-  const hasDuplicate = submission.data.serverFlaggedDuplicate === true;
 
   return (
     <div
@@ -116,9 +118,6 @@ export default function SubmissionCard({ submission }: Props) {
       {/* Header */}
       <div className="flex items-center gap-2 flex-wrap">
         <SubmissionTypeBadge type={submission.type} />
-        {hasDuplicate && submission.appSlug && (
-          <DuplicateBadge shortcutId={submission.shortcutId ?? ''} appSlug={submission.appSlug} />
-        )}
         <span className="text-xs text-gray-400 dark:text-gray-500 ml-auto">
           {new Date(submission.createdAt).toLocaleDateString()}
         </span>

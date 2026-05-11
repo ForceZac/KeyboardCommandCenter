@@ -47,11 +47,9 @@ async function encodeSessionToken(secret: string): Promise<string> {
     .encrypt(encKey);
 }
 
-export default async function globalSetup() {
-  const sessionToken = await encodeSessionToken(TEST_AUTH_SECRET);
+function makeStorageState(sessionToken: string) {
   const expires = Math.floor(Date.now() / 1000) + 30 * 24 * 60 * 60;
-
-  const storageState = {
+  return {
     cookies: [
       {
         name: COOKIE_NAME,
@@ -66,8 +64,59 @@ export default async function globalSetup() {
     ],
     origins: [],
   };
+}
 
-  // __dirname is injected by Playwright's esbuild transpiler; fall back to import.meta for ESM
+async function encodeAdminSessionToken(secret: string): Promise<string> {
+  const { EncryptJWT, base64url, calculateJwkThumbprint } = await import('jose');
+
+  const encKey = await getDerivedKey(secret, COOKIE_NAME);
+  const thumbprint = await calculateJwkThumbprint(
+    { kty: 'oct', k: base64url.encode(encKey) },
+    `sha${encKey.byteLength << 3}` as 'sha512',
+  );
+
+  const now = Math.floor(Date.now() / 1000);
+  return new EncryptJWT({
+    name: 'Admin Test User',
+    email: 'admin-test@example.com',
+    picture: null,
+    sub: 'admin-test-id',
+  })
+    .setProtectedHeader({ alg: ALG, enc: ENC, kid: thumbprint })
+    .setIssuedAt(now)
+    .setExpirationTime(now + 30 * 24 * 60 * 60)
+    .setJti(crypto.randomUUID())
+    .encrypt(encKey);
+}
+
+async function seedAdminUser(): Promise<boolean> {
+  try {
+    const { execSync } = await import('child_process');
+    const { resolve } = await import('path');
+    const dbRoot = resolve(
+      typeof __dirname !== 'undefined'
+        ? __dirname
+        : dirname(fileURLToPath((import.meta as { url: string }).url)),
+      '../../../database',
+    );
+    const sql = `INSERT INTO "users" (id, name, email, "isAdmin") VALUES ('admin-test-id', 'Admin Test User', 'admin-test@example.com', true) ON CONFLICT (id) DO UPDATE SET "isAdmin" = true;`;
+    execSync(`echo '${sql}' | npx prisma db execute --stdin`, {
+      cwd: dbRoot,
+      env: process.env,
+      stdio: 'pipe',
+    });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export default async function globalSetup() {
+  const [sessionToken, adminSessionToken] = await Promise.all([
+    encodeSessionToken(TEST_AUTH_SECRET),
+    encodeAdminSessionToken(TEST_AUTH_SECRET),
+  ]);
+
   const thisDir: string =
     typeof __dirname !== 'undefined'
       ? __dirname
@@ -75,5 +124,8 @@ export default async function globalSetup() {
 
   const fixturesDir = join(thisDir, 'fixtures');
   mkdirSync(fixturesDir, { recursive: true });
-  writeFileSync(join(fixturesDir, 'authenticated.json'), JSON.stringify(storageState, null, 2));
+  writeFileSync(join(fixturesDir, 'authenticated.json'), JSON.stringify(makeStorageState(sessionToken), null, 2));
+  writeFileSync(join(fixturesDir, 'admin-authenticated.json'), JSON.stringify(makeStorageState(adminSessionToken), null, 2));
+
+  await seedAdminUser();
 }
