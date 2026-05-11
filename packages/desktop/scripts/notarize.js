@@ -14,6 +14,7 @@
 
 'use strict';
 
+const { execSync } = require('child_process');
 const { notarize } = require('@electron/notarize');
 
 exports.default = async function notarizing(context) {
@@ -52,4 +53,11 @@ exports.default = async function notarizing(context) {
   });
 
   console.log('[notarize] Notarization complete.');
+
+  // Staple the notarization ticket to the .app bundle so Gatekeeper can verify
+  // offline (without contacting Apple's OCSP server). Must happen after notarize()
+  // confirms approval and before electron-builder packages the .app into the DMG.
+  console.log(`[notarize] Stapling notarization ticket to ${appPath}...`);
+  execSync(`xcrun notarytool staple "${appPath}"`, { stdio: 'inherit' });
+  console.log('[notarize] Staple complete.');
 };

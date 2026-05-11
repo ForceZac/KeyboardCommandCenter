@@ -9,12 +9,12 @@ name: Release
 # Required GitHub Secrets (Settings → Secrets and variables → Actions):
 #   APPLE_DEVELOPER_CERTIFICATE_BASE64   — base64-encoded Apple Developer .p12 certificate
 #   APPLE_DEVELOPER_CERTIFICATE_PASSWORD — passphrase for the .p12
-#   KEYCHAIN_PASSWORD                    — arbitrary password for the temp CI keychain
 #   APPLE_ID                             — your Apple ID email
 #   APPLE_APP_SPECIFIC_PASSWORD          — app-specific password from appleid.apple.com
 #   APPLE_TEAM_ID                        — 10-char Team ID from developer.apple.com
 #   WIN_CSC_LINK                         — base64-encoded Authenticode PFX certificate
 #   WIN_CSC_KEY_PASSWORD                 — passphrase for the Windows PFX
+# Note: GITHUB_TOKEN is the built-in token (contents: write granted above) — no extra secret needed.
 on:
   push:
     tags:
@@ -80,36 +80,15 @@ jobs:
       - name: Build overlay renderer
         run: npm run build:overlay
 
-      # Import Apple Developer certificate into a temporary keychain so codesign
-      # can find it during electron-builder's signing step.
-      - name: Import Apple Developer certificate
-        env:
-          CERTIFICATE_BASE64: ${{ secrets.APPLE_DEVELOPER_CERTIFICATE_BASE64 }}
-          CERTIFICATE_PASSWORD: ${{ secrets.APPLE_DEVELOPER_CERTIFICATE_PASSWORD }}
-          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
-        run: |
-          KEYCHAIN_PATH="$RUNNER_TEMP/signing.keychain-db"
-          echo "$CERTIFICATE_BASE64" | base64 --decode > "$RUNNER_TEMP/cert.p12"
-          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
-          security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
-          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
-          security import "$RUNNER_TEMP/cert.p12" -k "$KEYCHAIN_PATH" \
-            -P "$CERTIFICATE_PASSWORD" -T /usr/bin/codesign
-          security list-keychains -d user -s "$KEYCHAIN_PATH" \
-            "$(security list-keychains -d user | sed 's/[ "]//g')"
-          security set-key-partition-list -S apple-tool:,apple: -s \
-            -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
-
       # Compile TypeScript/webpack via electron-forge package. This populates the
       # .webpack/ directory that electron-builder uses as its input.
       # (electron-forge package also produces out/ which we don't need here.)
       - name: Compile webpack via electron-forge
         run: cd packages/desktop && npx electron-forge package --platform darwin --arch x64
 
-      # electron-builder: sign .app (via CSC_LINK), notarize (via scripts/notarize.js),
-      # create universal DMG, and publish to the draft GitHub Release.
-      # The APPLE_DEVELOPER_IDENTITY env var lets electron-builder select the right
-      # signing certificate from the keychain by name; leave unset to auto-detect.
+      # electron-builder: sign .app (CSC_LINK — electron-builder manages its own temp
+      # keychain), notarize + staple (via scripts/notarize.js), create universal DMG,
+      # and publish to the draft GitHub Release.
       - name: Build, sign, notarize, and publish macOS DMG
         run: cd packages/desktop && npm run build:mac
         env:
