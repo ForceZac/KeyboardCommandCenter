@@ -80,10 +80,6 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
 
 _(Developer moves tasks here when the draft PR is marked ready.)_
 
-## Changes Requested
-
-_(Reviewer moves tasks here when a PR needs rework.)_
-
 ### TASK-0033: electron-updater Integration — Auto-Update Check & Notification
 - **Goal:** Goal 9 — Auto-Update & Distribution (implementation-roadmap-v2.md § Goal 9)
 - **PRD:** research/agents/prds/goal-09-auto-update-distribution.md
@@ -101,7 +97,11 @@ _(Reviewer moves tasks here when a PR needs rework.)_
 - **PR:** #28
 - **Branch:** goals/33-electron-updater-auto-update
 - **TRD:** research/plans/goals/33-electron-updater-auto-update-trd.md — approved
-- **Notes:** First Goal 9 task. PRD Flow 1 (background update) and Flow 2 (manual check) cover this scope. Goal 9 dependency (Goal 6) is shipped. Can proceed independently of Goal 8.
+- **Notes:** First Goal 9 task. PRD Flow 1 (background update) and Flow 2 (manual check) cover this scope. Goal 9 dependency (Goal 6) is shipped. Round 2 approved via PR comment — Reviewer to confirm and move to Approved.
+
+## Changes Requested
+
+_(Reviewer moves tasks here when a PR needs rework.)_
 
 ## TRD Changes Requested
 
