@@ -41,6 +41,172 @@ body {
   display: block;
 }
 
+/* ── View tabs ──────────────────────────────────────────────────────────── */
+
+#view-tabs {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: row;
+  border-bottom: 1px solid #2e2e2e;
+  background: #1a1a1a;
+}
+
+.tab {
+  flex: 1;
+  padding: 7px 0;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: #666;
+  font-size: 11px;
+  font-family: inherit;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.12s ease, border-color 0.12s ease;
+  outline: none;
+}
+
+.tab:hover {
+  color: #a0a0a0;
+}
+
+.tab.active {
+  color: #e0e0e0;
+  border-bottom-color: #5a8dee;
+}
+
+/* ── Favorites container ─────────────────────────────────────────────────── */
+
+#favorites-container {
+  flex: 1;
+  overflow-y: auto;
+  will-change: transform;
+}
+
+#favorites-container::-webkit-scrollbar {
+  width: 6px;
+}
+#favorites-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+#favorites-container::-webkit-scrollbar-thumb {
+  background: #3a3a3a;
+  border-radius: 3px;
+}
+
+/* ── Favorites view sections ─────────────────────────────────────────────── */
+
+.favorites-section {
+  border-bottom: 1px solid #252525;
+}
+
+.favorites-section-header {
+  padding: 8px 16px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #666;
+}
+
+/* ── Favorites rows ──────────────────────────────────────────────────────── */
+
+.fav-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 16px;
+  min-height: 32px;
+  border-top: 1px solid #222;
+}
+
+.fav-row:hover {
+  background: #242424;
+}
+
+.fav-row-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.fav-row-cmd {
+  font-size: 12px;
+  color: #d0d0d0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fav-row-app {
+  font-size: 10px;
+  color: #555;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Favorite toggle button ──────────────────────────────────────────────── */
+
+.fav-btn {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #444;
+  font-size: 13px;
+  line-height: 1;
+  opacity: 0;
+  transition: opacity 0.1s ease, color 0.1s ease;
+  outline: none;
+}
+
+.shortcut-row:hover .fav-btn,
+.fav-row:hover .fav-btn {
+  opacity: 1;
+}
+
+.fav-btn.favorited {
+  color: #e05c5c;
+  opacity: 1;
+}
+
+.fav-btn:hover {
+  color: #e05c5c;
+}
+
+/* ── Favorites empty / unauthenticated states ─────────────────────────────── */
+
+.favorites-empty,
+.favorites-signin {
+  padding: 32px 20px;
+  text-align: center;
+}
+
+.favorites-empty-msg,
+.favorites-signin-msg {
+  font-size: 13px;
+  font-weight: 600;
+  color: #a0a0a0;
+  margin-bottom: 6px;
+}
+
+.favorites-signin-sub {
+  font-size: 11px;
+  color: #555;
+}
+
 /* ── Search input ───────────────────────────────────────────────────────── */
 
 #search-container {

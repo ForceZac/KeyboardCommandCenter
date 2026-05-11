@@ -33,32 +33,48 @@ Task IDs are monotonic. The Project Manager picks the next number.
 
 _(Project Manager keeps 2–3 tasks here at all times.)_
 
+### TASK-0037: Wayland Active Window Detection — GNOME & KDE DBus with Manual Fallback
+- **Goal:** Goal 10 — Linux Support (implementation-roadmap-v2.md § Goal 10)
+- **PRD:** research/agents/prds/goal-10-linux-support.md
+- **Scope:** Add Wayland active window detection to the Rust native module (`packages/desktop/native/`). Detect session type at startup via `WAYLAND_DISPLAY` / `XDG_SESSION_TYPE` environment variables — dispatch to X11 adapter (TASK-0036) or Wayland adapter accordingly. GNOME detection: use `org.gnome.Shell.Introspect` DBus interface to query focused window class and PID. KDE Plasma detection: use `org.kde.KWin.Scripting` DBus interface to query active window properties. For unsupported compositors (Sway, Hyprland, etc.) or when DBus calls fail: return a `DetectionUnavailable` result that tells the TypeScript layer to show a manual app selection UI. Add a "Select your app" search dropdown to the panel header that activates when detection returns unavailable — user's manual selection persists for the session (last-used app first). Include unit tests for session type detection logic and DBus response parsing (mock DBus). Add `dbus` / `zbus` crate dependency (behind `cfg(target_os = "linux")` feature gate). NOT in scope: X11 detection (TASK-0036), overlay Wayland support (separate task), wlr-layer-shell integration, packaging, CI, compositors beyond GNOME and KDE for active detection.
+- **Acceptance:**
+  - Session type detection correctly identifies Wayland vs X11 sessions
+  - GNOME DBus detection returns process name and window title on a GNOME Wayland session
+  - KDE DBus detection returns process name and window title on a KDE Plasma Wayland session
+  - Unsupported compositor returns `DetectionUnavailable` (no crash, no error)
+  - "Select your app" manual fallback UI renders in the panel when detection is unavailable
+  - Manual selection persists for the session (last-used app appears first)
+  - Subtle banner explains "Automatic app detection isn't available on your Wayland compositor"
+  - Unit tests for session type detection and DBus response parsing pass
+  - Existing X11 and Windows/macOS detection tests unaffected
+  - Crate compiles on Linux with `libdbus-1-dev` installed
+- **PR:**
+- **Branch:**
+- **TRD:**
+- **Notes:** Second Goal 10 task. PRD Flow 4 (Wayland detection) covers this scope. Extends TASK-0036's Rust native module with Wayland-specific adapter. Requires `libdbus-1-dev` as build dependency.
+
+### TASK-0038: Overlay X11 Compatibility — Transparency & Click-Through
+- **Goal:** Goal 10 — Linux Support (implementation-roadmap-v2.md § Goal 10)
+- **PRD:** research/agents/prds/goal-10-linux-support.md
+- **Scope:** Extend the existing overlay window (`packages/overlay/` + `packages/desktop/` overlay controller) to work correctly on Linux X11 sessions. Set X11-appropriate window type hints (`_NET_WM_WINDOW_TYPE_DOCK` or `_NET_WM_WINDOW_TYPE_UTILITY`) so the overlay renders as always-on-top and click-through. Verify `setIgnoreMouseEvents(true)` and `setAlwaysOnTop(true)` work on X11 via Electron. Confirm configurable opacity, position, and size settings apply correctly on X11. Handle tray icon absence gracefully — if no system tray is detected (common on i3, Sway, etc.), log a startup message ("No system tray detected — use [hotkey] to open the shortcut panel") and continue running via global hotkey only. Add Wayland degraded overlay behavior: always-on-top window without click-through, auto-dismiss on configurable timeout or hotkey, "experimental" label in overlay settings UI. NOT in scope: wlr-layer-shell protocol integration, Wayland click-through on GNOME/KDE, packaging, CI, detection changes, new overlay UI components.
+- **Acceptance:**
+  - Overlay window renders with transparency on X11 Linux
+  - Click-through (`setIgnoreMouseEvents(true)`) works on X11
+  - Always-on-top persists across focus changes on X11
+  - Opacity, position, and size settings apply correctly on X11
+  - Tray icon absence does not crash the app — startup log message shown, hotkey still works
+  - Wayland overlay opens as always-on-top without click-through
+  - Wayland overlay auto-dismisses after configurable timeout
+  - Overlay settings UI shows "experimental" label when on Wayland
+  - Existing Windows/macOS overlay behavior unaffected
+- **PR:**
+- **Branch:**
+- **TRD:**
+- **Notes:** Third Goal 10 task. PRD Flows 5 (X11 overlay) and 6 (Wayland degraded overlay) cover this scope. Depends on TASK-0036 being merged (needs Linux detection infrastructure). Independent of Wayland detection (TASK-0037) — overlay uses existing detection result.
+
 ## In Progress
 
 _(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
-
-### TASK-0027: Submission Data Model, Service Layer & API Routes
-- **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
-- **PRD:** research/agents/prds/goal-08-community-contributions.md
-- **Scope:** Add Submission Prisma model with type enum (NEW_SHORTCUT, CORRECTION, APP_REQUEST), status enum (PENDING, APPROVED, REJECTED), submitterId, appId, shortcutId (nullable — for corrections), data JSON field (stores submitted shortcut fields), reviewerNotes, reviewedBy, createdAt, updatedAt, reviewedAt. Add `isAdmin` boolean to User model (default false). Generate migration. Implement SubmissionsService: create (with rate limiting — max 20/user/day, server-side duplicate detection on app + platform + key combo), getByUser (user's own submissions), getPending (admin — oldest first), approve (apply to shortcuts table — insert or update), editAndApprove, reject. Implement API routes: `POST /api/submissions` (create), `GET /api/submissions` (list user's own), `GET /api/admin/submissions` (list pending, admin-only), `PATCH /api/admin/submissions/:id` (approve/reject/edit-and-approve, admin-only). All routes require auth; admin routes require `isAdmin`. NOT in scope: submission form UI, key recorder component, correction diff view, app request form, admin review queue UI, contributor profile, in-app notifications, duplicate detection client-side.
-- **Acceptance:**
-  - Submission model added to Prisma schema with proper enums and relations
-  - `isAdmin` boolean added to User model
-  - Migration generated and applies cleanly
-  - `POST /api/submissions` creates a pending submission (returns 201)
-  - Server rejects submissions beyond 20/day for the same user (returns 429)
-  - Server-side duplicate detection flags exact matches on app + platform + key combo
-  - `GET /api/submissions` returns the authenticated user's submissions
-  - `GET /api/admin/submissions` returns pending submissions sorted oldest-first (admin-only, returns 403 for non-admin)
-  - `PATCH /api/admin/submissions/:id` with action=approve applies the submission to the shortcuts table
-  - `PATCH /api/admin/submissions/:id` with action=reject marks the submission as rejected
-  - Edit-and-approve flow modifies submission data before applying
-  - All routes return 401 for unauthenticated requests
-  - Corrections update the existing shortcut row; original data preserved in the Submission record
-- **PR:** #27
-- **Branch:** goals/27-submission-data-model-api
-- **TRD:** research/plans/goals/27-submission-data-model-api-trd.md — approved
-- **Notes:** Unblocked — TASK-0025 merged 2026-05-11 (auth schema, User model, and NextAuth from TASK-0021/0022 already on main; TASK-0027 does not depend on TASK-0026). First Goal 8 task. PRD covers Flows 1–4 and duplicate detection.
 
 ## In Review
 
@@ -76,16 +92,53 @@ _(TRD Watcher moves tasks here when a TRD needs rework.)_
 
 _(Reviewer moves tasks here after approving the PR. You merge to main, then move to Shipped.)_
 
-### TASK-0026: Desktop Panel Favorites View & Favorite Toggle
-- **Goal:** Goal 7 — User Accounts & Favorites Sync
-- **PR:** #26
-- **Branch:** goals/26-desktop-panel-favorites
-- **TRD:** research/plans/goals/26-desktop-panel-favorites-trd.md — approved
-- **Approved:** 2026-05-11 (Round 3)
+### TASK-0036: Rust Native Module — Linux X11 Active Window Detection
+- **Goal:** Goal 10 — Linux Support
+- **PR:** #31
+- **Branch:** goals/36-linux-x11-detection
+- **TRD:** research/plans/goals/36-linux-x11-detection-trd.md — approved
+- **Approved:** 2026-05-11 (Round 2)
+
+### TASK-0035: GitHub Actions Release Workflow — Build, Sign & Publish
+- **Goal:** Goal 9 — Auto-Update & Distribution
+- **PR:** #30
+- **Branch:** goals/35-github-actions-release-workflow
+- **TRD:** research/plans/goals/35-github-actions-release-workflow-trd.md — approved
+- **Approved:** 2026-05-11 (Round 2)
+
+### TASK-0034: Landing Page — `/download` Route with OS Detection
+- **Goal:** Goal 9 — Auto-Update & Distribution
+- **PR:** #29
+- **Branch:** goals/34-landing-page-download
+- **TRD:** research/plans/goals/34-landing-page-download-trd.md — approved
+- **Approved:** 2026-05-11 (Round 1)
+
+### TASK-0033: electron-updater Integration — Auto-Update Check & Notification
+- **Goal:** Goal 9 — Auto-Update & Distribution
+- **PR:** #28
+- **Branch:** goals/33-electron-updater-auto-update
+- **TRD:** research/plans/goals/33-electron-updater-auto-update-trd.md — approved
+- **Approved:** 2026-05-11 (Round 2)
+
+### TASK-0027: Submission Data Model, Service Layer & API Routes
+- **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
+- **PR:** #27
+- **Branch:** goals/27-submission-data-model-api
+- **TRD:** research/plans/goals/27-submission-data-model-api-trd.md — approved
+- **Approved:** 2026-05-11 (Round 2)
 
 ## Shipped
 
 _(You move tasks here after merging to main.)_
+
+### TASK-0026: Desktop Panel Favorites View & Favorite Toggle
+- **Goal:** Goal 7 — User Accounts & Favorites Sync
+- **PRD:** research/agents/prds/goal-07-accounts-favorites.md
+- **PR:** #26
+- **Branch:** goals/26-desktop-panel-favorites
+- **TRD:** research/plans/goals/26-desktop-panel-favorites-trd.md — approved
+- **Approved:** 2026-05-11 (Round 3)
+- **Merged:** 2026-05-11
 
 ### TASK-0025: Desktop Favorites Sync Engine & Offline Cache
 - **Goal:** Goal 7 — User Accounts & Favorites Sync

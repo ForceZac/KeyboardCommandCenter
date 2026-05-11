@@ -13,3 +13,5 @@
 | 2026-05-10 | TASK-0017 | Goal 6 | #18 | goals/17-overlay-browser-window | Merge pull request #18 from ForceZac/goals/17-overlay-browser-window |
 | 2026-05-10 | TASK-0019 | Goal 6 | #17 | goals/19-overlay-settings-ui | Merge pull request #17 from ForceZac/goals/19-overlay-settings-ui |
 | 2026-05-10 | TASK-0021 | Goal 7 | #21 | goals/21-auth-schema-nextauth | Merge pull request #21 from ForceZac/goals/21-auth-schema-nextauth |
+| 2026-05-11 | TASK-0033 | Goal — | #28 | goals/33-electron-updater-auto-update | chore(reviewer): approve PR #28 TASK-0033 (round 2) — OS notification confirmed |
+| 2026-05-11 | TASK-0033 | Goal — | — | main | chore(agents): developer fix-up run — TASK-0033 backlog state sync; accumulated agent state from prior runs |
