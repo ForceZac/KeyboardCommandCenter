@@ -99,7 +99,7 @@ export function filterApps(apps: AppEntry[], query: string): AppEntry[] {
  * Returns a copy of `apps` with the last-used app moved to position 0 when it
  * exists in the list. The rest of the list retains its original order.
  */
-function sortAppsWithLastUsedFirst(apps: AppEntry[], lastUsedSlug: string | null): AppEntry[] {
+export function sortAppsWithLastUsedFirst(apps: AppEntry[], lastUsedSlug: string | null): AppEntry[] {
   if (!lastUsedSlug) return apps;
   const idx = apps.findIndex((a) => a.slug === lastUsedSlug);
   if (idx <= 0) return apps; // already first or not found — no change needed

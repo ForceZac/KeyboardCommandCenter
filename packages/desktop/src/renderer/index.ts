@@ -35,6 +35,7 @@ import {
   filterApps,
   type AppEntry,
 } from './wayland-unavailable';
+import { escHtml } from './keycap';
 import type { FavoriteEntry, CollectionSummary } from './types';
 
 // Escape key dismisses the panel via IPC → main process hides the BrowserWindow.
@@ -340,7 +341,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const items = filtered
           .map(
             ({ slug, name }) =>
-              `<div class="manual-app-item${slug === waylandLastUsedSlug ? ' manual-app-item--last-used' : ''}" data-slug="${slug.replace(/"/g, '&quot;')}">${name.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>`,
+              `<div class="manual-app-item${slug === waylandLastUsedSlug ? ' manual-app-item--last-used' : ''}" data-slug="${escHtml(slug)}">${escHtml(name)}</div>`,
           )
           .join('');
         listEl.innerHTML = items;
