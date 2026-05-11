@@ -1,0 +1,159 @@
+name: Release
+
+# Triggers on git tag push matching v* (e.g. v1.0.0, v1.2.3-beta.1).
+# Builds and signs the Electron app for macOS (universal DMG) and Windows
+# (NSIS x64 + arm64), then uploads all artifacts to a draft GitHub Release
+# via electron-builder's GitHub publisher. Zach reviews the draft and publishes
+# manually — no auto-publish.
+#
+# Required GitHub Secrets (Settings → Secrets and variables → Actions):
+#   APPLE_DEVELOPER_CERTIFICATE_BASE64   — base64-encoded Apple Developer .p12 certificate
+#   APPLE_DEVELOPER_CERTIFICATE_PASSWORD — passphrase for the .p12
+#   APPLE_ID                             — your Apple ID email
+#   APPLE_APP_SPECIFIC_PASSWORD          — app-specific password from appleid.apple.com
+#   APPLE_TEAM_ID                        — 10-char Team ID from developer.apple.com
+#   WIN_CSC_LINK                         — base64-encoded Authenticode PFX certificate
+#   WIN_CSC_KEY_PASSWORD                 — passphrase for the Windows PFX
+# Note: GITHUB_TOKEN is the built-in token (contents: write granted above) — no extra secret needed.
+on:
+  push:
+    tags:
+      - 'v*'
+
+# Required for electron-builder's GitHub publisher to create/update the release.
+permissions:
+  contents: write
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # macOS — universal DMG (x64 + arm64 merged with lipo), signed + notarized
+  # ---------------------------------------------------------------------------
+  build-mac:
+    runs-on: macos-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Set up Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          # Both macOS targets are required to create a universal binary with lipo.
+          targets: x86_64-apple-darwin,aarch64-apple-darwin
+
+      # Install Node deps. build-native.js (postinstall) tries to compile for the
+      # host arch; we skip that and build for both archs explicitly below.
+      - name: Install dependencies
+        run: npm ci
+        env:
+          SKIP_NATIVE_BUILD: '1'
+
+      # Compile the Rust native module for both macOS architectures.
+      # napi-rs outputs arch-stamped filenames: kcc-native.darwin-x64.node etc.
+      - name: Build native module (x86_64-apple-darwin)
+        run: cd packages/desktop/native && npx @napi-rs/cli build --release --js false --target x86_64-apple-darwin
+        env:
+          MACOSX_DEPLOYMENT_TARGET: '10.15'
+
+      - name: Build native module (aarch64-apple-darwin)
+        run: cd packages/desktop/native && npx @napi-rs/cli build --release --js false --target aarch64-apple-darwin
+        env:
+          MACOSX_DEPLOYMENT_TARGET: '11.0'
+
+      # Merge x64 + arm64 .node binaries into a single universal binary.
+      # electron-builder packages this one file into the universal .app bundle.
+      - name: Create universal .node binary (lipo)
+        run: |
+          lipo -create \
+            packages/desktop/native/kcc-native.darwin-x64.node \
+            packages/desktop/native/kcc-native.darwin-arm64.node \
+            -output packages/desktop/native/kcc-native.node
+
+      # Build the Vite overlay renderer so electron-builder can bundle it as an extraResource.
+      - name: Build overlay renderer
+        run: npm run build:overlay
+
+      # Compile TypeScript/webpack via electron-forge package. This populates the
+      # .webpack/ directory that electron-builder uses as its input.
+      # (electron-forge package also produces out/ which we don't need here.)
+      - name: Compile webpack via electron-forge
+        run: cd packages/desktop && npx electron-forge package --platform darwin --arch x64
+
+      # electron-builder: sign .app (CSC_LINK — electron-builder manages its own temp
+      # keychain), notarize + staple (via scripts/notarize.js), create universal DMG,
+      # and publish to the draft GitHub Release.
+      - name: Build, sign, notarize, and publish macOS DMG
+        run: cd packages/desktop && npm run build:mac
+        env:
+          # Code signing — electron-builder reads CSC_LINK + CSC_KEY_PASSWORD automatically.
+          CSC_LINK: ${{ secrets.APPLE_DEVELOPER_CERTIFICATE_BASE64 }}
+          CSC_KEY_PASSWORD: ${{ secrets.APPLE_DEVELOPER_CERTIFICATE_PASSWORD }}
+          # Notarization — consumed by scripts/notarize.js.
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          CI_NOTARIZE: '1'
+          # GitHub publisher — creates the draft release and uploads artifacts.
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ---------------------------------------------------------------------------
+  # Windows — NSIS installer for x64 and arm64, Authenticode signed
+  # ---------------------------------------------------------------------------
+  build-win:
+    runs-on: windows-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Set up Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          # x64 native + arm64 cross-compile from the x64 windows-latest runner.
+          targets: x86_64-pc-windows-msvc,aarch64-pc-windows-msvc
+
+      - name: Install dependencies
+        run: npm ci
+        env:
+          SKIP_NATIVE_BUILD: '1'
+
+      # Compile the Rust native module for both Windows architectures.
+      # napi-rs outputs: kcc-native.win32-x64-msvc.node and kcc-native.win32-arm64-msvc.node.
+      # electron-builder.yml uses ${arch} to select the right file per installer target.
+      - name: Build native module (x86_64-pc-windows-msvc)
+        run: cd packages/desktop/native && npx @napi-rs/cli build --release --js false --target x86_64-pc-windows-msvc
+
+      - name: Build native module (aarch64-pc-windows-msvc)
+        run: cd packages/desktop/native && npx @napi-rs/cli build --release --js false --target aarch64-pc-windows-msvc
+
+      - name: Build overlay renderer
+        run: npm run build:overlay
+
+      # Compile TypeScript/webpack via electron-forge package (populates .webpack/).
+      - name: Compile webpack via electron-forge
+        run: cd packages/desktop && npx electron-forge package --platform win32 --arch x64
+
+      # electron-builder: sign both NSIS installers (x64 + arm64) via WIN_CSC_LINK,
+      # then publish to the draft GitHub Release (same draft created by build-mac).
+      - name: Build, sign, and publish Windows NSIS installers
+        run: cd packages/desktop && npm run build:win
+        env:
+          # Code signing — electron-builder reads these automatically.
+          WIN_CSC_LINK: ${{ secrets.WIN_CSC_LINK }}
+          WIN_CSC_KEY_PASSWORD: ${{ secrets.WIN_CSC_KEY_PASSWORD }}
+          # GitHub publisher — appends Windows artifacts to the existing draft release.
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

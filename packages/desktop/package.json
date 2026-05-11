@@ -7,6 +7,11 @@
     "dev": "electron-forge start",
     "build": "electron-forge make",
     "package": "electron-forge package",
+    "build:mac": "electron-builder --mac --publish always",
+    "build:mac:local": "electron-builder --mac --publish never",
+    "build:win": "electron-builder --win --publish always",
+    "build:win:local": "electron-builder --win --publish never",
+    "build:native": "cd native && npx @napi-rs/cli build --release --js false",
     "test": "vitest run",
     "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.tests.json && tsc --noEmit -p tsconfig.renderer.json"
   },
@@ -26,8 +31,10 @@
   "devDependencies": {
     "@electron-forge/cli": "^7.0.0",
     "@electron-forge/plugin-webpack": "^7.0.0",
+    "@electron/notarize": "^2.3.0",
     "@types/node": "^20.0.0",
     "css-loader": "^6.0.0",
+    "electron-builder": "^24.0.0",
     "jsdom": "^29.1.1",
     "node-loader": "^2.0.0",
     "style-loader": "^3.0.0",

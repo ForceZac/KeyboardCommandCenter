@@ -1,0 +1,86 @@
+appId: com.forcezac.keyboardcommandcenter
+productName: Keyboard Command Center
+
+# electron-builder is production-only. Dev builds use electron-forge (webpack plugin).
+# In CI: webpack compilation runs via `electron-forge package` first (populates .webpack/),
+# then electron-builder packages and signs the compiled output into platform installers.
+
+directories:
+  buildResources: assets
+
+# Webpack output + package.json are required at runtime.
+files:
+  - .webpack/**/*
+  - package.json
+
+# Overlay renderer is common to all platforms — lives outside the ASAR so
+# OverlayWindowManager can load it via win.loadFile() at runtime.
+extraResources:
+  - from: ../../packages/overlay/dist
+    to: overlay/dist
+
+# ---------------------------------------------------------------------------
+# macOS — universal DMG (x64 + arm64 merged by electron-builder)
+#
+# Signing: electron-builder reads CSC_LINK (base64 .p12) + CSC_KEY_PASSWORD from env.
+# Notarization: afterSign hook reads APPLE_ID + APPLE_APP_SPECIFIC_PASSWORD + APPLE_TEAM_ID.
+# ---------------------------------------------------------------------------
+mac:
+  target:
+    - target: dmg
+      arch:
+        - universal
+  category: public.app-category.utilities
+  hardenedRuntime: true
+  gatekeeperAssess: false
+  entitlements: assets/entitlements.mac.plist
+  entitlementsInherit: assets/entitlements.mac.plist
+  afterSign: scripts/notarize.js
+  # Rust native module — universal binary pre-built in CI with lipo.
+  extraResources:
+    - from: native/kcc-native.node
+      to: native/kcc-native.node
+
+dmg:
+  # The DMG container is not signed — only the .app bundle inside it is.
+  sign: false
+
+# ---------------------------------------------------------------------------
+# Windows — NSIS installer for x64 and arm64
+#
+# Signing: electron-builder reads WIN_CSC_LINK + WIN_CSC_KEY_PASSWORD from env.
+#
+# Native module: napi-rs produces arch-specific .node files named
+# kcc-native.win32-x64-msvc.node and kcc-native.win32-arm64-msvc.node.
+# electron-builder's ${arch} token selects the correct file per installer target.
+# ---------------------------------------------------------------------------
+win:
+  target:
+    - target: nsis
+      arch:
+        - x64
+        - arm64
+  # Arch-specific native module — electron-builder expands ${arch} to "x64" or "arm64".
+  extraResources:
+    - from: native/kcc-native.win32-${arch}-msvc.node
+      to: native/kcc-native.node
+
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createStartMenuShortcut: true
+
+# ---------------------------------------------------------------------------
+# GitHub Releases publisher — creates a draft release and uploads artifacts
+# (DMG, NSIS exe, latest-mac.yml, latest.yml).
+# electron-updater (TASK-0033) polls for latest-mac.yml / latest.yml on update check.
+# Requires GH_TOKEN env var in CI.
+# macOS and Windows jobs both publish to the same draft release — electron-builder
+# finds the existing draft and appends artifacts rather than creating a duplicate.
+# ---------------------------------------------------------------------------
+publish:
+  provider: github
+  owner: ForceZac
+  repo: KeyboardCommandCenter
+  releaseType: draft
