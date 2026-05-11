@@ -26,6 +26,7 @@ vi.mock('@/hooks/useCategories', () => ({
 }));
 
 import AppRequestModal from '../../components/AppRequestModal';
+import { ApiError } from '../../lib/api';
 
 function Wrapper({ children }: { children: React.ReactNode }) {
   const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
@@ -92,14 +93,14 @@ describe('AppRequestModal', () => {
   it('submit button is disabled when app name is empty', () => {
     mockUseSession.mockReturnValue({ data: { user: {} } });
     render(<AppRequestModal open={true} onClose={vi.fn()} />, { wrapper: Wrapper });
-    expect(screen.getByRole('button', { name: /request app/i })).toBeDisabled();
+    expect((screen.getByRole('button', { name: /request app/i }) as HTMLButtonElement).disabled).toBe(true);
   });
 
   it('submit button is enabled when app name has text', () => {
     mockUseSession.mockReturnValue({ data: { user: {} } });
     render(<AppRequestModal open={true} onClose={vi.fn()} />, { wrapper: Wrapper });
     fireEvent.change(screen.getByLabelText(/app name/i), { target: { value: 'Blender' } });
-    expect(screen.getByRole('button', { name: /request app/i })).toBeEnabled();
+    expect((screen.getByRole('button', { name: /request app/i }) as HTMLButtonElement).disabled).toBe(false);
   });
 
   it('shows success confirmation after submission', () => {
@@ -111,10 +112,6 @@ describe('AppRequestModal', () => {
 
   it('shows rate limit error for 429', () => {
     mockUseSession.mockReturnValue({ data: { user: {} } });
-    const apiError = Object.assign(new Error('rate limit'), { status: 429, name: 'ApiError' });
-    Object.defineProperty(apiError, 'constructor', { value: class ApiError {} });
-    // We need to simulate the ApiError class check — use the real imported class
-    const { ApiError } = require('../../lib/api');
     const err = new ApiError(429, 'rate limit');
     mockMutation.mockReturnValue({ ...defaultMutation, isError: true, error: err });
     render(<AppRequestModal open={true} onClose={vi.fn()} />, { wrapper: Wrapper });
