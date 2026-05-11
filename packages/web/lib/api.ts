@@ -172,6 +172,21 @@ export async function submitShortcut(payload: SubmissionCreatePayload): Promise<
   return res.json() as Promise<ISubmission>;
 }
 
+/** POST /api/submissions with type APP_REQUEST. */
+export async function submitAppRequest(data: {
+  appName: string;
+  website?: string | null;
+  categoryId?: string | null;
+  platforms?: string[];
+}): Promise<ISubmission> {
+  const res = await apiMutate('/submissions', 'POST', {
+    type: 'APP_REQUEST',
+    appId: null,
+    data,
+  });
+  return res.json() as Promise<ISubmission>;
+}
+
 // ---------------------------------------------------------------------------
 // Admin Submissions (Goal 8 — Review Queue)
 // ---------------------------------------------------------------------------
