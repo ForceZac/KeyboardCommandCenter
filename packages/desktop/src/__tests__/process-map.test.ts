@@ -222,6 +222,133 @@ describe('getDisplayName — known slugs', () => {
   });
 });
 
+// Linux-specific process name entries (Goal 10 — TASK-0036)
+describe('lookupApp — Linux process names', () => {
+  it('firefox-esr → mozilla-firefox', () => {
+    expect(lookupApp('firefox-esr')).toBe('mozilla-firefox');
+  });
+
+  it('librewolf → mozilla-firefox', () => {
+    expect(lookupApp('librewolf')).toBe('mozilla-firefox');
+  });
+
+  it('waterfox → mozilla-firefox', () => {
+    expect(lookupApp('waterfox')).toBe('mozilla-firefox');
+  });
+
+  it('google-chrome (Linux binary name) → google-chrome', () => {
+    expect(lookupApp('google-chrome')).toBe('google-chrome');
+  });
+
+  it('google-chrome-s (15-char /proc/comm truncation) → google-chrome', () => {
+    expect(lookupApp('google-chrome-s')).toBe('google-chrome');
+  });
+
+  it('chromium → google-chrome', () => {
+    expect(lookupApp('chromium')).toBe('google-chrome');
+  });
+
+  it('chromium-browser → google-chrome', () => {
+    expect(lookupApp('chromium-browser')).toBe('google-chrome');
+  });
+
+  it('code-insiders (Linux hyphen variant) → vscode', () => {
+    expect(lookupApp('code-insiders')).toBe('vscode');
+  });
+
+  it('gimp → gimp', () => {
+    expect(lookupApp('gimp')).toBe('gimp');
+  });
+
+  it('gimp-2.10 → gimp', () => {
+    expect(lookupApp('gimp-2.10')).toBe('gimp');
+  });
+
+  it('gimp-3.0 → gimp', () => {
+    expect(lookupApp('gimp-3.0')).toBe('gimp');
+  });
+
+  it('idea.sh (JetBrains Linux launcher) → intellij-idea', () => {
+    expect(lookupApp('idea.sh')).toBe('intellij-idea');
+  });
+
+  it('webstorm.sh → webstorm', () => {
+    expect(lookupApp('webstorm.sh')).toBe('webstorm');
+  });
+
+  it('pycharm.sh → pycharm', () => {
+    expect(lookupApp('pycharm.sh')).toBe('pycharm');
+  });
+
+  it('goland.sh → goland', () => {
+    expect(lookupApp('goland.sh')).toBe('goland');
+  });
+
+  it('clion → clion', () => {
+    expect(lookupApp('clion')).toBe('clion');
+  });
+
+  it('clion.sh → clion', () => {
+    expect(lookupApp('clion.sh')).toBe('clion');
+  });
+
+  it('Discord (capital D Linux variant) → discord', () => {
+    expect(lookupApp('Discord')).toBe('discord');
+  });
+
+  it('soffice (LibreOffice main process) → libreoffice', () => {
+    expect(lookupApp('soffice')).toBe('libreoffice');
+  });
+
+  it('soffice.bin → libreoffice', () => {
+    expect(lookupApp('soffice.bin')).toBe('libreoffice');
+  });
+
+  it('com.obsproject. (OBS Flatpak 15-char truncation) → obs-studio', () => {
+    expect(lookupApp('com.obsproject.')).toBe('obs-studio');
+  });
+
+  it('steam-runtime → steam', () => {
+    expect(lookupApp('steam-runtime')).toBe('steam');
+  });
+
+  it('pressure-ves (15-char truncation of pressure-vessel) → steam', () => {
+    expect(lookupApp('pressure-ves')).toBe('steam');
+  });
+
+  it('gnome-terminal → gnome-terminal', () => {
+    expect(lookupApp('gnome-terminal')).toBe('gnome-terminal');
+  });
+
+  it('gnome-termina (15-char truncation of gnome-terminal-server) → gnome-terminal', () => {
+    expect(lookupApp('gnome-termina')).toBe('gnome-terminal');
+  });
+
+  it('konsole → konsole', () => {
+    expect(lookupApp('konsole')).toBe('konsole');
+  });
+
+  it('alacritty → alacritty', () => {
+    expect(lookupApp('alacritty')).toBe('alacritty');
+  });
+
+  it('kitty → kitty', () => {
+    expect(lookupApp('kitty')).toBe('kitty');
+  });
+
+  it('tilix → tilix', () => {
+    expect(lookupApp('tilix')).toBe('tilix');
+  });
+
+  it('xterm → xterm', () => {
+    expect(lookupApp('xterm')).toBe('xterm');
+  });
+
+  it('emacs-30.1 → emacs', () => {
+    expect(lookupApp('emacs-30.1')).toBe('emacs');
+  });
+});
+
 describe('getDisplayName — title-case fallback', () => {
   it('unknown slug falls back to title-casing: "my-cool-app" → "My Cool App"', () => {
     expect(getDisplayName('my-cool-app')).toBe('My Cool App');
