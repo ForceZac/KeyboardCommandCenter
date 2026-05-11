@@ -33,27 +33,6 @@ Task IDs are monotonic. The Project Manager picks the next number.
 
 _(Project Manager keeps 2–3 tasks here at all times.)_
 
-### TASK-0025: Desktop Favorites Sync Engine & Offline Cache
-- **Goal:** Goal 7 — User Accounts & Favorites Sync
-- **PRD:** research/agents/prds/goal-07-accounts-favorites.md
-- **Scope:** Implement a sync engine in the Electron main process that manages local caching and bidirectional sync of favorites and collections with the server API. Use electron-store (encrypted via safeStorage) to persist favorites and collections as JSON locally. On app start and network reconnection, pull remote changes from `GET /api/favorites` and `GET /api/collections` using the stored auth token from TASK-0023. When the user favorites/unfavorites a shortcut locally, queue the change with a timestamp and push to the server on next sync. Implement last-write-wins conflict resolution at the individual favorite level using timestamps. Sync interval: on app start, on reconnect, and every 15 minutes while online. Expose IPC handlers (`sync:getFavorites`, `sync:getCollections`, `sync:toggleFavorite`, `sync:addToCollection`, `sync:removeFromCollection`, `sync:forceSync`) for the renderer to query local cache. Local cache reads must complete in <10ms. Sync must not block the UI thread. NOT in scope: desktop panel favorites UI (separate task — TASK-0026), web app changes, auth flow (TASK-0023), API routes (TASK-0022), real-time WebSocket sync, collection reordering, guest favorites migration.
-- **Acceptance:**
-  - Favorites and collections stored locally in electron-store encrypted via safeStorage
-  - On app start (when signed in), sync engine pulls remote favorites/collections and updates local cache
-  - On network reconnection, sync engine automatically syncs pending changes
-  - Background sync runs every 15 minutes while online
-  - Local changes (favorite/unfavorite) are queued with timestamps and pushed on next sync
-  - Last-write-wins conflict resolution: most recent timestamp wins per shortcut
-  - IPC handlers exposed for renderer to read favorites/collections from local cache
-  - Local cache reads complete in <10ms
-  - Sync runs in the main process without blocking renderer
-  - Signed-out users: sync engine is inactive, no errors thrown
-  - No regressions on existing desktop functionality
-- **PR:**
-- **Branch:**
-- **TRD:**
-- **Notes:** Unblocked — TASK-0022 merged 2026-05-10, TASK-0023 merged 2026-05-10. Fifth Goal 7 task. PRD Flow 7 covers this scope.
-
 ## In Progress
 
 _(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
@@ -61,27 +40,6 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
 ## In Review
 
 _(Developer moves tasks here when the draft PR is marked ready.)_
-
-### TASK-0024: Favorites Web UI — Heart Icons, Collections Page & Optimistic Updates
-- **Goal:** Goal 7 — User Accounts & Favorites Sync
-- **PRD:** research/agents/prds/goal-07-accounts-favorites.md
-- **Scope:** Add a favorite toggle (heart/star icon) to each shortcut row on per-app shortcut pages. Clicking the icon calls `POST/DELETE /api/favorites` with optimistic UI (instant visual toggle, rollback on API error). Add a "My Collections" page accessible from the user nav/profile menu, displaying all collections as cards with shortcut counts. Implement collection CRUD UI: create (name + optional description), rename, delete (prevent deleting the default "My Favorites" collection). Add a collection detail view showing shortcuts in that collection with individual remove capability. Add a dropdown on the favorite icon to assign a shortcut to a specific named collection. All favorite/collection actions require an authenticated session — show a sign-in prompt for unauthenticated users attempting to favorite. NOT in scope: desktop panel favorites view (separate task), desktop sync engine, collection reordering/drag-and-drop, import/export, guest favorites migration, public/shared collections.
-- **Acceptance:**
-  - Heart/star icon visible on each shortcut row on per-app pages
-  - Clicking the icon favorites/unfavorites with immediate visual feedback (<100ms perceived)
-  - Optimistic UI: icon fills instantly, reverts if API call fails
-  - Dropdown on the favorite icon allows adding to a specific named collection
-  - "My Collections" page accessible from nav when signed in
-  - Collections displayed as cards with names, descriptions, and shortcut counts
-  - Create new collection with name and optional description
-  - Rename and delete collections (default "My Favorites" cannot be deleted)
-  - Collection detail page lists shortcuts with individual remove buttons
-  - Unauthenticated users see a sign-in prompt when attempting to favorite
-  - No regressions on existing shortcut browse/search pages
-- **PR:** #24
-- **Branch:** goals/24-favorites-web-ui
-- **TRD:** research/plans/goals/24-favorites-web-ui-trd.md — approved
-- **Notes:** Round 2 fixes pushed — isToggling assertion replaced with rollback-complete check; explicit afterEach(cleanup) in FavoriteToggle.test.tsx; .gitignore extended for agent runtime files; vitest.unit.config.ts includes hook/component tests with @ alias. 46/46 unit tests green, tsc clean.
 
 ## Changes Requested
 
@@ -95,9 +53,26 @@ _(TRD Watcher moves tasks here when a TRD needs rework.)_
 
 _(Reviewer moves tasks here after approving the PR. You merge to main, then move to Shipped.)_
 
+### TASK-0025: Desktop Favorites Sync Engine & Offline Cache
+- **Goal:** Goal 7 — User Accounts & Favorites Sync
+- **PRD:** research/agents/prds/goal-07-accounts-favorites.md
+- **PR:** #25
+- **Branch:** goals/25-desktop-favorites-sync
+- **TRD:** research/plans/goals/25-desktop-favorites-sync-trd.md — approved
+- **Approved:** 2026-05-11 (Round 2)
+
 ## Shipped
 
 _(You move tasks here after merging to main.)_
+
+### TASK-0024: Favorites Web UI — Heart Icons, Collections Page & Optimistic Updates
+- **Goal:** Goal 7 — User Accounts & Favorites Sync
+- **PRD:** research/agents/prds/goal-07-accounts-favorites.md
+- **PR:** #24
+- **Branch:** goals/24-favorites-web-ui
+- **TRD:** research/plans/goals/24-favorites-web-ui-trd.md — approved
+- **Approved:** 2026-05-11 (Round 3)
+- **Merged:** 2026-05-11
 
 ### TASK-0023: Desktop Auth Flow — Browser OAuth & Deep Link Callback
 - **Goal:** Goal 7 — User Accounts & Favorites Sync
@@ -326,7 +301,7 @@ _(Waiting on an external dependency, a missing PRD, or owner decision.)_
 - **PR:**
 - **Branch:**
 - **TRD:**
-- **Notes:** Blocked — awaiting Goal 7 completion (needs auth infrastructure and User model). First Goal 8 task. PRD covers Flows 1–4 and duplicate detection.
+- **Notes:** Blocked — awaiting TASK-0025 merge to main (auth schema, User model, and NextAuth from TASK-0021/0022 already on main; TASK-0027 does not depend on TASK-0026). First Goal 8 task. PRD covers Flows 1–4 and duplicate detection.
 
 ### TASK-0028: Submission Form UI — New Shortcut & Key Recorder
 - **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
@@ -349,6 +324,48 @@ _(Waiting on an external dependency, a missing PRD, or owner decision.)_
 - **Branch:**
 - **TRD:**
 - **Notes:** Blocked — awaiting TASK-0027 (needs submission API routes and data model). Second Goal 8 task. PRD Flows 1 and 6 cover this scope.
+
+### TASK-0029: Admin Review Queue UI
+- **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
+- **PRD:** research/agents/prds/goal-08-community-contributions.md
+- **Scope:** Build the admin review queue page at `/admin/review`. Protected route accessible only to users with `isAdmin=true` on User model (from TASK-0027). Display all pending submissions sorted oldest-first. Each submission card shows: type badge (New Shortcut / Correction / App Request), submitter display name, app name, and submitted data fields. For corrections: render a diff view comparing original shortcut values vs proposed values (changed fields highlighted). For server-flagged duplicates: show a warning badge linking to the existing entry. Three actions per submission: Approve (applies submission to shortcuts table via `PATCH /api/admin/submissions/:id`), Edit & Approve (inline editing of submission fields before applying), Reject (with optional reviewer reason text field). After any action, the submission is removed from the visible queue. Paginate if pending count exceeds 100. Page must load in <500ms. NOT in scope: keyboard shortcuts for review actions (v2), batch approve/reject, spam detection, email notifications, contributor notification system, submission API routes (TASK-0027), submission form (TASK-0028).
+- **Acceptance:**
+  - `/admin/review` route exists and renders the review queue page
+  - Non-admin users receive 403 or redirect to home
+  - Pending submissions displayed sorted oldest-first
+  - Type badge visible on each card (New Shortcut, Correction, App Request)
+  - Submitter name and app name shown on each submission card
+  - Correction submissions show diff view (original vs proposed, changed fields highlighted)
+  - Duplicate warning badge shown when server flagged a duplicate
+  - Approve action calls admin API and removes submission from queue
+  - Edit & Approve allows inline field modification before applying
+  - Reject action includes optional reason text field
+  - Pagination renders when pending count exceeds 100
+  - Page loads in <500ms
+  - No regressions on existing pages
+- **PR:**
+- **Branch:**
+- **TRD:**
+- **Notes:** Blocked — awaiting TASK-0027 (needs admin API routes, Submission model, and isAdmin flag). Third Goal 8 task. PRD Flow 4 covers this scope.
+
+### TASK-0030: Correction Form UI — Suggest Edit & Pre-filled Submission
+- **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
+- **PRD:** research/agents/prds/goal-08-community-contributions.md
+- **Scope:** Add a "Suggest edit" icon button on each shortcut row on per-app shortcut pages. Clicking opens a correction form pre-filled with the existing shortcut's data (command name, key combination via key recorder component from TASK-0028, platform, context/scope). User can edit any field that needs correction. Include an optional "Reason for correction" text area (e.g., "Changed in VS Code 1.96"). On submit: creates a Submission with type=CORRECTION via `POST /api/submissions` (from TASK-0027), linking to the existing shortcut via shortcutId. Show confirmation message on success. Handle rate limit (429) with user-friendly message. Requires authenticated session — show sign-in prompt for unauthenticated users. NOT in scope: admin review of corrections (TASK-0029), diff view rendering (TASK-0029 admin side), key recorder component implementation (TASK-0028 — reused here), app request form, server-side duplicate detection (TASK-0027), notification on approval/rejection, new shortcut submission form (TASK-0028).
+- **Acceptance:**
+  - "Suggest edit" icon visible on each shortcut row in per-app pages
+  - Clicking opens correction form pre-filled with current shortcut data
+  - Key recorder component (from TASK-0028) works for editing key combination
+  - Optional "Reason for correction" text area present
+  - Submit creates a CORRECTION-type Submission via `POST /api/submissions` with shortcutId
+  - Confirmation message shown on success
+  - Rate limit (429) shows user-friendly error
+  - Unauthenticated users see sign-in prompt
+  - No regressions on existing per-app shortcut pages
+- **PR:**
+- **Branch:**
+- **TRD:**
+- **Notes:** Blocked — awaiting TASK-0028 (needs key recorder component and submission form patterns) and TASK-0027 (needs submission API). Fourth Goal 8 task. PRD Flow 2 covers this scope.
 
 ### TASK-0026: Desktop Panel Favorites View & Favorite Toggle
 - **Goal:** Goal 7 — User Accounts & Favorites Sync

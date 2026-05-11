@@ -43,6 +43,9 @@ import {
   authEvents,
 } from './auth';
 import type { AuthSignedInPayload } from './auth';
+// TASK-0025: favorites sync engine + local cache.
+import { SyncStore } from './sync-store';
+import { SyncEngine } from './sync-engine';
 
 // Enforce single-instance: if another instance is already running, quit immediately.
 const isFirstInstance = app.requestSingleInstanceLock();
@@ -82,6 +85,7 @@ let detectionService: DetectionService;
 let shortcutService: ShortcutService;
 let shortcutCache: ShortcutCache;
 let overlayManager: OverlayWindowManager;
+let syncEngine: SyncEngine;
 
 // ---------------------------------------------------------------------------
 // Unrecognized-process log writer (production implementation).
@@ -167,6 +171,11 @@ app.whenReady().then(() => {
   const authStore = new AuthStore();
   initAuth(authStore);
 
+  // TASK-0025: Initialize sync store and engine. SyncStore must be created after
+  // app.whenReady() so safeStorage (used for encryption key derivation) is available.
+  const syncStore = new SyncStore();
+  syncEngine = new SyncEngine(syncStore, authStore);
+
   // Web app base URL for constructing the OAuth sign-in URL.
   // Reads NEXTAUTH_URL from the environment; falls back to local dev server.
   const webAppBaseUrl = process.env['NEXTAUTH_URL'] ?? 'http://localhost:3000';
@@ -197,14 +206,17 @@ app.whenReady().then(() => {
   trayManager.create();
 
   // TASK-0023: Subscribe to auth state changes and push to settings window + tray.
+  // TASK-0025: Also start/stop the sync engine on sign-in/sign-out.
   // Registered after both trayManager and settingsWindowManager are initialized.
   authEvents.on('auth:signed-in', (payload: AuthSignedInPayload) => {
     settingsWindowManager.sendToRenderer('auth:signed-in', payload);
     trayManager.refreshMenu(true);
+    syncEngine.start();
   });
   authEvents.on('auth:signed-out', () => {
     settingsWindowManager.sendToRenderer('auth:signed-out', null);
     trayManager.refreshMenu(false);
+    syncEngine.stop();
   });
 
   hotkeyManager = new HotkeyManager(() => {
@@ -233,6 +245,28 @@ app.whenReady().then(() => {
   ipcMain.handle('auth:get-state', () => getAuthState());
   ipcMain.handle('auth:open-signin', () => { openSignIn(buildSignInUrl()); });
   ipcMain.handle('auth:sign-out', () => { signOut(); });
+
+  // TASK-0025: Sync IPC handlers (panel renderer → main process).
+  // Cache reads (sync:getFavorites, sync:getCollections) return synchronously from
+  // memory and complete in <10ms. Sync operations are fire-and-forget.
+  ipcMain.handle('sync:getFavorites', () => syncEngine.getFavorites());
+  ipcMain.handle('sync:getCollections', () => syncEngine.getCollections());
+  ipcMain.handle('sync:toggleFavorite', (_event, shortcutId: string) => {
+    syncEngine.toggleFavorite(shortcutId);
+  });
+  ipcMain.handle('sync:addToCollection', (_event, shortcutId: string, collectionId: string) => {
+    return syncEngine.addToCollection(shortcutId, collectionId);
+  });
+  ipcMain.handle('sync:removeFromCollection', (_event, shortcutId: string, collectionId: string) => {
+    return syncEngine.removeFromCollection(shortcutId, collectionId);
+  });
+  ipcMain.handle('sync:forceSync', () => syncEngine.forceSync());
+
+  // Renderer forwards its window.ononline event so main process can trigger
+  // an unscheduled sync when connectivity is restored.
+  ipcMain.on('sync:network-reconnected', () => {
+    void syncEngine.triggerSync();
+  });
 
   // IPC: renderer requests shortcut data for a given app slug (TASK-0012).
   // Serves from cache when available; otherwise fetches from DB, caches, and returns.
