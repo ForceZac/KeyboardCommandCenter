@@ -41,30 +41,17 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
 
 _(Developer moves tasks here when the draft PR is marked ready.)_
 
-### TASK-0025: Desktop Favorites Sync Engine & Offline Cache
-- **Goal:** Goal 7 — User Accounts & Favorites Sync
-- **PRD:** research/agents/prds/goal-07-accounts-favorites.md
-- **Scope:** Implement a sync engine in the Electron main process that manages local caching and bidirectional sync of favorites and collections with the server API. Use electron-store (encrypted via safeStorage) to persist favorites and collections as JSON locally. On app start and network reconnection, pull remote changes from `GET /api/favorites` and `GET /api/collections` using the stored auth token from TASK-0023. When the user favorites/unfavorites a shortcut locally, queue the change with a timestamp and push to the server on next sync. Implement last-write-wins conflict resolution at the individual favorite level using timestamps. Sync interval: on app start, on reconnect, and every 15 minutes while online. Expose IPC handlers (`sync:getFavorites`, `sync:getCollections`, `sync:toggleFavorite`, `sync:addToCollection`, `sync:removeFromCollection`, `sync:forceSync`) for the renderer to query local cache. Local cache reads must complete in <10ms. Sync must not block the UI thread. NOT in scope: desktop panel favorites UI (separate task — TASK-0026), web app changes, auth flow (TASK-0023), API routes (TASK-0022), real-time WebSocket sync, collection reordering, guest favorites migration.
-- **Acceptance:**
-  - Favorites and collections stored locally in electron-store encrypted via safeStorage
-  - On app start (when signed in), sync engine pulls remote favorites/collections and updates local cache
-  - On network reconnection, sync engine automatically syncs pending changes
-  - Background sync runs every 15 minutes while online
-  - Local changes (favorite/unfavorite) are queued with timestamps and pushed on next sync
-  - Last-write-wins conflict resolution: most recent timestamp wins per shortcut
-  - IPC handlers exposed for renderer to read favorites/collections from local cache
-  - Local cache reads complete in <10ms
-  - Sync runs in the main process without blocking renderer
-  - Signed-out users: sync engine is inactive, no errors thrown
-  - No regressions on existing desktop functionality
-- **PR:** #25
-- **Branch:** goals/25-desktop-favorites-sync
-- **TRD:** research/plans/goals/25-desktop-favorites-sync-trd.md — approved
-- **Notes:** Unblocked — TASK-0022 merged 2026-05-10, TASK-0023 merged 2026-05-10. Fifth Goal 7 task. PRD Flow 7 covers this scope.
-
 ## Changes Requested
 
 _(Reviewer moves tasks here when a PR needs rework.)_
+
+### TASK-0025: Desktop Favorites Sync Engine & Offline Cache
+- **Goal:** Goal 7 — User Accounts & Favorites Sync
+- **PRD:** research/agents/prds/goal-07-accounts-favorites.md
+- **PR:** #25
+- **Branch:** goals/25-desktop-favorites-sync
+- **TRD:** research/plans/goals/25-desktop-favorites-sync-trd.md — approved
+- **Changes Requested:** 2026-05-11 (Round 1) — push() 401 handling drops subsequent pending changes; incomplete test
 
 ## TRD Changes Requested
 
@@ -314,7 +301,7 @@ _(Waiting on an external dependency, a missing PRD, or owner decision.)_
 - **PR:**
 - **Branch:**
 - **TRD:**
-- **Notes:** Blocked — awaiting Goal 7 completion (needs auth infrastructure and User model). First Goal 8 task. PRD covers Flows 1–4 and duplicate detection.
+- **Notes:** Blocked — awaiting TASK-0025 merge to main (auth schema, User model, and NextAuth from TASK-0021/0022 already on main; TASK-0027 does not depend on TASK-0026). First Goal 8 task. PRD covers Flows 1–4 and duplicate detection.
 
 ### TASK-0028: Submission Form UI — New Shortcut & Key Recorder
 - **Goal:** Goal 8 — Community Contributions & Shortcut Submissions

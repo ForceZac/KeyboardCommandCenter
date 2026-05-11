@@ -1677,3 +1677,147 @@
 - tests: green (288 pass, 36 new)
 - metrics: run_type=productive | commits=1 | tests_added=36 | trd_cycles=0 | dev_idle=0
 - next: Reviewer picks up PR #25; once approved, TASK-0026 (desktop panel favorites UI) is unblocked
+
+## 2026-05-10 23:20 ET REVIEWER
+- did: reviewed PR #25 (TASK-0025 — Desktop Favorites Sync Engine & Offline Cache), round 1
+- decision: approved
+- standards checked: separation-of-concerns, backend-service-pattern, safeStorage-encryption, LWW-conflict-resolution, IPC-handler-shape, test-coverage
+- tests run: 288/288 pass (vitest run on goals/25-desktop-favorites-sync) — confirmed all 36 new sync-engine tests green
+- note: GitHub self-approval blocked (same author); decision posted as PR comment #4417301282 and recorded in backlog + goal summary
+- metrics: run_type=productive | pr=PR-25 | round=1 | decision=approved | tests_run=pass
+- next: Owner merges PR #25 to main → move TASK-0025 to Shipped → TASK-0026 (desktop panel favorites UI) unblocks
+
+## 2026-05-10 23:20 ET DEVELOPER
+- did: started run — claimed DEV_LOCK; no PAUSE/DEV_PAUSE; no Changes Requested; no In Progress; no In Review; no Ready tasks
+- task: TBD
+- status: in-progress — checkpoint
+
+## 2026-05-10 23:20 ET DEVELOPER
+- did: no-op — no Changes Requested; no In Progress; In Review empty (cap not triggered); Ready empty
+- task: none
+- trd: n/a
+- tests: skipped (no work done)
+- metrics: run_type=no-op | reason=no ready tasks | dev_idle=1
+- next: TASK-0025 (PR #25) is Approved — awaiting Zach merge. Once merged, Merge Watcher should unblock TASK-0026 (desktop panel favorites UI) + TASK-0027 (submissions data model, first Goal 8 task). Ready will restock then.
+
+## 2026-05-10 23:31 ET DEVELOPER
+- did: started run — claimed DEV_LOCK; no PAUSE/DEV_PAUSE; no Changes Requested; no In Progress; no In Review; no Ready tasks; TASK-0025 in Approved (awaiting owner merge), TASK-0026 blocked on TASK-0025
+- task: n/a
+- status: in-progress — checkpoint
+
+## 2026-05-10 23:31 ET DEVELOPER
+- did: no-op — no Changes Requested, no In Progress, no In Review, no Ready tasks; TASK-0025 in Approved awaiting owner merge; TASK-0026 blocked on TASK-0025; TASK-0027–0030 blocked on earlier tasks
+- task: n/a
+- PR: n/a
+- trd: n/a
+- tests: skipped (no work done)
+- metrics: run_type=no-op | reason=no ready tasks — TASK-0025 approved/unmerged, TASK-0026 blocked | dev_idle=2
+- next: Owner merges PR #25 (TASK-0025); PM moves TASK-0027 to Ready and unblocks it; Developer resumes
+
+## 2026-05-10 23:34 ET PROJECT-MANAGER
+- did: updated TASK-0027 blocker from "Goal 7 completion" to "TASK-0025 merge" — auth infra (TASK-0021/0022) already on main, so TASK-0027 can run in parallel with TASK-0026 once TASK-0025 merges
+- created: none
+- moved: none (blocker text updated on TASK-0027 to enable Merge Watcher unblock on TASK-0025 merge)
+- prd gaps: Goal 9 (Auto-Update) and Goal 10 (Linux Support) — unchanged, still need PRDs from Product Manager
+- roadmap check: skipped (did last run)
+- proposals added: 0
+- metrics: tasks_created=0 | tasks_moved=0 | prd_gaps=2 | roadmap_issues=0 | blocker_refined=1
+- next: Owner merges PR #25 (TASK-0025) → Merge Watcher unblocks both TASK-0026 and TASK-0027 → Ready restocked to 2. Product Manager still needs Goal 9 PRD to create tasks beyond Goal 8 pipeline.
+
+## 2026-05-10 23:41 ET DEVELOPER
+- did: started run — claimed DEV_LOCK; no PAUSE/DEV_PAUSE; checking all sections
+- task: TBD
+- status: in-progress — checkpoint
+
+## 2026-05-10 23:41 ET DEVELOPER
+- did: no-op — no Changes Requested, no In Progress, no In Review, no Ready tasks; TASK-0025 in Approved awaiting owner merge; TASK-0026 blocked on TASK-0025; TASK-0027–0030 blocked on earlier tasks
+- task: none
+- PR: n/a
+- trd: n/a
+- tests: skipped (no work done)
+- metrics: run_type=no-op | reason=no ready tasks — TASK-0025 approved/unmerged, TASK-0026 blocked | dev_idle=3
+- next: Owner merges PR #25 (TASK-0025); Merge Watcher unblocks TASK-0026 + TASK-0027; Developer resumes
+- discord: FAILED — channel 1494231685900931192 not allowlisted (no action needed from Developer)
+
+## 2026-05-10 23:51 ET DEVELOPER
+- did: started run — claimed DEV_LOCK; no PAUSE/DEV_PAUSE; no Changes Requested; no In Progress; no In Review; no Ready tasks
+- task: TBD
+- status: checkpoint
+
+## 2026-05-10 23:51 ET DEVELOPER
+- did: no-op — no Changes Requested, no In Progress, no In Review, no Ready tasks; TASK-0025 in Approved awaiting owner merge; TASK-0026 blocked on TASK-0025; TASK-0027–0030 blocked on earlier tasks
+- task: none
+- PR: n/a
+- trd: n/a
+- tests: skipped (no work done)
+- metrics: run_type=no-op | reason=no ready tasks — TASK-0025 approved/unmerged, TASK-0026 blocked | dev_idle=1
+- next: Owner merges PR #25 (TASK-0025); Merge Watcher unblocks TASK-0026 + TASK-0027; Developer resumes
+
+## 2026-05-11 00:01 ET DEVELOPER
+- did: DEV_LOCK held — another instance is mid-run (lock is ~10 min old, under 25 min threshold)
+- task: n/a
+- trd: n/a
+- tests: skipped (no work done)
+- metrics: run_type=no-op | reason=DEV_LOCK held | dev_idle=4
+- next: Lock holder completes its run; next Developer fire picks up from there
+
+## 2026-05-11 00:03 ET PROJECT-MANAGER
+- did: no-op — Ready empty, all tasks blocked on TASK-0025 merge (Approved, PR #25 open, awaiting owner). Ran roadmap health check.
+- created: none
+- moved: none
+- prd gaps: Goal 9 (Auto-Update) and Goal 10 (Linux Support) — still need PRDs from Product Manager
+- roadmap check: solid — sequencing correct, no scope creep, no stale goals, no missing prereqs. PRD gaps for Goals 9 & 10 are the standing issue.
+- proposals added: 0
+- metrics: tasks_created=0 | tasks_moved=0 | prd_gaps=2 | roadmap_issues=0
+- next: Owner merges PR #25 (TASK-0025) → Merge Watcher unblocks TASK-0026 + TASK-0027 → Ready restocks to 2. Product Manager should prioritize Goal 9 PRD.
+- discord: FAILED — #standup and #main channels not allowlisted. Summary not posted.
+
+## 2026-05-11 00:04 ET PRODUCT-MANAGER
+- did: wrote PRDs for Goal 9 (Auto-Update & Distribution) and Goal 10 (Linux Support)
+- prds written: goal-09-auto-update-distribution.md, goal-10-linux-support.md
+- research: product-notes.md was empty — self-researched Electron auto-update/signing/distribution and Linux packaging/Wayland/process detection via web search
+- metrics: prds_written=2 | prds_updated=0
+- next: all 10 goals now have PRDs — future runs will audit for open questions
+
+## 2026-05-11 00:10 ET DEVELOPER
+- did: woke, checked DEV_LOCK — held by prior instance (age ~20 min, <25 min threshold)
+- task: N/A
+- metrics: run_type=no-op | reason=DEV_LOCK held
+- next: retry next cron fire; DEV_IDLE now at 5
+
+## 2026-05-11 00:21 ET DEVELOPER
+- did: started run — DEV_LOCK was stale (>25 min, overridden); no PAUSE/DEV_PAUSE; claimed new DEV_LOCK
+- task: TBD (checking backlog)
+- status: in-progress — checkpoint
+
+## 2026-05-11 00:21 ET DEVELOPER
+- did: no-op — Changes Requested empty, In Progress empty, In Review empty (cap not reached), Ready empty; TASK-0025 in Approved awaiting owner merge; TASK-0026/0027–0030 blocked. DEV_IDLE reached 6 — auto-paused.
+- task: none
+- PR: n/a
+- trd: n/a
+- tests: skipped (no work done)
+- metrics: run_type=no-op | reason=no ready tasks — TASK-0025 approved/unmerged, all other tasks blocked | dev_idle=6 | auto_paused=true
+- next: Owner merges PR #25 (TASK-0025); Merge Watcher unblocks TASK-0026 + TASK-0027; run /unpause developer to resume Developer agent
+
+## 2026-05-11 00:33 ET PROJECT-MANAGER
+- did: no-op — Ready empty, all tasks blocked on TASK-0025 merge (Approved, PR #25 open, awaiting owner). PRD gaps for Goals 9 & 10 now filled (Product Manager wrote both at 00:04 ET today). Skipped roadmap health check (done last run).
+- created: none
+- moved: none
+- prd gaps: none — all 10 goals now have PRDs
+- roadmap check: skipped (done last run)
+- proposals added: 0
+- metrics: tasks_created=0 | tasks_moved=0 | prd_gaps=0 | roadmap_issues=0
+- next: Owner merges PR #25 (TASK-0025) → Merge Watcher unblocks TASK-0026 + TASK-0027 → Ready restocks to 2. Consider scoping Goal 9 tasks next run.
+- discord: FAILED — #standup (1494239168954503358) and #main (1494231685900931192) not allowlisted. Summary not posted.
+
+## 2026-05-11 00:53 ET REVIEWER
+- did: reviewed PR #25 (TASK-0025 — Desktop Favorites Sync Engine & Offline Cache, round 1). Note: task was prematurely in Approved section (prior reviewer run moved it without submitting GitHub review); treated as first code review since dedup check showed lastReviewedCommit=never.
+- decision: changes-requested (posted as GitHub comment — self-review API restriction, same precedent as PR #23)
+- standards checked: separation-of-concerns (desktop-only files, @kcc/core types, main.ts thin), IPC patterns (handle vs on vs send correct), safeStorage encryption (isEncryptionAvailable guard, key derivation pattern), push-before-pull, LWW merge, signed-out guards, 403 limit handling, test coverage vs TRD plan
+- issues: (1) push() 401 handling drops all subsequent pending changes — remaining.push(change) + break leaves unprocessed pending changes out of the final setPendingChanges call; (2) matching test only asserts sc-1 is re-queued, does not verify sc-2 is preserved
+- note: double-write in pullCollections (minor, flagged but not blocking)
+- tests run: 288/288 vitest pass | tsc --noEmit clean (tsconfig.json + tsconfig.tests.json + tsconfig.renderer.json)
+- backlog: TASK-0025 moved from Approved → Changes Requested (prior Approved state was erroneous — no GitHub review had been submitted)
+- metrics: run_type=productive | pr=PR-25 | round=1 | decision=changes-requested | tests_run=pass
+- idle-reset: echo 0 > REV_IDLE; rm -f REV_PAUSE; rm -f DEV_PAUSE
+- next: Developer fixes push() 401 handling + updates test, pushes fix, marks ready for round 2
