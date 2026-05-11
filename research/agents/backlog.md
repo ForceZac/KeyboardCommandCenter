@@ -33,44 +33,6 @@ Task IDs are monotonic. The Project Manager picks the next number.
 
 _(Project Manager keeps 2–3 tasks here at all times.)_
 
-### TASK-0034: Landing Page — `/download` Route with OS Detection
-- **Goal:** Goal 9 — Auto-Update & Distribution (implementation-roadmap-v2.md § Goal 9)
-- **PRD:** research/agents/prds/goal-09-auto-update-distribution.md
-- **Scope:** Add a `/download` route to `packages/web` (Next.js). Detect visitor's OS via user agent on initial render (server-side hint + client-side fallback). Show a primary download button for the detected platform (`.dmg` for macOS, `.exe` for Windows) with secondary links for all platforms. Download links point to GitHub Release assets (latest release). Include brief product description and system requirements. Page must be responsive and load in <2 seconds. NOT in scope: Linux download buttons (Goal 10), auto-updater integration, CI pipeline, code signing, installer creation, onboarding flow, marketing copy beyond a brief description.
-- **Acceptance:**
-  - `/download` route exists and renders in `packages/web`
-  - Page detects visitor OS via user agent
-  - Primary download button highlights correct installer for detected platform
-  - Secondary links available for all supported platforms (Windows, macOS)
-  - Download links point to GitHub Release assets for the latest release
-  - Page is responsive (mobile-friendly)
-  - Page loads in <2 seconds
-  - No regressions on existing web pages
-- **PR:**
-- **Branch:**
-- **TRD:**
-- **Notes:** Second Goal 9 task. PRD Flow 3 (first-time download) covers this scope. Independent of TASK-0033 — can be built in parallel.
-
-### TASK-0035: GitHub Actions Release Workflow — Build, Sign & Publish
-- **Goal:** Goal 9 — Auto-Update & Distribution (implementation-roadmap-v2.md § Goal 9)
-- **PRD:** research/agents/prds/goal-09-auto-update-distribution.md
-- **Scope:** Create a GitHub Actions workflow that triggers on git tag push (e.g. `v*`). Build the Electron app for Windows (x64, arm64 NSIS installer) and macOS (universal DMG) in parallel CI jobs. macOS job signs with Apple Developer certificate and submits for notarization via `@electron/notarize` (with `waitForNotarization: true`). Windows job signs the installer with Authenticode certificate (configured via `WIN_CSC_LINK` and `WIN_CSC_KEY_PASSWORD` secrets). Both jobs upload build artifacts (`.dmg`, `.exe`, `latest-mac.yml`, `latest.yml`) to a draft GitHub Release. electron-builder generates the update metadata files automatically. Workflow fails the build if signing or notarization fails — never ship unsigned binaries. NOT in scope: Linux builds (Goal 10), auto-publishing releases (drafts for manual review), delta/differential updates, beta channels, version bumping automation, store distribution (Flathub/Snap/Microsoft Store/Mac App Store).
-- **Acceptance:**
-  - GitHub Actions workflow file exists (e.g. `.github/workflows/release.yml`)
-  - Workflow triggers on `v*` tag push
-  - macOS job builds a universal DMG (x64 + arm64)
-  - macOS job signs and notarizes the build (using `APPLE_ID`, `APPLE_APP_SPECIFIC_PASSWORD`, Apple Developer certificate secrets)
-  - Windows job builds NSIS installer for x64 and arm64
-  - Windows job signs the installer (using `WIN_CSC_LINK`, `WIN_CSC_KEY_PASSWORD` secrets)
-  - Both jobs upload build artifacts to a draft GitHub Release
-  - `latest.yml` and `latest-mac.yml` metadata files included in release assets
-  - Build fails if signing or notarization fails
-  - Workflow completes in under 10 minutes (per PRD success metric)
-  - No regressions on existing CI workflows
-- **PR:**
-- **Branch:**
-- **TRD:**
-- **Notes:** Third Goal 9 task. PRD Flow 4 covers this scope. Requires CI secrets to be populated before first real run. Can be built and tested with dummy/self-signed certificates initially.
 
 ### TASK-0036: Rust Native Module — Linux X11 Active Window Detection
 - **Goal:** Goal 10 — Linux Support (implementation-roadmap-v2.md § Goal 10)
@@ -95,6 +57,27 @@ _(Project Manager keeps 2–3 tasks here at all times.)_
 
 _(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
 
+### TASK-0035: GitHub Actions Release Workflow — Build, Sign & Publish
+- **Goal:** Goal 9 — Auto-Update & Distribution (implementation-roadmap-v2.md § Goal 9)
+- **PRD:** research/agents/prds/goal-09-auto-update-distribution.md
+- **Scope:** Create a GitHub Actions workflow that triggers on git tag push (e.g. `v*`). Build the Electron app for Windows (x64, arm64 NSIS installer) and macOS (universal DMG) in parallel CI jobs. macOS job signs with Apple Developer certificate and submits for notarization via `@electron/notarize` (with `waitForNotarization: true`). Windows job signs the installer with Authenticode certificate (configured via `WIN_CSC_LINK` and `WIN_CSC_KEY_PASSWORD` secrets). Both jobs upload build artifacts (`.dmg`, `.exe`, `latest-mac.yml`, `latest.yml`) to a draft GitHub Release. electron-builder generates the update metadata files automatically. Workflow fails the build if signing or notarization fails — never ship unsigned binaries. NOT in scope: Linux builds (Goal 10), auto-publishing releases (drafts for manual review), delta/differential updates, beta channels, version bumping automation, store distribution (Flathub/Snap/Microsoft Store/Mac App Store).
+- **Acceptance:**
+  - GitHub Actions workflow file exists (e.g. `.github/workflows/release.yml`)
+  - Workflow triggers on `v*` tag push
+  - macOS job builds a universal DMG (x64 + arm64)
+  - macOS job signs and notarizes the build (using `APPLE_ID`, `APPLE_APP_SPECIFIC_PASSWORD`, Apple Developer certificate secrets)
+  - Windows job builds NSIS installer for x64 and arm64
+  - Windows job signs the installer (using `WIN_CSC_LINK`, `WIN_CSC_KEY_PASSWORD` secrets)
+  - Both jobs upload build artifacts to a draft GitHub Release
+  - `latest.yml` and `latest-mac.yml` metadata files included in release assets
+  - Build fails if signing or notarization fails
+  - Workflow completes in under 10 minutes (per PRD success metric)
+  - No regressions on existing CI workflows
+- **PR:** #30
+- **Branch:** goals/35-github-actions-release-workflow
+- **TRD:** research/plans/goals/35-github-actions-release-workflow-trd.md — awaiting-review
+- **Notes:** Third Goal 9 task. PRD Flow 4 covers this scope. Requires CI secrets to be populated before first real run. Can be built and tested with dummy/self-signed certificates initially.
+
 ## In Review
 
 _(Developer moves tasks here when the draft PR is marked ready.)_
@@ -110,6 +93,13 @@ _(TRD Watcher moves tasks here when a TRD needs rework.)_
 ## Approved
 
 _(Reviewer moves tasks here after approving the PR. You merge to main, then move to Shipped.)_
+
+### TASK-0034: Landing Page — `/download` Route with OS Detection
+- **Goal:** Goal 9 — Auto-Update & Distribution
+- **PR:** #29
+- **Branch:** goals/34-landing-page-download
+- **TRD:** research/plans/goals/34-landing-page-download-trd.md — approved
+- **Approved:** 2026-05-11 (Round 1)
 
 ### TASK-0033: electron-updater Integration — Auto-Update Check & Notification
 - **Goal:** Goal 9 — Auto-Update & Distribution
