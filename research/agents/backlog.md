@@ -98,7 +98,7 @@ _(Developer moves tasks here when the draft PR is marked ready.)_
 - **PR:** #32
 - **Branch:** goals/37-wayland-active-window-detection
 - **TRD:** research/plans/goals/37-wayland-active-window-detection-trd.md — approved
-- **Notes:** Second Goal 10 task. PRD Flow 4 (Wayland detection) covers this scope. Uses zbus (pure-Rust, no libdbus-1-dev needed). Merged TASK-0036 branch into this before build phase.
+- **Notes:** Second Goal 10 task. PRD Flow 4 (Wayland detection) covers this scope. Uses zbus (pure-Rust, no libdbus-1-dev needed). Merged TASK-0036 branch into this before build phase. Round 1 fixed: added wayland-unavailable.test.ts (25 tests) + escHtml fix in index.ts.
 
 ## Changes Requested
 
