@@ -58,6 +58,7 @@ pub fn get_active_window() -> Option<ActiveWindowData> {
       process_name: exe_name,
       window_title: display_name,
       bundle_id,
+      detection_unavailable: false,
     })
   }
 }

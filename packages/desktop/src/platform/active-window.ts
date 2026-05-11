@@ -27,11 +27,23 @@ export interface ActiveWindowInfo {
    * Always undefined on Windows.
    */
   bundleId?: string;
+  /**
+   * True when active window detection is unavailable on this session.
+   * Set by the Rust layer when a Wayland compositor does not expose a supported
+   * DBus introspection API. Always false/undefined on macOS, Windows, and X11.
+   * When true, processName and windowTitle are empty strings.
+   */
+  detectionUnavailable?: boolean;
 }
 
 /** Shape of the native module's exported function. */
 export interface NativeModule {
-  getActiveWindow(): { processName: string; windowTitle: string; bundleId?: string } | null;
+  getActiveWindow(): {
+    processName: string;
+    windowTitle: string;
+    bundleId?: string;
+    detectionUnavailable?: boolean;
+  } | null;
 }
 
 /**
@@ -112,6 +124,7 @@ export function createActiveWindowDetector(
         processName: result.processName,
         windowTitle: result.windowTitle,
         bundleId: result.bundleId,
+        detectionUnavailable: result.detectionUnavailable ?? false,
       };
     } catch {
       // Defensive: if the native call throws unexpectedly, return null rather

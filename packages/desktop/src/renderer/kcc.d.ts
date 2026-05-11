@@ -7,6 +7,12 @@
 // the renderer tsconfig context).
 import type { AppDetail, FavoriteEntry, CollectionSummary } from './types';
 
+/** TASK-0037: App entry used by the Wayland manual app selector. */
+interface AppEntry {
+  slug: string;
+  name: string;
+}
+
 /** Payload received on each active-app change event. */
 interface DetectionPayload {
   /** Database app slug, or null when the process is unrecognized. */
@@ -64,6 +70,27 @@ interface KccAPI {
 
   /** TASK-0025/0026: Favorites sync engine — cache reads and toggle writes. */
   sync: SyncAPI;
+
+  // ── TASK-0037: Wayland manual app selector ─────────────────────────────────
+
+  /**
+   * Subscribe to Wayland detection-unavailable events.
+   * Fired when the Rust layer cannot identify the focused window.
+   * Returns an unsubscribe function to clean up the listener.
+   */
+  onDetectionUnavailable: (callback: () => void) => () => void;
+
+  /**
+   * Returns all known app slug+name pairs sorted alphabetically.
+   * Used to populate the manual app selector on Wayland sessions.
+   */
+  getAllApps: () => Promise<AppEntry[]>;
+
+  /**
+   * Sends the user-chosen app slug to the main process.
+   * Triggers an immediate detection:app-changed emission so the panel updates.
+   */
+  setManualApp: (slug: string) => Promise<void>;
 }
 
 declare global {

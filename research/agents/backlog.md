@@ -31,27 +31,7 @@ Task IDs are monotonic. The Project Manager picks the next number.
 
 ## Ready
 
-_(Project Manager keeps 2–3 tasks here at all times.)_
-
-### TASK-0037: Wayland Active Window Detection — GNOME & KDE DBus with Manual Fallback
-- **Goal:** Goal 10 — Linux Support (implementation-roadmap-v2.md § Goal 10)
-- **PRD:** research/agents/prds/goal-10-linux-support.md
-- **Scope:** Add Wayland active window detection to the Rust native module (`packages/desktop/native/`). Detect session type at startup via `WAYLAND_DISPLAY` / `XDG_SESSION_TYPE` environment variables — dispatch to X11 adapter (TASK-0036) or Wayland adapter accordingly. GNOME detection: use `org.gnome.Shell.Introspect` DBus interface to query focused window class and PID. KDE Plasma detection: use `org.kde.KWin.Scripting` DBus interface to query active window properties. For unsupported compositors (Sway, Hyprland, etc.) or when DBus calls fail: return a `DetectionUnavailable` result that tells the TypeScript layer to show a manual app selection UI. Add a "Select your app" search dropdown to the panel header that activates when detection returns unavailable — user's manual selection persists for the session (last-used app first). Include unit tests for session type detection logic and DBus response parsing (mock DBus). Add `dbus` / `zbus` crate dependency (behind `cfg(target_os = "linux")` feature gate). NOT in scope: X11 detection (TASK-0036), overlay Wayland support (separate task), wlr-layer-shell integration, packaging, CI, compositors beyond GNOME and KDE for active detection.
-- **Acceptance:**
-  - Session type detection correctly identifies Wayland vs X11 sessions
-  - GNOME DBus detection returns process name and window title on a GNOME Wayland session
-  - KDE DBus detection returns process name and window title on a KDE Plasma Wayland session
-  - Unsupported compositor returns `DetectionUnavailable` (no crash, no error)
-  - "Select your app" manual fallback UI renders in the panel when detection is unavailable
-  - Manual selection persists for the session (last-used app appears first)
-  - Subtle banner explains "Automatic app detection isn't available on your Wayland compositor"
-  - Unit tests for session type detection and DBus response parsing pass
-  - Existing X11 and Windows/macOS detection tests unaffected
-  - Crate compiles on Linux with `libdbus-1-dev` installed
-- **PR:**
-- **Branch:**
-- **TRD:**
-- **Notes:** Second Goal 10 task. PRD Flow 4 (Wayland detection) covers this scope. Extends TASK-0036's Rust native module with Wayland-specific adapter. Requires `libdbus-1-dev` as build dependency.
+_(Project Manager keeps 2–3 tasks here at all times.)
 
 ### TASK-0038: Overlay X11 Compatibility — Transparency & Click-Through
 - **Goal:** Goal 10 — Linux Support (implementation-roadmap-v2.md § Goal 10)
@@ -72,6 +52,26 @@ _(Project Manager keeps 2–3 tasks here at all times.)_
 - **TRD:**
 - **Notes:** Third Goal 10 task. PRD Flows 5 (X11 overlay) and 6 (Wayland degraded overlay) cover this scope. Depends on TASK-0036 being merged (needs Linux detection infrastructure). Independent of Wayland detection (TASK-0037) — overlay uses existing detection result.
 
+### TASK-0039: Linux Packaging — AppImage & .deb via electron-builder + CI Job
+- **Goal:** Goal 10 — Linux Support (implementation-roadmap-v2.md § Goal 10)
+- **PRD:** research/agents/prds/goal-10-linux-support.md
+- **Scope:** Add Linux packaging targets to the existing electron-builder configuration. Produce an `.AppImage` (universal, no-install) and `.deb` (Debian/Ubuntu) for x64. Configure the existing GitHub Actions release workflow (from TASK-0035) to include a Linux build job that installs required X11/DBus development libraries (`libx11-dev`, `libxcb1-dev`, `libdbus-1-dev`) and produces Linux artifacts alongside Windows/macOS builds. Declare runtime dependencies in the `.deb` package (`libx11-6`, `libdbus-1-3`, `libappindicator3-1` or `libayatana-appindicator3-1`). Create an XDG autostart `.desktop` file so the app can register itself for login startup on Linux. Ensure tray icon works via `libappindicator3` / `StatusNotifierItem`. NOT in scope: RPM packaging, Flathub/Snap Store listings, ARM64 builds, AppImage auto-update, landing page download page updates (separate task), overlay or detection features (covered by TASK-0036/0037/0038).
+- **Acceptance:**
+  - electron-builder config produces `.AppImage` and `.deb` files for Linux x64
+  - AppImage launches without installation on Ubuntu 22.04+
+  - `.deb` installs cleanly via `dpkg -i` on Ubuntu/Debian
+  - `.deb` declares correct runtime dependencies (`libx11-6`, `libdbus-1-3`, `libappindicator3-1`)
+  - GitHub Actions release workflow builds Linux targets alongside Windows/macOS
+  - CI Linux job installs required dev libraries and completes successfully
+  - XDG autostart `.desktop` entry created and offered to user on first launch
+  - Tray icon appears on GNOME (with libappindicator) and KDE
+  - App functions via global hotkey when no system tray is detected
+  - No regressions on existing Windows/macOS builds
+- **PR:**
+- **Branch:**
+- **TRD:**
+- **Notes:** Addresses PROP-0007 (Linux Packaging task lost in backlog divergence). Fourth Goal 10 task. PRD Flows 1 and 2 + CI constraint cover this scope. Depends on TASK-0035 being merged (needs the GitHub Actions release workflow to extend). Independent of TASK-0037 (Wayland detection) and TASK-0038 (X11 overlay).
+
 ## In Progress
 
 _(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
@@ -79,6 +79,26 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
 ## In Review
 
 _(Developer moves tasks here when the draft PR is marked ready.)_
+
+### TASK-0037: Wayland Active Window Detection — GNOME & KDE DBus with Manual Fallback
+- **Goal:** Goal 10 — Linux Support (implementation-roadmap-v2.md § Goal 10)
+- **PRD:** research/agents/prds/goal-10-linux-support.md
+- **Scope:** Add Wayland active window detection to the Rust native module (`packages/desktop/native/`). Detect session type at startup via `WAYLAND_DISPLAY` / `XDG_SESSION_TYPE` environment variables — dispatch to X11 adapter (TASK-0036) or Wayland adapter accordingly. GNOME detection: use `org.gnome.Shell.Introspect` DBus interface to query focused window class and PID. KDE Plasma detection: use `org.kde.KWin.Scripting` DBus interface to query active window properties. For unsupported compositors (Sway, Hyprland, etc.) or when DBus calls fail: return a `DetectionUnavailable` result that tells the TypeScript layer to show a manual app selection UI. Add a "Select your app" search dropdown to the panel header that activates when detection returns unavailable — user's manual selection persists for the session (last-used app first). Include unit tests for session type detection logic and DBus response parsing (mock DBus). Add `dbus` / `zbus` crate dependency (behind `cfg(target_os = "linux")` feature gate). NOT in scope: X11 detection (TASK-0036), overlay Wayland support (separate task), wlr-layer-shell integration, packaging, CI, compositors beyond GNOME and KDE for active detection.
+- **Acceptance:**
+  - Session type detection correctly identifies Wayland vs X11 sessions
+  - GNOME DBus detection returns process name and window title on a GNOME Wayland session
+  - KDE DBus detection returns process name and window title on a KDE Plasma Wayland session
+  - Unsupported compositor returns `DetectionUnavailable` (no crash, no error)
+  - "Select your app" manual fallback UI renders in the panel when detection is unavailable
+  - Manual selection persists for the session (last-used app appears first)
+  - Subtle banner explains "Automatic app detection isn't available on your Wayland compositor"
+  - Unit tests for session type detection and DBus response parsing pass
+  - Existing X11 and Windows/macOS detection tests unaffected
+  - Crate compiles on Linux with `libdbus-1-dev` installed
+- **PR:** #32
+- **Branch:** goals/37-wayland-active-window-detection
+- **TRD:** research/plans/goals/37-wayland-active-window-detection-trd.md — approved
+- **Notes:** Second Goal 10 task. PRD Flow 4 (Wayland detection) covers this scope. Uses zbus (pure-Rust, no libdbus-1-dev needed). Merged TASK-0036 branch into this before build phase. Round 1 fixed: added wayland-unavailable.test.ts (25 tests) + escHtml fix in index.ts.
 
 ## Changes Requested
 
@@ -384,7 +404,7 @@ _(Waiting on an external dependency, a missing PRD, or owner decision.)_
 - **PR:**
 - **Branch:**
 - **TRD:**
-- **Notes:** Blocked — awaiting TASK-0027 (needs submission API routes and data model). Second Goal 8 task. PRD Flows 1 and 6 cover this scope.
+- **Notes:** Unblocked by merge on 2026-05-11 (PR #27 merged). Second Goal 8 task. PRD Flows 1 and 6 cover this scope.
 
 ### TASK-0029: Admin Review Queue UI
 - **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
@@ -407,7 +427,7 @@ _(Waiting on an external dependency, a missing PRD, or owner decision.)_
 - **PR:**
 - **Branch:**
 - **TRD:**
-- **Notes:** Blocked — awaiting TASK-0027 (needs admin API routes, Submission model, and isAdmin flag). Third Goal 8 task. PRD Flow 4 covers this scope.
+- **Notes:** Unblocked by merge on 2026-05-11 (PR #27 merged). Third Goal 8 task. PRD Flow 4 covers this scope.
 
 ### TASK-0030: Correction Form UI — Suggest Edit & Pre-filled Submission
 - **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
@@ -444,7 +464,7 @@ _(Waiting on an external dependency, a missing PRD, or owner decision.)_
 - **PR:**
 - **Branch:**
 - **TRD:**
-- **Notes:** Blocked — awaiting TASK-0027 (needs submission API routes and Submission model). Fifth Goal 8 task. PRD Flow 3 covers this scope.
+- **Notes:** Unblocked by merge on 2026-05-11 (PR #27 merged). Fifth Goal 8 task. PRD Flow 3 covers this scope.
 
 ### TASK-0032: Contributor Profile Page
 - **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
@@ -463,5 +483,5 @@ _(Waiting on an external dependency, a missing PRD, or owner decision.)_
 - **PR:**
 - **Branch:**
 - **TRD:**
-- **Notes:** Blocked — awaiting TASK-0027 (needs Submission model for contribution queries). Sixth Goal 8 task. PRD Flow 5 covers this scope.
+- **Notes:** Unblocked by merge on 2026-05-11 (PR #27 merged). Sixth Goal 8 task. PRD Flow 5 covers this scope.
 

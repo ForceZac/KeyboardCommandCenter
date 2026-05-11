@@ -55,3 +55,16 @@ export function getDisplayName(slug: string): string {
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
 }
+
+/**
+ * Returns all known app entries from the process-map display names table,
+ * sorted alphabetically by display name.
+ *
+ * Used by the Wayland manual app selector UI (TASK-0037) to populate the
+ * searchable dropdown of all recognized apps.
+ */
+export function getAllApps(): { slug: string; name: string }[] {
+  return Object.entries(processMap.displayNames)
+    .map(([slug, name]) => ({ slug, name }))
+    .sort((a, b) => a.name.localeCompare(b.name));
+}

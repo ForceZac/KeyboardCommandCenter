@@ -12,6 +12,10 @@ mod windows;
 
 #[cfg(target_os = "linux")]
 mod linux;
+#[cfg(target_os = "linux")]
+mod linux_session;
+#[cfg(target_os = "linux")]
+mod linux_wayland;
 
 /// Internal representation of the active window info.
 /// Converted to `ActiveWindowInfo` (the napi-rs exported struct) in `lib.rs`.
@@ -19,6 +23,10 @@ pub struct ActiveWindowData {
   pub process_name: String,
   pub window_title: String,
   pub bundle_id: Option<String>,
+  /// True only when the Wayland adapter cannot identify the focused application
+  /// (unsupported compositor or DBus call failed). Always false on macOS, Windows,
+  /// and Linux X11. When true, `process_name` and `window_title` are empty strings.
+  pub detection_unavailable: bool,
 }
 
 /// Dispatches to the platform-specific adapter and returns `Some(ActiveWindowData)`

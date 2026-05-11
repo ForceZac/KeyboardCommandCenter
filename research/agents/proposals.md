@@ -71,7 +71,7 @@ Off-roadmap ideas and system-improvement suggestions surfaced by the agents. The
 - **Effort:** 1
 - **Evidence:** TASK-0035 branch (goals/35-github-actions-release-workflow) added `TASK-0037: Wayland Active Window Detection` and `TASK-0038: Linux Packaging — AppImage & .deb via electron-builder + CI Job` to Ready. The TASK-0036 branch (goals/36-linux-x11-detection) subsequently redefined TASK-0037 with a more detailed scope (adds manual fallback UI) and replaced TASK-0038 with `TASK-0038: Overlay X11 Compatibility — Transparency & Click-Through`. The Linux Packaging task (AppImage + .deb + CI job) from the TASK-0035 branch is now orphaned — it does not exist at any task ID in the TASK-0036 branch. Developer used the TASK-0036 branch definitions (most recently reviewed) when reconciling the main backlog.
 - **Proposal:** PM should review and either: (1) assign Linux Packaging a new task ID (TASK-0039) and add it to Ready, or (2) confirm the TASK-0036 branch's definition of TASK-0038 (Overlay X11) is correct and Linux Packaging is intentionally deferred/dropped. Linux Packaging (AppImage/deb + CI job) was in the Goal 10 PRD and is needed before Linux support can ship.
-- **Status:** open
+- **Status:** resolved — addressed by TASK-0039 (Linux Packaging — AppImage & .deb + CI Job, added to Ready)
 
 ### PROP-0001: Goal 3 work shipped without PRD or backlog tracking
 - **Source:** Project Manager

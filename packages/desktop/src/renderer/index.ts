@@ -29,6 +29,13 @@ import {
   renderFavoritesView,
   renderSignInPrompt,
 } from './favorites-list';
+// TASK-0037: Wayland manual app selector UI.
+import {
+  renderWaylandUnavailable,
+  filterApps,
+  type AppEntry,
+} from './wayland-unavailable';
+import { escHtml } from './keycap';
 import type { FavoriteEntry, CollectionSummary } from './types';
 
 // Escape key dismisses the panel via IPC → main process hides the BrowserWindow.
@@ -52,6 +59,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Track which view is active so the search filter knows which rows to target.
   let currentView: ActiveView = 'app-shortcuts';
+
+  // TASK-0037: Wayland detection state.
+  // allApps is fetched once on first detection:unavailable event and cached.
+  let allApps: AppEntry[] = [];
+  // Persisted in sessionStorage so the selection survives panel hide/show within
+  // the same OS session (but resets when the Electron app restarts).
+  const WAYLAND_MANUAL_APP_KEY = 'kcc:wayland-manual-app';
+  let waylandLastUsedSlug: string | null = sessionStorage.getItem(WAYLAND_MANUAL_APP_KEY);
 
   // Attach search listener once — reads currentView at filter time.
   if (searchInput && shortcutsEl && favoritesEl && noResultsEl) {
@@ -290,4 +305,83 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   window.kcc.onAppChanged(handleAppChanged);
+
+  // ── TASK-0037: Wayland detection-unavailable listener ─────────────────────
+
+  /**
+   * Called when the Rust layer signals that Wayland compositor DBus detection
+   * failed. Shows the manual app selector in the fallback container.
+   */
+  async function handleDetectionUnavailable(): Promise<void> {
+    try {
+      // Fetch app list once and cache for the session — the list doesn't change.
+      if (allApps.length === 0) {
+        allApps = await window.kcc.getAllApps();
+      }
+      if (appNameEl) appNameEl.innerHTML = clearAppHeader();
+      showFallback(renderWaylandUnavailable(allApps, waylandLastUsedSlug));
+      initWaylandInteractivity();
+    } catch (err) {
+      console.error('[kcc] handleDetectionUnavailable error:', err);
+    }
+  }
+
+  /**
+   * Attaches event listeners to the Wayland selector DOM after it is injected
+   * into the fallback container. Called every time the selector is rendered.
+   */
+  function initWaylandInteractivity(): void {
+    // Search input: filter the app list on each keystroke.
+    const manualSearchEl = document.getElementById('manual-app-search') as HTMLInputElement | null;
+    const listEl = document.getElementById('manual-app-list') as HTMLElement | null;
+
+    if (manualSearchEl && listEl) {
+      manualSearchEl.addEventListener('input', () => {
+        const filtered = filterApps(allApps, manualSearchEl.value);
+        const items = filtered
+          .map(
+            ({ slug, name }) =>
+              `<div class="manual-app-item${slug === waylandLastUsedSlug ? ' manual-app-item--last-used' : ''}" data-slug="${escHtml(slug)}">${escHtml(name)}</div>`,
+          )
+          .join('');
+        listEl.innerHTML = items;
+      });
+    }
+
+    // Dismiss banner button.
+    const dismissBtn = document.getElementById('wayland-banner-dismiss');
+    if (dismissBtn) {
+      dismissBtn.addEventListener('click', () => {
+        const banner = document.getElementById('wayland-banner');
+        if (banner) banner.hidden = true;
+      });
+    }
+  }
+
+  // Delegated click listener for manual app items (rendered into fallback container).
+  if (fallbackEl) {
+    fallbackEl.addEventListener('click', (event: MouseEvent) => {
+      const target = event.target as Element;
+      const item = target.closest<HTMLElement>('.manual-app-item[data-slug]');
+      if (!item) return;
+      const slug = item.dataset['slug'];
+      if (!slug) return;
+
+      // Persist selection for the session.
+      waylandLastUsedSlug = slug;
+      sessionStorage.setItem(WAYLAND_MANUAL_APP_KEY, slug);
+
+      // Mark the selected item as last-used in the list immediately.
+      document.querySelectorAll('.manual-app-item').forEach((el) => {
+        el.classList.toggle('manual-app-item--last-used', (el as HTMLElement).dataset['slug'] === slug);
+      });
+
+      // Send to main process — DetectionService will emit detection:app-changed.
+      void window.kcc.setManualApp(slug);
+    });
+  }
+
+  window.kcc.onDetectionUnavailable(() => {
+    void handleDetectionUnavailable();
+  });
 });
