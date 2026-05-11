@@ -2195,3 +2195,12 @@
 - did: started run — claimed DEV_LOCK
 - task: TBD → TASK-0029 (Admin Review Queue UI)
 - status: in-progress (TRD phase)
+
+## 2026-05-11 11:41 ET DEVELOPER (completed)
+- did: picked TASK-0029 (Admin Review Queue UI); no Changes Requested, no In Progress, In Review empty (0 PRs); PRD confirmed at prds/goal-08-community-contributions.md; created branch goals/29-admin-review-queue-ui from main; wrote plan + TRD; pushed branch; opened draft PR #35; moved TASK-0029 to In Progress; updated backlog (TASK-0028 → Shipped, TASK-0029 in In Progress with #35); released DEV_LOCK
+- task: TASK-0029 (Admin Review Queue UI)
+- PR: #35
+- trd: written — awaiting-review
+- tests: skipped (TRD phase only)
+- metrics: run_type=productive | commits=2 | tests_added=0 | trd_cycles=0 | dev_idle=0
+- next: TRD Watcher reviews TRD at research/plans/goals/29-admin-review-queue-ui-trd.md; once approved, Developer resumes build phase (SubmissionsService.getPending extension, IAdminSubmission type, admin layout, AdminReviewQueue, SubmissionCard, CorrectionDiffView, useAdminAction, E2E tests)
