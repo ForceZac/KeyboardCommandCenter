@@ -186,6 +186,53 @@ export interface CollectionSummary {
   shortcutCount: number;
 }
 
+// ---------------------------------------------------------------------------
+// Community Submissions types (Goal 8)
+// ---------------------------------------------------------------------------
+
+export type SubmissionType = 'NEW_SHORTCUT' | 'CORRECTION' | 'APP_REQUEST';
+export type SubmissionStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
+
+/**
+ * Wire shape for a Submission as returned by GET /api/submissions
+ * and GET /api/admin/submissions.
+ */
+export interface ISubmission {
+  id: string;
+  type: SubmissionType;
+  status: SubmissionStatus;
+  submitterId: string;
+  appId: string | null;
+  shortcutId: string | null;
+  data: Record<string, unknown>;
+  reviewerNotes: string | null;
+  reviewedBy: string | null;
+  reviewedAt: string | null; // ISO-8601
+  createdAt: string; // ISO-8601
+  updatedAt: string; // ISO-8601
+}
+
+/**
+ * Body shape for POST /api/submissions.
+ * `appId` is required for NEW_SHORTCUT and CORRECTION; null/absent for APP_REQUEST.
+ * `shortcutId` is required for CORRECTION; absent otherwise.
+ */
+export interface SubmissionCreatePayload {
+  type: SubmissionType;
+  appId?: string | null;
+  shortcutId?: string | null;
+  data: Record<string, unknown>;
+}
+
+/**
+ * Body shape for PATCH /api/admin/submissions/:id.
+ */
+export interface SubmissionAdminAction {
+  action: 'approve' | 'reject' | 'edit-and-approve';
+  reviewerNotes?: string;
+  data?: Record<string, unknown>;
+}
+
 /** One entry in the GET /api/favorites response. */
 export interface FavoriteEntry {
   collectionShortcutId: string;
