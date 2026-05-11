@@ -58,6 +58,7 @@ vi.mock('path', async (importOriginal) => {
   return { ...actual, join: (...args: string[]) => args.join('/') };
 });
 
+import { Tray as MockTray } from 'electron';
 import { TrayManager } from '../tray';
 
 // ---------------------------------------------------------------------------
@@ -333,5 +334,65 @@ describe('TrayManager — update menu items (TASK-0033)', () => {
     item?.click?.();
 
     expect(onRestartAndInstall).toHaveBeenCalledOnce();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// TrayManager — graceful tray creation failure (TASK-0038)
+//
+// On minimal Linux window managers (i3, Sway, etc.) no system tray is available.
+// The Tray constructor throws in this case. The app must survive the failure and
+// continue running via the global hotkey.
+// ---------------------------------------------------------------------------
+
+describe('TrayManager — graceful tray creation failure', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('does not throw when Tray constructor throws', () => {
+    vi.mocked(MockTray as unknown as () => void).mockImplementationOnce(() => {
+      throw new Error('No system tray available');
+    });
+
+    const { manager } = makeTrayManager({ recentApps: [] });
+    expect(() => manager.create()).not.toThrow();
+  });
+
+  it('logs startup message when Tray constructor throws', () => {
+    const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    vi.mocked(MockTray as unknown as () => void).mockImplementationOnce(() => {
+      throw new Error('No system tray available');
+    });
+
+    const { manager } = makeTrayManager({ recentApps: [] });
+    manager.create();
+
+    expect(consoleSpy).toHaveBeenCalledWith(
+      expect.stringContaining('No system tray detected'),
+    );
+    consoleSpy.mockRestore();
+  });
+
+  it('refreshMenu() does not throw after tray creation failure', () => {
+    vi.mocked(MockTray as unknown as () => void).mockImplementationOnce(() => {
+      throw new Error('No system tray available');
+    });
+
+    const { manager } = makeTrayManager({ recentApps: [] });
+    manager.create();
+
+    expect(() => manager.refreshMenu(false)).not.toThrow();
+  });
+
+  it('destroy() does not throw after tray creation failure', () => {
+    vi.mocked(MockTray as unknown as () => void).mockImplementationOnce(() => {
+      throw new Error('No system tray available');
+    });
+
+    const { manager } = makeTrayManager({ recentApps: [] });
+    manager.create();
+
+    expect(() => manager.destroy()).not.toThrow();
   });
 });

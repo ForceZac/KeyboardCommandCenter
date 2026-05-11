@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 // ---------------------------------------------------------------------------
 // vi.hoisted — create shared mock objects before vi.mock factories run.
@@ -11,7 +11,11 @@ const {
   MockBrowserWindowCtor,
   mockGlobalShortcut,
   mockDisplay,
+  mockIsWaylandSession,
+  mockDetectLinuxSession,
 } = vi.hoisted(() => {
+  const mockIsWaylandSession = vi.fn(() => false);
+  const mockDetectLinuxSession = vi.fn(() => 'unknown' as 'x11' | 'wayland' | 'unknown');
   const mockWebContents = {
     send: vi.fn(),
     on: vi.fn(),
@@ -60,7 +64,7 @@ const {
     internal: false,
   };
 
-  return { mockWebContents, mockBrowserWindow, MockBrowserWindowCtor, mockGlobalShortcut, mockDisplay };
+  return { mockWebContents, mockBrowserWindow, MockBrowserWindowCtor, mockGlobalShortcut, mockDisplay, mockIsWaylandSession, mockDetectLinuxSession };
 });
 
 vi.mock('electron', () => ({
@@ -80,7 +84,13 @@ vi.mock('../settings', () => ({
     opacity: 0.4,
     position: 'Top Right',
     size: 'Standard',
+    waylandDismissTimeoutMs: 8000,
   })),
+}));
+
+vi.mock('../platform/linux-session', () => ({
+  isWaylandSession: mockIsWaylandSession,
+  detectLinuxSession: mockDetectLinuxSession,
 }));
 
 vi.mock('path', async (importOriginal) => {
@@ -440,5 +450,229 @@ describe('OverlayWindowManager — ready-state guard', () => {
     didFinishLoad();
 
     expect(mockWebContents.send).toHaveBeenCalledWith('detection:app-changed', noDetectionPayload);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// OverlayWindowManager — Linux X11 window type hint (TASK-0038)
+// ---------------------------------------------------------------------------
+
+describe('OverlayWindowManager — Linux X11 window type hint', () => {
+  const originalPlatform = Object.getOwnPropertyDescriptor(process, 'platform');
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockBrowserWindow.isDestroyed.mockReturnValue(false);
+    mockBrowserWindow.isVisible.mockReturnValue(false);
+    mockBrowserWindow.loadFile.mockReturnValue(Promise.resolve());
+    mockGlobalShortcut.register.mockReturnValue(true);
+    MockBrowserWindowCtor.mockReturnValue(mockBrowserWindow);
+  });
+
+  afterEach(() => {
+    // Restore process.platform and mock defaults.
+    if (originalPlatform) {
+      Object.defineProperty(process, 'platform', originalPlatform);
+    }
+    mockIsWaylandSession.mockReturnValue(false);
+    mockDetectLinuxSession.mockReturnValue('unknown');
+  });
+
+  it('passes type: "panel" to BrowserWindow constructor on Linux X11', () => {
+    Object.defineProperty(process, 'platform', { value: 'linux', writable: true });
+    mockDetectLinuxSession.mockReturnValue('x11');
+    mockIsWaylandSession.mockReturnValue(false);
+
+    const manager = new OverlayWindowManager();
+    manager.show();
+
+    const options = (MockBrowserWindowCtor.mock.calls as unknown as Array<[Record<string, unknown>]>)[0][0];
+    expect(options['type']).toBe('panel');
+  });
+
+  it('calls setIgnoreMouseEvents on Linux X11 (click-through supported)', () => {
+    Object.defineProperty(process, 'platform', { value: 'linux', writable: true });
+    mockDetectLinuxSession.mockReturnValue('x11');
+    mockIsWaylandSession.mockReturnValue(false);
+
+    const manager = new OverlayWindowManager();
+    manager.show();
+
+    expect(mockBrowserWindow.setIgnoreMouseEvents).toHaveBeenCalledWith(true, { forward: true });
+  });
+
+  it('uses floating alwaysOnTop level on Linux X11', () => {
+    Object.defineProperty(process, 'platform', { value: 'linux', writable: true });
+    mockDetectLinuxSession.mockReturnValue('x11');
+    mockIsWaylandSession.mockReturnValue(false);
+
+    const manager = new OverlayWindowManager();
+    manager.show();
+
+    expect(mockBrowserWindow.setAlwaysOnTop).toHaveBeenCalledWith(true, 'floating');
+  });
+
+  it('does NOT pass type: "panel" on non-Linux platforms', () => {
+    Object.defineProperty(process, 'platform', { value: 'win32', writable: true });
+    mockDetectLinuxSession.mockReturnValue('unknown');
+    mockIsWaylandSession.mockReturnValue(false);
+
+    const manager = new OverlayWindowManager();
+    manager.show();
+
+    const options = (MockBrowserWindowCtor.mock.calls as unknown as Array<[Record<string, unknown>]>)[0][0];
+    expect(options['type']).toBeUndefined();
+  });
+
+  it('does NOT pass type: "panel" on Linux when session is unknown', () => {
+    Object.defineProperty(process, 'platform', { value: 'linux', writable: true });
+    mockDetectLinuxSession.mockReturnValue('unknown');
+    mockIsWaylandSession.mockReturnValue(false);
+
+    const manager = new OverlayWindowManager();
+    manager.show();
+
+    const options = (MockBrowserWindowCtor.mock.calls as unknown as Array<[Record<string, unknown>]>)[0][0];
+    expect(options['type']).toBeUndefined();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// OverlayWindowManager — Wayland degraded mode (TASK-0038)
+// ---------------------------------------------------------------------------
+
+describe('OverlayWindowManager — Wayland degraded mode', () => {
+  const originalPlatform = Object.getOwnPropertyDescriptor(process, 'platform');
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.useFakeTimers();
+    mockBrowserWindow.isDestroyed.mockReturnValue(false);
+    mockBrowserWindow.isVisible.mockReturnValue(false);
+    mockBrowserWindow.loadFile.mockReturnValue(Promise.resolve());
+    mockGlobalShortcut.register.mockReturnValue(true);
+    MockBrowserWindowCtor.mockReturnValue(mockBrowserWindow);
+    // Set up Wayland session for all tests in this suite.
+    Object.defineProperty(process, 'platform', { value: 'linux', writable: true });
+    mockDetectLinuxSession.mockReturnValue('wayland');
+    mockIsWaylandSession.mockReturnValue(true);
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    if (originalPlatform) {
+      Object.defineProperty(process, 'platform', originalPlatform);
+    }
+    mockIsWaylandSession.mockReturnValue(false);
+    mockDetectLinuxSession.mockReturnValue('unknown');
+  });
+
+  it('does NOT call setIgnoreMouseEvents on Wayland', () => {
+    const manager = new OverlayWindowManager();
+    manager.show();
+    expect(mockBrowserWindow.setIgnoreMouseEvents).not.toHaveBeenCalled();
+  });
+
+  it('uses pop-up-menu alwaysOnTop level on Wayland', () => {
+    const manager = new OverlayWindowManager();
+    manager.show();
+    expect(mockBrowserWindow.setAlwaysOnTop).toHaveBeenCalledWith(true, 'pop-up-menu');
+  });
+
+  it('does NOT pass type: "panel" on Wayland', () => {
+    const manager = new OverlayWindowManager();
+    manager.show();
+    const options = (MockBrowserWindowCtor.mock.calls as unknown as Array<[Record<string, unknown>]>)[0][0];
+    expect(options['type']).toBeUndefined();
+  });
+
+  it('auto-dismisses after waylandDismissTimeoutMs when shown on Wayland', () => {
+    const manager = new OverlayWindowManager();
+    manager.show();
+    vi.clearAllMocks();
+    mockBrowserWindow.isDestroyed.mockReturnValue(false);
+
+    // Advance time to just before the timeout — should not have hidden yet.
+    vi.advanceTimersByTime(7999);
+    expect(mockBrowserWindow.hide).not.toHaveBeenCalled();
+
+    // Advance past the timeout — should auto-dismiss.
+    vi.advanceTimersByTime(1);
+    expect(mockBrowserWindow.hide).toHaveBeenCalledTimes(1);
+  });
+
+  it('clears dismiss timer on hide()', () => {
+    const manager = new OverlayWindowManager();
+    manager.show();
+    vi.clearAllMocks();
+    mockBrowserWindow.isDestroyed.mockReturnValue(false);
+
+    manager.hide();
+    expect(mockBrowserWindow.hide).toHaveBeenCalledTimes(1);
+
+    // Advance past what would have been the timeout — no additional hide() call.
+    vi.advanceTimersByTime(10000);
+    expect(mockBrowserWindow.hide).toHaveBeenCalledTimes(1);
+  });
+
+  it('resets dismiss timer on detection:app-changed', () => {
+    const manager = new OverlayWindowManager();
+    manager.show();
+    vi.clearAllMocks();
+    mockBrowserWindow.isDestroyed.mockReturnValue(false);
+
+    // Advance 6 seconds (within the 8s timeout).
+    vi.advanceTimersByTime(6000);
+    // Simulate an app-changed event — timer resets.
+    manager.sendToRenderer('detection:app-changed', { appSlug: 'vscode' });
+    vi.clearAllMocks();
+    mockBrowserWindow.isDestroyed.mockReturnValue(false);
+
+    // Advance another 6 seconds — should not dismiss yet (reset to full 8s).
+    vi.advanceTimersByTime(6000);
+    expect(mockBrowserWindow.hide).not.toHaveBeenCalled();
+
+    // Advance 2 more seconds to reach 8s from the last reset.
+    vi.advanceTimersByTime(2000);
+    expect(mockBrowserWindow.hide).toHaveBeenCalledTimes(1);
+  });
+
+  it('no dismiss timer when timeout is set to 0', () => {
+    const manager = new OverlayWindowManager();
+    // Override the default 8000ms timeout to 0 (never auto-dismiss).
+    manager.setWaylandDismissTimeout(0);
+    manager.show();
+    vi.clearAllMocks();
+    mockBrowserWindow.isDestroyed.mockReturnValue(false);
+
+    vi.advanceTimersByTime(60000);
+    expect(mockBrowserWindow.hide).not.toHaveBeenCalled();
+  });
+
+  it('setWaylandDismissTimeout updates the runtime dismiss period', () => {
+    const manager = new OverlayWindowManager();
+    manager.setWaylandDismissTimeout(3000);
+    manager.show();
+    vi.clearAllMocks();
+    mockBrowserWindow.isDestroyed.mockReturnValue(false);
+
+    vi.advanceTimersByTime(2999);
+    expect(mockBrowserWindow.hide).not.toHaveBeenCalled();
+
+    vi.advanceTimersByTime(1);
+    expect(mockBrowserWindow.hide).toHaveBeenCalledTimes(1);
+  });
+
+  it('clears dismiss timer on destroy()', () => {
+    const manager = new OverlayWindowManager();
+    manager.show();
+    vi.clearAllMocks();
+    mockBrowserWindow.isDestroyed.mockReturnValue(false);
+
+    manager.destroy();
+
+    // Advance past the timeout — no hide() should fire after destroy.
+    vi.advanceTimersByTime(10000);
+    expect(mockBrowserWindow.hide).not.toHaveBeenCalled();
   });
 });
