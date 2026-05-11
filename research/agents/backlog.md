@@ -37,6 +37,29 @@ _(Project Manager keeps 2–3 tasks here at all times.)_
 
 _(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
 
+### TASK-0027: Submission Data Model, Service Layer & API Routes
+- **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
+- **PRD:** research/agents/prds/goal-08-community-contributions.md
+- **Scope:** Add Submission Prisma model with type enum (NEW_SHORTCUT, CORRECTION, APP_REQUEST), status enum (PENDING, APPROVED, REJECTED), submitterId, appId, shortcutId (nullable — for corrections), data JSON field (stores submitted shortcut fields), reviewerNotes, reviewedBy, createdAt, updatedAt, reviewedAt. Add `isAdmin` boolean to User model (default false). Generate migration. Implement SubmissionsService: create (with rate limiting — max 20/user/day, server-side duplicate detection on app + platform + key combo), getByUser (user's own submissions), getPending (admin — oldest first), approve (apply to shortcuts table — insert or update), editAndApprove, reject. Implement API routes: `POST /api/submissions` (create), `GET /api/submissions` (list user's own), `GET /api/admin/submissions` (list pending, admin-only), `PATCH /api/admin/submissions/:id` (approve/reject/edit-and-approve, admin-only). All routes require auth; admin routes require `isAdmin`. NOT in scope: submission form UI, key recorder component, correction diff view, app request form, admin review queue UI, contributor profile, in-app notifications, duplicate detection client-side.
+- **Acceptance:**
+  - Submission model added to Prisma schema with proper enums and relations
+  - `isAdmin` boolean added to User model
+  - Migration generated and applies cleanly
+  - `POST /api/submissions` creates a pending submission (returns 201)
+  - Server rejects submissions beyond 20/day for the same user (returns 429)
+  - Server-side duplicate detection flags exact matches on app + platform + key combo
+  - `GET /api/submissions` returns the authenticated user's submissions
+  - `GET /api/admin/submissions` returns pending submissions sorted oldest-first (admin-only, returns 403 for non-admin)
+  - `PATCH /api/admin/submissions/:id` with action=approve applies the submission to the shortcuts table
+  - `PATCH /api/admin/submissions/:id` with action=reject marks the submission as rejected
+  - Edit-and-approve flow modifies submission data before applying
+  - All routes return 401 for unauthenticated requests
+  - Corrections update the existing shortcut row; original data preserved in the Submission record
+- **PR:** #27
+- **Branch:** goals/27-submission-data-model-api
+- **TRD:** research/plans/goals/27-submission-data-model-api-trd.md — approved
+- **Notes:** Unblocked — TASK-0025 merged 2026-05-11 (auth schema, User model, and NextAuth from TASK-0021/0022 already on main; TASK-0027 does not depend on TASK-0026). First Goal 8 task. PRD covers Flows 1–4 and duplicate detection.
+
 ## In Review
 
 _(Developer moves tasks here when the draft PR is marked ready.)_
@@ -53,6 +76,17 @@ _(TRD Watcher moves tasks here when a TRD needs rework.)_
 
 _(Reviewer moves tasks here after approving the PR. You merge to main, then move to Shipped.)_
 
+### TASK-0026: Desktop Panel Favorites View & Favorite Toggle
+- **Goal:** Goal 7 — User Accounts & Favorites Sync
+- **PR:** #26
+- **Branch:** goals/26-desktop-panel-favorites
+- **TRD:** research/plans/goals/26-desktop-panel-favorites-trd.md — approved
+- **Approved:** 2026-05-11 (Round 3)
+
+## Shipped
+
+_(You move tasks here after merging to main.)_
+
 ### TASK-0025: Desktop Favorites Sync Engine & Offline Cache
 - **Goal:** Goal 7 — User Accounts & Favorites Sync
 - **PRD:** research/agents/prds/goal-07-accounts-favorites.md
@@ -60,10 +94,7 @@ _(Reviewer moves tasks here after approving the PR. You merge to main, then move
 - **Branch:** goals/25-desktop-favorites-sync
 - **TRD:** research/plans/goals/25-desktop-favorites-sync-trd.md — approved
 - **Approved:** 2026-05-11 (Round 2)
-
-## Shipped
-
-_(You move tasks here after merging to main.)_
+- **Merged:** 2026-05-11
 
 ### TASK-0024: Favorites Web UI — Heart Icons, Collections Page & Optimistic Updates
 - **Goal:** Goal 7 — User Accounts & Favorites Sync
@@ -280,29 +311,6 @@ _(You move tasks here after merging to main.)_
 
 _(Waiting on an external dependency, a missing PRD, or owner decision.)_
 
-### TASK-0027: Submission Data Model, Service Layer & API Routes
-- **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
-- **PRD:** research/agents/prds/goal-08-community-contributions.md
-- **Scope:** Add Submission Prisma model with type enum (NEW_SHORTCUT, CORRECTION, APP_REQUEST), status enum (PENDING, APPROVED, REJECTED), submitterId, appId, shortcutId (nullable — for corrections), data JSON field (stores submitted shortcut fields), reviewerNotes, reviewedBy, createdAt, updatedAt, reviewedAt. Add `isAdmin` boolean to User model (default false). Generate migration. Implement SubmissionsService: create (with rate limiting — max 20/user/day, server-side duplicate detection on app + platform + key combo), getByUser (user's own submissions), getPending (admin — oldest first), approve (apply to shortcuts table — insert or update), editAndApprove, reject. Implement API routes: `POST /api/submissions` (create), `GET /api/submissions` (list user's own), `GET /api/admin/submissions` (list pending, admin-only), `PATCH /api/admin/submissions/:id` (approve/reject/edit-and-approve, admin-only). All routes require auth; admin routes require `isAdmin`. NOT in scope: submission form UI, key recorder component, correction diff view, app request form, admin review queue UI, contributor profile, in-app notifications, duplicate detection client-side.
-- **Acceptance:**
-  - Submission model added to Prisma schema with proper enums and relations
-  - `isAdmin` boolean added to User model
-  - Migration generated and applies cleanly
-  - `POST /api/submissions` creates a pending submission (returns 201)
-  - Server rejects submissions beyond 20/day for the same user (returns 429)
-  - Server-side duplicate detection flags exact matches on app + platform + key combo
-  - `GET /api/submissions` returns the authenticated user's submissions
-  - `GET /api/admin/submissions` returns pending submissions sorted oldest-first (admin-only, returns 403 for non-admin)
-  - `PATCH /api/admin/submissions/:id` with action=approve applies the submission to the shortcuts table
-  - `PATCH /api/admin/submissions/:id` with action=reject marks the submission as rejected
-  - Edit-and-approve flow modifies submission data before applying
-  - All routes return 401 for unauthenticated requests
-  - Corrections update the existing shortcut row; original data preserved in the Submission record
-- **PR:**
-- **Branch:**
-- **TRD:**
-- **Notes:** Blocked — awaiting TASK-0025 merge to main (auth schema, User model, and NextAuth from TASK-0021/0022 already on main; TASK-0027 does not depend on TASK-0026). First Goal 8 task. PRD covers Flows 1–4 and duplicate detection.
-
 ### TASK-0028: Submission Form UI — New Shortcut & Key Recorder
 - **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
 - **PRD:** research/agents/prds/goal-08-community-contributions.md
@@ -367,22 +375,40 @@ _(Waiting on an external dependency, a missing PRD, or owner decision.)_
 - **TRD:**
 - **Notes:** Blocked — awaiting TASK-0028 (needs key recorder component and submission form patterns) and TASK-0027 (needs submission API). Fourth Goal 8 task. PRD Flow 2 covers this scope.
 
-### TASK-0026: Desktop Panel Favorites View & Favorite Toggle
-- **Goal:** Goal 7 — User Accounts & Favorites Sync
-- **PRD:** research/agents/prds/goal-07-accounts-favorites.md
-- **Scope:** Add a favorites view to the desktop shortcut panel. Add a toggle or tab at the top of the panel to switch between "App Shortcuts" (current behavior — shortcuts for the detected active app) and "My Favorites" (user's saved shortcuts). In favorites view, display shortcuts grouped by collection with collection names as section headers. Each shortcut row shows the app name (since favorites span multiple apps) and the standard keycap display. Shortcut rows are searchable/filterable using the existing search input. Add a favorite toggle icon (heart/star, visible on hover) to each shortcut row in "App Shortcuts" mode. Clicking the icon calls the sync engine's `sync:toggleFavorite` IPC handler. Icon shows filled state for already-favorited shortcuts. Optimistic UI: icon fills/unfills instantly, reverts if the sync engine reports failure. If the user is not signed in, show a message in the favorites tab directing them to sign in via the tray menu. If offline, render favorites from local cache with no loading spinner. NOT in scope: sync engine logic (TASK-0025), desktop auth flow (TASK-0023), web favorites UI (TASK-0024), collection CRUD in the panel (read-only view), collection reordering, drag-and-drop.
+### TASK-0031: App Request Form & "No Results" Request Button
+- **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
+- **PRD:** research/agents/prds/goal-08-community-contributions.md
+- **Scope:** Add a "Request this app" button to the no-results page when a user searches for an app not in the database. Build a minimal form: app name (required, text input), website URL (optional, text input), category (optional, dropdown matching existing categories), platform(s) (checkboxes: Windows / macOS / Linux). On submit: create a Submission with type=APP_REQUEST via `POST /api/submissions` (from TASK-0027). Show confirmation message on success. Handle rate limit (429) with user-friendly message. Requires authenticated session — show sign-in prompt for unauthenticated users. NOT in scope: admin handling of app requests (TASK-0029 covers review queue), auto-populating shortcuts for newly approved apps, search improvements, notification on approval/rejection, mobile-optimized form.
 - **Acceptance:**
-  - Panel has a toggle/tab to switch between "App Shortcuts" and "My Favorites"
-  - "My Favorites" view shows shortcuts grouped by collection with section headers
-  - Each shortcut row in favorites view shows app name + shortcut keycap display
-  - Search/filter works in favorites view (filters across all collections)
-  - Heart/star icon visible on hover on each shortcut row in "App Shortcuts" mode
-  - Clicking favorite icon toggles favorite state with optimistic UI (<100ms perceived)
-  - Filled icon state for already-favorited shortcuts (reads from sync engine cache)
-  - Unauthenticated users see "Sign in to save favorites" prompt in favorites tab
-  - Offline: favorites render from local cache, no loading state
-  - No regressions on existing panel functionality (search, keycaps, fallback states)
+  - "Request this app" button visible on no-results search page
+  - Form includes app name (required), website URL, category dropdown, platform checkboxes
+  - Submit creates an APP_REQUEST-type Submission via `POST /api/submissions`
+  - Confirmation message shown on success
+  - Rate limit (429) shows user-friendly error
+  - Unauthenticated users see sign-in prompt when clicking request button
+  - Form validates required field (app name) before submission
+  - No regressions on existing search/browse pages
 - **PR:**
 - **Branch:**
 - **TRD:**
-- **Notes:** Blocked — awaiting TASK-0025 (needs sync engine IPC handlers and local cache). Sixth Goal 7 task. PRD Flows 4 and 6 cover this scope.
+- **Notes:** Blocked — awaiting TASK-0027 (needs submission API routes and Submission model). Fifth Goal 8 task. PRD Flow 3 covers this scope.
+
+### TASK-0032: Contributor Profile Page
+- **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
+- **PRD:** research/agents/prds/goal-08-community-contributions.md
+- **Scope:** Add a public profile page at `/profile/[userId]`. Display: user display name and avatar (from OAuth provider), "Member since" date, contribution stats (total submitted, total accepted, acceptance rate), and a list of accepted contributions (shortcut name, app name, date accepted). Link to the profile from the nav avatar dropdown ("My Profile"). Any user can view any contributor's profile. Query the Submission model for contribution data (filter by submitterId, group by status). NOT in scope: private profile settings, notification system (separate task), reputation/badges/gamification, editable profile fields, submission form (TASK-0028), admin review queue (TASK-0029), email notifications.
+- **Acceptance:**
+  - `/profile/[userId]` route exists and renders the contributor profile
+  - Display name and avatar shown (sourced from OAuth provider data on User model)
+  - "Member since" date displayed
+  - Contribution stats: total submitted, total accepted, acceptance rate
+  - List of accepted contributions with shortcut name, app name, and date accepted
+  - Profiles are publicly viewable (no auth required to view)
+  - Nav avatar dropdown includes "My Profile" link for authenticated users
+  - Page loads in <500ms
+  - No regressions on existing pages
+- **PR:**
+- **Branch:**
+- **TRD:**
+- **Notes:** Blocked — awaiting TASK-0027 (needs Submission model for contribution queries). Sixth Goal 8 task. PRD Flow 5 covers this scope.
+
