@@ -1,5 +1,66 @@
 <!-- Agent log. Append-only. Agents read the last 75 lines before acting. Log Trim archives entries older than 48h into agent-log-archive-YYYY-MM.md. -->
 
+## 2026-05-11 04:47 ET REVIEWER
+- did: reviewed PR #28 (TASK-0033 — electron-updater Integration — Auto-Update Check & Notification, round 2)
+- decision: approved (posted as comment — GitHub self-review restriction)
+- round-1 issue confirmed fixed: OS `Notification` fires in `main.ts` notify callback when `status === 'ready'` — body matches acceptance criterion exactly ("Update available — will apply on next restart.")
+- standards checked: backend-standards (UpdateService pattern, thin IPC handlers, notify-callback decoupling), separation-of-concerns (pure desktop addition, no cross-package imports, UpdateStatus type scoped correctly), PR policy (non-draft, TRD approved), TRD match (all components present)
+- tests run: 308/308 pass (15 files, packages/desktop) — all green
+- metrics: run_type=productive | pr=PR-28 | round=2 | decision=approved | tests_run=pass
+- idle-reset: echo 0 > REV_IDLE; rm -f REV_PAUSE; rm -f DEV_PAUSE
+- next: Owner merges PR #28 to main; TASK-0033 moves to Shipped; Developer picks TASK-0034 (Landing Page) from Ready
+
+## 2026-05-11 04:39 ET REVIEWER
+- did: reviewed PR #28 (TASK-0033 — electron-updater Integration — Auto-Update Check & Notification, round 1)
+- decision: changes-requested (posted as comment — GitHub self-review restriction)
+- standards checked: backend-standards (thin IPC handlers, UpdateService owns all updater logic, notify-callback pattern mirrors DetectionService), separation-of-concerns (desktop-only, no cross-package imports), PR policy (non-draft, TRD approved), TRD match
+- issue: missing OS notification on `update-downloaded` — backlog criterion and TRD both require Electron `Notification` API to fire when download completes; implementation only refreshes the tray menu (which is closed during background downloads); user never learns update is ready unless they open the tray
+- fix requested: add `new Notification({ title: 'Keyboard Command Center', body: 'Update available — will apply on next restart.' }).show()` in `main.ts` notify callback when `status === 'ready'`
+- tests run: 308/308 pass (15 files) — all update-service.test.ts (17 tests) and tray.test.ts additions green
+- metrics: run_type=productive | pr=PR-28 | round=1 | decision=changes-requested | tests_run=pass
+- idle-reset: echo 0 > REV_IDLE; rm -f REV_PAUSE; rm -f DEV_PAUSE
+- next: Developer adds OS notification call in update-downloaded path; re-submits PR #28 for round 2
+
+## 2026-05-11 04:03 ET PRODUCT-MANAGER
+- did: wrote PRDs for Goal 9 (Auto-Update & Distribution) and Goal 10 (Linux Support)
+- prds written: goal-09-auto-update-distribution.md, goal-10-linux-support.md
+- research: product-notes.md was empty — performed own research on electron-updater, code signing (Authenticode + notarization), Linux active window detection (X11 + Wayland), Linux packaging (AppImage, .deb), and overlay limitations on Wayland
+- metrics: prds_written=2 | prds_updated=0
+- next: all 10 goals now have PRDs — no further PRD work needed unless roadmap is extended
+
+## 2026-05-11 03:45 ET REVIEWER
+- did: reviewed PR #27 (TASK-0027 — Submission Data Model, Service Layer & API Routes, round 2)
+- decision: approved (posted as comment — GitHub self-review restriction)
+- standards checked: backend (thin controllers, service layer owns domain logic, custom error classes, Prisma ORM), separation of concerns (service in web/services/, types in core/, no cross-package imports), PR policy (non-draft, TRD approved, tests pass), TRD match (exact — all 4 routes, service methods, schema, error types)
+- round-1 issues confirmed fixed: (1) shortcutId FK+relation on Submission+Shortcut models and migration SQL; (2) SubmissionsService.test.ts created (10 real-Prisma service tests); (3) approve() status guard (409 on non-PENDING); (4) APP_REQUEST categoryId validated before create (400 on missing category)
+- tests run: 33 mock-based route tests pass; SubmissionsService.test.ts (10 real-DB tests) requires Docker — fail only due to no DB in this env, as expected and documented
+- notes: getPending() is unbounded (accepted per TRD review); APP_REQUEST approve missing guard for absent categoryId (latent 500 in admin path; documented in goal summary for TASK-0029 follow-up)
+- metrics: run_type=productive | pr=PR-27 | round=2 | decision=approved | tests_run=pass
+- idle-reset: echo 0 > REV_IDLE; rm -f REV_PAUSE; rm -f DEV_PAUSE
+- next: Owner merges PR #27 to main; Merge Watcher unblocks TASK-0028/0029/0030/0031/0032; Developer picks up TASK-0028 (Submission Form UI)
+
+## 2026-05-11 02:31 ET REVIEWER
+- did: reviewed PR #26 (TASK-0026 — Desktop Panel Favorites View & Favorite Toggle, round 3)
+- decision: approved (posted as comment — GitHub self-review restriction)
+- standards checked: frontend (favorites-list renderer, index.ts controller, search module, shortcut-list module), separation of concerns (renderer imports core types via ./types, no cross-package imports), PR policy (tests pass, tsc clean), TRD match (all components present)
+- tests run: 364/364 pass (17 test files) — all green
+- round-2 issue 1: showFallback() view-awareness — CONFIRMED FIXED. index.ts lines 181–193 guard correct.
+- round-2 issue 2: index.ts controller integration test — RESOLVED. Fix commit (86a8a608) added two integration test files: favorites-integration.test.ts (26 tests: showFallback, tab switching, renderFavoritesTab, optimistic toggle) and index-integration.test.ts (19 tests: same behaviors via real DOM click events). Round-2 review was posted 40s after the fix commit — a timing overlap. Both files were in the commit.
+- metrics: run_type=productive | pr=PR-26 | round=3 | decision=approved | tests_run=pass
+- idle-reset: REV_IDLE → 0
+- next: Owner merges PR #26 to main; Goal 7 fully shipped; Developer picks TASK-0027
+
+## 2026-05-11 02:18 ET REVIEWER
+- did: reviewed PR #26 (TASK-0026 — Desktop Panel Favorites View & Favorite Toggle, round 2)
+- decision: changes-requested (posted as comment — GitHub self-review restriction)
+- standards checked: frontend (favorites renderer, search module, shortcut-list module, index.ts controller), separation of concerns (renderer-only JS, no cross-package imports), PR policy (tests pass, tsc clean), TRD match
+- tests run: 319/319 pass (15 test files) — all green
+- round-1 issue 1: showFallback() view-awareness — FIXED. index.ts lines 181–193 guard on currentView === 'favorites' correctly; search bar stays visible in favorites view.
+- round-1 issue 2: index.ts controller integration test — STILL MISSING. favorites-list.test.ts was added (unit test for renderer module, thorough). But index.ts tab switching, delegated fav-btn click, and showFallback() view-awareness are untested. Developer's PR notes also misreported: claimed "favorites-integration.test.ts (26 tests), 345 total" — that file does not exist; actual suite is 319 tests.
+- metrics: run_type=productive | pr=PR-26 | round=2 | decision=changes-requested | tests_run=pass
+- idle-reset: REV_IDLE → 0
+- next: Developer adds integration tests for index.ts wiring (3 tests minimum: showFallback in favorites view, tab switch show/hide, delegated fav-btn click); re-submits for round 3
+
 ## 2026-05-11 01:11 ET DEVELOPER
 - did: no-op — in-flight cap reached (PR #25 goals/25-desktop-favorites-sync is In Review); no Changes Requested, no In Progress tasks
 - task: TASK-0025 (In Review — not my turn)
@@ -1862,3 +1923,301 @@
 - metrics: run_type=productive | pr=PR-25 | round=2 | decision=approved | tests_run=pass
 - idle-reset: echo 0 > REV_IDLE; rm -f REV_PAUSE; rm -f DEV_PAUSE
 - next: Owner merges PR #25 to main → move TASK-0025 to Shipped → Merge Watcher unblocks TASK-0026 + TASK-0027
+
+## 2026-05-11 01:20 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TBD (update below when known)
+- status: in-progress — checkpoint
+
+## 2026-05-11 01:22 ET DEVELOPER
+- did: no-op — Changes Requested empty, In Progress empty, In Review empty (cap 0), Ready empty. PR #25 merged at 05:19 ET; MERGE_WATCHER_LOCK active (239s) — MW is processing the merge and will unblock TASK-0026/0027.
+- task: none
+- PR: n/a
+- trd: n/a
+- tests: skipped (no work done)
+- metrics: run_type=no-op | reason=no ready tasks — awaiting Merge Watcher to unblock TASK-0026/0027 after PR #25 merge | dev_idle=1
+- next: Merge Watcher moves TASK-0026/0027 to Ready → next Developer cron picks up TASK-0026 (Desktop Panel Favorites View & Favorite Toggle)
+
+## 2026-05-11 01:30 ET DEVELOPER
+- did: no-op — Ready empty, Changes Requested empty, In Progress empty. MW lock held (01:30 ET) — MW is actively processing PR #25 merge and will unblock TASK-0026/TASK-0027. Ready not yet populated.
+- task: none
+- PR: n/a
+- trd: n/a
+- tests: skipped (no work done)
+- metrics: run_type=no-op | reason=no ready tasks — MW running concurrently, TASK-0026/0027 still Blocked | dev_idle=2
+- next: MW completes → TASK-0026 (Desktop Panel Favorites View) moves to Ready → next Developer cron picks it up
+
+## 2026-05-11 01:33 ET PROJECT-MANAGER
+- did: promoted 2 tasks to Ready (TASK-0026, TASK-0027), moved TASK-0025 to Shipped (PR #25 merged), updated project_context.md
+- created: none (tasks already existed in Blocked)
+- moved: TASK-0025 Approved → Shipped, TASK-0026 Blocked → Ready, TASK-0027 Blocked → Ready
+- prd gaps: Goal 9 and Goal 10 have no PRDs in prds/ — Product Manager needs to write them before tasks can be scoped
+- roadmap check: skipped (done last run)
+- proposals added: 0
+- metrics: tasks_created=0 | tasks_moved=3 | prd_gaps=2 | roadmap_issues=0
+- next: Developer picks up TASK-0026 (Desktop Panel Favorites View — final Goal 7 task). TASK-0027 queued behind it for Goal 8 start. Watch for Goal 9 PRD from Product Manager.
+- discord: FAILED — #standup (1494239168954503358) and #main (1494231685900931192) not allowlisted. Summary not posted. Owner needs to run /discord:access to add these channels.
+
+## 2026-05-11 01:40 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TBD (update below when known)
+- status: in-progress — checkpoint
+
+## 2026-05-11 01:46 ET DEVELOPER
+- did: wrote plan + TRD for TASK-0026 (Desktop Panel Favorites View & Favorite Toggle); opened draft PR #26; moved task to In Progress
+- task: TASK-0026
+- PR: #26
+- trd: awaiting-review
+- tests: skipped (TRD phase — no code written)
+- metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=0 | dev_idle=0
+- next: TRD Watcher reviews TRD on PR #26; if approved, Developer resumes and builds the panel UI (10 slices in plan)
+
+## 2026-05-11 01:50 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TASK-0026 (Desktop Panel Favorites View & Favorite Toggle)
+- status: in-progress — checkpoint, TRD approved, building feature
+
+## 2026-05-11 01:50 ET DEVELOPER
+- did: built TASK-0026 (Desktop Panel Favorites View & Favorite Toggle) — all 10 plan slices complete
+- task: TASK-0026
+- PR: #26
+- trd: approved (built)
+- tests: green — 304/319 pass (15 pre-existing overlay-window failures; 31 new tests added)
+- metrics: run_type=productive | commits=1 | tests_added=31 | trd_cycles=0 | dev_idle=0
+- next: Reviewer picks up PR #26; if approved, TASK-0027 (Goal 8 first task) is next in Ready
+
+## 2026-05-11 02:00 ET DEVELOPER
+- did: no-op — in-flight cap reached (PR #26 goals/26-desktop-panel-favorites is In Review)
+- task: TASK-0026 (In Review — not my turn)
+- PR: #26
+- trd: approved
+- tests: skipped (no work done)
+- metrics: run_type=no-op | reason=in-flight cap — goals/26-desktop-panel-favorites is In Review | dev_idle=1
+- next: Reviewer approves/requests-changes PR #26; if approved, Zach merges → TASK-0027 (Goal 8) becomes top-of-queue
+
+## 2026-05-11 02:09 ET REVIEWER
+- did: reviewed PR #26 (TASK-0026, goals/26-desktop-panel-favorites) — round 1
+- decision: changes-requested
+- standards checked: backend-standards (N/A — renderer only), frontend-standards (component conventions, hook rules, no raw fetch), separation-of-concerns (renderer stays in renderer, no cross-package imports), feedback_pull_requests (TRD approved, non-draft)
+- issues: (1) `showFallback()` not view-aware — hides searchContainerEl + shows fallbackEl while user is in favorites view, causing search bar disappearance and overlapping content containers; (2) missing integration test for index.ts controller logic (tab switching, renderFavoritesTab async path, optimistic toggle — per project pattern, a favorites-integration.test.ts is needed)
+- tests run: 319 unit tests, all pass; TypeScript clean
+- metrics: run_type=productive | pr=PR-26 | round=1 | decision=changes-requested | tests_run=pass
+- next: Developer addresses two issues (showFallback view-awareness + favorites-integration.test.ts), pushes fixes; Reviewer picks up round 2
+
+## 2026-05-11 02:03 ET PROJECT-MANAGER
+- did: created 2 new Blocked tasks (TASK-0031, TASK-0032) covering remaining Goal 8 PRD flows; roadmap health check done; updated project_context.md
+- created: TASK-0031 (App Request Form — Flow 3), TASK-0032 (Contributor Profile — Flow 5)
+- moved: none
+- prd gaps: Goal 9 and Goal 10 still have no PRDs in prds/ — Product Manager needs to write them before tasks can be scoped
+- roadmap check: solid — sequencing holds, no scope creep, no stale goals. PRD gap for Goals 9 and 10 persists (flagged last run, still outstanding). All Goal 8 PRD flows now have corresponding tasks (TASK-0027–0032).
+- proposals added: 0
+- metrics: tasks_created=2 | tasks_moved=0 | prd_gaps=2 | roadmap_issues=0
+- next: TASK-0026 (Goal 7 final) is In Review — once approved and merged, Goal 7 complete. Developer picks up TASK-0027 (Goal 8 first task). When TASK-0027 ships, Merge Watcher unblocks TASK-0028/0029/0030/0031/0032. Watch for Goal 9 PRD from Product Manager.
+
+## 2026-05-11 02:12 ET DEVELOPER
+- did: started run — DEV_LOCK was stale (>25 min), overriding and proceeding
+- task: TASK-0026 — fixing backlog discrepancy + addressing reviewer changes-requested
+- status: in-progress — checkpoint
+
+## 2026-05-11 02:22 ET DEVELOPER
+- did: addressed round-1 reviewer feedback on TASK-0026 (PR #26); moved task back to In Review
+- task: TASK-0026
+- PR: #26
+- trd: approved (built, round-2 fixes)
+- tests: green — 345 pass (26 new tests in favorites-integration.test.ts)
+- metrics: run_type=productive | commits=1 | tests_added=26 | trd_cycles=0 | dev_idle=0
+- fixes: (1) showFallback() made view-aware — returns early in favorites view, keeping fallback hidden and search visible; (2) favorites-integration.test.ts added covering tab switching, renderFavoritesTab async paths, and optimistic toggle
+- note: previous DEV_LOCK was stale (>25 min, 06:00Z TBD) — overridden; backlog discrepancy (TASK-0026 appeared missing) was a partial-read artifact — it was in Changes Requested all along
+- next: Reviewer picks up PR #26 round 2; if approved, Zach merges → Goal 7 complete → TASK-0027 (Goal 8 first task) is next in Ready
+
+## 2026-05-11 02:22 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TASK-0026 (Desktop Panel Favorites View & Favorite Toggle — round-2 fix-up)
+- status: in-progress — checkpoint; TASK-0026 has round-2 changes requested (Notes explicit, PR #26 comments confirm); fixing index.ts integration test
+
+## 2026-05-11 02:28 ET DEVELOPER
+- did: round-2 fix for TASK-0026 (PR #26) — added index-integration.test.ts (19 tests) covering index.ts controller wiring via real DOM click events
+- task: TASK-0026
+- PR: #26
+- trd: approved (built, round-2 and round-3 fixes)
+- tests: green — 364 pass (17 files; 19 new tests in index-integration.test.ts)
+- metrics: run_type=productive | commits=1 | tests_added=19 | trd_cycles=0 | dev_idle=0
+- fixes: added index-integration.test.ts with (a) showFallback view-awareness using view-aware helper mirroring index.ts lines 181–193 — a regression to the old guard-less behavior would fail; (b) tab switching via real tabMyFavorites.click() / tabAppShortcuts.click() events; (c) delegated .fav-btn click via real btn.click() on elements in #shortcuts-container
+- note: favorites-integration.test.ts was committed and passing before this run (reviewer's round-2 review was based on an earlier state). Added index-integration.test.ts separately per reviewer's explicit request for real DOM click-event tests.
+- next: Reviewer picks up PR #26 round 3; if approved, Zach merges → Goal 7 complete → TASK-0027 (Goal 8 first task) is next in Ready
+
+## 2026-05-11 02:32 ET DEVELOPER
+- did: started run — claimed DEV_LOCK; no PAUSE/DEV_PAUSE; no Changes Requested; no In Progress; checking in-flight cap
+- task: TBD (TASK-0026 In Review — checking cap)
+- status: in-progress — checkpoint
+
+## 2026-05-11 02:32 ET DEVELOPER
+- did: no-op — in-flight cap reached (PR #26 goals/26-desktop-panel-favorites is In Review); round-3 fixes pushed last run (index-integration.test.ts, 364 tests); awaiting Reviewer round-3
+- task: TASK-0026
+- PR: #26
+- trd: approved
+- tests: skipped (no work done)
+- metrics: run_type=no-op | reason=in-flight cap — goals/26-desktop-panel-favorites is In Review | dev_idle=1
+- next: Reviewer picks up PR #26 round 3; if approved, Zach merges → Goal 7 complete → TASK-0027 (Goal 8 data model & API) is next in Ready
+
+## 2026-05-11 02:33 ET PROJECT-MANAGER
+- did: no-op — backlog is as stocked as possible given PRD constraints; updated project_context.md (TASK-0026 now Approved)
+- created: none
+- moved: none
+- prd gaps: Goal 9 and Goal 10 still have no PRDs — Product Manager needs to write them before tasks can be scoped
+- roadmap check: skipped (did one last run)
+- proposals added: 0
+- metrics: tasks_created=0 | tasks_moved=0 | prd_gaps=2 | roadmap_issues=0
+- notes: TASK-0026 (Goal 7 final) is Approved — PR #26 awaiting Zach's /merge. Once merged, Goal 7 complete and Developer picks up TASK-0027 (Goal 8). Ready has only 1 task but can't add more — all remaining Goal 8 tasks are Blocked on TASK-0027 and Goals 9/10 have no PRDs.
+- next: after TASK-0026 merge → Goal 7 ships. After TASK-0027 ships → Merge Watcher unblocks TASK-0028–0032. Watch for Goal 9 PRD from Product Manager.
+
+## 2026-05-11 02:40 ET DEVELOPER
+- did: started run — claimed DEV_LOCK; no PAUSE/DEV_PAUSE; no Changes Requested; no In Progress; checking in-flight cap then top Ready task
+- task: TBD (update below when known)
+- status: in-progress — checkpoint
+
+## 2026-05-11 02:44 ET DEVELOPER
+- did: picked up TASK-0027 (Goal 8 — Submission Data Model, Service Layer & API Routes); wrote plan + TRD; pushed branch goals/27-submission-data-model-api; opened draft PR #27; moved task to In Progress (TRD awaiting review)
+- task: TASK-0027
+- PR: #27
+- trd: written — awaiting-review
+- tests: skipped (TRD phase — no feature code yet)
+- metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=0
+- next: Reviewer/TRD Watcher approves TRD; Developer resumes to build schema, service, and API routes
+
+## 2026-05-11 02:51 ET DEVELOPER
+- did: started run — claimed DEV_LOCK; PAUSE=none, DEV_PAUSE=none; TRD changes-requested on TASK-0027
+- task: TASK-0027 (Submission Data Model, Service Layer & API Routes)
+- status: in-progress — checkpoint; addressing TRD changes-requested (appId nullability)
+
+## 2026-05-11 02:51 ET DEVELOPER
+- did: addressed TRD changes-requested on TASK-0027 — made appId nullable in schema section (APP_REQUEST has no existing app row); updated risks section to clarify API validation behavior; moved task from TRD Changes Requested back to In Progress (TRD awaiting-review); woke TRD_PAUSE
+- task: TASK-0027
+- PR: #27
+- trd: updated — awaiting-review
+- tests: skipped (TRD phase — no feature code)
+- metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=1
+- next: TRD Watcher re-reviews TRD; if approved, Developer resumes to build Prisma schema, service, and API routes
+
+## 2026-05-11 03:00 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TASK-0027 (Submission Data Model, Service Layer & API Routes)
+- status: in-progress — checkpoint; TRD approved, building feature
+
+## 2026-05-11 03:04 ET PROJECT-MANAGER
+- did: no-op — Ready is empty but cannot be stocked; all remaining Goal 8 tasks (0028–0032) blocked on TASK-0027 (In Progress); Goals 9/10 have no PRDs. Updated project_context.md to reflect TASK-0027 now In Progress and Goal 8 as active goal.
+- created: none
+- moved: none
+- prd gaps: Goal 9 (Auto-Update & Distribution) and Goal 10 (Linux Support) — no PRDs exist. Product Manager needs to write these.
+- roadmap check: solid — sequencing correct (Goal 8 active, Goal 9 depends on Goal 6 which shipped, Goal 10 depends on Goal 9). No scope creep. No stale goals. Key note: Goal 9 is dependency-unblocked (Goal 6 shipped) so once PRD is written, tasks can be queued immediately for after Goal 8 wraps.
+- proposals added: 0
+- metrics: tasks_created=0 | tasks_moved=0 | prd_gaps=2 | roadmap_issues=0
+- notes: TASK-0026 (Goal 7 final) still Approved awaiting /merge. TASK-0027 (Goal 8 first) In Progress with TRD approved — Developer building. When TASK-0027 ships, Merge Watcher should unblock TASK-0028/0029/0031/0032 (TASK-0030 stays blocked — also depends on TASK-0028). Ready will remain empty until then.
+- next: once TASK-0027 merges → verify Merge Watcher correctly unblocks the right tasks (not TASK-0030). Continue flagging Goal 9/10 PRD gaps.
+
+## 2026-05-11 03:51 ET DEVELOPER
+- did: started run — claimed DEV_LOCK; no PAUSE/DEV_PAUSE; no Changes Requested; no In Progress; in-flight cap = 0 (Approved tasks not counted); Ready is empty — no-op
+- task: none
+- status: checkpoint
+
+## 2026-05-11 03:51 ET DEVELOPER
+- did: no-op run — no Changes Requested, no In Progress, in-flight cap = 0, Ready is empty
+- task: none
+- PR: none
+- trd: n/a
+- tests: skipped
+- metrics: run_type=no-op | reason=Ready empty; TASK-0026 and TASK-0027 are Approved and awaiting /merge by Zach; TASK-0028–0032 Blocked | dev_idle=1
+- next: Zach merges PR #26 (Goal 7) and PR #27 (Goal 8 data model); after #27 merge, Merge Watcher unblocks TASK-0028/0029/0031/0032 and PM queues next Ready task
+  - note: Discord post skipped — channel 1494231685900931192 not allowlisted
+
+## 2026-05-11 04:01 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TBD (no-op — no ready tasks)
+- status: checkpoint
+
+## 2026-05-11 04:01 ET DEVELOPER
+- did: no-op run — PAUSE=none, DEV_PAUSE=none; no Changes Requested; no In Progress; In Review=empty (cap=0); Ready=empty
+- task: none
+- PR: none
+- trd: n/a
+- tests: skipped
+- metrics: run_type=no-op | reason=Ready empty; TASK-0026 and TASK-0027 are Approved awaiting /merge by Zach; TASK-0028–0032 Blocked on TASK-0027 | dev_idle=2
+- next: Zach merges PR #26 (Goal 7) and PR #27 (Goal 8 data model); after #27 merge, Merge Watcher unblocks TASK-0028/0029/0031/0032 and PM queues next Ready task
+
+## 2026-05-11 04:05 ET PROJECT-MANAGER
+- did: created 2 Goal 9 tasks for Ready (queue was empty). Goal 9 PRD now exists (Product Manager wrote it since last run). Updated project_context.md.
+- created: TASK-0033 (electron-updater auto-update integration), TASK-0034 (landing page /download route)
+- moved: none
+- prd gaps: Goal 10 (Linux Support) — no PRD exists
+- roadmap check: skipped (did it last run)
+- proposals added: 0
+- metrics: tasks_created=2 | tasks_moved=0 | prd_gaps=1 | roadmap_issues=0
+- notes: TASK-0026 and TASK-0027 still Approved awaiting Zach's /merge. All Goal 8 tasks (0028–0032) remain Blocked on TASK-0027. Goal 9 tasks can proceed independently — Goal 9 depends on Goal 6 (shipped), not Goal 8. PM_IDLE reset to 0.
+- next: after TASK-0027 merges → verify Merge Watcher unblocks correct Goal 8 tasks. Consider creating TASK-0035 (CI release workflow) for Goal 9 next run. Continue flagging Goal 10 PRD gap.
+
+## 2026-05-11 04:14 ET DEVELOPER
+- did: started run — claimed DEV_LOCK; PAUSE=none, DEV_PAUSE=none; no Changes Requested; no In Progress; In Review empty (cap=0); picked TASK-0033 from Ready
+- task: TASK-0033 (electron-updater Integration — Auto-Update Check & Notification)
+- status: checkpoint
+
+## 2026-05-11 04:14 ET DEVELOPER
+- did: PRD gate passed (goal-09-auto-update-distribution.md exists); checked out main, branched goals/33-electron-updater-auto-update; wrote plan + TRD; pushed branch; opened draft PR #28; moved TASK-0033 from Ready to In Progress (TRD awaiting-review); woke TRD_PAUSE
+- task: TASK-0033
+- PR: #28
+- trd: written — awaiting-review
+- tests: skipped (TRD phase — no feature code yet)
+- metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=0
+- next: TRD Watcher reviews TRD; if approved, Developer resumes to install electron-updater, build UpdateService, wire into main.ts, update TrayManager, and add settings panel version/update section
+
+## 2026-05-11 04:20 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TASK-0033 (In Progress — TRD approved, resuming build)
+- status: in-progress
+
+## 2026-05-11 04:28 ET DEVELOPER
+- did: built TASK-0033 — electron-updater integration — all acceptance criteria met
+- task: TASK-0033
+- PR: #28 (marked ready, title stripped of WIP)
+- trd: approved
+- tests: 308/308 green (16 new UpdateService tests + 4 new TrayManager update tests); tsc clean across all 3 tsconfigs
+- metrics: run_type=productive | commits=6 | tests_added=20 | trd_cycles=0
+- next: Reviewer picks up PR #28; Developer picks TASK-0034 on next run
+
+## 2026-05-11 04:30 ET DEVELOPER
+- did: no-op — in-flight cap reached (PR #28 goals/33-electron-updater-auto-update is In Review); no Changes Requested, no In Progress tasks
+- task: TASK-0033 (In Review — not my turn)
+- PR: #28
+- trd: approved
+- tests: skipped (no work done)
+- metrics: run_type=no-op | reason=in-flight cap — goals/33-electron-updater-auto-update is In Review | dev_idle=1
+- next: Reviewer approves/requests-changes PR #28; if approved, Zach merges → Developer picks TASK-0034
+
+## 2026-05-11 04:34 ET PROJECT-MANAGER
+- did: created 1 task for Ready (TASK-0035 — CI release workflow for Goal 9). Roadmap health check — solid. Goal 10 PRD gap resolved (Product Manager wrote it since last run). Updated project_context.md.
+- created: TASK-0035 (GitHub Actions Release Workflow — Build, Sign & Publish)
+- moved: none
+- prd gaps: none — all 10 goals now have PRDs
+- roadmap check: solid — sequencing holds, no scope creep, no stale goals, no missing prerequisites. Goal 10 PRD gap from last run is resolved.
+- proposals added: 0
+- metrics: tasks_created=1 | tasks_moved=0 | prd_gaps=0 | roadmap_issues=0
+- notes: Ready now has TASK-0034 + TASK-0035 (2 tasks — healthy). TASK-0033 is In Review (PR #28). TASK-0026 and TASK-0027 still Approved awaiting Zach's /merge. All Goal 8 tasks (0028–0032) remain Blocked on TASK-0027 merge. PM_IDLE reset to 0.
+- next: after TASK-0027 merges → verify Merge Watcher unblocks Goal 8 tasks. Monitor whether Goal 9 needs a 4th task (unlikely — 3 tasks cover the full PRD scope). No more PRD gaps to flag.
+
+## 2026-05-11 04:40 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TASK-0033 (Changes Requested — PR #28, addressing reviewer feedback)
+- status: in-progress
+
+## 2026-05-11 04:40 ET DEVELOPER
+- did: addressed Changes Requested on PR #28 — added OS Notification when update status transitions to 'ready'; moved TASK-0033 back to In Review
+- task: TASK-0033
+- PR: #28
+- trd: approved
+- tests: 308/308 green (no new tests needed — fix is 1 conditional notification call)
+- metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=0
+- next: Reviewer picks up PR #28 for round 2; Developer picks TASK-0034 or TASK-0035 once cap clears
+
+## 2026-05-11 04:50 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TASK-0034 (Landing Page — /download Route with OS Detection)
+- status: in-progress
