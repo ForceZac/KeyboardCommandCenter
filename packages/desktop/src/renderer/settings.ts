@@ -10,6 +10,9 @@ const loginStartupToggle = document.getElementById('login-startup-toggle') as HT
 
 // Overlay section
 const overlaySection = document.getElementById('overlay-section') as HTMLFieldSetElement;
+const overlayExperimentalBadge = document.getElementById('overlay-experimental-badge') as HTMLSpanElement;
+const overlayWaylandDismissRow = document.getElementById('overlay-wayland-dismiss-row') as HTMLDivElement;
+const overlayWaylandDismissInput = document.getElementById('overlay-wayland-dismiss') as HTMLInputElement;
 
 // Overlay controls
 const overlayEnabled = document.getElementById('overlay-enabled') as HTMLInputElement;
@@ -37,7 +40,11 @@ async function loadSettings(): Promise<void> {
     return;
   }
 
-  const overlayPrefs = await window.kccSettings.overlay.getOverlay();
+  const [overlayPrefs, isDegraded] = await Promise.all([
+    window.kccSettings.overlay.getOverlay(),
+    window.kccSettings.overlay.isDegraded(),
+  ]);
+
   overlayEnabled.checked = overlayPrefs.enabled;
   overlayHotkeyDisplay.textContent = overlayPrefs.hotkey;
   // Opacity stored as 0.2–0.8 float; slider is 20–80 int.
@@ -47,6 +54,14 @@ async function loadSettings(): Promise<void> {
   overlaySizeRadios.forEach((radio) => {
     radio.checked = radio.value === overlayPrefs.size;
   });
+
+  // On Wayland, show the experimental badge and dismiss timeout control.
+  if (isDegraded) {
+    overlayExperimentalBadge.classList.remove('hidden');
+    overlayWaylandDismissRow.classList.remove('hidden');
+    // Timeout is stored in ms; show in seconds (0 = never).
+    overlayWaylandDismissInput.value = String(Math.round((overlayPrefs.waylandDismissTimeoutMs ?? 8000) / 1000));
+  }
 }
 
 function setFeedback(message: string, type: 'success' | 'error' | ''): void {
@@ -193,6 +208,13 @@ overlaySizeRadios.forEach((radio) => {
       await window.kccSettings.overlay.setSize(radio.value);
     }
   });
+});
+
+overlayWaylandDismissInput.addEventListener('change', async () => {
+  // UI uses seconds (0–60); IPC layer uses milliseconds.
+  const seconds = Math.max(0, Math.min(60, Number(overlayWaylandDismissInput.value)));
+  overlayWaylandDismissInput.value = String(seconds);
+  await window.kccSettings.overlay.setWaylandDismissTimeout(seconds * 1000);
 });
 
 loginStartupToggle.addEventListener('change', async () => {

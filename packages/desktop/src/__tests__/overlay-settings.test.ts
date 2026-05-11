@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 // ---------------------------------------------------------------------------
 // Shared mock state — created via vi.hoisted so it's available inside vi.mock.
@@ -55,6 +55,7 @@ import {
   setOverlayOpacity,
   setOverlayPosition,
   setOverlaySize,
+  setOverlayWaylandDismissTimeoutMs,
   getHotkey,
   setHotkey,
 } from '../settings';
@@ -334,5 +335,79 @@ describe('overlay:set-enabled IPC handler simulation', () => {
 
     expect(mockState.setSpy).toHaveBeenCalledWith('overlay.enabled', true);
     expect(controller.setEnabled).toHaveBeenCalledWith(true);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Wayland dismiss timeout setter (TASK-0038).
+// ---------------------------------------------------------------------------
+
+describe('setOverlayWaylandDismissTimeoutMs', () => {
+  beforeEach(() => { mockState.setSpy.mockClear(); });
+
+  it('persists the timeout value under overlay.waylandDismissTimeoutMs', () => {
+    setOverlayWaylandDismissTimeoutMs(5000);
+    expect(mockState.setSpy).toHaveBeenCalledWith('overlay.waylandDismissTimeoutMs', 5000);
+  });
+
+  it('persists 0 (never auto-dismiss)', () => {
+    setOverlayWaylandDismissTimeoutMs(0);
+    expect(mockState.setSpy).toHaveBeenCalledWith('overlay.waylandDismissTimeoutMs', 0);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Settings preload surface: isDegraded and setWaylandDismissTimeout (TASK-0038).
+// These tests verify that the contextBridge exposes the correct IPC channels.
+// ---------------------------------------------------------------------------
+
+describe('settings-preload — isDegraded and setWaylandDismissTimeout surface', () => {
+  // Minimal mock of ipcRenderer and contextBridge.
+  const capturedKccSettings: Record<string, unknown> = {};
+
+  const mockIpcRenderer = {
+    invoke: vi.fn(() => Promise.resolve<unknown>(null)),
+    on: vi.fn(),
+  };
+
+  const mockContextBridge = {
+    exposeInMainWorld: vi.fn((key: string, api: unknown) => {
+      capturedKccSettings[key] = api;
+    }),
+  };
+
+  beforeEach(async () => {
+    vi.resetModules();
+    vi.doMock('electron', () => ({
+      contextBridge: mockContextBridge,
+      ipcRenderer: mockIpcRenderer,
+    }));
+    mockIpcRenderer.invoke.mockClear();
+    mockContextBridge.exposeInMainWorld.mockClear();
+    // Import the preload to populate capturedKccSettings.
+    await import('../settings-preload');
+  });
+
+  afterEach(() => {
+    vi.resetModules();
+  });
+
+  it('exposes overlay.isDegraded() that invokes overlay:is-degraded', async () => {
+    const api = capturedKccSettings['kccSettings'] as {
+      overlay: { isDegraded: () => Promise<boolean> };
+    };
+    await api.overlay.isDegraded();
+    expect(mockIpcRenderer.invoke).toHaveBeenCalledWith('overlay:is-degraded');
+  });
+
+  it('exposes overlay.setWaylandDismissTimeout() that invokes overlay:set-wayland-dismiss-timeout', async () => {
+    const api = capturedKccSettings['kccSettings'] as {
+      overlay: { setWaylandDismissTimeout: (ms: number) => Promise<void> };
+    };
+    await api.overlay.setWaylandDismissTimeout(5000);
+    expect(mockIpcRenderer.invoke).toHaveBeenCalledWith(
+      'overlay:set-wayland-dismiss-timeout',
+      { timeoutMs: 5000 },
+    );
   });
 });

@@ -7,6 +7,8 @@ export interface OverlayPrefs {
   opacity: number;
   position: string;
   size: string;
+  /** Auto-dismiss timeout in milliseconds when running on Wayland. 0 = never dismiss. */
+  waylandDismissTimeoutMs: number;
 }
 
 // TASK-0023: Auth state and push payload types.
@@ -34,6 +36,8 @@ interface KccSettingsAPI {
     setPosition: (position: string) => Promise<void>;
     setSize: (size: string) => Promise<void>;
     isSupported: () => Promise<boolean>;
+    isDegraded: () => Promise<boolean>;
+    setWaylandDismissTimeout: (timeoutMs: number) => Promise<void>;
   };
   // TASK-0023: auth namespace
   auth: {
