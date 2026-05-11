@@ -14,6 +14,7 @@ import type {
   ShortcutEntry,
   AdminSubmissionsResponse,
   SubmissionAdminAction,
+  IContributorProfile,
 } from '@kcc/core';
 
 const API_BASE = '/api';
@@ -203,6 +204,15 @@ export async function adminSubmissionAction(
 ): Promise<ISubmission> {
   const res = await apiMutate(`/admin/submissions/${encodeURIComponent(id)}`, 'PATCH', action);
   return res.json() as Promise<ISubmission>;
+}
+
+// ---------------------------------------------------------------------------
+// Contributor Profile (Goal 8)
+// ---------------------------------------------------------------------------
+
+/** GET /api/users/:userId/profile — public contributor profile. */
+export function fetchContributorProfile(userId: string): Promise<IContributorProfile> {
+  return apiFetch<IContributorProfile>(`/users/${encodeURIComponent(userId)}/profile`);
 }
 
 /** GET /api/shortcuts/check-duplicate — check for duplicate shortcuts before submitting. */

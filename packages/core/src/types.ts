@@ -255,6 +255,30 @@ export interface SubmissionAdminAction {
   data?: Record<string, unknown>;
 }
 
+// ---------------------------------------------------------------------------
+// Contributor Profile types (Goal 8)
+// ---------------------------------------------------------------------------
+
+export interface IContributorProfile {
+  user: {
+    id: string;
+    name: string | null;
+    image: string | null;
+    memberSince: string; // ISO-8601
+  };
+  stats: {
+    totalSubmitted: number;
+    totalAccepted: number;
+    acceptanceRate: number; // 0–100
+  };
+  acceptedContributions: {
+    type: SubmissionType;
+    command: string;
+    appName: string;
+    date: string; // ISO-8601
+  }[];
+}
+
 /** One entry in the GET /api/favorites response. */
 export interface FavoriteEntry {
   collectionShortcutId: string;
