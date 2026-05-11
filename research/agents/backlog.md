@@ -73,7 +73,7 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
   - Crate compiles on Linux with `libdbus-1-dev` installed
 - **PR:** #32
 - **Branch:** goals/37-wayland-active-window-detection
-- **TRD:** research/plans/goals/37-wayland-active-window-detection-trd.md — awaiting-review
+- **TRD:** research/plans/goals/37-wayland-active-window-detection-trd.md — approved
 - **Notes:** Second Goal 10 task. PRD Flow 4 (Wayland detection) covers this scope. Extends TASK-0036's Rust native module with Wayland-specific adapter. Uses `zbus` (pure-Rust, no libdbus-1-dev needed). Branch created from main — will need rebase onto goals/36-linux-x11-detection before build phase since that branch not yet merged.
 
 ## In Review

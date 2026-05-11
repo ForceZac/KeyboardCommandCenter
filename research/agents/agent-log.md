@@ -2032,3 +2032,8 @@
 - did: merges found on origin/main (2 commits); no blocked tasks to unblock; synced 5 branches (all agent-file-only conflicts auto-resolved by taking main version)
 - branches synced: goals/36-linux-x11-detection, goals/35-github-actions-release-workflow, goals/34-landing-page-download, goals/33-electron-updater-auto-update, goals/27-submission-data-model-api
 - idle counter reset to 0
+
+## 2026-05-11 08:51 ET DEVELOPER
+- did: started run — claimed DEV_LOCK; no PAUSE/DEV_PAUSE; no Changes Requested; TASK-0037 In Progress with TRD approved — resuming build phase
+- task: TASK-0037 (Wayland Active Window Detection — GNOME & KDE DBus with Manual Fallback)
+- status: in-progress — build phase (checkpoint)
