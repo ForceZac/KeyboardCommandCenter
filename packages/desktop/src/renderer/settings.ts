@@ -1,4 +1,6 @@
 import './settings.css';
+// AuthState and AuthSignedInPayload are declared in kccSettings.d.ts,
+// included via tsconfig.renderer.json — no import needed.
 
 const hotkeyDisplay = document.getElementById('hotkey-display') as HTMLSpanElement;
 const changeHotkeyBtn = document.getElementById('change-hotkey-btn') as HTMLButtonElement;
@@ -200,4 +202,65 @@ loginStartupToggle.addEventListener('change', async () => {
 // Load current settings on page ready.
 loadSettings().catch((err: unknown) => {
   console.error('[Settings] Failed to load settings:', err);
+});
+
+// ---------------------------------------------------------------------------
+// TASK-0023: Account section — auth state display.
+// ---------------------------------------------------------------------------
+
+const authSignedIn = document.getElementById('auth-signed-in') as HTMLDivElement;
+const authSignedOut = document.getElementById('auth-signed-out') as HTMLDivElement;
+const authAvatar = document.getElementById('auth-avatar') as HTMLDivElement;
+const authDisplayNameEl = document.getElementById('auth-display-name') as HTMLSpanElement;
+const signInBtn = document.getElementById('sign-in-btn') as HTMLButtonElement;
+const signOutBtn = document.getElementById('sign-out-btn') as HTMLButtonElement;
+
+function renderAuthState(
+  isAuthenticated: boolean,
+  displayName: string | null,
+): void {
+  if (isAuthenticated) {
+    authSignedIn.hidden = false;
+    authSignedOut.hidden = true;
+    // Derive initials from display name for the avatar circle.
+    const initials = displayName
+      ? displayName
+          .split(' ')
+          .map((w) => w[0] ?? '')
+          .join('')
+          .slice(0, 2)
+          .toUpperCase()
+      : '?';
+    authAvatar.textContent = initials;
+    authDisplayNameEl.textContent = displayName ?? 'Signed in';
+  } else {
+    authSignedIn.hidden = true;
+    authSignedOut.hidden = false;
+  }
+}
+
+async function loadAuthState(): Promise<void> {
+  const state = await window.kccSettings.auth.getAuthState();
+  renderAuthState(state.isAuthenticated, state.displayName);
+}
+
+// Subscribe to push events from main process (fired while window is open).
+window.kccSettings.auth.onSignedIn((payload) => {
+  renderAuthState(true, payload.displayName);
+});
+
+window.kccSettings.auth.onSignedOut(() => {
+  renderAuthState(false, null);
+});
+
+signInBtn.addEventListener('click', async () => {
+  await window.kccSettings.auth.signIn();
+});
+
+signOutBtn.addEventListener('click', async () => {
+  await window.kccSettings.auth.signOut();
+});
+
+loadAuthState().catch((err: unknown) => {
+  console.error('[Settings] Failed to load auth state:', err);
 });

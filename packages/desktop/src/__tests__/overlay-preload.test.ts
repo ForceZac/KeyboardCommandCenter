@@ -11,7 +11,9 @@ const { mockIpcRenderer, mockContextBridge, capturedApis } = vi.hoisted(() => {
   const mockIpcRenderer = {
     on: vi.fn(),
     removeListener: vi.fn(),
-    invoke: vi.fn(() => Promise.resolve(null)),
+    // Promise.resolve<unknown> widens the inferred return type so mockResolvedValueOnce
+    // accepts any value (avoids "not assignable to null" errors in tests).
+    invoke: vi.fn(() => Promise.resolve<unknown>(null)),
   };
 
   const mockContextBridge = {

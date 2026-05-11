@@ -1,4 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron';
+import type { AuthState, AuthSignedInPayload } from './auth';
 
 // Expose a typed settings API to the settings renderer.
 // Separate from the panel preload — least-privilege: each window gets only what it needs.
@@ -42,5 +43,27 @@ contextBridge.exposeInMainWorld('kccSettings', {
 
     isSupported: (): Promise<boolean> =>
       ipcRenderer.invoke('overlay:is-supported'),
+  },
+
+  // TASK-0023: auth namespace — sign in/out and push event subscriptions.
+  auth: {
+    getAuthState: (): Promise<AuthState> => ipcRenderer.invoke('auth:get-state'),
+
+    signIn: (): Promise<void> => ipcRenderer.invoke('auth:open-signin'),
+
+    signOut: (): Promise<void> => ipcRenderer.invoke('auth:sign-out'),
+
+    // Push listeners — main process sends these when auth state changes while
+    // the settings window is open. The renderer calls getAuthState() on load
+    // to initialize state, so missed pushes are recovered on next window open.
+    onSignedIn: (callback: (payload: AuthSignedInPayload) => void): void => {
+      ipcRenderer.on('auth:signed-in', (_event, payload: AuthSignedInPayload) =>
+        callback(payload),
+      );
+    },
+
+    onSignedOut: (callback: () => void): void => {
+      ipcRenderer.on('auth:signed-out', () => callback());
+    },
   },
 });

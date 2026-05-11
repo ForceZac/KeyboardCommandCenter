@@ -67,6 +67,9 @@ function makeTrayManager(opts: {
   recentApps?: string[];
   detectionEnabled?: boolean;
   onOpenPanelWithApp?: (slug: string) => void;
+  isAuthenticated?: boolean;
+  onSignIn?: () => void;
+  onSignOut?: () => void;
 }) {
   const onOpenPanel = vi.fn();
   const onOpenSettings = vi.fn();
@@ -74,6 +77,10 @@ function makeTrayManager(opts: {
   const getDisplayName = vi.fn((slug: string) => slug.toUpperCase()); // deterministic stub
   const isDetectionEnabled = vi.fn(() => opts.detectionEnabled !== false);
   const onOpenPanelWithApp = opts.onOpenPanelWithApp ?? vi.fn();
+  // TASK-0023: auth callbacks — default unauthenticated
+  const isAuthenticated = vi.fn(() => opts.isAuthenticated ?? false);
+  const onSignIn = opts.onSignIn ?? vi.fn();
+  const onSignOut = opts.onSignOut ?? vi.fn();
 
   const manager = new TrayManager(
     onOpenPanel,
@@ -82,9 +89,12 @@ function makeTrayManager(opts: {
     getDisplayName,
     isDetectionEnabled,
     onOpenPanelWithApp,
+    isAuthenticated,
+    onSignIn,
+    onSignOut,
   );
 
-  return { manager, onOpenPanel, onOpenSettings, getRecentApps, getDisplayName, isDetectionEnabled, onOpenPanelWithApp };
+  return { manager, onOpenPanel, onOpenSettings, getRecentApps, getDisplayName, isDetectionEnabled, onOpenPanelWithApp, isAuthenticated, onSignIn, onSignOut };
 }
 
 // ---------------------------------------------------------------------------
@@ -196,8 +206,8 @@ describe('TrayManager — buildContextMenu: recent apps submenu', () => {
 });
 
 describe('TrayManager — menu structure', () => {
-  it('menu has Open, Recent Apps, Settings, separator, and Quit items', () => {
-    const { manager } = makeTrayManager({ recentApps: [] });
+  it('menu has Open, Recent Apps, Settings, Sign in, and Quit items', () => {
+    const { manager } = makeTrayManager({ recentApps: [], isAuthenticated: false });
     const menu = buildMenu(manager);
     const labels = (menu.items as Array<{ label?: string; type?: string }>).map(
       (item) => item.label ?? item.type,
@@ -206,8 +216,19 @@ describe('TrayManager — menu structure', () => {
     expect(labels).toContain('Open Keyboard Command Center');
     expect(labels).toContain('Recent Apps');
     expect(labels).toContain('Settings');
-    expect(labels).toContain('separator');
+    expect(labels).toContain('Sign in');
     expect(labels).toContain('Quit');
+  });
+
+  it('menu shows "Sign out" instead of "Sign in" when authenticated', () => {
+    const { manager } = makeTrayManager({ recentApps: [], isAuthenticated: true });
+    const menu = buildMenu(manager);
+    const labels = (menu.items as Array<{ label?: string; type?: string }>).map(
+      (item) => item.label ?? item.type,
+    );
+
+    expect(labels).toContain('Sign out');
+    expect(labels).not.toContain('Sign in');
   });
 
   it('"Recent Apps" appears between "Open" and "Settings"', () => {
@@ -223,5 +244,31 @@ describe('TrayManager — menu structure', () => {
 
     expect(openIdx).toBeLessThan(recentIdx);
     expect(recentIdx).toBeLessThan(settingsIdx);
+  });
+
+  it('clicking "Sign in" calls onSignIn', () => {
+    const onSignIn = vi.fn();
+    const { manager } = makeTrayManager({ recentApps: [], isAuthenticated: false, onSignIn });
+
+    const menu = buildMenu(manager);
+    const signInItem = (menu.items as Array<{ label?: string; click?: () => void }>).find(
+      (item) => item.label === 'Sign in',
+    );
+    signInItem?.click?.();
+
+    expect(onSignIn).toHaveBeenCalledOnce();
+  });
+
+  it('clicking "Sign out" calls onSignOut', () => {
+    const onSignOut = vi.fn();
+    const { manager } = makeTrayManager({ recentApps: [], isAuthenticated: true, onSignOut });
+
+    const menu = buildMenu(manager);
+    const signOutItem = (menu.items as Array<{ label?: string; click?: () => void }>).find(
+      (item) => item.label === 'Sign out',
+    );
+    signOutItem?.click?.();
+
+    expect(onSignOut).toHaveBeenCalledOnce();
   });
 });
