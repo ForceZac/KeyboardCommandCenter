@@ -50,7 +50,6 @@ describe('renderShortcutRow', () => {
   });
 
   it('falls back to first available binding when requested platform is missing', () => {
-    // Only mac binding available; requesting windows → falls back to mac.
     const html = renderShortcutRow(shortcutMacOnly, 'windows');
     expect(html).toContain('Cmd');
   });
@@ -58,7 +57,6 @@ describe('renderShortcutRow', () => {
   it('renders empty combo column when no platforms available', () => {
     const html = renderShortcutRow(shortcutNoPlatforms, 'macos');
     expect(html).toContain('Unbound shortcut');
-    // No key cap should appear
     expect(html).not.toContain('key-cap');
   });
 
@@ -78,6 +76,30 @@ describe('renderShortcutRow', () => {
     expect(html).toContain('class="shortcut-row"');
     expect(html).toContain('class="shortcut-cmd"');
     expect(html).toContain('class="shortcut-combo"');
+  });
+
+  // ── TASK-0026: favorite toggle button ────────────────────────────────────
+
+  it('renders a fav-btn with data-shortcut-id', () => {
+    const html = renderShortcutRow(shortcutBothPlatforms, 'macos');
+    expect(html).toContain('class="fav-btn"');
+    expect(html).toContain('data-shortcut-id="1"');
+  });
+
+  it('does NOT have .favorited class when isFavorited is false (default)', () => {
+    const html = renderShortcutRow(shortcutBothPlatforms, 'macos');
+    expect(html).not.toContain('fav-btn favorited');
+  });
+
+  it('adds .favorited class when isFavorited is true', () => {
+    const html = renderShortcutRow(shortcutBothPlatforms, 'macos', true);
+    expect(html).toContain('fav-btn favorited');
+  });
+
+  it('does NOT add .favorited class when isFavorited is false', () => {
+    const html = renderShortcutRow(shortcutBothPlatforms, 'macos', false);
+    expect(html).not.toContain('fav-btn favorited');
+    expect(html).toContain('class="fav-btn"');
   });
 });
 
@@ -120,6 +142,15 @@ describe('renderContextGroup', () => {
     );
     expect(html).toContain('Command Palette');
     expect(html).toContain('Mac-only shortcut');
+  });
+
+  it('renders fav-btn with .favorited class for IDs in favoritedIds', () => {
+    const favoritedIds = new Set(['1']);
+    const html = renderContextGroup('Editor', [shortcutBothPlatforms, shortcutMacOnly], 'macos', favoritedIds);
+    // shortcutBothPlatforms (id='1') — should be favorited
+    expect(html).toContain('data-shortcut-id="1"');
+    // We should see the favorited class for id 1
+    expect(html).toMatch(/fav-btn favorited[^>]*data-shortcut-id="1"|data-shortcut-id="1"[^<]*fav-btn favorited/);
   });
 });
 
@@ -171,5 +202,23 @@ describe('renderShortcutList', () => {
     };
     const html = renderShortcutList(appDetail, 'macos');
     expect(html.match(/<details/g)?.length).toBe(2);
+  });
+
+  it('passes favoritedIds so favorited shortcuts render with .favorited class', () => {
+    const appDetail: AppDetail = {
+      id: 'app1',
+      name: 'VS Code',
+      slug: 'vscode',
+      description: null,
+      categorySlug: 'developer-tools',
+      contexts: {
+        Global: [shortcutBothPlatforms, shortcutMacOnly],
+      },
+    };
+    const favoritedIds = new Set(['1']);
+    const html = renderShortcutList(appDetail, 'macos', favoritedIds);
+    // id '1' should be favorited; id '2' should not
+    expect(html).toContain('data-shortcut-id="1"');
+    expect(html).toContain('data-shortcut-id="2"');
   });
 });

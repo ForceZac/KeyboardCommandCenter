@@ -1,75 +1,102 @@
 /**
  * search.ts — Real-time shortcut filter for the panel renderer.
  *
- * Operates on the live DOM produced by shortcut-list.ts. Each .shortcut-row
- * carries data-cmd and data-combo attributes (pre-lowercased at render time)
- * that this module matches against — no HTML parsing, no re-render.
+ * Handles both views:
+ * - App Shortcuts view: filters `.shortcut-row` elements by data-cmd / data-combo
+ * - My Favorites view: filters `.fav-row` elements by data-cmd / data-app
+ *
+ * Operates on the live DOM — no re-render. Data attributes are pre-lowercased
+ * at render time so filter logic is a single includes() call per row.
  *
  * Design (per TRD):
  * - Visibility toggled via HTMLElement.hidden — spec-standard, no class churn.
  * - Context group headings (.context-group) are hidden when all their rows are
- *   hidden, via a one-pass O(n-groups) walk after updating rows.
+ *   hidden (App Shortcuts view only).
  * - No library deps — vanilla TypeScript only.
  */
+
+export type ActiveView = 'app-shortcuts' | 'favorites';
 
 /**
  * Attach an `input` event listener to the search input.
  * Call once on DOMContentLoaded.
+ *
+ * The listener re-reads the active view at filter time so it always filters the
+ * correct container without needing to rebind on every tab switch.
  */
 export function initSearch(
   input: HTMLInputElement,
-  container: HTMLElement,
+  shortcutsContainer: HTMLElement,
+  favoritesContainer: HTMLElement,
   noResults: HTMLElement,
+  getActiveView: () => ActiveView,
 ): void {
   input.addEventListener('input', () => {
-    applyFilter(input.value, container, noResults);
+    applyFilter(input.value, shortcutsContainer, favoritesContainer, noResults, getActiveView());
   });
 }
 
 /**
- * Filter the shortcut list by query string.
+ * Filter the visible list by query string.
  *
- * Shows rows whose data-cmd or data-combo contains the lowercased query as a
- * substring (case-insensitive). Hides context groups whose every row is hidden.
- * Shows the no-results message when nothing matches.
+ * In App Shortcuts view: matches against data-cmd and data-combo on .shortcut-row elements.
+ *                        Context groups whose every row is hidden are also hidden.
+ * In My Favorites view:  matches against data-cmd and data-app on .fav-row elements.
  *
- * Empty or whitespace-only query restores all rows (same effect as resetFilter,
- * but without touching the input value).
+ * Shows the no-results message when filtering produces zero visible rows.
+ * Empty or whitespace-only query restores all rows.
  */
 export function applyFilter(
   query: string,
-  container: HTMLElement,
+  shortcutsContainer: HTMLElement,
+  favoritesContainer: HTMLElement,
   noResults: HTMLElement,
+  activeView: ActiveView,
 ): void {
   const lowerQuery = query.toLowerCase().trim();
-
-  const rows = container.querySelectorAll<HTMLElement>('.shortcut-row');
   let anyVisible = false;
 
-  if (lowerQuery === '') {
-    // Empty query → show everything.
-    rows.forEach((row) => {
-      row.hidden = false;
-    });
-    anyVisible = rows.length > 0;
+  if (activeView === 'favorites') {
+    // ── My Favorites view ─────────────────────────────────────────────────
+    const rows = favoritesContainer.querySelectorAll<HTMLElement>('.fav-row');
+
+    if (lowerQuery === '') {
+      rows.forEach((row) => { row.hidden = false; });
+      anyVisible = rows.length > 0;
+    } else {
+      rows.forEach((row) => {
+        const cmd = row.dataset['cmd'] ?? '';
+        const app = row.dataset['app'] ?? '';
+        const matches = cmd.includes(lowerQuery) || app.includes(lowerQuery);
+        row.hidden = !matches;
+        if (matches) anyVisible = true;
+      });
+    }
   } else {
-    rows.forEach((row) => {
-      const cmd = row.dataset['cmd'] ?? '';
-      const combo = row.dataset['combo'] ?? '';
-      const matches = cmd.includes(lowerQuery) || combo.includes(lowerQuery);
-      row.hidden = !matches;
-      if (matches) anyVisible = true;
+    // ── App Shortcuts view ─────────────────────────────────────────────────
+    const rows = shortcutsContainer.querySelectorAll<HTMLElement>('.shortcut-row');
+
+    if (lowerQuery === '') {
+      rows.forEach((row) => { row.hidden = false; });
+      anyVisible = rows.length > 0;
+    } else {
+      rows.forEach((row) => {
+        const cmd = row.dataset['cmd'] ?? '';
+        const combo = row.dataset['combo'] ?? '';
+        const matches = cmd.includes(lowerQuery) || combo.includes(lowerQuery);
+        row.hidden = !matches;
+        if (matches) anyVisible = true;
+      });
+    }
+
+    // Hide context group headings whose every shortcut row is hidden.
+    const groups = shortcutsContainer.querySelectorAll<HTMLElement>('.context-group');
+    groups.forEach((group) => {
+      const groupRows = group.querySelectorAll<HTMLElement>('.shortcut-row');
+      const allHidden = Array.from(groupRows).every((r) => r.hidden);
+      group.hidden = allHidden;
     });
   }
-
-  // Hide context group headings whose every shortcut row is hidden.
-  // Walk groups once; check their child rows.
-  const groups = container.querySelectorAll<HTMLElement>('.context-group');
-  groups.forEach((group) => {
-    const groupRows = group.querySelectorAll<HTMLElement>('.shortcut-row');
-    const allHidden = Array.from(groupRows).every((r) => r.hidden);
-    group.hidden = allHidden;
-  });
 
   // Show the "no results" message only when filtering and nothing matches.
   noResults.hidden = lowerQuery === '' || anyVisible;
@@ -81,9 +108,11 @@ export function applyFilter(
  */
 export function resetFilter(
   input: HTMLInputElement,
-  container: HTMLElement,
+  shortcutsContainer: HTMLElement,
+  favoritesContainer: HTMLElement,
   noResults: HTMLElement,
+  activeView: ActiveView,
 ): void {
   input.value = '';
-  applyFilter('', container, noResults);
+  applyFilter('', shortcutsContainer, favoritesContainer, noResults, activeView);
 }
