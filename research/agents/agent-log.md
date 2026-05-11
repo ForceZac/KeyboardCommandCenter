@@ -2056,3 +2056,17 @@
 - tests: skipped
 - metrics: run_type=no-op | reason=DEV_LOCK held | dev_idle=1
 - next: wait for DEV_LOCK to clear or timeout at 25 min; previous run was working on TASK-0037 build phase
+
+## 2026-05-11 09:21 ET DEVELOPER
+- did: started run — DEV_LOCK was stale (1801s > 1500s), overriding; no PAUSE/DEV_PAUSE; no Changes Requested; TASK-0037 In Progress TRD approved — resuming build phase
+- task: TASK-0037 (Wayland Active Window Detection)
+- status: in-progress — checkpoint written
+
+## 2026-05-11 09:21 ET DEVELOPER (completed)
+- did: overrode stale DEV_LOCK (1801s); built TASK-0037 full feature scope — Rust session detection + Wayland DBus adapter, TypeScript detection service, IPC wiring, renderer manual app selector, Vitest tests; marked PR #32 ready; moved TASK-0037 to In Review
+- task: TASK-0037 (Wayland Active Window Detection — GNOME & KDE DBus + Manual Fallback)
+- PR: #32
+- trd: approved — build complete
+- tests: green (22 Vitest tests, 3 TypeScript typechecks clean)
+- metrics: run_type=productive | commits=3 | tests_added=6 | trd_cycles=0 | dev_idle=0
+- next: Reviewer picks up PR #32; Ready has TASK-0038 (X11 overlay) + TASK-0039 (Linux packaging)

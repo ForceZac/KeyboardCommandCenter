@@ -76,6 +76,10 @@ _(Project Manager keeps 2–3 tasks here at all times.)
 
 _(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
 
+## In Review
+
+_(Developer moves tasks here when the draft PR is marked ready.)_
+
 ### TASK-0037: Wayland Active Window Detection — GNOME & KDE DBus with Manual Fallback
 - **Goal:** Goal 10 — Linux Support (implementation-roadmap-v2.md § Goal 10)
 - **PRD:** research/agents/prds/goal-10-linux-support.md
@@ -94,11 +98,7 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
 - **PR:** #32
 - **Branch:** goals/37-wayland-active-window-detection
 - **TRD:** research/plans/goals/37-wayland-active-window-detection-trd.md — approved
-- **Notes:** Second Goal 10 task. PRD Flow 4 (Wayland detection) covers this scope. Extends TASK-0036's Rust native module with Wayland-specific adapter. Uses `zbus` (pure-Rust, no libdbus-1-dev needed). Branch created from main — will need rebase onto goals/36-linux-x11-detection before build phase since that branch not yet merged.
-
-## In Review
-
-_(Developer moves tasks here when the draft PR is marked ready.)_
+- **Notes:** Second Goal 10 task. PRD Flow 4 (Wayland detection) covers this scope. Uses zbus (pure-Rust, no libdbus-1-dev needed). Merged TASK-0036 branch into this before build phase.
 
 ## Changes Requested
 
@@ -404,7 +404,7 @@ _(Waiting on an external dependency, a missing PRD, or owner decision.)_
 - **PR:**
 - **Branch:**
 - **TRD:**
-- **Notes:** Blocked — awaiting TASK-0027 (needs submission API routes and data model). Second Goal 8 task. PRD Flows 1 and 6 cover this scope.
+- **Notes:** Unblocked by merge on 2026-05-11 (PR #27 merged). Second Goal 8 task. PRD Flows 1 and 6 cover this scope.
 
 ### TASK-0029: Admin Review Queue UI
 - **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
@@ -427,7 +427,7 @@ _(Waiting on an external dependency, a missing PRD, or owner decision.)_
 - **PR:**
 - **Branch:**
 - **TRD:**
-- **Notes:** Blocked — awaiting TASK-0027 (needs admin API routes, Submission model, and isAdmin flag). Third Goal 8 task. PRD Flow 4 covers this scope.
+- **Notes:** Unblocked by merge on 2026-05-11 (PR #27 merged). Third Goal 8 task. PRD Flow 4 covers this scope.
 
 ### TASK-0030: Correction Form UI — Suggest Edit & Pre-filled Submission
 - **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
@@ -464,7 +464,7 @@ _(Waiting on an external dependency, a missing PRD, or owner decision.)_
 - **PR:**
 - **Branch:**
 - **TRD:**
-- **Notes:** Blocked — awaiting TASK-0027 (needs submission API routes and Submission model). Fifth Goal 8 task. PRD Flow 3 covers this scope.
+- **Notes:** Unblocked by merge on 2026-05-11 (PR #27 merged). Fifth Goal 8 task. PRD Flow 3 covers this scope.
 
 ### TASK-0032: Contributor Profile Page
 - **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
@@ -483,5 +483,5 @@ _(Waiting on an external dependency, a missing PRD, or owner decision.)_
 - **PR:**
 - **Branch:**
 - **TRD:**
-- **Notes:** Blocked — awaiting TASK-0027 (needs Submission model for contribution queries). Sixth Goal 8 task. PRD Flow 5 covers this scope.
+- **Notes:** Unblocked by merge on 2026-05-11 (PR #27 merged). Sixth Goal 8 task. PRD Flow 5 covers this scope.
 
