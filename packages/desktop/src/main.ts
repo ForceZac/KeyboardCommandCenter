@@ -32,6 +32,17 @@ import {
 } from './settings';
 import * as overlayControllerModule from './overlay-controller';
 import { OverlayWindowManager } from './overlay-window';
+// TASK-0023: desktop auth flow.
+import { AuthStore } from './auth-store';
+import {
+  initAuth,
+  handleDeepLinkCallback,
+  openSignIn,
+  signOut,
+  getAuthState,
+  authEvents,
+} from './auth';
+import type { AuthSignedInPayload } from './auth';
 
 // Enforce single-instance: if another instance is already running, quit immediately.
 const isFirstInstance = app.requestSingleInstanceLock();
@@ -39,6 +50,27 @@ if (!isFirstInstance) {
   app.quit();
   process.exit(0);
 }
+
+// TASK-0023: Register shortcutvault:// custom protocol before app is ready.
+// This must be called early so the OS associates the protocol with this executable.
+app.setAsDefaultProtocolClient('shortcutvault');
+
+// macOS: deep links arrive via 'open-url' on the already-running instance.
+// The OS delivers this after the app is fully running, so initAuth() will have
+// been called by the time this fires.
+app.on('open-url', (event, url) => {
+  event.preventDefault();
+  handleDeepLinkCallback(url);
+});
+
+// Windows: a second instance is launched with the URL in its argv; the
+// single-instance lock above routes it here via 'second-instance'.
+app.on('second-instance', (_event, argv) => {
+  const deepLink = argv.find((arg) => arg.startsWith('shortcutvault://'));
+  if (deepLink) {
+    handleDeepLinkCallback(deepLink);
+  }
+});
 
 const store = new Store();
 
@@ -131,6 +163,16 @@ app.whenReady().then(() => {
   overlayManager = new OverlayWindowManager();
   overlayControllerModule.registerOverlayController(overlayManager);
 
+  // TASK-0023: Initialize auth store (safeStorage available from this point on).
+  const authStore = new AuthStore();
+  initAuth(authStore);
+
+  // Web app base URL for constructing the OAuth sign-in URL.
+  // Reads NEXTAUTH_URL from the environment; falls back to local dev server.
+  const webAppBaseUrl = process.env['NEXTAUTH_URL'] ?? 'http://localhost:3000';
+  const buildSignInUrl = (): string =>
+    `${webAppBaseUrl}/auth/signin?callbackUrl=${encodeURIComponent('shortcutvault://auth/callback')}`;
+
   trayManager = new TrayManager(
     // onOpenPanel: open the shortcut panel
     () => { panelManager.show(); },
@@ -147,8 +189,23 @@ app.whenReady().then(() => {
       panelManager.show();
       panelManager.sendToRenderer('detection:app-changed', { slug });
     },
+    // TASK-0023: auth state and actions
+    () => authStore.isAuthenticated(),
+    () => { openSignIn(buildSignInUrl()); },
+    () => { signOut(); },
   );
   trayManager.create();
+
+  // TASK-0023: Subscribe to auth state changes and push to settings window + tray.
+  // Registered after both trayManager and settingsWindowManager are initialized.
+  authEvents.on('auth:signed-in', (payload: AuthSignedInPayload) => {
+    settingsWindowManager.sendToRenderer('auth:signed-in', payload);
+    trayManager.refreshMenu(true);
+  });
+  authEvents.on('auth:signed-out', () => {
+    settingsWindowManager.sendToRenderer('auth:signed-out', null);
+    trayManager.refreshMenu(false);
+  });
 
   hotkeyManager = new HotkeyManager(() => {
     panelManager.toggle();
@@ -171,6 +228,11 @@ app.whenReady().then(() => {
   ipcMain.on('hide-panel', () => {
     panelManager.hide();
   });
+
+  // TASK-0023: Auth IPC handlers (settings window renderer → main process).
+  ipcMain.handle('auth:get-state', () => getAuthState());
+  ipcMain.handle('auth:open-signin', () => { openSignIn(buildSignInUrl()); });
+  ipcMain.handle('auth:sign-out', () => { signOut(); });
 
   // IPC: renderer requests shortcut data for a given app slug (TASK-0012).
   // Serves from cache when available; otherwise fetches from DB, caches, and returns.

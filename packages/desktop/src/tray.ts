@@ -12,6 +12,10 @@ export class TrayManager {
   private getDisplayName: (slug: string) => string;
   private isDetectionEnabled: () => boolean;
   private onOpenPanelWithApp: (slug: string) => void;
+  // TASK-0023: auth callbacks — read at menu-open time so state is always current.
+  private isAuthenticated: () => boolean;
+  private onSignIn: () => void;
+  private onSignOut: () => void;
 
   constructor(
     onOpenPanel: () => void,
@@ -20,6 +24,9 @@ export class TrayManager {
     getDisplayName: (slug: string) => string,
     isDetectionEnabled: () => boolean,
     onOpenPanelWithApp: (slug: string) => void,
+    isAuthenticated: () => boolean,
+    onSignIn: () => void,
+    onSignOut: () => void,
   ) {
     this.onOpenPanel = onOpenPanel;
     this.onOpenSettings = onOpenSettings;
@@ -27,6 +34,9 @@ export class TrayManager {
     this.getDisplayName = getDisplayName;
     this.isDetectionEnabled = isDetectionEnabled;
     this.onOpenPanelWithApp = onOpenPanelWithApp;
+    this.isAuthenticated = isAuthenticated;
+    this.onSignIn = onSignIn;
+    this.onSignOut = onSignOut;
   }
 
   /**
@@ -35,6 +45,10 @@ export class TrayManager {
    */
   private buildContextMenu(): Menu {
     const recentAppsSubmenu = this.buildRecentAppsSubmenu();
+    // Read auth state at menu-build time so the item is always current.
+    const authItem: MenuItemConstructorOptions = this.isAuthenticated()
+      ? { label: 'Sign out', click: () => this.onSignOut() }
+      : { label: 'Sign in', click: () => this.onSignIn() };
 
     return Menu.buildFromTemplate([
       {
@@ -51,11 +65,27 @@ export class TrayManager {
         click: () => this.onOpenSettings(),
       },
       { type: 'separator' },
+      authItem,
+      { type: 'separator' },
       {
         label: 'Quit',
         click: () => app.quit(),
       },
     ]);
+  }
+
+  /**
+   * Rebuilds and re-sets the static context menu after an auth state change.
+   * On macOS and Windows we use popUpContextMenu on click so the menu is
+   * already rebuilt on each open — this method exists for the TRD contract
+   * and for platforms that use a static context menu.
+   */
+  refreshMenu(_isAuthenticated: boolean): void {
+    // buildContextMenu reads isAuthenticated() directly at call time,
+    // so no parameter threading needed.
+    if (this.tray !== null) {
+      this.tray.setContextMenu(this.buildContextMenu());
+    }
   }
 
   /**

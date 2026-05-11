@@ -148,6 +148,33 @@ button:disabled {
   transform: translateX(18px);
 }
 
+/* Account section (TASK-0023) */
+.account-fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.account-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.auth-avatar {
+  width: 32px;
+  height: 32px;
+  background: #2a5ea3;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  flex-shrink: 0;
+}
+
 /* Overlay section */
 .overlay-fieldset {
   border: none;

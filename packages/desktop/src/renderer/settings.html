@@ -37,6 +37,25 @@
         </div>
       </section>
 
+      <fieldset id="account-section" class="setting-row account-fieldset">
+        <legend class="setting-section-heading">Account</legend>
+
+        <div id="auth-signed-in" hidden>
+          <div class="account-row">
+            <div class="auth-avatar" id="auth-avatar"></div>
+            <span id="auth-display-name" class="label-text"></span>
+            <button id="sign-out-btn">Sign out</button>
+          </div>
+        </div>
+
+        <div id="auth-signed-out">
+          <div class="account-row">
+            <button id="sign-in-btn">Sign in</button>
+            <span class="hint">Sign in to sync your favorites across devices</span>
+          </div>
+        </div>
+      </fieldset>
+
       <fieldset id="overlay-section" class="setting-row overlay-fieldset">
         <legend class="setting-section-heading">Overlay</legend>
 
