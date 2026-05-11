@@ -1,6 +1,7 @@
 import { Tray, Menu, nativeImage, app } from 'electron';
 import type { MenuItemConstructorOptions } from 'electron';
 import path from 'path';
+import type { UpdateStatus } from './update-service';
 
 const MAX_RECENT_APPS = 5;
 
@@ -16,6 +17,10 @@ export class TrayManager {
   private isAuthenticated: () => boolean;
   private onSignIn: () => void;
   private onSignOut: () => void;
+  // TASK-0033: update callbacks — read at menu-open time.
+  private onCheckForUpdates: () => void;
+  private onRestartAndInstall: () => void;
+  private getUpdateStatus: () => UpdateStatus;
 
   constructor(
     onOpenPanel: () => void,
@@ -27,6 +32,9 @@ export class TrayManager {
     isAuthenticated: () => boolean,
     onSignIn: () => void,
     onSignOut: () => void,
+    onCheckForUpdates: () => void,
+    onRestartAndInstall: () => void,
+    getUpdateStatus: () => UpdateStatus,
   ) {
     this.onOpenPanel = onOpenPanel;
     this.onOpenSettings = onOpenSettings;
@@ -37,6 +45,9 @@ export class TrayManager {
     this.isAuthenticated = isAuthenticated;
     this.onSignIn = onSignIn;
     this.onSignOut = onSignOut;
+    this.onCheckForUpdates = onCheckForUpdates;
+    this.onRestartAndInstall = onRestartAndInstall;
+    this.getUpdateStatus = getUpdateStatus;
   }
 
   /**
@@ -49,6 +60,27 @@ export class TrayManager {
     const authItem: MenuItemConstructorOptions = this.isAuthenticated()
       ? { label: 'Sign out', click: () => this.onSignOut() }
       : { label: 'Sign in', click: () => this.onSignIn() };
+
+    // TASK-0033: update items — read status at menu-build time.
+    const updateStatus = this.getUpdateStatus();
+    const updateItems: MenuItemConstructorOptions[] =
+      updateStatus === 'ready'
+        ? [
+            {
+              label: 'Update available — restart to apply',
+              enabled: false,
+            },
+            {
+              label: 'Restart to update',
+              click: () => this.onRestartAndInstall(),
+            },
+          ]
+        : [
+            {
+              label: 'Check for updates',
+              click: () => this.onCheckForUpdates(),
+            },
+          ];
 
     return Menu.buildFromTemplate([
       {
@@ -64,6 +96,7 @@ export class TrayManager {
         label: 'Settings',
         click: () => this.onOpenSettings(),
       },
+      ...updateItems,
       { type: 'separator' },
       authItem,
       { type: 'separator' },

@@ -70,6 +70,9 @@ function makeTrayManager(opts: {
   isAuthenticated?: boolean;
   onSignIn?: () => void;
   onSignOut?: () => void;
+  onCheckForUpdates?: () => void;
+  onRestartAndInstall?: () => void;
+  getUpdateStatus?: () => import('../update-service').UpdateStatus;
 }) {
   const onOpenPanel = vi.fn();
   const onOpenSettings = vi.fn();
@@ -81,6 +84,10 @@ function makeTrayManager(opts: {
   const isAuthenticated = vi.fn(() => opts.isAuthenticated ?? false);
   const onSignIn = opts.onSignIn ?? vi.fn();
   const onSignOut = opts.onSignOut ?? vi.fn();
+  // TASK-0033: update callbacks — default idle/no-op
+  const onCheckForUpdates = opts.onCheckForUpdates ?? vi.fn();
+  const onRestartAndInstall = opts.onRestartAndInstall ?? vi.fn();
+  const getUpdateStatus = opts.getUpdateStatus ?? vi.fn(() => 'idle' as const);
 
   const manager = new TrayManager(
     onOpenPanel,
@@ -92,9 +99,12 @@ function makeTrayManager(opts: {
     isAuthenticated,
     onSignIn,
     onSignOut,
+    onCheckForUpdates,
+    onRestartAndInstall,
+    getUpdateStatus,
   );
 
-  return { manager, onOpenPanel, onOpenSettings, getRecentApps, getDisplayName, isDetectionEnabled, onOpenPanelWithApp, isAuthenticated, onSignIn, onSignOut };
+  return { manager, onOpenPanel, onOpenSettings, getRecentApps, getDisplayName, isDetectionEnabled, onOpenPanelWithApp, isAuthenticated, onSignIn, onSignOut, onCheckForUpdates, onRestartAndInstall, getUpdateStatus };
 }
 
 // ---------------------------------------------------------------------------
@@ -206,7 +216,7 @@ describe('TrayManager — buildContextMenu: recent apps submenu', () => {
 });
 
 describe('TrayManager — menu structure', () => {
-  it('menu has Open, Recent Apps, Settings, Sign in, and Quit items', () => {
+  it('menu has Open, Recent Apps, Settings, Check for updates, Sign in, and Quit items', () => {
     const { manager } = makeTrayManager({ recentApps: [], isAuthenticated: false });
     const menu = buildMenu(manager);
     const labels = (menu.items as Array<{ label?: string; type?: string }>).map(
@@ -216,6 +226,7 @@ describe('TrayManager — menu structure', () => {
     expect(labels).toContain('Open Keyboard Command Center');
     expect(labels).toContain('Recent Apps');
     expect(labels).toContain('Settings');
+    expect(labels).toContain('Check for updates');
     expect(labels).toContain('Sign in');
     expect(labels).toContain('Quit');
   });
@@ -270,5 +281,57 @@ describe('TrayManager — menu structure', () => {
     signOutItem?.click?.();
 
     expect(onSignOut).toHaveBeenCalledOnce();
+  });
+});
+
+describe('TrayManager — update menu items (TASK-0033)', () => {
+  it('shows "Check for updates" when status is not ready', () => {
+    const { manager } = makeTrayManager({ recentApps: [], getUpdateStatus: () => 'idle' });
+    const menu = buildMenu(manager);
+    const labels = (menu.items as Array<{ label?: string }>).map((item) => item.label);
+
+    expect(labels).toContain('Check for updates');
+    expect(labels).not.toContain('Restart to update');
+  });
+
+  it('clicking "Check for updates" calls onCheckForUpdates', () => {
+    const onCheckForUpdates = vi.fn();
+    const { manager } = makeTrayManager({
+      recentApps: [],
+      getUpdateStatus: () => 'idle',
+      onCheckForUpdates,
+    });
+    const menu = buildMenu(manager);
+    const item = (menu.items as Array<{ label?: string; click?: () => void }>).find(
+      (i) => i.label === 'Check for updates',
+    );
+    item?.click?.();
+
+    expect(onCheckForUpdates).toHaveBeenCalledOnce();
+  });
+
+  it('shows "Restart to update" (and not "Check for updates") when status is ready', () => {
+    const { manager } = makeTrayManager({ recentApps: [], getUpdateStatus: () => 'ready' });
+    const menu = buildMenu(manager);
+    const labels = (menu.items as Array<{ label?: string }>).map((item) => item.label);
+
+    expect(labels).toContain('Restart to update');
+    expect(labels).not.toContain('Check for updates');
+  });
+
+  it('clicking "Restart to update" calls onRestartAndInstall', () => {
+    const onRestartAndInstall = vi.fn();
+    const { manager } = makeTrayManager({
+      recentApps: [],
+      getUpdateStatus: () => 'ready',
+      onRestartAndInstall,
+    });
+    const menu = buildMenu(manager);
+    const item = (menu.items as Array<{ label?: string; click?: () => void }>).find(
+      (i) => i.label === 'Restart to update',
+    );
+    item?.click?.();
+
+    expect(onRestartAndInstall).toHaveBeenCalledOnce();
   });
 });
