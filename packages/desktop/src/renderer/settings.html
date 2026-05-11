@@ -56,6 +56,24 @@
         </div>
       </fieldset>
 
+      <fieldset id="update-section" class="setting-row update-fieldset">
+        <legend class="setting-section-heading">Updates</legend>
+
+        <div class="update-row">
+          <span class="label-text">Version</span>
+          <span id="app-version" class="value-display">—</span>
+        </div>
+
+        <div class="update-row">
+          <button id="check-updates-btn">Check for updates</button>
+          <span id="update-status-label" class="hint" aria-live="polite"></span>
+        </div>
+
+        <div id="restart-update-row" class="update-row" hidden>
+          <button id="restart-update-btn">Restart to update</button>
+        </div>
+      </fieldset>
+
       <fieldset id="overlay-section" class="setting-row overlay-fieldset">
         <legend class="setting-section-heading">Overlay</legend>
 
