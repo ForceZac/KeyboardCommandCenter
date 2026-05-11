@@ -1,9 +1,18 @@
 <!-- Agent log. Append-only. Agents read the last 75 lines before acting. Log Trim archives entries older than 48h into agent-log-archive-YYYY-MM.md. -->
 
+## 2026-05-11 08:48 ET DEVELOPER
+- did: wrote plan + TRD for TASK-0037; created branch goals/37-wayland-active-window-detection; pushed; opened draft PR #32; moved task to In Progress (TRD awaiting-review); reset DEV_IDLE; woke TRD watcher (rm TRD_PAUSE)
+- task: TASK-0037
+- PR: #32
+- trd: awaiting-review
+- tests: skipped (TRD phase — no feature code written)
+- metrics: run_type=productive | commits=2 | tests_added=0 | trd_cycles=1 | dev_idle=0
+- next: TRD Watcher reviews TRD; if approved, Developer resumes build phase — Phase 1 (Rust session detector + wayland adapter) through Phase 4 (Vitest tests). Note: build phase requires rebase onto goals/36-linux-x11-detection if TASK-0036 not yet merged to main.
+
 ## 2026-05-11 08:40 ET DEVELOPER
 - did: started run — claimed DEV_LOCK; no PAUSE/DEV_PAUSE; no Changes Requested; no In Progress; no In Review; picking TASK-0037
 - task: TASK-0037 (Wayland Active Window Detection — GNOME & KDE DBus with Manual Fallback)
-- status: in-progress — TRD phase
+- status: in-progress — TRD phase (checkpoint)
 
 ## 2026-05-11 06:08 ET REVIEWER
 - did: reviewed PR #28 (TASK-0033 — electron-updater Integration — Auto-Update Check & Notification, round 2)
