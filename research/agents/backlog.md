@@ -72,6 +72,11 @@ _(Project Manager keeps 2–3 tasks here at all times.)_
 - **TRD:**
 - **Notes:** Third Goal 9 task. PRD Flow 4 covers this scope. Requires CI secrets to be populated before first real run. Can be built and tested with dummy/self-signed certificates initially.
 
+
+## In Progress
+
+_(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
+
 ### TASK-0036: Rust Native Module — Linux X11 Active Window Detection
 - **Goal:** Goal 10 — Linux Support (implementation-roadmap-v2.md § Goal 10)
 - **PRD:** research/agents/prds/goal-10-linux-support.md
@@ -86,14 +91,10 @@ _(Project Manager keeps 2–3 tasks here at all times.)_
   - Unit tests for Linux process-to-app mapping lookups pass
   - Existing Windows/macOS detection tests unaffected
   - Crate compiles on Linux with X11 dev libraries installed
-- **PR:**
-- **Branch:**
-- **TRD:**
+- **PR:** (opening now)
+- **Branch:** goals/36-linux-x11-detection
+- **TRD:** research/plans/goals/36-linux-x11-detection-trd.md — awaiting-review
 - **Notes:** First Goal 10 task. PRD Flow 3 (X11 detection) covers this scope. Does not depend on Goal 9 shipping — extends the existing Goal 4 Rust native module architecture. Requires `libx11-dev` / `libxcb1-dev` as build dependencies.
-
-## In Progress
-
-_(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
 
 ## In Review
 
