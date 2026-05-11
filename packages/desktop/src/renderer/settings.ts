@@ -1,5 +1,5 @@
 import './settings.css';
-// AuthState and AuthSignedInPayload are declared in kccSettings.d.ts,
+// AuthState, AuthSignedInPayload, and UpdateStatus are declared in kccSettings.d.ts,
 // included via tsconfig.renderer.json — no import needed.
 
 const hotkeyDisplay = document.getElementById('hotkey-display') as HTMLSpanElement;
@@ -202,6 +202,61 @@ loginStartupToggle.addEventListener('change', async () => {
 // Load current settings on page ready.
 loadSettings().catch((err: unknown) => {
   console.error('[Settings] Failed to load settings:', err);
+});
+
+// ---------------------------------------------------------------------------
+// TASK-0033: Update section — version display and manual update check.
+// ---------------------------------------------------------------------------
+
+const appVersionEl = document.getElementById('app-version') as HTMLSpanElement;
+const checkUpdatesBtn = document.getElementById('check-updates-btn') as HTMLButtonElement;
+const updateStatusLabel = document.getElementById('update-status-label') as HTMLSpanElement;
+const restartUpdateRow = document.getElementById('restart-update-row') as HTMLDivElement;
+const restartUpdateBtn = document.getElementById('restart-update-btn') as HTMLButtonElement;
+
+/** Maps UpdateStatus to user-readable label text. */
+function updateStatusToLabel(status: UpdateStatus): string {
+  switch (status) {
+    case 'idle':       return 'Up to date';
+    case 'checking':   return 'Checking…';
+    case 'available':  return 'Update available — downloading…';
+    case 'downloading': return 'Downloading update…';
+    case 'ready':      return 'Update ready — restart to apply';
+    case 'error':      return 'Update check failed';
+    default:           return '';
+  }
+}
+
+function applyUpdateStatus(status: UpdateStatus): void {
+  updateStatusLabel.textContent = updateStatusToLabel(status);
+  restartUpdateRow.hidden = status !== 'ready';
+  checkUpdatesBtn.disabled = status === 'checking' || status === 'downloading';
+}
+
+async function loadUpdateState(): Promise<void> {
+  const [version, status] = await Promise.all([
+    window.kccSettings.app.getVersion(),
+    window.kccSettings.update.getStatus(),
+  ]);
+  appVersionEl.textContent = `v${version}`;
+  applyUpdateStatus(status);
+}
+
+// Subscribe to status push events from the main process.
+window.kccSettings.update.onStatusChanged((status) => {
+  applyUpdateStatus(status);
+});
+
+checkUpdatesBtn.addEventListener('click', async () => {
+  await window.kccSettings.update.checkNow();
+});
+
+restartUpdateBtn.addEventListener('click', async () => {
+  await window.kccSettings.update.restartAndInstall();
+});
+
+loadUpdateState().catch((err: unknown) => {
+  console.error('[Settings] Failed to load update state:', err);
 });
 
 // ---------------------------------------------------------------------------
