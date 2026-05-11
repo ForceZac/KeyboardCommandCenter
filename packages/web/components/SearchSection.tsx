@@ -20,7 +20,7 @@ export default function SearchSection() {
 
       {query.trim().length >= 2 && results !== undefined && (
         <div className="mt-4 max-w-2xl mx-auto">
-          <SearchResults results={results} />
+          <SearchResults results={results} searchQuery={query} />
         </div>
       )}
     </div>
