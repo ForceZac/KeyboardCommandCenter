@@ -2030,3 +2030,28 @@
 - tests: skipped (backlog/proposals only)
 - metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=0 | dev_idle=0
 - next: Ready has TASK-0037 (Wayland detection) — PRD exists at goal-10-linux-support.md; next run picks it up and writes TRD. PM should review PROP-0007 re Linux Packaging gap
+
+## 2026-05-11 10:08 ET PROJECT-MANAGER
+- did: promoted TASK-0028 and TASK-0029 from Blocked to Ready (TASK-0027 merged, dependency resolved). Moved TASK-0027 and TASK-0033 from Approved to Shipped (PRs #27 and #28 merged). Updated TASK-0030/0031/0032 notes to reflect TASK-0027 resolution.
+- created: none
+- moved: TASK-0028 Blocked→Ready, TASK-0029 Blocked→Ready, TASK-0027 Approved→Shipped, TASK-0033 Approved→Shipped
+- prd gaps: none — all 10 goals have PRDs
+- roadmap check: skipped (ran last time at 08:35 ET — every-other-run cadence)
+- proposals added: 0
+- flags: (1) PROP-0007 still open — Linux Packaging task (AppImage/deb + CI) is orphaned and needs a task ID (TASK-0039). Will create next run. (2) TASK-0031 and TASK-0032 are technically unblocked but held in Blocked to keep Ready at 2 — will promote as Ready drains. (3) 4 Approved tasks (TASK-0034/0035/0036/0037) awaiting /merge.
+- metrics: tasks_created=0 | tasks_moved=4 | prd_gaps=0 | roadmap_issues=0
+- next: create TASK-0039 for Linux Packaging (PROP-0007). Promote TASK-0031 to Ready when capacity opens. Roadmap health check next run.
+
+## 2026-05-11 10:10 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TASK-0038 (resuming In Progress — TRD approved)
+- status: in-progress (checkpoint)
+
+## 2026-05-11 10:24 ET DEVELOPER
+- did: built TASK-0038 (Overlay X11 Compatibility) — all 8 phases complete. Phase 1: linux-session.ts (detectLinuxSession/isWaylandSession, cached). Phase 2: settings.ts waylandDismissTimeoutMs (default 8000ms). Phase 3: overlay-window.ts X11 type:'panel' window hint, Wayland skips setIgnoreMouseEvents/uses pop-up-menu level, dismiss timer (maybeScheduleDismiss/clearDismissTimer, resets on detection events). Phase 4: main.ts overlay:is-supported→true, overlay:is-degraded, overlay:set-wayland-dismiss-timeout IPC handlers. Phase 5: tray.ts Tray constructor wrapped in try-catch, graceful null+log on failure. Phase 6: settings.html experimental badge + wayland-dismiss-row, settings.ts wires isDegraded toggle, settings-preload.ts + kccSettings.d.ts expose new methods. Phase 7: linux-session.test.ts (14 tests), overlay-window.test.ts (+16 Linux X11/Wayland/timer tests), overlay-settings.test.ts (+9 wayland timeout + preload surface tests), tray.test.ts (+4 graceful failure tests). Phase 8: 420/420 tests green, 3 tsconfigs clean.
+- task: TASK-0038
+- PR: #33 (marked ready)
+- trd: approved → building → FINAL
+- tests: green (420/420, 19 files)
+- metrics: run_type=productive | commits=3 | tests_added=43 | trd_cycles=0 | dev_idle=0
+- next: Reviewer picks up PR #33 (goals/38-overlay-x11-compat); Developer picks TASK-0028 (next Ready task) on next run
