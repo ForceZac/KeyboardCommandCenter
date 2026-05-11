@@ -18,6 +18,8 @@ const { mockPrisma } = vi.hoisted(() => ({
     },
     collectionShortcut: {
       findMany: vi.fn(),
+      upsert: vi.fn(),
+      deleteMany: vi.fn(),
     },
   },
 }));
@@ -27,7 +29,8 @@ vi.mock('../../lib/prisma', () => ({ prisma: mockPrisma }));
 
 import { GET as collectionsGET, POST as collectionsPOST } from '../../app/api/collections/route';
 import { PATCH, DELETE } from '../../app/api/collections/[id]/route';
-import { GET as shortcutsGET } from '../../app/api/collections/[id]/shortcuts/route';
+import { GET as shortcutsGET, POST as shortcutsPOST } from '../../app/api/collections/[id]/shortcuts/route';
+import { DELETE as shortcutDELETE } from '../../app/api/collections/[id]/shortcuts/[shortcutId]/route';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -306,5 +309,119 @@ describe('GET /api/collections/:id/shortcuts', () => {
       { params: Promise.resolve({ id: 'other-coll' }) },
     );
     expect(res.status).toBe(404);
+  });
+});
+
+// ─── POST /api/collections/:id/shortcuts ─────────────────────────────────────
+
+describe('POST /api/collections/:id/shortcuts', () => {
+  const SHORTCUT_ID = 'sc-999';
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockAuth.mockResolvedValue(SESSION);
+  });
+
+  it('returns 401 when unauthenticated', async () => {
+    mockAuth.mockResolvedValue(null);
+    const res = await shortcutsPOST(
+      makeRequest(`http://localhost/api/collections/${COLLECTION_ID}/shortcuts`, 'POST', {
+        shortcutId: SHORTCUT_ID,
+      }),
+      { params: Promise.resolve({ id: COLLECTION_ID }) },
+    );
+    expect(res.status).toBe(401);
+  });
+
+  it('returns 400 when shortcutId is missing', async () => {
+    const res = await shortcutsPOST(
+      makeRequest(`http://localhost/api/collections/${COLLECTION_ID}/shortcuts`, 'POST', {}),
+      { params: Promise.resolve({ id: COLLECTION_ID }) },
+    );
+    expect(res.status).toBe(400);
+  });
+
+  it('returns 404 when collection does not exist', async () => {
+    mockPrisma.collection.findFirst.mockResolvedValue(null);
+    const res = await shortcutsPOST(
+      makeRequest(`http://localhost/api/collections/missing/shortcuts`, 'POST', {
+        shortcutId: SHORTCUT_ID,
+      }),
+      { params: Promise.resolve({ id: 'missing' }) },
+    );
+    expect(res.status).toBe(404);
+  });
+
+  it('returns 204 when shortcut is added successfully', async () => {
+    mockPrisma.collection.findFirst.mockResolvedValue(mockNamedCollection);
+    mockPrisma.collectionShortcut.upsert.mockResolvedValue({});
+    const res = await shortcutsPOST(
+      makeRequest(`http://localhost/api/collections/${COLLECTION_ID}/shortcuts`, 'POST', {
+        shortcutId: SHORTCUT_ID,
+      }),
+      { params: Promise.resolve({ id: COLLECTION_ID }) },
+    );
+    expect(res.status).toBe(204);
+  });
+});
+
+// ─── DELETE /api/collections/:id/shortcuts/:shortcutId ───────────────────────
+
+describe('DELETE /api/collections/:id/shortcuts/:shortcutId', () => {
+  const SHORTCUT_ID = 'sc-999';
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockAuth.mockResolvedValue(SESSION);
+  });
+
+  it('returns 401 when unauthenticated', async () => {
+    mockAuth.mockResolvedValue(null);
+    const res = await shortcutDELETE(
+      makeRequest(
+        `http://localhost/api/collections/${COLLECTION_ID}/shortcuts/${SHORTCUT_ID}`,
+        'DELETE',
+      ),
+      { params: Promise.resolve({ id: COLLECTION_ID, shortcutId: SHORTCUT_ID }) },
+    );
+    expect(res.status).toBe(401);
+  });
+
+  it('returns 404 when collection does not exist', async () => {
+    mockPrisma.collection.findFirst.mockResolvedValue(null);
+    const res = await shortcutDELETE(
+      makeRequest(
+        `http://localhost/api/collections/missing/shortcuts/${SHORTCUT_ID}`,
+        'DELETE',
+      ),
+      { params: Promise.resolve({ id: 'missing', shortcutId: SHORTCUT_ID }) },
+    );
+    expect(res.status).toBe(404);
+  });
+
+  it('returns 404 when shortcut is not in the collection', async () => {
+    mockPrisma.collection.findFirst.mockResolvedValue(mockNamedCollection);
+    mockPrisma.collectionShortcut.deleteMany.mockResolvedValue({ count: 0 });
+    const res = await shortcutDELETE(
+      makeRequest(
+        `http://localhost/api/collections/${COLLECTION_ID}/shortcuts/${SHORTCUT_ID}`,
+        'DELETE',
+      ),
+      { params: Promise.resolve({ id: COLLECTION_ID, shortcutId: SHORTCUT_ID }) },
+    );
+    expect(res.status).toBe(404);
+  });
+
+  it('returns 204 when shortcut is removed successfully', async () => {
+    mockPrisma.collection.findFirst.mockResolvedValue(mockNamedCollection);
+    mockPrisma.collectionShortcut.deleteMany.mockResolvedValue({ count: 1 });
+    const res = await shortcutDELETE(
+      makeRequest(
+        `http://localhost/api/collections/${COLLECTION_ID}/shortcuts/${SHORTCUT_ID}`,
+        'DELETE',
+      ),
+      { params: Promise.resolve({ id: COLLECTION_ID, shortcutId: SHORTCUT_ID }) },
+    );
+    expect(res.status).toBe(204);
   });
 });
