@@ -33,24 +33,6 @@ Task IDs are monotonic. The Project Manager picks the next number.
 
 _(Project Manager keeps 2–3 tasks here at all times.)
 
-### TASK-0031: App Request Form & "No Results" Request Button
-- **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
-- **PRD:** research/agents/prds/goal-08-community-contributions.md
-- **Scope:** Add a "Request this app" button to the no-results page when a user searches for an app not in the database. Build a minimal form: app name (required, text input), website URL (optional, text input), category (optional, dropdown matching existing categories), platform(s) (checkboxes: Windows / macOS / Linux). On submit: create a Submission with type=APP_REQUEST via `POST /api/submissions` (from TASK-0027). Show confirmation message on success. Handle rate limit (429) with user-friendly message. Requires authenticated session — show sign-in prompt for unauthenticated users. NOT in scope: admin handling of app requests (TASK-0029 covers review queue), auto-populating shortcuts for newly approved apps, search improvements, notification on approval/rejection, mobile-optimized form.
-- **Acceptance:**
-  - "Request this app" button visible on no-results search page
-  - Form includes app name (required), website URL, category dropdown, platform checkboxes
-  - Submit creates an APP_REQUEST-type Submission via `POST /api/submissions`
-  - Confirmation message shown on success
-  - Rate limit (429) shows user-friendly error
-  - Unauthenticated users see sign-in prompt when clicking request button
-  - Form validates required field (app name) before submission
-  - No regressions on existing search/browse pages
-- **PR:**
-- **Branch:**
-- **TRD:**
-- **Notes:** Unblocked by TASK-0027 merge (PR #27, 2026-05-11). Fifth Goal 8 task. PRD Flow 3 covers this scope.
-
 ### TASK-0032: Contributor Profile Page
 - **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
 - **PRD:** research/agents/prds/goal-08-community-contributions.md
@@ -96,6 +78,24 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
 ## In Review
 
 _(Developer moves tasks here when the draft PR is marked ready.)_
+
+### TASK-0031: App Request Form & "No Results" Request Button
+- **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
+- **PRD:** research/agents/prds/goal-08-community-contributions.md
+- **Scope:** Add a "Request this app" button to the no-results page when a user searches for an app not in the database. Build a minimal form: app name (required, text input), website URL (optional, text input), category (optional, dropdown matching existing categories), platform(s) (checkboxes: Windows / macOS / Linux). On submit: create a Submission with type=APP_REQUEST via `POST /api/submissions` (from TASK-0027). Show confirmation message on success. Handle rate limit (429) with user-friendly message. Requires authenticated session — show sign-in prompt for unauthenticated users. NOT in scope: admin handling of app requests (TASK-0029 covers review queue), auto-populating shortcuts for newly approved apps, search improvements, notification on approval/rejection, mobile-optimized form.
+- **Acceptance:**
+  - "Request this app" button visible on no-results search page
+  - Form includes app name (required), website URL, category dropdown, platform checkboxes
+  - Submit creates an APP_REQUEST-type Submission via `POST /api/submissions`
+  - Confirmation message shown on success
+  - Rate limit (429) shows user-friendly error
+  - Unauthenticated users see sign-in prompt when clicking request button
+  - Form validates required field (app name) before submission
+  - No regressions on existing search/browse pages
+- **PR:** #36
+- **Branch:** goals/31-app-request-form
+- **TRD:** research/plans/goals/31-app-request-form-trd.md — approved
+- **Notes:** Unblocked by TASK-0027 merge (PR #27, 2026-05-11). Fifth Goal 8 task. PRD Flow 3 covers this scope.
 
 ### TASK-0029: Admin Review Queue UI
 - **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
