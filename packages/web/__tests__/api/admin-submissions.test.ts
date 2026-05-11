@@ -56,7 +56,7 @@ const USER_SESSION = { user: { id: USER_ID, email: 'user@example.com' } };
 const ADMIN_USER = { isAdmin: true };
 const NON_ADMIN_USER = { isAdmin: false };
 
-const PENDING_SUBMISSION = {
+const PENDING_SUBMISSION_ROW = {
   id: 'sub-001',
   type: 'NEW_SHORTCUT',
   status: 'PENDING',
@@ -69,24 +69,38 @@ const PENDING_SUBMISSION = {
   reviewedAt: null,
   createdAt: new Date('2026-05-11T06:00:00Z'),
   updatedAt: new Date('2026-05-11T06:00:00Z'),
+  submitter: { name: 'Test User', image: 'https://example.com/avatar.png' },
+  app: { name: 'VS Code', slug: 'vscode' },
+  shortcut: null,
 };
 
 const APPROVED_SUBMISSION = {
-  ...PENDING_SUBMISSION,
+  id: 'sub-001',
+  type: 'NEW_SHORTCUT',
   status: 'APPROVED',
+  submitterId: USER_ID,
+  appId: 'app-001',
+  shortcutId: null,
+  data: { command: 'Save File', platformId: 'plat-001', keyCombo: 'Ctrl+S', key: 's', modifiers: ['Ctrl'] },
+  reviewerNotes: null,
   reviewedBy: ADMIN_ID,
   reviewedAt: new Date('2026-05-11T07:00:00Z'),
+  createdAt: new Date('2026-05-11T06:00:00Z'),
   updatedAt: new Date('2026-05-11T07:00:00Z'),
 };
 
 const REJECTED_SUBMISSION = {
-  ...PENDING_SUBMISSION,
+  ...APPROVED_SUBMISSION,
   status: 'REJECTED',
-  reviewedBy: ADMIN_ID,
-  reviewedAt: new Date('2026-05-11T07:00:00Z'),
   reviewerNotes: 'Duplicate entry',
-  updatedAt: new Date('2026-05-11T07:00:00Z'),
 };
+
+function makeGETRequest(page?: number): NextRequest {
+  const url = page
+    ? `http://localhost/api/admin/submissions?page=${page}`
+    : 'http://localhost/api/admin/submissions';
+  return new NextRequest(url);
+}
 
 function makePATCHRequest(id: string, body: unknown): NextRequest {
   return new NextRequest(`http://localhost/api/admin/submissions/${id}`, {
@@ -109,35 +123,92 @@ describe('GET /api/admin/submissions', () => {
 
   it('returns 401 when unauthenticated', async () => {
     mockAuth.mockResolvedValue(null);
-    const res = await GET();
+    const res = await GET(makeGETRequest());
     expect(res.status).toBe(401);
   });
 
   it('returns 403 for non-admin user', async () => {
     mockAuth.mockResolvedValue(USER_SESSION);
     mockPrisma.user.findUnique.mockResolvedValue(NON_ADMIN_USER);
-    const res = await GET();
+    const res = await GET(makeGETRequest());
     expect(res.status).toBe(403);
   });
 
-  it('returns 200 with pending submissions sorted oldest-first for admin', async () => {
+  it('returns 200 with { submissions, totalPending } for admin', async () => {
     mockAuth.mockResolvedValue(ADMIN_SESSION);
     mockPrisma.user.findUnique.mockResolvedValue(ADMIN_USER);
-    mockPrisma.submission.findMany.mockResolvedValue([PENDING_SUBMISSION]);
-    const res = await GET();
+    mockPrisma.submission.findMany.mockResolvedValue([PENDING_SUBMISSION_ROW]);
+    mockPrisma.submission.count.mockResolvedValue(1);
+
+    const res = await GET(makeGETRequest());
     expect(res.status).toBe(200);
     const body = await res.json();
-    expect(body).toHaveLength(1);
-    expect(body[0]).toMatchObject({ id: 'sub-001', status: 'PENDING' });
+    expect(body.totalPending).toBe(1);
+    expect(body.submissions).toHaveLength(1);
+    expect(body.submissions[0]).toMatchObject({
+      id: 'sub-001',
+      status: 'PENDING',
+      submitterName: 'Test User',
+      submitterImage: 'https://example.com/avatar.png',
+      appName: 'VS Code',
+      appSlug: 'vscode',
+    });
   });
 
-  it('returns 200 with empty array when no pending submissions', async () => {
+  it('returns empty submissions array when no pending', async () => {
     mockAuth.mockResolvedValue(ADMIN_SESSION);
     mockPrisma.user.findUnique.mockResolvedValue(ADMIN_USER);
     mockPrisma.submission.findMany.mockResolvedValue([]);
-    const res = await GET();
+    mockPrisma.submission.count.mockResolvedValue(0);
+
+    const res = await GET(makeGETRequest());
     expect(res.status).toBe(200);
-    expect(await res.json()).toEqual([]);
+    const body = await res.json();
+    expect(body).toEqual({ submissions: [], totalPending: 0 });
+  });
+
+  it('passes page parameter to service for pagination', async () => {
+    mockAuth.mockResolvedValue(ADMIN_SESSION);
+    mockPrisma.user.findUnique.mockResolvedValue(ADMIN_USER);
+    mockPrisma.submission.findMany.mockResolvedValue([]);
+    mockPrisma.submission.count.mockResolvedValue(0);
+
+    await GET(makeGETRequest(3));
+    expect(mockPrisma.submission.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ skip: 100, take: 50 }),
+    );
+  });
+
+  it('includes originalShortcut for CORRECTION submissions', async () => {
+    const correctionRow = {
+      ...PENDING_SUBMISSION_ROW,
+      type: 'CORRECTION',
+      shortcutId: 'sc-001',
+      shortcut: {
+        command: 'Copy',
+        context: 'Editor',
+        bindings: [
+          {
+            platform: { slug: 'windows' },
+            steps: [{ keyCombo: 'Ctrl+C' }],
+          },
+        ],
+      },
+    };
+
+    mockAuth.mockResolvedValue(ADMIN_SESSION);
+    mockPrisma.user.findUnique.mockResolvedValue(ADMIN_USER);
+    mockPrisma.submission.findMany.mockResolvedValue([correctionRow]);
+    mockPrisma.submission.count.mockResolvedValue(1);
+
+    const res = await GET(makeGETRequest());
+    const body = await res.json();
+    expect(body.submissions[0].originalShortcut).toEqual({
+      command: 'Copy',
+      context: 'Editor',
+      keyCombo: 'Ctrl+C',
+      platform: 'windows',
+    });
   });
 });
 
@@ -147,6 +218,21 @@ describe('PATCH /api/admin/submissions/:id', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
+
+  const PENDING_FOR_PATCH = {
+    id: 'sub-001',
+    type: 'NEW_SHORTCUT',
+    status: 'PENDING',
+    submitterId: USER_ID,
+    appId: 'app-001',
+    shortcutId: null,
+    data: { command: 'Save File', platformId: 'plat-001', keyCombo: 'Ctrl+S', key: 's', modifiers: ['Ctrl'] },
+    reviewerNotes: null,
+    reviewedBy: null,
+    reviewedAt: null,
+    createdAt: new Date('2026-05-11T06:00:00Z'),
+    updatedAt: new Date('2026-05-11T06:00:00Z'),
+  };
 
   it('returns 401 when unauthenticated', async () => {
     mockAuth.mockResolvedValue(null);
@@ -186,7 +272,7 @@ describe('PATCH /api/admin/submissions/:id', () => {
   it('returns 200 and approves a NEW_SHORTCUT submission', async () => {
     mockAuth.mockResolvedValue(ADMIN_SESSION);
     mockPrisma.user.findUnique.mockResolvedValue(ADMIN_USER);
-    mockPrisma.submission.findUnique.mockResolvedValue(PENDING_SUBMISSION);
+    mockPrisma.submission.findUnique.mockResolvedValue(PENDING_FOR_PATCH);
     mockPrisma.shortcut.create.mockResolvedValue({ id: 'sc-new' });
     mockPrisma.shortcutKeyBinding.create.mockResolvedValue({ id: 'binding-new' });
     mockPrisma.shortcutKeyStep.create.mockResolvedValue({ id: 'step-new' });
@@ -200,7 +286,6 @@ describe('PATCH /api/admin/submissions/:id', () => {
     const body = await res.json();
     expect(body.status).toBe('APPROVED');
     expect(body.reviewedBy).toBe(ADMIN_ID);
-    // Verify shortcut was created
     expect(mockPrisma.shortcut.create).toHaveBeenCalledWith(
       expect.objectContaining({
         data: expect.objectContaining({ command: 'Save File', applicationId: 'app-001' }),
@@ -211,7 +296,7 @@ describe('PATCH /api/admin/submissions/:id', () => {
   it('returns 200 and rejects a submission with reviewer notes', async () => {
     mockAuth.mockResolvedValue(ADMIN_SESSION);
     mockPrisma.user.findUnique.mockResolvedValue(ADMIN_USER);
-    mockPrisma.submission.findUnique.mockResolvedValue(PENDING_SUBMISSION);
+    mockPrisma.submission.findUnique.mockResolvedValue(PENDING_FOR_PATCH);
     mockPrisma.submission.update.mockResolvedValue(REJECTED_SUBMISSION);
 
     const res = await PATCH(
@@ -232,21 +317,20 @@ describe('PATCH /api/admin/submissions/:id', () => {
   it('returns 200 and edit-and-approves — merges data before applying', async () => {
     const updatedData = { command: 'Save All Files', keyCombo: 'Ctrl+Shift+S', key: 's', modifiers: ['Ctrl', 'Shift'] };
     const mergedSubmission = {
-      ...PENDING_SUBMISSION,
-      data: { ...PENDING_SUBMISSION.data, ...updatedData },
+      ...PENDING_FOR_PATCH,
+      data: { ...PENDING_FOR_PATCH.data, ...updatedData },
     };
     const approvedMerged = { ...mergedSubmission, status: 'APPROVED', reviewedBy: ADMIN_ID };
 
     mockAuth.mockResolvedValue(ADMIN_SESSION);
     mockPrisma.user.findUnique.mockResolvedValue(ADMIN_USER);
-    // editAndApprove calls findUnique twice (once in editAndApprove, once in approve)
     mockPrisma.submission.findUnique
-      .mockResolvedValueOnce(PENDING_SUBMISSION) // for editAndApprove
-      .mockResolvedValueOnce({ ...mergedSubmission }) // for approve after update
-      .mockResolvedValue({ ...mergedSubmission }); // fallback
+      .mockResolvedValueOnce(PENDING_FOR_PATCH)
+      .mockResolvedValueOnce({ ...mergedSubmission })
+      .mockResolvedValue({ ...mergedSubmission });
     mockPrisma.submission.update
-      .mockResolvedValueOnce({ ...mergedSubmission }) // data merge
-      .mockResolvedValueOnce({ ...approvedMerged, reviewedAt: new Date() }); // status update
+      .mockResolvedValueOnce({ ...mergedSubmission })
+      .mockResolvedValueOnce({ ...approvedMerged, reviewedAt: new Date() });
     mockPrisma.shortcut.create.mockResolvedValue({ id: 'sc-new' });
     mockPrisma.shortcutKeyBinding.create.mockResolvedValue({ id: 'binding-new' });
     mockPrisma.shortcutKeyStep.create.mockResolvedValue({ id: 'step-new' });
@@ -256,7 +340,6 @@ describe('PATCH /api/admin/submissions/:id', () => {
       makeParams('sub-001'),
     );
     expect(res.status).toBe(200);
-    // Verify data was merged before approve
     expect(mockPrisma.submission.update).toHaveBeenCalledWith(
       expect.objectContaining({
         data: expect.objectContaining({ data: expect.objectContaining({ command: 'Save All Files' }) }),
@@ -276,7 +359,7 @@ describe('PATCH /api/admin/submissions/:id', () => {
 
   it('approves CORRECTION — updates existing shortcut row', async () => {
     const correctionSubmission = {
-      ...PENDING_SUBMISSION,
+      ...PENDING_FOR_PATCH,
       type: 'CORRECTION',
       shortcutId: 'sc-existing',
       data: { command: 'Save Document', keyCombo: 'Ctrl+S', platformId: 'plat-001', key: 's', modifiers: ['Ctrl'] },
@@ -309,7 +392,7 @@ describe('PATCH /api/admin/submissions/:id', () => {
 
   it('approves APP_REQUEST — creates new Application row', async () => {
     const appRequestSubmission = {
-      ...PENDING_SUBMISSION,
+      ...PENDING_FOR_PATCH,
       type: 'APP_REQUEST',
       appId: null,
       data: { appName: 'Notion', slug: 'notion', categoryId: 'cat-productivity' },
@@ -336,7 +419,7 @@ describe('PATCH /api/admin/submissions/:id', () => {
   });
 
   it('returns 409 when approving a non-PENDING submission', async () => {
-    const approvedSubmission = { ...PENDING_SUBMISSION, status: 'APPROVED' };
+    const approvedSubmission = { ...PENDING_FOR_PATCH, status: 'APPROVED' };
     mockAuth.mockResolvedValue(ADMIN_SESSION);
     mockPrisma.user.findUnique.mockResolvedValue(ADMIN_USER);
     mockPrisma.submission.findUnique.mockResolvedValue(approvedSubmission);
@@ -349,7 +432,7 @@ describe('PATCH /api/admin/submissions/:id', () => {
 
   it('returns 400 when APP_REQUEST approve has invalid categoryId', async () => {
     const appRequestSubmission = {
-      ...PENDING_SUBMISSION,
+      ...PENDING_FOR_PATCH,
       type: 'APP_REQUEST',
       appId: null,
       data: { appName: 'Some App', slug: 'some-app', categoryId: 'nonexistent-cat' },
