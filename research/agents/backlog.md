@@ -135,6 +135,17 @@ _(TRD Watcher moves tasks here when a TRD needs rework.)_
 
 _(Reviewer moves tasks here after approving the PR. You merge to main, then move to Shipped.)_
 
+### TASK-0028: Submission Form UI — New Shortcut & Key Recorder
+- **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
+- **PRD:** research/agents/prds/goal-08-community-contributions.md
+- **PR:** #34
+- **Branch:** goals/28-submission-form-ui
+- **TRD:** research/plans/goals/28-submission-form-ui-trd.md — approved
+- **Approved:** 2026-05-11 (Round 2)
+
+## Shipped
+
+_(You move tasks here after merging to main.)_
 ### TASK-0038: Overlay X11 Compatibility — Transparency & Click-Through
 - **Goal:** Goal 10 — Linux Support (implementation-roadmap-v2.md § Goal 10)
 - **PRD:** research/agents/prds/goal-10-linux-support.md

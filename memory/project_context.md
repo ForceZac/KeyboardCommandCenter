@@ -9,9 +9,8 @@ Keyboard Command Center is a comprehensive keyboard shortcut database and backgr
 ## Current status
 
 - **Shipped goals:** Goal 1 (Schema & Seed), Goal 2 (Web Search & Browse), Goal 3 (Desktop App Shell), Goal 4 (Active Window Detection), Goal 5 (Shortcut Panel UI), Goal 6 (Overlay Mode), Goal 7 (User Accounts & Favorites Sync)
-- **Active goals:** Goal 8 — Community Contributions (TASK-0028/0029 Ready, TASK-0030 Blocked on 0028, TASK-0031/0032 unblocked waiting for Ready slot); Goal 10 — Linux Support (TASK-0038 Approved PR #33, TASK-0039 Ready)
+- **Active goals:** Goal 8 — Community Contributions (TASK-0028 In Progress PR #34 Draft, TASK-0029/0031/0032 Ready, TASK-0030 Blocked on 0028); Goal 10 — Linux Support (TASK-0036/0037/0038 Shipped, TASK-0039 Blocked on PRD)
 - **Shipped in parallel:** Goal 9 — Auto-Update & Distribution (TASK-0033/0034/0035 all merged)
-- **Approved awaiting /merge:** TASK-0038 (PR #33), TASK-0037 (PR #32 merged), TASK-0036 (PR #31 merged), TASK-0035 (PR #30 merged), TASK-0034 (PR #29 merged), TASK-0033 (PR #28 merged), TASK-0027 (PR #27 merged)
 - **PRD gaps:** Goals 9 and 10 have no PRDs in `research/agents/prds/` — see PROP-0008
 - **Stage:** Active development — Goals 1–9 shipped, Goal 8 & 10 active
 
