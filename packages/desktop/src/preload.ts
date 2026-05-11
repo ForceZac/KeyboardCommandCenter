@@ -52,6 +52,11 @@ contextBridge.exposeInMainWorld('kcc', {
    * All sync/write operations are async and do not block the UI thread.
    */
   sync: {
+    /** Returns true when the user is signed in (TASK-0026). */
+    isSignedIn: (): Promise<boolean> => {
+      return ipcRenderer.invoke('sync:isSignedIn') as Promise<boolean>;
+    },
+
     /** Returns the locally cached favorites list. Empty array when signed out. */
     getFavorites: (): Promise<FavoriteEntry[]> => {
       return ipcRenderer.invoke('sync:getFavorites') as Promise<FavoriteEntry[]>;

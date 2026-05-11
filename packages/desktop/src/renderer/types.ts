@@ -6,7 +6,8 @@
  * the authoritative types in packages/core/src/types.ts — if core types change,
  * update here too.
  *
- * Re-declared types: AppDetail, ShortcutEntry, PlatformBinding (runtime-relevant shapes only).
+ * Re-declared types: AppDetail, ShortcutEntry, PlatformBinding, FavoriteEntry,
+ * CollectionSummary (runtime-relevant shapes only).
  */
 
 /** A shortcut binding for a single platform. */
@@ -34,4 +35,28 @@ export interface AppDetail {
   description: string | null;
   categorySlug: string;
   contexts: Record<string, ShortcutEntry[]>;
+}
+
+/** One entry in the GET /api/favorites response (mirrors @kcc/core FavoriteEntry). */
+export interface FavoriteEntry {
+  collectionShortcutId: string;
+  collectionId: string;
+  shortcutId: string;
+  addedAt: string; // ISO-8601
+  shortcut: {
+    id: string;
+    command: string;
+    context: string | null;
+    appName: string;
+    appSlug: string;
+  };
+}
+
+/** Collection summary from the sync cache (mirrors @kcc/core CollectionSummary). */
+export interface CollectionSummary {
+  id: string;
+  name: string;
+  description: string | null;
+  isDefault: boolean;
+  shortcutCount: number;
 }
