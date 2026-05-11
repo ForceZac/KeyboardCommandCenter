@@ -75,7 +75,18 @@
       </fieldset>
 
       <fieldset id="overlay-section" class="setting-row overlay-fieldset">
-        <legend class="setting-section-heading">Overlay</legend>
+        <legend class="setting-section-heading">
+          Overlay
+          <span id="overlay-experimental-badge" class="experimental-badge hidden">Experimental</span>
+        </legend>
+
+        <div id="overlay-wayland-dismiss-row" class="overlay-row hidden">
+          <span class="label-text">Auto-dismiss timeout (seconds)</span>
+          <div class="overlay-slider-controls">
+            <input type="number" id="overlay-wayland-dismiss" min="0" max="60" step="1" />
+            <span class="hint">0 = never auto-dismiss</span>
+          </div>
+        </div>
 
         <div class="overlay-row">
           <span class="label-text">Enable overlay mode</span>

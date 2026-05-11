@@ -29,7 +29,9 @@ import {
   setOverlayOpacity,
   setOverlayPosition,
   setOverlaySize,
+  setOverlayWaylandDismissTimeoutMs,
 } from './settings';
+import { isWaylandSession } from './platform/linux-session';
 import * as overlayControllerModule from './overlay-controller';
 import { OverlayWindowManager } from './overlay-window';
 // TASK-0023: desktop auth flow.
@@ -370,8 +372,18 @@ app.whenReady().then(() => {
     overlayControllerModule.overlayController?.setOpacity(clampOpacity(opacity));
   });
 
-  // Returns true on Windows and macOS where the overlay feature is supported.
-  ipcMain.handle('overlay:is-supported', () => process.platform !== 'linux');
+  // The overlay is supported on all platforms — Linux gets a degraded experience on Wayland.
+  ipcMain.handle('overlay:is-supported', () => true);
+
+  // Returns true when running under a Wayland compositor (degraded overlay mode).
+  // The settings renderer uses this to show the "Experimental" badge and dismiss timeout row.
+  ipcMain.handle('overlay:is-degraded', () => isWaylandSession());
+
+  // Persists and forwards the Wayland auto-dismiss timeout to the overlay manager.
+  ipcMain.handle('overlay:set-wayland-dismiss-timeout', (_event, { timeoutMs }: { timeoutMs: number }) => {
+    setOverlayWaylandDismissTimeoutMs(timeoutMs);
+    overlayManager.setWaylandDismissTimeout(timeoutMs);
+  });
 
   ipcMain.handle('overlay:set-position', (_event, { position }: { position: string }) => {
     setOverlayPosition(position);

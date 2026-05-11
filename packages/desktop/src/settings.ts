@@ -12,6 +12,8 @@ export interface OverlayPrefs {
   opacity: number;
   position: string;
   size: string;
+  /** Auto-dismiss timeout in milliseconds when running on Wayland. 0 = never dismiss. */
+  waylandDismissTimeoutMs: number;
 }
 
 interface SettingsSchema {
@@ -30,6 +32,7 @@ const store = new Store<SettingsSchema>({
       opacity: 0.4,
       position: 'Top Right',
       size: 'Standard',
+      waylandDismissTimeoutMs: 8000,
     },
   },
 });
@@ -77,4 +80,12 @@ export function setOverlayPosition(position: string): void {
 
 export function setOverlaySize(size: string): void {
   store.set('overlay.size', size);
+}
+
+export function getOverlayWaylandDismissTimeoutMs(): number {
+  return (store.get('overlay') as OverlayPrefs).waylandDismissTimeoutMs;
+}
+
+export function setOverlayWaylandDismissTimeoutMs(ms: number): void {
+  store.set('overlay.waylandDismissTimeoutMs', ms);
 }
