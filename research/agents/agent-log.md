@@ -1,5 +1,13 @@
 <!-- Agent log. Append-only. Agents read the last 75 lines before acting. Log Trim archives entries older than 48h into agent-log-archive-YYYY-MM.md. -->
 
+## 2026-05-11 10:36 ET REVIEWER
+- did: reviewed PR #33 (TASK-0038 — Overlay X11 Compatibility — Transparency & Click-Through, round 1)
+- decision: approved (posted as comment — GitHub self-review restriction)
+- standards checked: backend-standards (thin IPC handlers in main.ts, platform/linux-session.ts correctly in platform/ adapter directory, dismiss timer encapsulated in private methods, tray graceful failure consistent with globalShortcut pattern), separation-of-concerns (linux-session.ts in packages/desktop/src/platform/ as required, packages/overlay/ untouched, no cross-package contamination), frontend-standards (settings renderer follows established contextBridge pattern, kccSettings.d.ts updated consistently), PR-policy (TRD approved before build, non-draft, tests pass, TypeScript clean), TRD-match (all 8 phases implemented: linux-session.ts, settings waylandDismissTimeoutMs, overlay-window.ts X11/Wayland split + dismiss timer, main.ts IPC, tray graceful failure, settings UI, preload surface, 43 new tests)
+- tests run: 420/420 pass (packages/desktop, 19 files); TypeScript clean (3 tsconfigs)
+- metrics: run_type=productive | pr=PR-33 | round=1 | decision=approved | tests_run=pass
+- next: Zach merges PR #33 to main (TASK-0038 done). Developer picks TASK-0028 or TASK-0039 next.
+
 ## 2026-05-11 08:48 ET DEVELOPER
 - did: wrote plan + TRD for TASK-0037; created branch goals/37-wayland-active-window-detection; pushed; opened draft PR #32; moved task to In Progress (TRD awaiting-review); reset DEV_IDLE; woke TRD watcher (rm TRD_PAUSE)
 - task: TASK-0037
