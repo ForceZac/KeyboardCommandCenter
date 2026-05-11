@@ -103,10 +103,13 @@ describe('useFavorites', () => {
       result.current.toggle('shortcut-new');
     });
 
-    // Optimistic update: shortcut should appear favorited immediately
-    await waitFor(() => expect(result.current.isToggling).toBe(true));
-
-    // After rejection: rollback — shortcut should no longer appear favorited
-    await waitFor(() => expect(result.current.isFavorited('shortcut-new')).toBe(false));
+    // Wait until addFavorite was called AND the rollback has restored the prior state.
+    // onMutate sets the optimistic entry then mutationFn rejects — onError restores the
+    // snapshot. By the time waitFor polls between JS tasks, both the call and the
+    // rollback have completed within the same microtask chain.
+    await waitFor(() => {
+      expect(addFavorite).toHaveBeenCalledWith('shortcut-new');
+      expect(result.current.isFavorited('shortcut-new')).toBe(false);
+    });
   });
 });

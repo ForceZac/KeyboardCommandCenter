@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
 
@@ -46,6 +46,10 @@ describe('FavoriteToggle', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockCollections.mockReturnValue({ collections: [] });
+  });
+
+  afterEach(() => {
+    cleanup();
   });
 
   it('renders outline heart (add label) when shortcut is not favorited', () => {
