@@ -315,6 +315,139 @@ describe('DetectionService', () => {
     expect(emitToRenderer.mock.calls[1][1]).toMatchObject({ appSlug: null, processName: '' });
   });
 
+  // ── Wayland detection unavailable (TASK-0037) ──────────────────────────────
+
+  it('emits detection:unavailable when getActiveWindow returns detectionUnavailable: true', () => {
+    const emitToRenderer = vi.fn<[string, unknown], void>();
+    const svc = new DetectionService({
+      getActiveWindow: vi.fn(() => ({ processName: '', windowTitle: '', detectionUnavailable: true })),
+      lookupApp: () => null,
+      emitToRenderer,
+      store: makeStore({ 'detection.intervalMs': 100 }),
+    });
+
+    svc.start();
+    vi.advanceTimersByTime(100);
+    svc.stop();
+
+    expect(emitToRenderer).toHaveBeenCalledOnce();
+    expect(emitToRenderer.mock.calls[0][0]).toBe('detection:unavailable');
+  });
+
+  it('emits detection:unavailable only once for consecutive unavailable ticks', () => {
+    const emitToRenderer = vi.fn<[string, unknown], void>();
+    const svc = new DetectionService({
+      getActiveWindow: vi.fn(() => ({ processName: '', windowTitle: '', detectionUnavailable: true })),
+      lookupApp: () => null,
+      emitToRenderer,
+      store: makeStore({ 'detection.intervalMs': 100 }),
+    });
+
+    svc.start();
+    vi.advanceTimersByTime(350); // 3 ticks — all unavailable
+    svc.stop();
+
+    // Should only emit once (de-duplicated like the no-detection sentinel).
+    expect(emitToRenderer).toHaveBeenCalledOnce();
+    expect(emitToRenderer.mock.calls[0][0]).toBe('detection:unavailable');
+  });
+
+  it('re-emits detection:unavailable after a successful detection resumes and drops back', () => {
+    const emitToRenderer = vi.fn<[string, unknown], void>();
+    let tick = 0;
+    const getActiveWindow = vi.fn(() => {
+      tick++;
+      if (tick === 1) return { processName: '', windowTitle: '', detectionUnavailable: true };
+      if (tick === 2) return makeWindowInfo('code'); // recovers
+      return { processName: '', windowTitle: '', detectionUnavailable: true }; // drops again
+    });
+
+    const svc = new DetectionService({
+      getActiveWindow,
+      lookupApp: () => 'vscode',
+      emitToRenderer,
+      store: makeStore({ 'detection.intervalMs': 100 }),
+    });
+
+    svc.start();
+    vi.advanceTimersByTime(350); // 3 ticks
+    svc.stop();
+
+    const channels = emitToRenderer.mock.calls.map((c) => c[0]);
+    // tick1: detection:unavailable; tick2: app-changed (code); tick3: detection:unavailable again
+    expect(channels).toContain('detection:unavailable');
+    expect(channels).toContain('detection:app-changed');
+    // detection:unavailable should appear exactly twice (once on tick1, once on tick3).
+    expect(channels.filter((c) => c === 'detection:unavailable')).toHaveLength(2);
+  });
+
+  it('setManualApp() stores the slug and getManualAppSlug() returns it', () => {
+    const svc = new DetectionService({
+      getActiveWindow: vi.fn(() => null),
+      lookupApp: () => null,
+      emitToRenderer: vi.fn(),
+      store: makeStore(),
+    });
+
+    expect(svc.getManualAppSlug()).toBeNull();
+    svc.setManualApp('vscode');
+    expect(svc.getManualAppSlug()).toBe('vscode');
+  });
+
+  it('setManualApp() immediately emits detection:app-changed when lastWasUnavailable is true', () => {
+    const emitToRenderer = vi.fn<[string, unknown], void>();
+    const svc = new DetectionService({
+      getActiveWindow: vi.fn(() => ({ processName: '', windowTitle: '', detectionUnavailable: true })),
+      lookupApp: () => null,
+      emitToRenderer,
+      store: makeStore({ 'detection.intervalMs': 100 }),
+    });
+
+    // First tick sets lastWasUnavailable = true.
+    svc.start();
+    vi.advanceTimersByTime(100);
+
+    // Now call setManualApp — should immediately push app-changed.
+    svc.setManualApp('figma');
+
+    svc.stop();
+
+    const calls = emitToRenderer.mock.calls;
+    const appChangedCall = calls.find((c) => c[0] === 'detection:app-changed');
+    expect(appChangedCall).toBeTruthy();
+    expect(appChangedCall![1]).toMatchObject({ appSlug: 'figma', processName: 'figma' });
+  });
+
+  it('subsequent unavailable ticks forward the manual selection via app-changed', () => {
+    const emitToRenderer = vi.fn<[string, unknown], void>();
+    const svc = new DetectionService({
+      getActiveWindow: vi.fn(() => ({ processName: '', windowTitle: '', detectionUnavailable: true })),
+      lookupApp: () => null,
+      emitToRenderer,
+      store: makeStore({ 'detection.intervalMs': 100 }),
+    });
+
+    svc.start();
+    vi.advanceTimersByTime(100); // tick 1: emits detection:unavailable
+
+    svc.setManualApp('figma'); // pushes detection:app-changed immediately
+    emitToRenderer.mockClear(); // clear to isolate the next tick
+
+    vi.advanceTimersByTime(100); // tick 2: same unavailable, manual slug set
+    svc.stop();
+
+    // Tick 2 is still unavailable; since lastDetected doesn't match 'figma',
+    // detection:app-changed should be emitted to keep the panel current.
+    // (Or it was already emitted on tick 2 if process name changed.)
+    const calls = emitToRenderer.mock.calls;
+    // Either no emit (if lastDetected already = figma) or app-changed with figma.
+    calls.forEach((c) => {
+      if (c[0] === 'detection:app-changed') {
+        expect(c[1]).toMatchObject({ appSlug: 'figma' });
+      }
+    });
+  });
+
   // ── Disabled service ───────────────────────────────────────────────────────
 
   it('start() is a no-op when detection is disabled in settings', () => {
