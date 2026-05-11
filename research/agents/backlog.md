@@ -53,9 +53,53 @@ _(Project Manager keeps 2–3 tasks here at all times.)_
 - **TRD:**
 - **Notes:** First Goal 10 task. PRD Flow 3 (X11 detection) covers this scope. Does not depend on Goal 9 shipping — extends the existing Goal 4 Rust native module architecture. Requires `libx11-dev` / `libxcb1-dev` as build dependencies.
 
+### TASK-0037: Wayland Active Window Detection — GNOME & KDE DBus
+- **Goal:** Goal 10 — Linux Support (implementation-roadmap-v2.md § Goal 10)
+- **PRD:** research/agents/prds/goal-10-linux-support.md
+- **Scope:** Add a Wayland detection path to the Rust native module (`packages/desktop/native/`). Detect Wayland session via `XDG_SESSION_TYPE=wayland` or `WAYLAND_DISPLAY`. Implement GNOME detection via `org.gnome.Shell.Introspect` DBus interface — call `GetWindows()` to identify the focused window and get its PID/app-id. Implement KDE Plasma detection via `org.kde.KWin.Scripting` DBus interface — register a temporary script to read `workspace.activeWindow` properties. Use `zbus` crate for async DBus IPC. For unrecognized compositors, return a "detection unavailable" result so the TypeScript layer can fall back to manual app selection. Include unit tests for session type detection logic and integration test stubs (guarded behind `#[cfg(target_os = "linux")]`). NOT in scope: X11 detection (TASK-0036), overlay on Wayland, manual app selection UI (TypeScript side), Sway/Hyprland/other compositor support, tray icon compat, packaging, CI pipeline.
+- **Acceptance:**
+  - Wayland session detected via `XDG_SESSION_TYPE` or `WAYLAND_DISPLAY`
+  - GNOME active window detection returns process name/PID via `org.gnome.Shell.Introspect` DBus
+  - KDE active window detection returns process name/PID via `org.kde.KWin.Scripting` DBus
+  - Unrecognized compositor returns "detection unavailable" result
+  - `ActiveWindowInfo` struct returned matches the same shape as X11/Windows/macOS adapters
+  - `zbus` crate used for DBus communication
+  - Unit tests for session type detection logic pass
+  - Existing X11/Windows/macOS detection tests unaffected
+  - Crate compiles on Linux with `libdbus-1-dev` installed
+- **PR:**
+- **Branch:**
+- **TRD:**
+- **Notes:** Second Goal 10 task. PRD Flow 4 (Wayland detection) covers this scope. Depends on TASK-0036 architecture (adds Wayland path alongside X11 path). Requires `libdbus-1-dev` as build dependency.
+
+### TASK-0038: Linux Packaging — AppImage & .deb via electron-builder + CI Job
+- **Goal:** Goal 10 — Linux Support (implementation-roadmap-v2.md § Goal 10)
+- **PRD:** research/agents/prds/goal-10-linux-support.md
+- **Scope:** Configure electron-builder to produce AppImage and `.deb` packages for Linux x64. Add `linux` target configuration in electron-builder config specifying AppImage and deb targets with category (`Utility`), desktop entry, and icon. Add an XDG autostart `.desktop` file for login startup (controlled by existing settings preference). Declare runtime dependencies in `.deb` control fields: `libx11-6`, `libxcb1`, `libdbus-1-3`, `libappindicator3-1` (or `libayatana-appindicator3-1`). Add a Linux build job to the existing GitHub Actions release workflow (from TASK-0035) that runs on `ubuntu-latest`, installs build deps (`libx11-dev`, `libxcb1-dev`, `libdbus-1-dev`), builds AppImage and `.deb`, and uploads both artifacts to the draft GitHub Release alongside Windows and macOS builds. NOT in scope: RPM packaging, Flathub/Snap Store listing, ARM64 builds, auto-updater for Linux, signing Linux binaries, Wayland-specific packaging, landing page update for Linux downloads (separate task).
+- **Acceptance:**
+  - electron-builder config includes Linux target for AppImage and `.deb` (x64)
+  - `electron-builder --linux` produces a working `.AppImage` file
+  - `electron-builder --linux` produces a working `.deb` file
+  - AppImage runs without installation on Ubuntu 22.04+
+  - `.deb` installs cleanly via `dpkg -i` on Ubuntu/Debian
+  - XDG autostart `.desktop` entry created for login startup
+  - `.deb` declares runtime dependencies (`libx11-6`, `libxcb1`, `libdbus-1-3`, `libappindicator3-1`)
+  - GitHub Actions workflow includes a Linux build job triggered on `v*` tag
+  - Linux build artifacts uploaded to draft GitHub Release
+  - Existing Windows and macOS build jobs unaffected
+  - CI completes within 10-minute target
+- **PR:**
+- **Branch:**
+- **TRD:**
+- **Notes:** Third Goal 10 task. PRD Flows 1–2 (AppImage and .deb installation) cover this scope. Depends on TASK-0035 (GitHub Actions release workflow must exist before adding Linux job). Does not depend on TASK-0036/TASK-0037 — packaging is independent of native module Linux feature flags.
+
 ## In Progress
 
 _(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
+
+## In Review
+
+_(Developer moves tasks here when the draft PR is marked ready.)_
 
 ### TASK-0035: GitHub Actions Release Workflow — Build, Sign & Publish
 - **Goal:** Goal 9 — Auto-Update & Distribution (implementation-roadmap-v2.md § Goal 9)
@@ -75,12 +119,8 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
   - No regressions on existing CI workflows
 - **PR:** #30
 - **Branch:** goals/35-github-actions-release-workflow
-- **TRD:** research/plans/goals/35-github-actions-release-workflow-trd.md — awaiting-review
+- **TRD:** research/plans/goals/35-github-actions-release-workflow-trd.md — approved
 - **Notes:** Third Goal 9 task. PRD Flow 4 covers this scope. Requires CI secrets to be populated before first real run. Can be built and tested with dummy/self-signed certificates initially.
-
-## In Review
-
-_(Developer moves tasks here when the draft PR is marked ready.)_
 
 ## Changes Requested
 
