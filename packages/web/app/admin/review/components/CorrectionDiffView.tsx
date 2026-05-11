@@ -1,3 +1,4 @@
+import { Fragment } from 'react';
 import { clsx } from 'clsx';
 
 interface OriginalShortcut {
@@ -58,15 +59,11 @@ export default function CorrectionDiffView({ original, proposed }: Props) {
           Proposed
         </div>
         {fields.map((field) => (
-          <>
-            <div
-              key={`${field.label}-label`}
-              className="px-3 py-2 border-t border-gray-100 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-medium"
-            >
+          <Fragment key={field.label}>
+            <div className="px-3 py-2 border-t border-gray-100 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-medium">
               {field.label}
             </div>
             <div
-              key={`${field.label}-orig`}
               className={clsx(
                 'px-3 py-2 border-t border-gray-100 dark:border-gray-700',
                 field.changed
@@ -77,7 +74,6 @@ export default function CorrectionDiffView({ original, proposed }: Props) {
               {field.originalValue}
             </div>
             <div
-              key={`${field.label}-proposed`}
               className={clsx(
                 'px-3 py-2 border-t border-gray-100 dark:border-gray-700',
                 field.changed
@@ -87,7 +83,7 @@ export default function CorrectionDiffView({ original, proposed }: Props) {
             >
               {field.proposedValue}
             </div>
-          </>
+          </Fragment>
         ))}
       </div>
     </div>
