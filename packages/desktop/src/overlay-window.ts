@@ -1,6 +1,7 @@
 import { BrowserWindow, globalShortcut, screen } from 'electron';
 import path from 'path';
 import { getOverlayPrefs } from './settings';
+import { detectLinuxSession, isWaylandSession } from './platform/linux-session';
 import type { OverlayController } from './overlay-controller';
 
 // ---------------------------------------------------------------------------
@@ -75,11 +76,19 @@ export class OverlayWindowManager implements OverlayController {
    */
   private lastDetectionPayload: unknown = null;
 
+  /**
+   * Wayland auto-dismiss timer. Fires hide() after waylandDismissTimeoutMs ms
+   * of inactivity. Cleared on hide(), reset on each show() or detection event.
+   */
+  private _waylandDismissTimer: ReturnType<typeof setTimeout> | null = null;
+  private _waylandDismissTimeoutMs: number;
+
   constructor() {
     const prefs = getOverlayPrefs();
     this.currentHotkey = prefs.hotkey;
     this.currentPosition = prefs.position;
     this.currentSize = prefs.size;
+    this._waylandDismissTimeoutMs = prefs.waylandDismissTimeoutMs ?? 8000;
   }
 
   // ---------------------------------------------------------------------------
@@ -94,6 +103,10 @@ export class OverlayWindowManager implements OverlayController {
     const { width: winW, height: winH } = SIZE_MAP[this.currentSize] ?? SIZE_MAP['Standard'];
     const { x, y } = getPositionForPreset(this.currentPosition, this.currentSize);
 
+    // On Linux X11, set the window type hint to _NET_WM_WINDOW_TYPE_DOCK so X11
+    // compositors (Mutter/KWin on X11) keep the overlay above other windows.
+    const isX11 = process.platform === 'linux' && detectLinuxSession() === 'x11';
+
     this.window = new BrowserWindow({
       width: winW,
       height: winH,
@@ -107,6 +120,9 @@ export class OverlayWindowManager implements OverlayController {
       resizable: false,
       movable: false,
       show: false,
+      // 'panel' maps to _NET_WM_WINDOW_TYPE_DOCK on X11 — keeps overlay above
+      // other windows and allows click-through under X11 compositors.
+      ...(isX11 ? { type: 'panel' as const } : {}),
       webPreferences: {
         preload: OVERLAY_WINDOW_PRELOAD_WEBPACK_ENTRY,
         contextIsolation: true,
@@ -114,12 +130,16 @@ export class OverlayWindowManager implements OverlayController {
       },
     });
 
-    // Set alwaysOnTop level after creation — 'floating' keeps the overlay above
-    // normal windows but below the panel window ('pop-up-menu').
-    this.window.setAlwaysOnTop(true, 'floating');
-
-    // Full click-through: all mouse events pass to the underlying window.
-    this.window.setIgnoreMouseEvents(true, { forward: true });
+    if (isWaylandSession()) {
+      // On Wayland, setIgnoreMouseEvents is a no-op (Ozone/Wayland backend does
+      // not implement mouse event forwarding via the Wayland protocol). Avoid
+      // the misleading call and use a higher alwaysOnTop level for degraded mode.
+      this.window.setAlwaysOnTop(true, 'pop-up-menu');
+    } else {
+      // Windows, macOS, and Linux X11: full click-through overlay.
+      this.window.setAlwaysOnTop(true, 'floating');
+      this.window.setIgnoreMouseEvents(true, { forward: true });
+    }
 
     // Replay the last known detection state once the renderer is ready.
     // This handles the race between lazy window creation and detection events
@@ -146,15 +166,49 @@ export class OverlayWindowManager implements OverlayController {
   }
 
   // ---------------------------------------------------------------------------
+  // Wayland dismiss timer
+  // ---------------------------------------------------------------------------
+
+  /**
+   * On Wayland, schedule an auto-dismiss after the configured timeout.
+   * Called on show() and on each detection:app-changed event (resets the timer).
+   * No-op on non-Wayland sessions or when timeoutMs is 0.
+   */
+  private maybeScheduleDismiss(): void {
+    if (!isWaylandSession()) return;
+    this.clearDismissTimer();
+    if (this._waylandDismissTimeoutMs > 0) {
+      this._waylandDismissTimer = setTimeout(() => {
+        this.hide();
+      }, this._waylandDismissTimeoutMs);
+    }
+  }
+
+  private clearDismissTimer(): void {
+    if (this._waylandDismissTimer !== null) {
+      clearTimeout(this._waylandDismissTimer);
+      this._waylandDismissTimer = null;
+    }
+  }
+
+  /** Update the Wayland dismiss timeout at runtime (called from IPC handler). */
+  setWaylandDismissTimeout(ms: number): void {
+    this._waylandDismissTimeoutMs = ms;
+  }
+
+  // ---------------------------------------------------------------------------
   // Public show / hide / toggle / destroy
   // ---------------------------------------------------------------------------
 
   show(): void {
     const win = this.getOrCreateWindow();
     win.show();
+    // On Wayland, start the auto-dismiss countdown.
+    this.maybeScheduleDismiss();
   }
 
   hide(): void {
+    this.clearDismissTimer();
     if (this.window !== null && !this.window.isDestroyed()) {
       this.window.hide();
     }
@@ -174,12 +228,17 @@ export class OverlayWindowManager implements OverlayController {
    * Detection payloads are buffered unconditionally so that if the renderer
    * is not yet loaded (window loading or not yet created), the latest app
    * state is available for replay on `did-finish-load`.
+   *
+   * On Wayland, each detection event resets the auto-dismiss timer so the
+   * overlay stays up while the user is actively looking at shortcuts.
    */
   sendToRenderer(channel: string, payload: unknown): void {
     // Buffer detection events for ready-state replay (Phase 3 — TASK-0020).
     // This runs regardless of whether the window exists yet.
     if (channel === 'detection:app-changed') {
       this.lastDetectionPayload = payload;
+      // Reset dismiss timer — user is still active.
+      this.maybeScheduleDismiss();
     }
     if (this.window !== null && !this.window.isDestroyed()) {
       this.window.webContents.send(channel, payload);
@@ -190,6 +249,7 @@ export class OverlayWindowManager implements OverlayController {
    * Release the globalShortcut and destroy the BrowserWindow. Called on app quit.
    */
   destroy(): void {
+    this.clearDismissTimer();
     if (this.currentHotkey) {
       globalShortcut.unregister(this.currentHotkey);
     }

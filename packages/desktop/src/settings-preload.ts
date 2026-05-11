@@ -44,6 +44,12 @@ contextBridge.exposeInMainWorld('kccSettings', {
 
     isSupported: (): Promise<boolean> =>
       ipcRenderer.invoke('overlay:is-supported'),
+
+    isDegraded: (): Promise<boolean> =>
+      ipcRenderer.invoke('overlay:is-degraded'),
+
+    setWaylandDismissTimeout: (timeoutMs: number): Promise<void> =>
+      ipcRenderer.invoke('overlay:set-wayland-dismiss-timeout', { timeoutMs }),
   },
 
   // TASK-0023: auth namespace — sign in/out and push event subscriptions.

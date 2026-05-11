@@ -156,7 +156,16 @@ export class TrayManager {
       icon.setTemplateImage(true);
     }
 
-    this.tray = new Tray(icon);
+    try {
+      this.tray = new Tray(icon);
+    } catch {
+      // On minimal Linux window managers (i3, Sway, etc.) no system tray is available.
+      // The app remains fully functional via the global hotkey — log and continue.
+      console.log('[kcc] No system tray detected — use [hotkey] to open the shortcut panel.');
+      this.tray = null;
+      return;
+    }
+
     this.tray.setToolTip('Keyboard Command Center');
 
     if (process.platform === 'darwin') {
