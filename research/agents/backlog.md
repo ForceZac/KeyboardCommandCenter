@@ -97,6 +97,10 @@ _(Project Manager keeps 2–3 tasks here at all times.)
 
 _(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
 
+## In Review
+
+_(Developer moves tasks here when the draft PR is marked ready.)_
+
 ### TASK-0028: Submission Form UI — New Shortcut & Key Recorder
 - **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
 - **PRD:** research/agents/prds/goal-08-community-contributions.md
@@ -116,12 +120,8 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
   - No regressions on existing per-app shortcut pages
 - **PR:** #34
 - **Branch:** goals/28-submission-form-ui
-- **TRD:** research/plans/goals/28-submission-form-ui-trd.md — awaiting-review
+- **TRD:** research/plans/goals/28-submission-form-ui-trd.md — approved
 - **Notes:** Unblocked by TASK-0027 merge (PR #27, 2026-05-11). Second Goal 8 task. PRD Flows 1 and 6 cover this scope.
-
-## In Review
-
-_(Developer moves tasks here when the draft PR is marked ready.)_
 
 ## Changes Requested
 
@@ -135,29 +135,19 @@ _(TRD Watcher moves tasks here when a TRD needs rework.)_
 
 _(Reviewer moves tasks here after approving the PR. You merge to main, then move to Shipped.)_
 
+## Shipped
+
+_(You move tasks here after merging to main.)_
+
 ### TASK-0038: Overlay X11 Compatibility — Transparency & Click-Through
 - **Goal:** Goal 10 — Linux Support (implementation-roadmap-v2.md § Goal 10)
 - **PRD:** research/agents/prds/goal-10-linux-support.md
-- **Scope:** Extend the existing overlay window (`packages/overlay/` + `packages/desktop/` overlay controller) to work correctly on Linux X11 sessions. Set X11-appropriate window type hints (`_NET_WM_WINDOW_TYPE_DOCK` or `_NET_WM_WINDOW_TYPE_UTILITY`) so the overlay renders as always-on-top and click-through. Verify `setIgnoreMouseEvents(true)` and `setAlwaysOnTop(true)` work on X11 via Electron. Confirm configurable opacity, position, and size settings apply correctly on X11. Handle tray icon absence gracefully — if no system tray is detected (common on i3, Sway, etc.), log a startup message ("No system tray detected — use [hotkey] to open the shortcut panel") and continue running via global hotkey only. Add Wayland degraded overlay behavior: always-on-top window without click-through, auto-dismiss on configurable timeout or hotkey, "experimental" label in overlay settings UI. NOT in scope: wlr-layer-shell protocol integration, Wayland click-through on GNOME/KDE, packaging, CI, detection changes, new overlay UI components.
-- **Acceptance:**
-  - Overlay window renders with transparency on X11 Linux
-  - Click-through (`setIgnoreMouseEvents(true)`) works on X11
-  - Always-on-top persists across focus changes on X11
-  - Opacity, position, and size settings apply correctly on X11
-  - Tray icon absence does not crash the app — startup log message shown, hotkey still works
-  - Wayland overlay opens as always-on-top without click-through
-  - Wayland overlay auto-dismisses after configurable timeout
-  - Overlay settings UI shows "experimental" label when on Wayland
-  - Existing Windows/macOS overlay behavior unaffected
+- **Scope:** Extend the existing overlay window to work correctly on Linux X11 sessions. X11 window type hints, click-through, always-on-top, configurable opacity/position/size. Tray icon absence graceful handling. Wayland degraded overlay behavior.
 - **PR:** #33
 - **Branch:** goals/38-overlay-x11-compat
 - **TRD:** research/plans/goals/38-overlay-x11-compat-trd.md — approved
 - **Approved:** 2026-05-11 (Round 1)
-- **Notes:** Third Goal 10 task. PRD Flows 5 (X11 overlay) and 6 (Wayland degraded overlay) cover this scope. Depends on TASK-0036 being merged. Independent of Wayland detection (TASK-0037).
-
-## Shipped
-
-_(You move tasks here after merging to main.)_
+- **Merged:** 2026-05-11
 
 ### TASK-0037: Wayland Active Window Detection — GNOME & KDE DBus with Manual Fallback
 - **Goal:** Goal 10 — Linux Support (implementation-roadmap-v2.md § Goal 10)
