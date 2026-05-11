@@ -33,25 +33,9 @@ Task IDs are monotonic. The Project Manager picks the next number.
 
 _(Project Manager keeps 2–3 tasks here at all times.)_
 
-### TASK-0037: Wayland Active Window Detection — GNOME & KDE DBus with Manual Fallback
-- **Goal:** Goal 10 — Linux Support (implementation-roadmap-v2.md § Goal 10)
-- **PRD:** research/agents/prds/goal-10-linux-support.md
-- **Scope:** Add Wayland active window detection to the Rust native module (`packages/desktop/native/`). Detect session type at startup via `WAYLAND_DISPLAY` / `XDG_SESSION_TYPE` environment variables — dispatch to X11 adapter (TASK-0036) or Wayland adapter accordingly. GNOME detection: use `org.gnome.Shell.Introspect` DBus interface to query focused window class and PID. KDE Plasma detection: use `org.kde.KWin.Scripting` DBus interface to query active window properties. For unsupported compositors (Sway, Hyprland, etc.) or when DBus calls fail: return a `DetectionUnavailable` result that tells the TypeScript layer to show a manual app selection UI. Add a "Select your app" search dropdown to the panel header that activates when detection returns unavailable — user's manual selection persists for the session (last-used app first). Include unit tests for session type detection logic and DBus response parsing (mock DBus). Add `dbus` / `zbus` crate dependency (behind `cfg(target_os = "linux")` feature gate). NOT in scope: X11 detection (TASK-0036), overlay Wayland support (separate task), wlr-layer-shell integration, packaging, CI, compositors beyond GNOME and KDE for active detection.
-- **Acceptance:**
-  - Session type detection correctly identifies Wayland vs X11 sessions
-  - GNOME DBus detection returns process name and window title on a GNOME Wayland session
-  - KDE DBus detection returns process name and window title on a KDE Plasma Wayland session
-  - Unsupported compositor returns `DetectionUnavailable` (no crash, no error)
-  - "Select your app" manual fallback UI renders in the panel when detection is unavailable
-  - Manual selection persists for the session (last-used app appears first)
-  - Subtle banner explains "Automatic app detection isn't available on your Wayland compositor"
-  - Unit tests for session type detection and DBus response parsing pass
-  - Existing X11 and Windows/macOS detection tests unaffected
-  - Crate compiles on Linux with `libdbus-1-dev` installed
-- **PR:**
-- **Branch:**
-- **TRD:**
-- **Notes:** Second Goal 10 task. PRD Flow 4 (Wayland detection) covers this scope. Extends TASK-0036's Rust native module with Wayland-specific adapter. Requires `libdbus-1-dev` as build dependency.
+## In Progress
+
+_(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
 
 ### TASK-0038: Overlay X11 Compatibility — Transparency & Click-Through
 - **Goal:** Goal 10 — Linux Support (implementation-roadmap-v2.md § Goal 10)
@@ -67,14 +51,10 @@ _(Project Manager keeps 2–3 tasks here at all times.)_
   - Wayland overlay auto-dismisses after configurable timeout
   - Overlay settings UI shows "experimental" label when on Wayland
   - Existing Windows/macOS overlay behavior unaffected
-- **PR:**
-- **Branch:**
-- **TRD:**
+- **PR:** #33
+- **Branch:** goals/38-overlay-x11-compat
+- **TRD:** research/plans/goals/38-overlay-x11-compat-trd.md — awaiting-review
 - **Notes:** Third Goal 10 task. PRD Flows 5 (X11 overlay) and 6 (Wayland degraded overlay) cover this scope. Depends on TASK-0036 being merged (needs Linux detection infrastructure). Independent of Wayland detection (TASK-0037) — overlay uses existing detection result.
-
-## In Progress
-
-_(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
 
 ## In Review
 
@@ -91,6 +71,13 @@ _(TRD Watcher moves tasks here when a TRD needs rework.)_
 ## Approved
 
 _(Reviewer moves tasks here after approving the PR. You merge to main, then move to Shipped.)_
+
+### TASK-0037: Wayland Active Window Detection — GNOME & KDE DBus with Manual Fallback
+- **Goal:** Goal 10 — Linux Support
+- **PR:** #32
+- **Branch:** goals/37-wayland-active-window-detection
+- **TRD:** research/plans/goals/37-wayland-active-window-detection-trd.md — approved
+- **Approved:** 2026-05-11 (Round 1)
 
 ### TASK-0036: Rust Native Module — Linux X11 Active Window Detection
 - **Goal:** Goal 10 — Linux Support

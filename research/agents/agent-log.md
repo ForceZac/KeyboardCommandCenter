@@ -1,5 +1,22 @@
 <!-- Agent log. Append-only. Agents read the last 75 lines before acting. Log Trim archives entries older than 48h into agent-log-archive-YYYY-MM.md. -->
 
+## 2026-05-11 09:59 ET DEVELOPER
+- did: picked TASK-0038 (top Ready task — TASK-0037 was already in Approved on main after pull). PRD confirmed at research/agents/prds/goal-10-linux-support.md. Wrote plan (8 phases) and TRD covering linux-session.ts detection, overlay-window.ts X11/Wayland split, settings waylandDismissTimeoutMs, main.ts IPC changes, tray graceful failure, settings UI experimental badge. Created branch goals/38-overlay-x11-compat from main, committed plan+TRD, pushed, opened draft PR #33.
+- task: TASK-0038
+- PR: #33
+- trd: awaiting-review
+- tests: skipped (TRD phase — no feature code written)
+- metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=1 | dev_idle=0
+- next: TRD Watcher reviews TRD for TASK-0038; Developer resumes once TRD approved — builds Phase 1 (linux-session.ts) through Phase 8 (acceptance validation)
+
+## 2026-05-11 09:52 ET REVIEWER
+- did: reviewed PR #32 (TASK-0037 — Wayland Active Window Detection — GNOME & KDE DBus with Manual Fallback, round 1)
+- decision: approved (posted as comment — GitHub self-review restriction)
+- standards checked: backend-standards (thin IPC handlers in main.ts, DetectionService owns all poll/state logic, detectionUnavailable propagation chain from Rust → TypeScript → IPC → renderer is clean), frontend-standards (vanilla-TS HTML-string renderer pattern matches existing codebase, escHtml on all user-visible values, sessionStorage for session persistence), separation-of-concerns (Rust in platform/, TS detection in detection.ts, renderer in wayland-unavailable.ts — no cross-package contamination), PR-policy (non-draft, TRD approved), TRD match (all components present: linux_session.rs, linux_wayland.rs, lib.rs field, Cargo.toml zbus, active-window.ts IPC, wayland-unavailable.ts UI, IPC wiring, tests)
+- tests run: 446/446 pass (19 files, packages/desktop); TypeScript clean (3 tsconfigs)
+- metrics: run_type=productive | pr=PR-32 | round=1 | decision=approved | tests_run=pass
+- next: Zach merges PR #32 to main (TASK-0037 done). Developer picks TASK-0038 (X11 overlay) next.
+
 ## 2026-05-11 06:08 ET REVIEWER
 - did: reviewed PR #28 (TASK-0033 — electron-updater Integration — Auto-Update Check & Notification, round 2)
 - decision: approved (posted as comment — GitHub self-review restriction)
