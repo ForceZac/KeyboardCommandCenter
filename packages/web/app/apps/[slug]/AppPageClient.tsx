@@ -5,6 +5,7 @@ import type { AppDetail } from '@kcc/core';
 import { usePlatform } from '@/hooks/usePlatform';
 import PlatformToggle from '@/components/PlatformToggle';
 import ContextGroup from '@/components/ContextGroup';
+import SubmitShortcutModal from '@/components/SubmitShortcutModal';
 
 interface Props {
   app: AppDetail;
@@ -18,6 +19,7 @@ interface Props {
 export default function AppPageClient({ app }: Props) {
   const [platform, setPlatform] = usePlatform();
   const [search, setSearch] = useState('');
+  const [submitOpen, setSubmitOpen] = useState(false);
   const { contexts } = app;
 
   // Filter contexts and their shortcuts client-side based on the search string.
@@ -59,6 +61,13 @@ export default function AppPageClient({ app }: Props) {
             className="w-full px-3 py-1.5 text-sm rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
         </div>
+        <button
+          type="button"
+          onClick={() => setSubmitOpen(true)}
+          className="px-3 py-1.5 text-sm rounded-lg border border-indigo-200 dark:border-indigo-700 text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/40 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 whitespace-nowrap"
+        >
+          + Submit a shortcut
+        </button>
       </div>
 
       {/* Stats */}
@@ -83,6 +92,13 @@ export default function AppPageClient({ app }: Props) {
           />
         ))
       )}
+
+      <SubmitShortcutModal
+        appId={app.id}
+        appName={app.name}
+        open={submitOpen}
+        onClose={() => setSubmitOpen(false)}
+      />
     </div>
   );
 }

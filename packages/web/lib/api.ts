@@ -9,6 +9,9 @@ import type {
   AppSummary,
   FavoriteEntry,
   CollectionSummary,
+  ISubmission,
+  SubmissionCreatePayload,
+  ShortcutEntry,
 } from '@kcc/core';
 
 const API_BASE = '/api';
@@ -154,5 +157,27 @@ export async function removeFromCollection(
   await apiMutate(
     `/collections/${encodeURIComponent(collectionId)}/shortcuts/${encodeURIComponent(shortcutId)}`,
     'DELETE',
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Submissions (Goal 8)
+// ---------------------------------------------------------------------------
+
+/** POST /api/submissions — create a new submission. Returns the created ISubmission. */
+export async function submitShortcut(payload: SubmissionCreatePayload): Promise<ISubmission> {
+  const res = await apiMutate('/submissions', 'POST', payload);
+  return res.json() as Promise<ISubmission>;
+}
+
+/** GET /api/shortcuts/check-duplicate — check for duplicate shortcuts before submitting. */
+export function checkDuplicate(
+  appId: string,
+  platform: string,
+  keyCombo: string,
+): Promise<{ exact: ShortcutEntry | null; fuzzy: ShortcutEntry[] }> {
+  const params = new URLSearchParams({ appId, platform, keyCombo });
+  return apiFetch<{ exact: ShortcutEntry | null; fuzzy: ShortcutEntry[] }>(
+    `/shortcuts/check-duplicate?${params.toString()}`,
   );
 }
