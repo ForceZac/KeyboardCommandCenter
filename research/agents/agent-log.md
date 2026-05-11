@@ -1593,3 +1593,87 @@
 - did: started run — claimed DEV_LOCK
 - task: TASK-0022 (Changes Requested — fix-up)
 - status: in-progress
+
+## 2026-05-10 22:20 ET DEVELOPER
+- did: started run — claimed DEV_LOCK; no PAUSE/DEV_PAUSE; no Changes Requested; no In Progress; In Review empty (TASK-0024 in Approved, not In Review); cap clear; top Ready = TASK-0025
+- task: TASK-0025 (new Ready task — writing TRD)
+- status: in-progress (checkpoint)
+
+## 2026-05-10 22:30 ET DEVELOPER
+- did: wrote plan + TRD for TASK-0025 (Desktop Favorites Sync Engine & Offline Cache). Resolved git state (stale stash conflicts, branch confusion). Updated backlog: TASK-0023→Shipped, TASK-0024→Approved, TASK-0025→In Progress. Committed plan+TRD, pushed branch goals/25-desktop-favorites-sync, opened draft PR #25.
+- task: TASK-0025
+- PR: #25
+- trd: written — awaiting-review
+- tests: skipped (TRD phase — no feature code written)
+- metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=1 | dev_idle=0
+- next: Reviewer approves TRD on PR #25; Developer resumes building (sync-store.ts, sync-engine.ts, main.ts wiring, preload.ts, unit tests)
+
+## 2026-05-10 22:29 ET REVIEWER
+- did: reviewed PR #23 (TASK-0023 — Desktop Auth Flow — Browser OAuth & Deep Link Callback, round 1). PR was already merged before review; post-merge review logged for record.
+- decision: approved (posted as comment — GitHub self-approval restriction; same precedent as prior PRs)
+- standards checked: separation-of-concerns (auth.ts/auth-store.ts domain isolation, main.ts stays thin), security (safeStorage.isEncryptionAvailable() checked before all encrypt/decrypt, never writes plain text, deep link guards protocol+hostname+path), IPC pattern (thin handlers, least-privilege preload, push+pull state recovery), tray (buildContextMenu reads state at call time, refreshMenu rebuilds live menu), test coverage (252/252 pass, typecheck clean across 3 tsconfig targets)
+- tests run: 252/252 vitest pass | tsc --noEmit clean (tsconfig.json + tsconfig.tests.json + tsconfig.renderer.json)
+- backlog: TASK-0023 already in Shipped (backlog updated by prior process); goal summary written to research/goals/goal-07-accounts-favorites.md
+- note: parseTokenPayload is a pure function (no Electron deps) — unit tests absent; TRD scoped tests to typecheck only. Flag for TASK-0025 TRD.
+- metrics: run_type=productive | pr=PR-23 | round=1 | decision=approved | tests_run=pass
+- idle-reset: REV_IDLE → 0
+- next: TASK-0024 (Favorites Web UI) is in Approved, awaiting owner merge; no other In Review tasks. Reviewer idles until TASK-0024 or next Developer PR appears.
+
+## 2026-05-10 22:36 ET PROJECT-MANAGER
+- did: moved TASK-0024 to Shipped (PR #24 merged); created 2 Goal 8 tasks (admin review queue, correction form); updated project_context.md
+- created: TASK-0029 (Admin Review Queue UI), TASK-0030 (Correction Form UI — Suggest Edit & Pre-filled Submission)
+- moved: TASK-0024 Approved → Shipped
+- prd gaps: Goal 9 (Auto-Update) and Goal 10 (Linux Support) still need PRDs — no change from last run
+- roadmap check: skipped (did it last run)
+- proposals added: 0
+- metrics: tasks_created=2 | tasks_moved=1 | prd_gaps=2 | roadmap_issues=0
+- next: Ready still at 0 — all tasks have legitimate blockers (sequential Goal 7 → Goal 8 dependency chain). TASK-0025 in progress, TASK-0026 blocked on it. Once Goal 7 ships, Merge Watcher unblocks TASK-0027. Goal 8 now has 4 tasks scoped. Monitor for Goal 9 PRD from Product Manager.
+
+## 2026-05-10 22:41 ET DEVELOPER
+- did: started run — claimed DEV_LOCK; TASK-0025 in TRD Changes Requested — addressing TRD feedback
+- task: TASK-0025
+- status: in-progress — checkpoint
+
+
+## 2026-05-10 22:41 ET DEVELOPER
+- did: addressed TRD reviewer feedback for TASK-0025 — fixed 2 issues (safeStorage encryption, network reconnect events)
+- task: TASK-0025
+- PR: #25
+- trd: awaiting-review (was changes-requested)
+- tests: skipped (TRD revision only — no feature code written)
+- metrics: run_type=productive | commits=2 | tests_added=0 | trd_cycles=2
+- next: TRD Watcher reviews updated TRD; Developer resumes and builds feature once TRD is approved
+
+
+## 2026-05-10 22:50 ET DEVELOPER
+- did: no-op — TASK-0025 In Progress; TRD awaiting-review; exiting without writing feature code
+- task: TASK-0025
+- PR: #25
+- trd: awaiting-review
+- tests: skipped (TRD phase — no code written)
+- metrics: run_type=no-op | reason=TRD awaiting reviewer approval — TASK-0025 | dev_idle=1
+- next: TRD Watcher reviews TRD for TASK-0025; Developer resumes once TRD is approved
+
+## 2026-05-10 23:00 ET DEVELOPER
+- did: started run — claimed DEV_LOCK; no PAUSE/DEV_PAUSE; no Changes Requested; TASK-0025 In Progress with TRD approved; resuming build
+- task: TASK-0025
+- status: in-progress — checkpoint
+
+## 2026-05-10 23:04 ET PROJECT-MANAGER
+- did: no-op — Ready at 0 but all upcoming tasks have legitimate blockers (TASK-0026 on TASK-0025, Goal 8 tasks on Goal 7 completion). No tasks to create without Goal 9/10 PRDs. Ran roadmap health check.
+- created: none
+- moved: none
+- prd gaps: Goal 9 (Auto-Update) and Goal 10 (Linux Support) — unchanged. Goal 9 is critical: its only dependency (Goal 6) is already shipped, so tasks could go straight to Ready once PRD exists.
+- roadmap check: sequencing solid. Key finding: Goal 9 depends only on Goal 6 (shipped) — Goal 9 tasks are the fastest path to restocking Ready, independent of Goal 7/8 progress. No scope creep, no stale goals, no missing prerequisites beyond PRDs.
+- proposals added: 0
+- metrics: tasks_created=0 | tasks_moved=0 | prd_gaps=2 | roadmap_issues=0
+- next: Product Manager writes Goal 9 PRD → PM creates Goal 9 tasks → Ready restocked. Monitor TASK-0025 progress for Goal 7 unblocking chain.
+
+## 2026-05-10 23:00 ET DEVELOPER
+- did: built TASK-0025 (Desktop Favorites Sync Engine) — all 4 slices complete: sync-store.ts, sync-engine.ts, main.ts wiring, preload.ts kcc.sync namespace; 36 new Vitest unit tests; 288/288 pass; tsc clean; PR #25 marked ready
+- task: TASK-0025
+- PR: #25
+- trd: approved → building → FINAL
+- tests: green (288 pass, 36 new)
+- metrics: run_type=productive | commits=1 | tests_added=36 | trd_cycles=0 | dev_idle=0
+- next: Reviewer picks up PR #25; once approved, TASK-0026 (desktop panel favorites UI) is unblocked

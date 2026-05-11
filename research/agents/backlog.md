@@ -37,6 +37,10 @@ _(Project Manager keeps 2–3 tasks here at all times.)_
 
 _(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
 
+## In Review
+
+_(Developer moves tasks here when the draft PR is marked ready.)_
+
 ### TASK-0025: Desktop Favorites Sync Engine & Offline Cache
 - **Goal:** Goal 7 — User Accounts & Favorites Sync
 - **PRD:** research/agents/prds/goal-07-accounts-favorites.md
@@ -55,12 +59,8 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
   - No regressions on existing desktop functionality
 - **PR:** #25
 - **Branch:** goals/25-desktop-favorites-sync
-- **TRD:** research/plans/goals/25-desktop-favorites-sync-trd.md — awaiting-review
+- **TRD:** research/plans/goals/25-desktop-favorites-sync-trd.md — approved
 - **Notes:** Unblocked — TASK-0022 merged 2026-05-10, TASK-0023 merged 2026-05-10. Fifth Goal 7 task. PRD Flow 7 covers this scope.
-
-## In Review
-
-_(Developer moves tasks here when the draft PR is marked ready.)_
 
 ## Changes Requested
 
