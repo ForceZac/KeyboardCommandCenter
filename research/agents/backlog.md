@@ -91,7 +91,7 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
   - Unit tests for Linux process-to-app mapping lookups pass
   - Existing Windows/macOS detection tests unaffected
   - Crate compiles on Linux with X11 dev libraries installed
-- **PR:** (opening now)
+- **PR:** #31
 - **Branch:** goals/36-linux-x11-detection
 - **TRD:** research/plans/goals/36-linux-x11-detection-trd.md — awaiting-review
 - **Notes:** First Goal 10 task. PRD Flow 3 (X11 detection) covers this scope. Does not depend on Goal 9 shipping — extends the existing Goal 4 Rust native module architecture. Requires `libx11-dev` / `libxcb1-dev` as build dependencies.
