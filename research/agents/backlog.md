@@ -33,25 +33,6 @@ Task IDs are monotonic. The Project Manager picks the next number.
 
 _(Project Manager keeps 2–3 tasks here at all times.)
 
-### TASK-0032: Contributor Profile Page
-- **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
-- **PRD:** research/agents/prds/goal-08-community-contributions.md
-- **Scope:** Add a public profile page at `/profile/[userId]`. Display: user display name and avatar (from OAuth provider), "Member since" date, contribution stats (total submitted, total accepted, acceptance rate), and a list of accepted contributions (shortcut name, app name, date accepted). Link to the profile from the nav avatar dropdown ("My Profile"). Any user can view any contributor's profile. Query the Submission model for contribution data (filter by submitterId, group by status). NOT in scope: private profile settings, notification system (separate task), reputation/badges/gamification, editable profile fields, submission form (TASK-0028), admin review queue (TASK-0029), email notifications.
-- **Acceptance:**
-  - `/profile/[userId]` route exists and renders the contributor profile
-  - Display name and avatar shown (sourced from OAuth provider data on User model)
-  - "Member since" date displayed
-  - Contribution stats: total submitted, total accepted, acceptance rate
-  - List of accepted contributions with shortcut name, app name, and date accepted
-  - Profiles are publicly viewable (no auth required to view)
-  - Nav avatar dropdown includes "My Profile" link for authenticated users
-  - Page loads in <500ms
-  - No regressions on existing pages
-- **PR:**
-- **Branch:**
-- **TRD:**
-- **Notes:** Unblocked by TASK-0027 merge (PR #27, 2026-05-11). Sixth Goal 8 task. PRD Flow 5 covers this scope.
-
 ### TASK-0030: Correction Form UI — Suggest Edit & Pre-filled Submission
 - **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
 - **PRD:** research/agents/prds/goal-08-community-contributions.md
@@ -78,6 +59,25 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
 ## In Review
 
 _(Developer moves tasks here when the draft PR is marked ready.)_
+
+### TASK-0032: Contributor Profile Page
+- **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
+- **PRD:** research/agents/prds/goal-08-community-contributions.md
+- **Scope:** Add a public profile page at `/profile/[userId]`. Display: user display name and avatar (from OAuth provider), "Member since" date, contribution stats (total submitted, total accepted, acceptance rate), and a list of accepted contributions (shortcut name, app name, date accepted). Link to the profile from the nav avatar dropdown ("My Profile"). Any user can view any contributor's profile. Query the Submission model for contribution data (filter by submitterId, group by status). NOT in scope: private profile settings, notification system (separate task), reputation/badges/gamification, editable profile fields, submission form (TASK-0028), admin review queue (TASK-0029), email notifications.
+- **Acceptance:**
+  - `/profile/[userId]` route exists and renders the contributor profile
+  - Display name and avatar shown (sourced from OAuth provider data on User model)
+  - "Member since" date displayed
+  - Contribution stats: total submitted, total accepted, acceptance rate
+  - List of accepted contributions with shortcut name, app name, and date accepted
+  - Profiles are publicly viewable (no auth required to view)
+  - Nav avatar dropdown includes "My Profile" link for authenticated users
+  - Page loads in <500ms
+  - No regressions on existing pages
+- **PR:** #37
+- **Branch:** goals/32-contributor-profile-page
+- **TRD:** research/plans/goals/32-contributor-profile-page-trd.md — approved
+- **Notes:** Unblocked by TASK-0027 merge (PR #27, 2026-05-11). Sixth Goal 8 task. PRD Flow 5 covers this scope.
 
 ### TASK-0031: App Request Form & "No Results" Request Button
 - **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
