@@ -2,6 +2,7 @@
 
 import { signOut, useSession } from 'next-auth/react';
 import { useState, useRef, useEffect } from 'react';
+import Link from 'next/link';
 
 export default function UserMenu() {
   const { data: session } = useSession();
@@ -63,6 +64,13 @@ export default function UserMenu() {
               </p>
             )}
           </div>
+          <Link
+            href="/collections"
+            onClick={() => setOpen(false)}
+            className="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+          >
+            My Collections
+          </Link>
           <button
             onClick={() => signOut()}
             className="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"

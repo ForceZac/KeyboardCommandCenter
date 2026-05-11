@@ -79,6 +79,7 @@ export default function AppPageClient({ app }: Props) {
             context={ctx}
             shortcuts={shortcuts}
             platform={platform}
+            showFavoriteToggle
           />
         ))
       )}

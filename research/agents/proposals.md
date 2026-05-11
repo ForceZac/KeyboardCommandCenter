@@ -19,6 +19,15 @@ Off-roadmap ideas and system-improvement suggestions surfaced by the agents. The
 
 ## Open
 
+### PROP-0006: TRD Review Deadlock — Reviewer skips draft PRs but Developer waits for TRD approval
+- **Source:** Project Manager
+- **Date:** 2026-05-10
+- **Impact:** 4
+- **Effort:** 1
+- **Evidence:** TASK-0023 (Desktop Auth Flow) TRD posted on draft PR #23 (2026-05-10). Developer has been idle for 5+ consecutive fires (19:10–19:50 ET on 05-10) waiting for TRD approval before building. Reviewer's most recent run (2026-05-10 19:07 ET) says "Only open PR (#23) is a draft — skipped per policy." Result: process deadlock — Developer won't build without TRD approval, Reviewer won't review a draft PR.
+- **Proposal:** Two options: (1) Reviewer should review TRDs on draft PRs — TRDs are a design artifact ready for review even when the implementation hasn't started; the draft status correctly signals "code not ready for final review" but shouldn't block TRD review. (2) Developer marks PR as ready-for-review after TRD submission so the Reviewer picks it up, then converts back to draft if needed. Recommend option (1) — it's cleaner and matches the intent of the TRD-first workflow. This deadlock will recur on every future task unless the Reviewer's draft-skip policy is updated.
+- **Status:** open
+
 ### PROP-0005: TASK-0019 began before TASK-0017 — overlay store schema defined in settings task
 - **Source:** Developer
 - **Date:** 2026-05-10

@@ -19,6 +19,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
+      '@': path.resolve(__dirname, '.'),
       '@kcc/core': path.resolve(__dirname, '../core/src/index.ts'),
     },
   },

@@ -105,6 +105,57 @@ export class CollectionsService {
   }
 
   /**
+   * Adds a shortcut to a named (non-default) collection.
+   * Uses upsert for idempotency — adding a shortcut that's already in the
+   * collection is a no-op, not an error.
+   * Returns 'not_found' if the collection does not exist or is not owned.
+   */
+  async addShortcutToCollection(
+    userId: string,
+    collectionId: string,
+    shortcutId: string,
+  ): Promise<'added' | 'not_found'> {
+    const collection = await prisma.collection.findFirst({
+      where: { id: collectionId, userId },
+    });
+
+    if (!collection) return 'not_found';
+
+    await prisma.collectionShortcut.upsert({
+      where: {
+        collectionId_shortcutId: { collectionId, shortcutId },
+      },
+      create: { userId, collectionId, shortcutId },
+      update: {},
+    });
+
+    return 'added';
+  }
+
+  /**
+   * Removes a shortcut from a named collection.
+   * Returns 'removed' on success, 'not_found' if the collection doesn't exist
+   * or isn't owned, or 'not_in_collection' if the shortcut wasn't there.
+   */
+  async removeShortcutFromCollection(
+    userId: string,
+    collectionId: string,
+    shortcutId: string,
+  ): Promise<'removed' | 'not_found' | 'not_in_collection'> {
+    const collection = await prisma.collection.findFirst({
+      where: { id: collectionId, userId },
+    });
+
+    if (!collection) return 'not_found';
+
+    const deleted = await prisma.collectionShortcut.deleteMany({
+      where: { collectionId, shortcutId, userId },
+    });
+
+    return deleted.count > 0 ? 'removed' : 'not_in_collection';
+  }
+
+  /**
    * Returns shortcuts in a specific collection.
    * Returns null if the collection does not exist or is not owned by the user.
    */
