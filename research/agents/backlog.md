@@ -52,6 +52,10 @@ _(Project Manager keeps 2–3 tasks here at all times.)
 - **TRD:**
 - **Notes:** Unblocked by TASK-0027 merge (PR #27, 2026-05-11). Sixth Goal 8 task. PRD Flow 5 covers this scope.
 
+## In Progress
+
+_(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
+
 ### TASK-0030: Correction Form UI — Suggest Edit & Pre-filled Submission
 - **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
 - **PRD:** research/agents/prds/goal-08-community-contributions.md
@@ -66,14 +70,10 @@ _(Project Manager keeps 2–3 tasks here at all times.)
   - Rate limit (429) shows user-friendly error
   - Unauthenticated users see sign-in prompt
   - No regressions on existing per-app shortcut pages
-- **PR:**
-- **Branch:**
-- **TRD:**
+- **PR:** #38
+- **Branch:** goals/30-correction-form-ui
+- **TRD:** research/plans/goals/30-correction-form-ui-trd.md — awaiting-review
 - **Notes:** Unblocked — TASK-0028 shipped (PR #34, 2026-05-11). Fourth Goal 8 task. PRD Flow 2 covers this scope.
-
-## In Progress
-
-_(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
 
 ## In Review
 
