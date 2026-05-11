@@ -1,6 +1,6 @@
 import { contextBridge, ipcRenderer } from 'electron';
 import type { DetectionPayload } from './detection';
-import type { AppDetail } from '@kcc/core';
+import type { AppDetail, FavoriteEntry, CollectionSummary } from '@kcc/core';
 
 // Expose a minimal, typed API to the renderer process.
 // contextIsolation: true — renderer cannot access Node.js APIs directly.
@@ -44,5 +44,60 @@ contextBridge.exposeInMainWorld('kcc', {
    */
   getShortcutsForApp: (slug: string): Promise<AppDetail | null> => {
     return ipcRenderer.invoke('shortcuts:get-by-app', slug) as Promise<AppDetail | null>;
+  },
+
+  /**
+   * TASK-0025: Sync engine namespace — favorites and collections cache access.
+   * Cache reads (getFavorites, getCollections) complete synchronously in <10ms.
+   * All sync/write operations are async and do not block the UI thread.
+   */
+  sync: {
+    /** Returns the locally cached favorites list. Empty array when signed out. */
+    getFavorites: (): Promise<FavoriteEntry[]> => {
+      return ipcRenderer.invoke('sync:getFavorites') as Promise<FavoriteEntry[]>;
+    },
+
+    /** Returns the locally cached collections list. Empty array when signed out. */
+    getCollections: (): Promise<CollectionSummary[]> => {
+      return ipcRenderer.invoke('sync:getCollections') as Promise<CollectionSummary[]>;
+    },
+
+    /**
+     * Toggles a shortcut in the default "My Favorites" collection.
+     * Optimistic: the local cache updates immediately. No-op when signed out.
+     */
+    toggleFavorite: (shortcutId: string): Promise<void> => {
+      return ipcRenderer.invoke('sync:toggleFavorite', shortcutId) as Promise<void>;
+    },
+
+    /**
+     * Adds a shortcut to a specific (non-default) collection.
+     * Returns { ok: boolean, error?: string }.
+     */
+    addToCollection: (shortcutId: string, collectionId: string): Promise<{ ok: boolean; error?: string }> => {
+      return ipcRenderer.invoke('sync:addToCollection', shortcutId, collectionId) as Promise<{ ok: boolean; error?: string }>;
+    },
+
+    /**
+     * Removes a shortcut from a specific (non-default) collection.
+     * Returns { ok: boolean, error?: string }.
+     */
+    removeFromCollection: (shortcutId: string, collectionId: string): Promise<{ ok: boolean; error?: string }> => {
+      return ipcRenderer.invoke('sync:removeFromCollection', shortcutId, collectionId) as Promise<{ ok: boolean; error?: string }>;
+    },
+
+    /** Forces an immediate sync cycle (push pending changes then pull remote state). */
+    forceSync: (): Promise<void> => {
+      return ipcRenderer.invoke('sync:forceSync') as Promise<void>;
+    },
+  },
+
+  /**
+   * TASK-0025: Forward the browser's network-online event to the main process
+   * so the sync engine can trigger an unscheduled sync on reconnect.
+   * Usage: window.addEventListener('online', () => window.kcc.notifyNetworkOnline())
+   */
+  notifyNetworkOnline: (): void => {
+    ipcRenderer.send('sync:network-reconnected');
   },
 });
