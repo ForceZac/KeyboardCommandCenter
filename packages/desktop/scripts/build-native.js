@@ -19,6 +19,14 @@ const path = require('path');
 
 const NATIVE_DIR = path.join(__dirname, '..', 'native');
 
+// CI sets SKIP_NATIVE_BUILD=1 when it needs to build for specific targets or
+// architectures (e.g. universal macOS). The CI workflow handles native module
+// compilation explicitly after npm ci completes.
+if (process.env.SKIP_NATIVE_BUILD === '1') {
+  console.log('[kcc-native] SKIP_NATIVE_BUILD set — skipping postinstall build (CI handles it).');
+  process.exit(0);
+}
+
 // Check if Rust / cargo is available.
 const rustCheck = spawnSync('cargo', ['--version'], { stdio: 'pipe' });
 if (rustCheck.error || rustCheck.status !== 0) {
