@@ -1,5 +1,6 @@
 import { contextBridge, ipcRenderer } from 'electron';
 import type { AuthState, AuthSignedInPayload } from './auth';
+import type { UpdateStatus } from './update-service';
 
 // Expose a typed settings API to the settings renderer.
 // Separate from the panel preload — least-privilege: each window gets only what it needs.
@@ -65,5 +66,31 @@ contextBridge.exposeInMainWorld('kccSettings', {
     onSignedOut: (callback: () => void): void => {
       ipcRenderer.on('auth:signed-out', () => callback());
     },
+  },
+
+  // TASK-0033: update namespace — check/install actions and status push.
+  update: {
+    getStatus: (): Promise<UpdateStatus> =>
+      ipcRenderer.invoke('update:get-status'),
+
+    checkNow: (): Promise<void> =>
+      ipcRenderer.invoke('update:check-now'),
+
+    restartAndInstall: (): Promise<void> =>
+      ipcRenderer.invoke('update:restart-and-install'),
+
+    // Push listener — main process sends this when update status changes.
+    // Renderer subscribes on load; missed events are recovered via getStatus().
+    onStatusChanged: (callback: (status: UpdateStatus) => void): void => {
+      ipcRenderer.on('update:status-changed', (_event, payload: { status: UpdateStatus }) =>
+        callback(payload.status),
+      );
+    },
+  },
+
+  // TASK-0033: app namespace — version info from main process.
+  app: {
+    getVersion: (): Promise<string> =>
+      ipcRenderer.invoke('app:get-version'),
   },
 });
