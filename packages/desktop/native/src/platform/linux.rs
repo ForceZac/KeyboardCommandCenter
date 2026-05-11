@@ -24,12 +24,19 @@ use x11rb::connection::Connection;
 use x11rb::protocol::xproto::{AtomEnum, ConnectionExt};
 use x11rb::rust_connection::RustConnection;
 
+use super::linux_session::{detect_session, SessionType};
 use super::ActiveWindowData;
 
 /// Linux TASK_COMM_LEN limit: `/proc/<pid>/comm` holds at most 15 printable chars.
 const COMM_MAX_LEN: usize = 15;
 
 pub fn get_active_window() -> Option<ActiveWindowData> {
+    // Dispatch to X11 or Wayland detection based on the running session type.
+    match detect_session() {
+        SessionType::Wayland => return super::linux_wayland::get_active_window(),
+        SessionType::X11 => {} // fall through to X11 detection below
+    }
+
     // Connect to the X11 display ($DISPLAY env var; falls back to ":0").
     let (conn, screen_num) = RustConnection::connect(None).ok()?;
     let root = conn.setup().roots[screen_num].root;
@@ -67,6 +74,7 @@ pub fn get_active_window() -> Option<ActiveWindowData> {
         process_name,
         window_title,
         bundle_id: None, // Linux has no bundle identifiers
+        detection_unavailable: false,
     })
 }
 

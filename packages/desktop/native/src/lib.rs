@@ -25,6 +25,11 @@ pub struct ActiveWindowInfo {
   /// macOS bundle identifier (e.g. "com.microsoft.VSCode").
   /// Always `undefined` on Windows.
   pub bundle_id: Option<String>,
+  /// True when active window detection is technically unavailable on this session
+  /// (Wayland session with an unsupported compositor, or all DBus calls failed).
+  /// Always false on macOS, Windows, and Linux X11.
+  /// When true, `processName` and `windowTitle` are empty strings.
+  pub detection_unavailable: bool,
 }
 
 /// Returns information about the currently active (foreground) window,
@@ -39,5 +44,6 @@ pub fn get_active_window() -> Option<ActiveWindowInfo> {
     process_name: info.process_name,
     window_title: info.window_title,
     bundle_id: info.bundle_id,
+    detection_unavailable: info.detection_unavailable,
   })
 }

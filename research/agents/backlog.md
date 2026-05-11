@@ -52,6 +52,26 @@ _(Project Manager keeps 2–3 tasks here at all times.)
 - **TRD:**
 - **Notes:** Third Goal 10 task. PRD Flows 5 (X11 overlay) and 6 (Wayland degraded overlay) cover this scope. Depends on TASK-0036 being merged (needs Linux detection infrastructure). Independent of Wayland detection (TASK-0037) — overlay uses existing detection result.
 
+### TASK-0039: Linux Packaging — AppImage & .deb via electron-builder + CI Job
+- **Goal:** Goal 10 — Linux Support (implementation-roadmap-v2.md § Goal 10)
+- **PRD:** research/agents/prds/goal-10-linux-support.md
+- **Scope:** Add Linux packaging targets to the existing electron-builder configuration. Produce an `.AppImage` (universal, no-install) and `.deb` (Debian/Ubuntu) for x64. Configure the existing GitHub Actions release workflow (from TASK-0035) to include a Linux build job that installs required X11/DBus development libraries (`libx11-dev`, `libxcb1-dev`, `libdbus-1-dev`) and produces Linux artifacts alongside Windows/macOS builds. Declare runtime dependencies in the `.deb` package (`libx11-6`, `libdbus-1-3`, `libappindicator3-1` or `libayatana-appindicator3-1`). Create an XDG autostart `.desktop` file so the app can register itself for login startup on Linux. Ensure tray icon works via `libappindicator3` / `StatusNotifierItem`. NOT in scope: RPM packaging, Flathub/Snap Store listings, ARM64 builds, AppImage auto-update, landing page download page updates (separate task), overlay or detection features (covered by TASK-0036/0037/0038).
+- **Acceptance:**
+  - electron-builder config produces `.AppImage` and `.deb` files for Linux x64
+  - AppImage launches without installation on Ubuntu 22.04+
+  - `.deb` installs cleanly via `dpkg -i` on Ubuntu/Debian
+  - `.deb` declares correct runtime dependencies (`libx11-6`, `libdbus-1-3`, `libappindicator3-1`)
+  - GitHub Actions release workflow builds Linux targets alongside Windows/macOS
+  - CI Linux job installs required dev libraries and completes successfully
+  - XDG autostart `.desktop` entry created and offered to user on first launch
+  - Tray icon appears on GNOME (with libappindicator) and KDE
+  - App functions via global hotkey when no system tray is detected
+  - No regressions on existing Windows/macOS builds
+- **PR:**
+- **Branch:**
+- **TRD:**
+- **Notes:** Addresses PROP-0007 (Linux Packaging task lost in backlog divergence). Fourth Goal 10 task. PRD Flows 1 and 2 + CI constraint cover this scope. Depends on TASK-0035 being merged (needs the GitHub Actions release workflow to extend). Independent of TASK-0037 (Wayland detection) and TASK-0038 (X11 overlay).
+
 ## In Progress
 
 _(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_

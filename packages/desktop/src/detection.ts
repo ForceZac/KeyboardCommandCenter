@@ -17,6 +17,11 @@ export interface ActiveWindowInfo {
   processName: string;
   windowTitle: string;
   bundleId?: string;
+  /**
+   * True when the Wayland adapter cannot identify the focused app.
+   * When true, processName and windowTitle are empty strings.
+   */
+  detectionUnavailable?: boolean;
 }
 
 /** Payload emitted on the 'detection:app-changed' IPC channel. */
@@ -77,6 +82,18 @@ export class DetectionService {
   private recentApps: string[] = [];
   /** Process names already logged this session — prevents duplicate log entries. */
   private loggedProcesses = new Set<string>();
+  /**
+   * True after `detection:unavailable` has been emitted for the current
+   * unavailable run. Reset to false when a successful detection arrives.
+   * Prevents re-emitting `detection:unavailable` on every poll tick.
+   */
+  private lastWasUnavailable = false;
+  /**
+   * App slug manually selected by the user via `setManualApp()`.
+   * Used as the active app when the native module returns detectionUnavailable.
+   * Persists for the session (cleared only on app restart, not between polls).
+   */
+  private manualAppSlug: string | null = null;
 
   constructor(options: DetectionServiceOptions) {
     this.getActiveWindowFn = options.getActiveWindow;
@@ -123,6 +140,31 @@ export class DetectionService {
     return [...this.recentApps];
   }
 
+  /**
+   * Sets the manually-selected app slug for Wayland sessions where automatic
+   * detection is unavailable. Immediately emits `detection:app-changed` so the
+   * panel updates without waiting for the next poll tick.
+   *
+   * Called by the IPC handler for `detection:set-manual-app`.
+   */
+  setManualApp(slug: string): void {
+    this.manualAppSlug = slug;
+    // Immediately push the selection to the renderer so the panel updates.
+    if (this.lastWasUnavailable) {
+      this.lastDetected = { processName: slug, appSlug: slug, windowTitle: '' };
+      this.emitToRenderer('detection:app-changed', {
+        appSlug: slug,
+        processName: slug,
+        windowTitle: '',
+      });
+    }
+  }
+
+  /** Returns the current manually-selected app slug (or null). */
+  getManualAppSlug(): string | null {
+    return this.manualAppSlug;
+  }
+
   // ---------------------------------------------------------------------------
   // Private — polling internals
   // ---------------------------------------------------------------------------
@@ -138,8 +180,35 @@ export class DetectionService {
         this.lastDetected = null;
         this.emitToRenderer('detection:app-changed', { appSlug: null, processName: '', windowTitle: '' });
       }
+      this.lastWasUnavailable = false;
       return;
     }
+
+    // --- Wayland detection unavailable ---
+    // The Rust layer signals that no supported compositor API could identify the
+    // focused window. Show the manual selector UI and, if the user has already
+    // picked an app, forward it as a regular detection:app-changed event.
+    if (info.detectionUnavailable) {
+      if (!this.lastWasUnavailable) {
+        this.lastWasUnavailable = true;
+        this.lastDetected = null;
+        this.emitToRenderer('detection:unavailable', { appSlug: null, processName: '', windowTitle: '' });
+      }
+      // If a manual override is already set, emit app-changed so the panel
+      // shows shortcuts for the selected app (change-gated to avoid duplicates).
+      if (this.manualAppSlug !== null && this.lastDetected?.processName !== this.manualAppSlug) {
+        this.lastDetected = { processName: this.manualAppSlug, appSlug: this.manualAppSlug, windowTitle: '' };
+        this.emitToRenderer('detection:app-changed', {
+          appSlug: this.manualAppSlug,
+          processName: this.manualAppSlug,
+          windowTitle: '',
+        });
+      }
+      return;
+    }
+
+    // Successful detection — clear any previous unavailability state.
+    this.lastWasUnavailable = false;
 
     const { processName, windowTitle, bundleId } = info;
     const appSlug = this.lookupAppFn(processName, bundleId);

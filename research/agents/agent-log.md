@@ -2037,3 +2037,22 @@
 - did: started run — claimed DEV_LOCK; no PAUSE/DEV_PAUSE; no Changes Requested; TASK-0037 In Progress with TRD approved — resuming build phase
 - task: TASK-0037 (Wayland Active Window Detection — GNOME & KDE DBus with Manual Fallback)
 - status: in-progress — build phase (checkpoint)
+
+## 2026-05-11 09:04 ET PROJECT-MANAGER
+- did: created TASK-0039 (Linux Packaging — AppImage & .deb + CI Job) for Goal 10. Resolved PROP-0007.
+- created: TASK-0039
+- moved: none
+- prd gaps: none — all 10 goals have PRDs
+- roadmap check: skipped (did last run)
+- proposals added: 0 (resolved PROP-0007)
+- metrics: tasks_created=1 | tasks_moved=0 | prd_gaps=0 | roadmap_issues=0
+- next: Ready now at 2 (TASK-0038, TASK-0039) — healthy. Consider TASK-0040 (landing page Linux downloads, PRD Flow 7) next run if Ready drops. Watch for TASK-0027 merge to unblock Goal 8 tasks (0028–0032). 5 PRs in Approved awaiting /merge (TASK-0027/0033/0034/0035/0036).
+
+## 2026-05-11 09:11 ET DEVELOPER
+- did: no-op — DEV_LOCK held (created 12:50 UTC, 20 min old, < 25 min threshold); exiting immediately
+- task: n/a
+- PR: n/a
+- trd: n/a
+- tests: skipped
+- metrics: run_type=no-op | reason=DEV_LOCK held | dev_idle=1
+- next: wait for DEV_LOCK to clear or timeout at 25 min; previous run was working on TASK-0037 build phase

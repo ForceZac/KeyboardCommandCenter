@@ -35,6 +35,12 @@ windows = { version = "0.58", features = [
 # x11rb: pure-Rust X11 client library (no C libxcb runtime dependency).
 # allow-unsafe-code enables zero-copy protocol parsing for performance.
 x11rb = { version = "0.13", features = ["allow-unsafe-code"] }
+# zbus: pure-Rust async D-Bus library for Wayland compositor detection.
+# tokio feature enables integration with the tokio async runtime.
+zbus = { version = "4", features = ["tokio"] }
+# tokio rt: minimal single-threaded runtime used to block_on zbus async calls
+# from within the synchronous napi get_active_window() entry point.
+tokio = { version = "1", features = ["rt"] }
 
 [build-dependencies]
 napi-build = "2"
