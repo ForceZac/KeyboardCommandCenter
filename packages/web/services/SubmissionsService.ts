@@ -1,6 +1,6 @@
 import { prisma } from '../lib/prisma';
 import { NotFoundError, RateLimitError, DuplicateSubmissionError } from '../lib/errors';
-import type { ISubmission, SubmissionCreatePayload } from '@kcc/core';
+import type { ISubmission, IAdminSubmission, AdminSubmissionsResponse, SubmissionCreatePayload } from '@kcc/core';
 
 const DAILY_SUBMISSION_LIMIT = 20;
 
@@ -132,6 +132,71 @@ export class SubmissionsService {
       orderBy: { createdAt: 'asc' },
     });
     return rows.map(toWireSubmission);
+  }
+
+  /**
+   * Returns PENDING submissions with relational data for the admin review queue.
+   * Includes submitter name/image, app name/slug, and original shortcut for corrections.
+   * Paginated at `pageSize` per page (default 50).
+   */
+  async getPendingAdmin(page = 1, pageSize = 50): Promise<AdminSubmissionsResponse> {
+    const skip = (page - 1) * pageSize;
+
+    const [rows, totalPending] = await Promise.all([
+      prisma.submission.findMany({
+        where: { status: 'PENDING' },
+        orderBy: { createdAt: 'asc' },
+        skip,
+        take: pageSize,
+        include: {
+          submitter: { select: { name: true, image: true } },
+          app: { select: { name: true, slug: true } },
+          shortcut: {
+            select: {
+              command: true,
+              context: true,
+              bindings: {
+                select: {
+                  platform: { select: { slug: true } },
+                  steps: {
+                    where: { stepOrder: 1 },
+                    select: { keyCombo: true },
+                  },
+                },
+                take: 1,
+              },
+            },
+          },
+        },
+      }),
+      prisma.submission.count({ where: { status: 'PENDING' } }),
+    ]);
+
+    const submissions: IAdminSubmission[] = rows.map((row) => {
+      const base = toWireSubmission(row);
+      let originalShortcut: IAdminSubmission['originalShortcut'] = null;
+
+      if (row.shortcut && row.shortcut.bindings[0]) {
+        const binding = row.shortcut.bindings[0];
+        originalShortcut = {
+          command: row.shortcut.command,
+          context: row.shortcut.context,
+          keyCombo: binding.steps[0]?.keyCombo ?? '',
+          platform: binding.platform.slug,
+        };
+      }
+
+      return {
+        ...base,
+        submitterName: row.submitter.name,
+        submitterImage: row.submitter.image,
+        appName: row.app?.name ?? null,
+        appSlug: row.app?.slug ?? null,
+        originalShortcut,
+      };
+    });
+
+    return { submissions, totalPending };
   }
 
   /**

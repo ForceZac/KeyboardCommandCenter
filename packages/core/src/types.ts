@@ -213,6 +213,28 @@ export interface ISubmission {
 }
 
 /**
+ * Enriched submission shape returned by GET /api/admin/submissions.
+ * Extends ISubmission with relational data for the admin review queue.
+ */
+export interface IAdminSubmission extends ISubmission {
+  submitterName: string | null;
+  submitterImage: string | null;
+  appName: string | null;
+  appSlug: string | null;
+  originalShortcut: {
+    command: string;
+    keyCombo: string;
+    context: string | null;
+    platform: string;
+  } | null;
+}
+
+export interface AdminSubmissionsResponse {
+  submissions: IAdminSubmission[];
+  totalPending: number;
+}
+
+/**
  * Body shape for POST /api/submissions.
  * `appId` is required for NEW_SHORTCUT and CORRECTION; null/absent for APP_REQUEST.
  * `shortcutId` is required for CORRECTION; absent otherwise.
