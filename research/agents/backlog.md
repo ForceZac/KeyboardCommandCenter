@@ -74,6 +74,10 @@ _(TRD Watcher moves tasks here when a TRD needs rework.)_
 
 _(Reviewer moves tasks here after approving the PR. You merge to main, then move to Shipped.)_
 
+## Shipped
+
+_(You move tasks here after merging to main.)_
+
 ### TASK-0024: Favorites Web UI — Heart Icons, Collections Page & Optimistic Updates
 - **Goal:** Goal 7 — User Accounts & Favorites Sync
 - **PRD:** research/agents/prds/goal-07-accounts-favorites.md
@@ -81,10 +85,7 @@ _(Reviewer moves tasks here after approving the PR. You merge to main, then move
 - **Branch:** goals/24-favorites-web-ui
 - **TRD:** research/plans/goals/24-favorites-web-ui-trd.md — approved
 - **Approved:** 2026-05-11 (Round 3)
-
-## Shipped
-
-_(You move tasks here after merging to main.)_
+- **Merged:** 2026-05-11
 
 ### TASK-0023: Desktop Auth Flow — Browser OAuth & Deep Link Callback
 - **Goal:** Goal 7 — User Accounts & Favorites Sync
@@ -336,6 +337,48 @@ _(Waiting on an external dependency, a missing PRD, or owner decision.)_
 - **Branch:**
 - **TRD:**
 - **Notes:** Blocked — awaiting TASK-0027 (needs submission API routes and data model). Second Goal 8 task. PRD Flows 1 and 6 cover this scope.
+
+### TASK-0029: Admin Review Queue UI
+- **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
+- **PRD:** research/agents/prds/goal-08-community-contributions.md
+- **Scope:** Build the admin review queue page at `/admin/review`. Protected route accessible only to users with `isAdmin=true` on User model (from TASK-0027). Display all pending submissions sorted oldest-first. Each submission card shows: type badge (New Shortcut / Correction / App Request), submitter display name, app name, and submitted data fields. For corrections: render a diff view comparing original shortcut values vs proposed values (changed fields highlighted). For server-flagged duplicates: show a warning badge linking to the existing entry. Three actions per submission: Approve (applies submission to shortcuts table via `PATCH /api/admin/submissions/:id`), Edit & Approve (inline editing of submission fields before applying), Reject (with optional reviewer reason text field). After any action, the submission is removed from the visible queue. Paginate if pending count exceeds 100. Page must load in <500ms. NOT in scope: keyboard shortcuts for review actions (v2), batch approve/reject, spam detection, email notifications, contributor notification system, submission API routes (TASK-0027), submission form (TASK-0028).
+- **Acceptance:**
+  - `/admin/review` route exists and renders the review queue page
+  - Non-admin users receive 403 or redirect to home
+  - Pending submissions displayed sorted oldest-first
+  - Type badge visible on each card (New Shortcut, Correction, App Request)
+  - Submitter name and app name shown on each submission card
+  - Correction submissions show diff view (original vs proposed, changed fields highlighted)
+  - Duplicate warning badge shown when server flagged a duplicate
+  - Approve action calls admin API and removes submission from queue
+  - Edit & Approve allows inline field modification before applying
+  - Reject action includes optional reason text field
+  - Pagination renders when pending count exceeds 100
+  - Page loads in <500ms
+  - No regressions on existing pages
+- **PR:**
+- **Branch:**
+- **TRD:**
+- **Notes:** Blocked — awaiting TASK-0027 (needs admin API routes, Submission model, and isAdmin flag). Third Goal 8 task. PRD Flow 4 covers this scope.
+
+### TASK-0030: Correction Form UI — Suggest Edit & Pre-filled Submission
+- **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
+- **PRD:** research/agents/prds/goal-08-community-contributions.md
+- **Scope:** Add a "Suggest edit" icon button on each shortcut row on per-app shortcut pages. Clicking opens a correction form pre-filled with the existing shortcut's data (command name, key combination via key recorder component from TASK-0028, platform, context/scope). User can edit any field that needs correction. Include an optional "Reason for correction" text area (e.g., "Changed in VS Code 1.96"). On submit: creates a Submission with type=CORRECTION via `POST /api/submissions` (from TASK-0027), linking to the existing shortcut via shortcutId. Show confirmation message on success. Handle rate limit (429) with user-friendly message. Requires authenticated session — show sign-in prompt for unauthenticated users. NOT in scope: admin review of corrections (TASK-0029), diff view rendering (TASK-0029 admin side), key recorder component implementation (TASK-0028 — reused here), app request form, server-side duplicate detection (TASK-0027), notification on approval/rejection, new shortcut submission form (TASK-0028).
+- **Acceptance:**
+  - "Suggest edit" icon visible on each shortcut row in per-app pages
+  - Clicking opens correction form pre-filled with current shortcut data
+  - Key recorder component (from TASK-0028) works for editing key combination
+  - Optional "Reason for correction" text area present
+  - Submit creates a CORRECTION-type Submission via `POST /api/submissions` with shortcutId
+  - Confirmation message shown on success
+  - Rate limit (429) shows user-friendly error
+  - Unauthenticated users see sign-in prompt
+  - No regressions on existing per-app shortcut pages
+- **PR:**
+- **Branch:**
+- **TRD:**
+- **Notes:** Blocked — awaiting TASK-0028 (needs key recorder component and submission form patterns) and TASK-0027 (needs submission API). Fourth Goal 8 task. PRD Flow 2 covers this scope.
 
 ### TASK-0026: Desktop Panel Favorites View & Favorite Toggle
 - **Goal:** Goal 7 — User Accounts & Favorites Sync
