@@ -46,6 +46,8 @@ import type { AuthSignedInPayload } from './auth';
 // TASK-0025: favorites sync engine + local cache.
 import { SyncStore } from './sync-store';
 import { SyncEngine } from './sync-engine';
+// TASK-0033: auto-update service.
+import { UpdateService } from './update-service';
 
 // Enforce single-instance: if another instance is already running, quit immediately.
 const isFirstInstance = app.requestSingleInstanceLock();
@@ -86,6 +88,7 @@ let shortcutService: ShortcutService;
 let shortcutCache: ShortcutCache;
 let overlayManager: OverlayWindowManager;
 let syncEngine: SyncEngine;
+let updateService: UpdateService;
 
 // ---------------------------------------------------------------------------
 // Unrecognized-process log writer (production implementation).
@@ -182,6 +185,17 @@ app.whenReady().then(() => {
   const buildSignInUrl = (): string =>
     `${webAppBaseUrl}/auth/signin?callbackUrl=${encodeURIComponent('shortcutvault://auth/callback')}`;
 
+  // TASK-0033: UpdateService — instantiate before TrayManager so getUpdateStatus
+  // is available when the tray menu is first built. start() is called after
+  // tray setup (below) and only when app.isPackaged (dev builds have no release).
+  updateService = new UpdateService((channel: string, payload: unknown) => {
+    settingsWindowManager.sendToRenderer(channel, payload);
+    // Refresh tray menu so "Restart to update" item appears when download completes.
+    if (channel === 'update:status-changed') {
+      trayManager.refreshMenu(authStore.isAuthenticated());
+    }
+  });
+
   trayManager = new TrayManager(
     // onOpenPanel: open the shortcut panel
     () => { panelManager.show(); },
@@ -202,6 +216,10 @@ app.whenReady().then(() => {
     () => authStore.isAuthenticated(),
     () => { openSignIn(buildSignInUrl()); },
     () => { signOut(); },
+    // TASK-0033: update actions
+    () => { void updateService.checkNow(); },
+    () => { updateService.restartAndInstall(); },
+    () => updateService.getStatus(),
   );
   trayManager.create();
 
@@ -245,6 +263,12 @@ app.whenReady().then(() => {
   ipcMain.handle('auth:get-state', () => getAuthState());
   ipcMain.handle('auth:open-signin', () => { openSignIn(buildSignInUrl()); });
   ipcMain.handle('auth:sign-out', () => { signOut(); });
+
+  // TASK-0033: Update IPC handlers (settings window renderer → main process).
+  ipcMain.handle('update:get-status', () => updateService.getStatus());
+  ipcMain.handle('update:check-now', () => updateService.checkNow());
+  ipcMain.handle('update:restart-and-install', () => { updateService.restartAndInstall(); });
+  ipcMain.handle('app:get-version', () => app.getVersion());
 
   // TASK-0025: Sync IPC handlers (panel renderer → main process).
   // Cache reads (sync:getFavorites, sync:getCollections) return synchronously from
@@ -349,6 +373,12 @@ app.whenReady().then(() => {
     detectionService.start();
   }
 
+  // TASK-0033: Start the update service only in packaged builds — dev builds have
+  // no GitHub Release + latest.yml, so autoUpdater would throw immediately.
+  if (app.isPackaged) {
+    updateService.start();
+  }
+
   // Log idle memory usage after everything has settled.
   setTimeout(() => {
     panelManager.logMemoryUsage();
@@ -364,6 +394,7 @@ app.on('window-all-closed', () => {
 
 app.on('before-quit', () => {
   detectionService?.stop();
+  updateService?.stop();
   trayManager?.destroy();
   overlayManager?.destroy();
 });
