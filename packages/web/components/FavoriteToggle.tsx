@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { useSession } from 'next-auth/react';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useCollections } from '@/hooks/useCollections';
 import { addToCollection, removeFromCollection, fetchCollectionShortcuts } from '@/lib/api';
-import { useQueryClient } from '@tanstack/react-query';
+import { useQueryClient, useMutation } from '@tanstack/react-query';
+import type { FavoriteEntry } from '@kcc/core';
 
 interface Props {
   shortcutId: string;
@@ -33,7 +34,7 @@ export default function FavoriteToggle({ shortcutId }: Props) {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const favorited = isFavorited(shortcutId);
-  const namedCollections = collections.filter((c) => !c.isDefault);
+  const namedCollections = useMemo(() => collections.filter((c) => !c.isDefault), [collections]);
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -46,22 +47,20 @@ export default function FavoriteToggle({ shortcutId }: Props) {
     return () => document.removeEventListener('mousedown', handleClick);
   }, []);
 
-  // When dropdown opens, lazily fetch membership for each named collection
+  // When dropdown opens, lazily fetch membership for each named collection.
+  // queryClient.fetchQuery is used so results enter the TQ cache (shared with useCollectionDetail).
   useEffect(() => {
     if (!dropdownOpen || namedCollections.length === 0) return;
 
     setMembershipLoading(true);
     Promise.all(
       namedCollections.map(async (c) => {
-        // Use the TanStack Query cache if available; otherwise fetch
-        const cached = queryClient.getQueryData<{ shortcutId: string }[]>([
-          'collection-detail',
-          c.id,
-        ]);
-        if (cached) return { id: c.id, has: cached.some((e) => e.shortcutId === shortcutId) };
-        // Minimal check: fetch collection shortcuts just to test membership
         try {
-          const data = await fetchCollectionShortcuts(c.id);
+          const data = await queryClient.fetchQuery<FavoriteEntry[]>({
+            queryKey: ['collection-detail', c.id],
+            queryFn: () => fetchCollectionShortcuts(c.id),
+            staleTime: 60_000,
+          });
           return { id: c.id, has: data.some((e) => e.shortcutId === shortcutId) };
         } catch {
           return { id: c.id, has: false };
@@ -72,8 +71,69 @@ export default function FavoriteToggle({ shortcutId }: Props) {
       setCollectionMembership(inSet);
       setMembershipLoading(false);
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dropdownOpen]);
+  }, [dropdownOpen, namedCollections, shortcutId, queryClient]);
+
+  // Mutations for adding/removing a shortcut from a named collection.
+  // Optimistic updates go into the ['collection-detail', collectionId] cache
+  // (consistent with useCollectionDetail) and also flip collectionMembership state.
+  const addToCollectionMutation = useMutation({
+    mutationFn: (collectionId: string) => addToCollection(collectionId, shortcutId),
+    onMutate: async (collectionId: string) => {
+      const key = ['collection-detail', collectionId] as const;
+      await queryClient.cancelQueries({ queryKey: key });
+      const previousData = queryClient.getQueryData<FavoriteEntry[]>(key);
+      queryClient.setQueryData<FavoriteEntry[]>(key, (old = []) => [
+        ...old,
+        {
+          collectionShortcutId: `optimistic-${shortcutId}`,
+          collectionId,
+          shortcutId,
+          addedAt: new Date().toISOString(),
+          shortcut: { id: shortcutId, command: '', context: null, appName: '', appSlug: '' },
+        },
+      ]);
+      setCollectionMembership((prev) => new Set([...prev, collectionId]));
+      return { previousData };
+    },
+    onError: (_err, collectionId, context) => {
+      queryClient.setQueryData(['collection-detail', collectionId], context?.previousData);
+      setCollectionMembership((prev) => {
+        const next = new Set(prev);
+        next.delete(collectionId);
+        return next;
+      });
+    },
+    onSettled: (_data, _err, collectionId) => {
+      queryClient.invalidateQueries({ queryKey: ['collection-detail', collectionId] });
+      queryClient.invalidateQueries({ queryKey: ['collections'] });
+    },
+  });
+
+  const removeFromCollectionMutation = useMutation({
+    mutationFn: (collectionId: string) => removeFromCollection(collectionId, shortcutId),
+    onMutate: async (collectionId: string) => {
+      const key = ['collection-detail', collectionId] as const;
+      await queryClient.cancelQueries({ queryKey: key });
+      const previousData = queryClient.getQueryData<FavoriteEntry[]>(key);
+      queryClient.setQueryData<FavoriteEntry[]>(key, (old = []) =>
+        old.filter((f) => f.shortcutId !== shortcutId),
+      );
+      setCollectionMembership((prev) => {
+        const next = new Set(prev);
+        next.delete(collectionId);
+        return next;
+      });
+      return { previousData };
+    },
+    onError: (_err, collectionId, context) => {
+      queryClient.setQueryData(['collection-detail', collectionId], context?.previousData);
+      setCollectionMembership((prev) => new Set([...prev, collectionId]));
+    },
+    onSettled: (_data, _err, collectionId) => {
+      queryClient.invalidateQueries({ queryKey: ['collection-detail', collectionId] });
+      queryClient.invalidateQueries({ queryKey: ['collections'] });
+    },
+  });
 
   const handleHeartClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -93,38 +153,11 @@ export default function FavoriteToggle({ shortcutId }: Props) {
     setDropdownOpen((o) => !o);
   };
 
-  const handleCollectionToggle = async (collectionId: string) => {
-    const inCollection = collectionMembership.has(collectionId);
-    // Optimistic update
-    setCollectionMembership((prev) => {
-      const next = new Set(prev);
-      if (inCollection) {
-        next.delete(collectionId);
-      } else {
-        next.add(collectionId);
-      }
-      return next;
-    });
-    try {
-      if (inCollection) {
-        await removeFromCollection(collectionId, shortcutId);
-      } else {
-        await addToCollection(collectionId, shortcutId);
-      }
-      // Invalidate the detail cache so the collection detail page stays fresh
-      queryClient.invalidateQueries({ queryKey: ['collection-detail', collectionId] });
-      queryClient.invalidateQueries({ queryKey: ['collections'] });
-    } catch {
-      // Roll back on error
-      setCollectionMembership((prev) => {
-        const next = new Set(prev);
-        if (inCollection) {
-          next.add(collectionId);
-        } else {
-          next.delete(collectionId);
-        }
-        return next;
-      });
+  const handleCollectionToggle = (collectionId: string) => {
+    if (collectionMembership.has(collectionId)) {
+      removeFromCollectionMutation.mutate(collectionId);
+    } else {
+      addToCollectionMutation.mutate(collectionId);
     }
   };
 
