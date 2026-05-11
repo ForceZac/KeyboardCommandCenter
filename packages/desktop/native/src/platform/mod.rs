@@ -10,6 +10,9 @@ mod macos;
 #[cfg(target_os = "windows")]
 mod windows;
 
+#[cfg(target_os = "linux")]
+mod linux;
+
 /// Internal representation of the active window info.
 /// Converted to `ActiveWindowInfo` (the napi-rs exported struct) in `lib.rs`.
 pub struct ActiveWindowData {
@@ -27,7 +30,10 @@ pub fn get_active_window_info() -> Option<ActiveWindowData> {
   #[cfg(target_os = "windows")]
   return windows::get_active_window();
 
-  // Unsupported platform (e.g. Linux — deferred to Goal 10)
-  #[cfg(not(any(target_os = "macos", target_os = "windows")))]
+  #[cfg(target_os = "linux")]
+  return linux::get_active_window();
+
+  // Unsupported platform (e.g. BSDs, WASM — genuinely not supported)
+  #[cfg(not(any(target_os = "macos", target_os = "windows", target_os = "linux")))]
   None
 }
