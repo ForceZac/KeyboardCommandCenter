@@ -1,5 +1,5 @@
 // Must be called before app.whenReady() — eliminates the GPU process (~20-40MB RAM savings).
-import { app, ipcMain } from 'electron';
+import { app, ipcMain, Notification } from 'electron';
 app.disableHardwareAcceleration();
 
 import fs from 'fs';
@@ -48,6 +48,7 @@ import { SyncStore } from './sync-store';
 import { SyncEngine } from './sync-engine';
 // TASK-0033: auto-update service.
 import { UpdateService } from './update-service';
+import type { UpdateStatus } from './update-service';
 
 // Enforce single-instance: if another instance is already running, quit immediately.
 const isFirstInstance = app.requestSingleInstanceLock();
@@ -192,7 +193,17 @@ app.whenReady().then(() => {
     settingsWindowManager.sendToRenderer(channel, payload);
     // Refresh tray menu so "Restart to update" item appears when download completes.
     if (channel === 'update:status-changed') {
+      const { status } = payload as { status: UpdateStatus };
       trayManager.refreshMenu(authStore.isAuthenticated());
+      // TASK-0033: fire an OS notification so users know an update is ready
+      // even when the tray menu is closed (which it almost always is during
+      // a background download).
+      if (status === 'ready') {
+        new Notification({
+          title: 'Keyboard Command Center',
+          body: 'Update available — will apply on next restart.',
+        }).show();
+      }
     }
   });
 
