@@ -1983,3 +1983,33 @@
 - metrics: tasks_created=1 | tasks_moved=0 | prd_gaps=0 | roadmap_issues=0
 - notes: Backlog on main was empty for active sections — restored from stash@{0} (goals/33-electron-updater-auto-update branch had the most recent state). Ready now has TASK-0034 + TASK-0035 + TASK-0036 (3 tasks — healthy). TASK-0033 in In Review (round 2 approved). TASK-0026/0027 in Approved awaiting /merge. TASK-0028–0032 Blocked on TASK-0027.
 - next: verify Developer moves TASK-0034 to In Progress on next Dev run (PR #29 already open). After TASK-0027 merges, confirm Merge Watcher unblocks Goal 8 tasks. Consider TASK-0037 (Wayland detection) for Goal 10 if Ready drops below 2.
+
+## 2026-05-11 08:27 ET MERGE-WATCHER
+- did: unblocked 0 task(s), synced 3 branches (2 conflicts)
+- synced: goals/36-linux-x11-detection, goals/35-github-actions-release-workflow, goals/34-landing-page-download
+- conflicts: goals/33-electron-updater-auto-update, goals/27-submission-data-model-api
+
+## 2026-05-11 08:35 ET PROJECT-MANAGER
+- did: moved TASK-0026 to Shipped (PR #26 merged 2026-05-11). Roadmap health check — solid.
+- created: none
+- moved: TASK-0026 Approved→Shipped
+- prd gaps: none — all 10 goals have PRDs
+- roadmap check: solid — sequencing correct, no scope creep, no stale goals, no missing prerequisites. Goal 10 work (TASK-0036) correctly parallelized with Goal 9 since X11 detection extends Goal 4's Rust module and doesn't depend on Goal 9 shipping. All Ready tasks (0034/0035/0036) have active PRs — Developer has picked them up. Ready will be empty once those backlog updates land; will create TASK-0037 (Wayland detection) next run.
+- flags: (1) TASK-0027 and TASK-0033 have merge conflicts per Merge Watcher 08:27 ET — need resolution before /merge. (2) Goal 7 fully shipped (all 6 tasks merged). (3) Goal 8 still blocked — TASK-0028–0032 waiting on TASK-0027 merge.
+- proposals added: 0
+- metrics: tasks_created=0 | tasks_moved=1 | prd_gaps=0 | roadmap_issues=0
+- next: create TASK-0037 (Wayland active window detection for Goal 10) to restock Ready. After TASK-0027 merges, confirm Merge Watcher unblocks Goal 8 tasks.
+
+## 2026-05-11 08:35 ET DEVELOPER
+- did: started run — claimed DEV_LOCK; no PAUSE/DEV_PAUSE; no in-flight lock; reconciling stale backlog (TASK-0034/0035/0036 approved on GitHub but still showing Ready on main)
+- task: backlog-reconciliation
+- status: in-progress
+
+## 2026-05-11 08:38 ET DEVELOPER
+- did: reconciled stale main backlog — TASK-0034/0035/0036 were all approved on GitHub (PRs #29/#30/#31) but still showed as Ready on main; moved all three to Approved, replaced Ready with TASK-0037/TASK-0038 from goals/36 branch, filed PROP-0007 for displaced Linux Packaging task
+- task: backlog-reconciliation (no code task claimed)
+- PR: n/a
+- trd: n/a
+- tests: skipped (backlog/proposals only)
+- metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=0 | dev_idle=0
+- next: Ready has TASK-0037 (Wayland detection) — PRD exists at goal-10-linux-support.md; next run picks it up and writes TRD. PM should review PROP-0007 re Linux Packaging gap
