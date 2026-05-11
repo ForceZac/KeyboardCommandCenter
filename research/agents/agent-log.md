@@ -1,5 +1,30 @@
 <!-- Agent log. Append-only. Agents read the last 75 lines before acting. Log Trim archives entries older than 48h into agent-log-archive-YYYY-MM.md. -->
 
+## 2026-05-11 06:08 ET REVIEWER
+- did: reviewed PR #28 (TASK-0033 — electron-updater Integration — Auto-Update Check & Notification, round 2)
+- decision: approved (posted as comment — GitHub self-review restriction)
+- standards checked: backend-standards (UpdateService encapsulates all autoUpdater logic, thin IPC handlers, stop() in before-quit, app.isPackaged guard), separation-of-concerns (desktop-only, no cross-package imports, kccSettings.update preload follows least-privilege pattern), PR-policy (non-draft, TRD approved), TRD match (all components present: UpdateService, 4 IPC handlers, settings HTML fieldset, settings.ts wiring, preload namespaces, electron-builder publish config)
+- round-1 issue confirmed fixed: OS Notification fires at main.ts:201–205 when status === 'ready' — Notification imported from electron at line 2, body matches acceptance criterion "Update available — will apply on next restart."
+- tests run: 308/308 pass (15 files, packages/desktop) — all green
+- metrics: run_type=productive | pr=PR-28 | round=2 | decision=approved | tests_run=pass
+- idle-reset: echo 0 > REV_IDLE; rm -f REV_PAUSE; rm -f DEV_PAUSE
+- next: Owner merges PR #28 to main; TASK-0033 shipped; Goal 9 continues with TASK-0035 (GitHub Actions release workflow)
+
+## 2026-05-11 06:00 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TBD (update below when known)
+- status: in-progress
+
+## 2026-05-11 05:09 ET REVIEWER
+- did: reviewed PR #29 (TASK-0034 — Landing Page `/download` Route with OS Detection, round 1)
+- decision: approved (posted as comment — GitHub self-review restriction)
+- standards checked: frontend-standards (RSC/client split, dark mode, Tailwind, one component per file, no raw fetch), separation-of-concerns (pure packages/web addition, no cross-package imports, detectOs.ts in lib/), testing (E2E + unit tests present, 10 unit tests pass, tsc clean, lint clean), TRD match (all 3 components present, no backend changes, asset filenames match)
+- tests run: 10/10 unit tests (detectOs.test.ts) pass via unit-only vitest config; tsc --noEmit clean; next lint clean; E2E not run (no live server in review env)
+- notes: (1) PrimaryButton uses raw `<a>` rather than shadcn Button — borderline, flagged in review; (2) backlog.md and agent-log.md on PR branch diverged from main (other agents committed to them while branch was open) — will need rebase/conflict resolution before Zach can merge; TASK-0035 must match asset filenames
+- metrics: run_type=productive | pr=PR-29 | round=1 | decision=approved | tests_run=pass
+- idle-reset: echo 0 > REV_IDLE; rm -f REV_PAUSE; rm -f DEV_PAUSE
+- next: Owner merges PR #29 to main; TASK-0034 moves to Shipped; Developer picks TASK-0035 (CI release workflow) from Ready
+
 ## 2026-05-11 01:11 ET DEVELOPER
 - did: no-op — in-flight cap reached (PR #25 goals/25-desktop-favorites-sync is In Review); no Changes Requested, no In Progress tasks
 - task: TASK-0025 (In Review — not my turn)
@@ -1862,3 +1887,90 @@
 - metrics: run_type=productive | pr=PR-25 | round=2 | decision=approved | tests_run=pass
 - idle-reset: echo 0 > REV_IDLE; rm -f REV_PAUSE; rm -f DEV_PAUSE
 - next: Owner merges PR #25 to main → move TASK-0025 to Shipped → Merge Watcher unblocks TASK-0026 + TASK-0027
+
+## 2026-05-11 05:11 ET DEVELOPER
+- did: no-op — no Ready tasks, no In Progress, no Changes Requested; TASK-0025 is in Approved (awaiting Zach merge to main → will unblock TASK-0026)
+- task: none
+- PR: n/a
+- trd: n/a
+- tests: skipped (no work done)
+- metrics: run_type=no-op | reason=no ready tasks | dev_idle=1
+- next: Zach merges PR #25 (TASK-0025) → TASK-0026 moves from Blocked to Ready → Developer picks it up next run
+
+## 2026-05-11 05:21 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TBD
+- status: in-progress — checkpoint
+
+## 2026-05-11 05:21 ET DEVELOPER
+- did: no-op — no ready tasks; In Progress empty, In Review empty, Changes Requested empty
+- task: n/a
+- PR: n/a
+- trd: n/a
+- tests: skipped (no work done)
+- metrics: run_type=no-op | reason=no ready tasks | dev_idle=2
+- next: Zach merges PR #29 (TASK-0034) and PR #25 (TASK-0025) from Approved; once TASK-0025 merges, TASK-0026 and TASK-0027 unblock; PM needs to queue next Ready task
+
+## 2026-05-11 05:31 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TBD
+- status: in-progress — checkpoint
+
+## 2026-05-11 05:31 ET DEVELOPER
+- did: no-op — no ready tasks; In Progress empty, In Review empty, Changes Requested empty; TASK-0034 (PR #29) and TASK-0025 (PR #25) both Approved, awaiting Zach merge to main
+- task: n/a
+- PR: n/a
+- trd: n/a
+- tests: skipped (no work done)
+- metrics: run_type=no-op | reason=no ready tasks | dev_idle=3
+- next: Zach merges PR #25 (TASK-0025) → TASK-0026 + TASK-0027 unblock → PM queues next Ready task; Zach merges PR #29 (TASK-0034) → TASK-0034 ships
+
+## 2026-05-11 05:39 ET PROJECT-MANAGER
+- did: major backlog sync — PR #25 merged but backlog was stale, causing Developer to idle for 3+ fires. Moved TASK-0025 to Shipped, moved TASK-0026 and TASK-0027 from Blocked to In Progress (both have open PRs with TRDs awaiting review), added TASK-0033 retroactively to In Progress (Developer created Goal 9 task and PR #28 outside normal PM flow). Added missing PRD field to TASK-0034. Updated project_context.md.
+- created: none (TASK-0033 added retroactively — Developer-created)
+- moved: TASK-0025 Approved→Shipped | TASK-0026 Blocked→In Progress | TASK-0027 Blocked→In Progress | TASK-0033 (new)→In Progress
+- prd gaps: none — all 10 goals have PRDs
+- roadmap check: skipped (ran last time at 01:06 ET — every-other-run cadence)
+- proposals added: 0
+- flags: (1) Developer created TASK-0033 and TASK-0034 outside the normal PM→backlog flow (same pattern as PROP-0001/Goal 3). TASK-0033 was never in the backlog; TASK-0034 was missing PRD/Scope/Acceptance fields. (2) Ready queue is empty — all upcoming Goal 8 tasks (TASK-0028/0029/0030) are blocked on TASK-0027; no new tasks can be queued until TASK-0027 ships. (3) Goal 9 PRD still has 4 open questions (code signing approach, draft vs published releases, version bumping, unsigned fallback) — not blocking current tasks but will block CI/CD pipeline task scoping.
+- metrics: tasks_created=0 | tasks_moved=4 | prd_gaps=0 | roadmap_issues=0
+- next: Reviewer picks up TRDs for TASK-0026, TASK-0027, TASK-0033. Once TASK-0027 ships, TASK-0028/0029 unblock → PM stocks Ready. Scope Goal 9 CI/CD pipeline task once PRD open questions are resolved.
+
+## 2026-05-11 05:41 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TBD
+- status: in-progress — checkpoint
+
+## 2026-05-11 05:41 ET DEVELOPER
+- did: no-op — all 3 In Progress tasks (TASK-0033, TASK-0027, TASK-0026) have TRD awaiting reviewer approval; no Changes Requested; Ready is empty
+- task: n/a (TASK-0033 is oldest In Progress, TRD awaiting-review)
+- PR: n/a
+- trd: awaiting-review (TASK-0033, TASK-0027, TASK-0026 all blocked on TRD Watcher)
+- tests: skipped (no work done)
+- metrics: run_type=no-op | reason=TRD awaiting reviewer approval — TASK-0033, TASK-0027, TASK-0026 | dev_idle=4
+- next: TRD Watcher reviews TRDs for PR #28 (TASK-0033), PR #27 (TASK-0027), PR #26 (TASK-0026) → approves or requests changes → Developer resumes build phase
+
+## 2026-05-11 05:50 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TBD
+- status: in-progress — checkpoint
+
+## 2026-05-11 05:51 ET DEVELOPER
+- did: no-op — all 3 In Progress tasks (TASK-0033, TASK-0027, TASK-0026) have TRD awaiting reviewer approval; no Changes Requested; Ready is empty
+- task: n/a (TASK-0033, TASK-0027, TASK-0026 all blocked on TRD Watcher)
+- PR: n/a
+- trd: awaiting-review (all 3 In Progress tasks)
+- tests: skipped (no work done)
+- metrics: run_type=no-op | reason=TRD awaiting reviewer approval — TASK-0033, TASK-0027, TASK-0026 | dev_idle=5
+- next: TRD Watcher reviews and approves TRDs for PR #28 (TASK-0033), PR #27 (TASK-0027), PR #26 (TASK-0026) → Developer resumes build phase on oldest approved task
+
+## 2026-05-11 06:05 ET PROJECT-MANAGER
+- did: restored backlog from stash (main branch was stale — missing all active tasks). Created TASK-0036 (Rust Linux X11 Active Window Detection) for Goal 10. Updated project_context.md.
+- created: TASK-0036
+- moved: none
+- prd gaps: none — all 10 goals have PRDs
+- roadmap check: skipped (did last run)
+- proposals added: 0
+- metrics: tasks_created=1 | tasks_moved=0 | prd_gaps=0 | roadmap_issues=0
+- notes: Backlog on main was empty for active sections — restored from stash@{0} (goals/33-electron-updater-auto-update branch had the most recent state). Ready now has TASK-0034 + TASK-0035 + TASK-0036 (3 tasks — healthy). TASK-0033 in In Review (round 2 approved). TASK-0026/0027 in Approved awaiting /merge. TASK-0028–0032 Blocked on TASK-0027.
+- next: verify Developer moves TASK-0034 to In Progress on next Dev run (PR #29 already open). After TASK-0027 merges, confirm Merge Watcher unblocks Goal 8 tasks. Consider TASK-0037 (Wayland detection) for Goal 10 if Ready drops below 2.
