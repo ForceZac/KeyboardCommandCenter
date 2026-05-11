@@ -33,28 +33,50 @@ Task IDs are monotonic. The Project Manager picks the next number.
 
 _(Project Manager keeps 2–3 tasks here at all times.)
 
-### TASK-0032: Contributor Profile Page
-- **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
-- **PRD:** research/agents/prds/goal-08-community-contributions.md
-- **Scope:** Add a public profile page at `/profile/[userId]`. Display: user display name and avatar (from OAuth provider), "Member since" date, contribution stats (total submitted, total accepted, acceptance rate), and a list of accepted contributions (shortcut name, app name, date accepted). Link to the profile from the nav avatar dropdown ("My Profile"). Any user can view any contributor's profile. Query the Submission model for contribution data (filter by submitterId, group by status). NOT in scope: private profile settings, notification system (separate task), reputation/badges/gamification, editable profile fields, submission form (TASK-0028), admin review queue (TASK-0029), email notifications.
+### TASK-0039: Linux Packaging — AppImage & .deb via electron-builder + CI Job
+- **Goal:** Goal 10 — Linux Support (implementation-roadmap-v2.md § Goal 10)
+- **PRD:** research/agents/prds/goal-10-linux-support.md
+- **Scope:** Add Linux packaging targets to the existing electron-builder configuration. Produce an `.AppImage` (universal, no-install) and `.deb` (Debian/Ubuntu) for x64. Configure the existing GitHub Actions release workflow (from TASK-0035) to include a Linux build job that installs required X11/DBus development libraries (`libx11-dev`, `libxcb1-dev`, `libdbus-1-dev`) and produces Linux artifacts alongside Windows/macOS builds. Declare runtime dependencies in the `.deb` package (`libx11-6`, `libdbus-1-3`, `libappindicator3-1` or `libayatana-appindicator3-1`). Create an XDG autostart `.desktop` file so the app can register itself for login startup on Linux. Ensure tray icon works via `libappindicator3` / `StatusNotifierItem`. NOT in scope: RPM packaging, Flathub/Snap Store listings, ARM64 builds, AppImage auto-update, landing page download page updates (separate task), overlay or detection features (covered by TASK-0036/0037/0038).
 - **Acceptance:**
-  - `/profile/[userId]` route exists and renders the contributor profile
-  - Display name and avatar shown (sourced from OAuth provider data on User model)
-  - "Member since" date displayed
-  - Contribution stats: total submitted, total accepted, acceptance rate
-  - List of accepted contributions with shortcut name, app name, and date accepted
-  - Profiles are publicly viewable (no auth required to view)
-  - Nav avatar dropdown includes "My Profile" link for authenticated users
-  - Page loads in <500ms
-  - No regressions on existing pages
+  - electron-builder config produces `.AppImage` and `.deb` files for Linux x64
+  - AppImage launches without installation on Ubuntu 22.04+
+  - `.deb` installs cleanly via `dpkg -i` on Ubuntu/Debian
+  - `.deb` declares correct runtime dependencies (`libx11-6`, `libdbus-1-3`, `libappindicator3-1`)
+  - GitHub Actions release workflow builds Linux targets alongside Windows/macOS
+  - CI Linux job installs required dev libraries and completes successfully
+  - XDG autostart `.desktop` entry created and offered to user on first launch
+  - Tray icon appears on GNOME (with libappindicator) and KDE
+  - App functions via global hotkey when no system tray is detected
+  - No regressions on existing Windows/macOS builds
 - **PR:**
 - **Branch:**
 - **TRD:**
-- **Notes:** Unblocked by TASK-0027 merge (PR #27, 2026-05-11). Sixth Goal 8 task. PRD Flow 5 covers this scope.
+- **Notes:** Unblocked — PRD written (2026-05-11). Depends on TASK-0035 (merged). Fourth Goal 10 task. PRD Flows 1, 2, 6 cover this scope.
+
+### TASK-0040: Download Page — Linux Download Option
+- **Goal:** Goal 10 — Linux Support (implementation-roadmap-v2.md § Goal 10)
+- **PRD:** research/agents/prds/goal-10-linux-support.md
+- **Scope:** Update the existing `/download` page (built in TASK-0034 / Goal 9) to include Linux download options. Add AppImage and .deb download buttons linking to the latest GitHub Release Linux artifacts. Update the existing OS detection logic to identify Linux User-Agents and auto-highlight the Linux section. Show brief format descriptions ("Works on any Linux distro" for AppImage, "For Debian & Ubuntu" for .deb). Preserve existing Windows/macOS download flows. NOT in scope: distro-specific detection (Ubuntu vs Fedora), RPM downloads, Flathub/Snap links, new page layout or redesign, auto-update instructions, download analytics.
+- **Acceptance:**
+  - `/download` page shows Linux download section with AppImage and .deb options
+  - Linux User-Agent detection highlights the Linux section by default
+  - Download links point to correct GitHub Release assets
+  - Brief format descriptions displayed for each option
+  - Existing Windows/macOS download sections unchanged
+  - Page remains mobile-responsive
+  - No regressions on existing download page functionality
+- **PR:**
+- **Branch:**
+- **TRD:**
+- **Notes:** Fifth Goal 10 task. PRD Flow 1 covers download page scope. Depends on TASK-0039 (Linux builds must exist to link to).
 
 ## In Progress
 
 _(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
+
+## In Review
+
+_(Developer moves tasks here when the draft PR is marked ready.)_
 
 ### TASK-0030: Correction Form UI — Suggest Edit & Pre-filled Submission
 - **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
@@ -72,53 +94,27 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
   - No regressions on existing per-app shortcut pages
 - **PR:** #38
 - **Branch:** goals/30-correction-form-ui
-- **TRD:** research/plans/goals/30-correction-form-ui-trd.md — awaiting-review
+- **TRD:** research/plans/goals/30-correction-form-ui-trd.md — approved
 - **Notes:** Unblocked — TASK-0028 shipped (PR #34, 2026-05-11). Fourth Goal 8 task. PRD Flow 2 covers this scope.
 
-## In Review
-
-_(Developer moves tasks here when the draft PR is marked ready.)_
-
-### TASK-0031: App Request Form & "No Results" Request Button
+### TASK-0032: Contributor Profile Page
 - **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
 - **PRD:** research/agents/prds/goal-08-community-contributions.md
-- **Scope:** Add a "Request this app" button to the no-results page when a user searches for an app not in the database. Build a minimal form: app name (required, text input), website URL (optional, text input), category (optional, dropdown matching existing categories), platform(s) (checkboxes: Windows / macOS / Linux). On submit: create a Submission with type=APP_REQUEST via `POST /api/submissions` (from TASK-0027). Show confirmation message on success. Handle rate limit (429) with user-friendly message. Requires authenticated session — show sign-in prompt for unauthenticated users. NOT in scope: admin handling of app requests (TASK-0029 covers review queue), auto-populating shortcuts for newly approved apps, search improvements, notification on approval/rejection, mobile-optimized form.
+- **Scope:** Add a public profile page at `/profile/[userId]`. Display: user display name and avatar (from OAuth provider), "Member since" date, contribution stats (total submitted, total accepted, acceptance rate), and a list of accepted contributions (shortcut name, app name, date accepted). Link to the profile from the nav avatar dropdown ("My Profile"). Any user can view any contributor's profile. Query the Submission model for contribution data (filter by submitterId, group by status). NOT in scope: private profile settings, notification system (separate task), reputation/badges/gamification, editable profile fields, submission form (TASK-0028), admin review queue (TASK-0029), email notifications.
 - **Acceptance:**
-  - "Request this app" button visible on no-results search page
-  - Form includes app name (required), website URL, category dropdown, platform checkboxes
-  - Submit creates an APP_REQUEST-type Submission via `POST /api/submissions`
-  - Confirmation message shown on success
-  - Rate limit (429) shows user-friendly error
-  - Unauthenticated users see sign-in prompt when clicking request button
-  - Form validates required field (app name) before submission
-  - No regressions on existing search/browse pages
-- **PR:** #36
-- **Branch:** goals/31-app-request-form
-- **TRD:** research/plans/goals/31-app-request-form-trd.md — approved
-- **Notes:** Unblocked by TASK-0027 merge (PR #27, 2026-05-11). Fifth Goal 8 task. PRD Flow 3 covers this scope.
-
-### TASK-0029: Admin Review Queue UI
-- **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
-- **PRD:** research/agents/prds/goal-08-community-contributions.md
-- **Scope:** Build the admin review queue page at `/admin/review`. Protected route accessible only to users with `isAdmin=true` on User model (from TASK-0027). Display all pending submissions sorted oldest-first. Each submission card shows: type badge (New Shortcut / Correction / App Request), submitter display name, app name, and submitted data fields. For corrections: render a diff view comparing original shortcut values vs proposed values (changed fields highlighted). For server-flagged duplicates: show a warning badge linking to the existing entry. Three actions per submission: Approve (applies submission to shortcuts table via `PATCH /api/admin/submissions/:id`), Edit & Approve (inline editing of submission fields before applying), Reject (with optional reviewer reason text field). After any action, the submission is removed from the visible queue. Paginate if pending count exceeds 100. Page must load in <500ms. NOT in scope: keyboard shortcuts for review actions (v2), batch approve/reject, spam detection, email notifications, contributor notification system, submission API routes (TASK-0027), submission form (TASK-0028).
-- **Acceptance:**
-  - `/admin/review` route exists and renders the review queue page
-  - Non-admin users receive 403 or redirect to home
-  - Pending submissions displayed sorted oldest-first
-  - Type badge visible on each card (New Shortcut, Correction, App Request)
-  - Submitter name and app name shown on each submission card
-  - Correction submissions show diff view (original vs proposed, changed fields highlighted)
-  - Duplicate warning badge shown when server flagged a duplicate
-  - Approve action calls admin API and removes submission from queue
-  - Edit & Approve allows inline field modification before applying
-  - Reject action includes optional reason text field
-  - Pagination renders when pending count exceeds 100
+  - `/profile/[userId]` route exists and renders the contributor profile
+  - Display name and avatar shown (sourced from OAuth provider data on User model)
+  - "Member since" date displayed
+  - Contribution stats: total submitted, total accepted, acceptance rate
+  - List of accepted contributions with shortcut name, app name, and date accepted
+  - Profiles are publicly viewable (no auth required to view)
+  - Nav avatar dropdown includes "My Profile" link for authenticated users
   - Page loads in <500ms
   - No regressions on existing pages
-- **PR:** #35
-- **Branch:** goals/29-admin-review-queue-ui
-- **TRD:** research/plans/goals/29-admin-review-queue-ui-trd.md — approved
-- **Notes:** Unblocked by TASK-0027 merge (PR #27, 2026-05-11). Third Goal 8 task. PRD Flow 4 covers this scope.
+- **PR:** #37
+- **Branch:** goals/32-contributor-profile-page
+- **TRD:**
+- **Notes:** Sixth Goal 8 task. PRD Flow 5 covers this scope.
 
 ## Changes Requested
 
@@ -135,6 +131,22 @@ _(Reviewer moves tasks here after approving the PR. You merge to main, then move
 ## Shipped
 
 _(You move tasks here after merging to main.)_
+
+### TASK-0031: App Request Form & "No Results" Request Button
+- **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
+- **PRD:** research/agents/prds/goal-08-community-contributions.md
+- **PR:** #36
+- **Branch:** goals/31-app-request-form
+- **TRD:** research/plans/goals/31-app-request-form-trd.md — approved
+- **Merged:** 2026-05-11
+
+### TASK-0029: Admin Review Queue UI
+- **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
+- **PRD:** research/agents/prds/goal-08-community-contributions.md
+- **PR:** #35
+- **Branch:** goals/29-admin-review-queue-ui
+- **TRD:** research/plans/goals/29-admin-review-queue-ui-trd.md — approved
+- **Merged:** 2026-05-11
 
 ### TASK-0028: Submission Form UI — New Shortcut & Key Recorder
 - **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
@@ -435,23 +447,4 @@ _(You move tasks here after merging to main.)_
 
 _(Waiting on an external dependency, a missing PRD, or owner decision.)_
 
-### TASK-0039: Linux Packaging — AppImage & .deb via electron-builder + CI Job
-- **Goal:** Goal 10 — Linux Support (implementation-roadmap-v2.md § Goal 10)
-- **PRD:** research/agents/prds/goal-10-linux-support.md
-- **Scope:** Add Linux packaging targets to the existing electron-builder configuration. Produce an `.AppImage` (universal, no-install) and `.deb` (Debian/Ubuntu) for x64. Configure the existing GitHub Actions release workflow (from TASK-0035) to include a Linux build job that installs required X11/DBus development libraries (`libx11-dev`, `libxcb1-dev`, `libdbus-1-dev`) and produces Linux artifacts alongside Windows/macOS builds. Declare runtime dependencies in the `.deb` package (`libx11-6`, `libdbus-1-3`, `libappindicator3-1` or `libayatana-appindicator3-1`). Create an XDG autostart `.desktop` file so the app can register itself for login startup on Linux. Ensure tray icon works via `libappindicator3` / `StatusNotifierItem`. NOT in scope: RPM packaging, Flathub/Snap Store listings, ARM64 builds, AppImage auto-update, landing page download page updates (separate task), overlay or detection features (covered by TASK-0036/0037/0038).
-- **Acceptance:**
-  - electron-builder config produces `.AppImage` and `.deb` files for Linux x64
-  - AppImage launches without installation on Ubuntu 22.04+
-  - `.deb` installs cleanly via `dpkg -i` on Ubuntu/Debian
-  - `.deb` declares correct runtime dependencies (`libx11-6`, `libdbus-1-3`, `libappindicator3-1`)
-  - GitHub Actions release workflow builds Linux targets alongside Windows/macOS
-  - CI Linux job installs required dev libraries and completes successfully
-  - XDG autostart `.desktop` entry created and offered to user on first launch
-  - Tray icon appears on GNOME (with libappindicator) and KDE
-  - App functions via global hotkey when no system tray is detected
-  - No regressions on existing Windows/macOS builds
-- **PR:**
-- **Branch:**
-- **TRD:**
-- **Notes:** Blocked — awaiting PRD. `research/agents/prds/goal-10-linux-support.md` does not exist in the repo; Product Manager must write it before this task can start. Fourth Goal 10 task. Depends on TASK-0035 being merged (done). Independent of TASK-0037 and TASK-0038.
 
