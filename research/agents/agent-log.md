@@ -1,5 +1,23 @@
 <!-- Agent log. Append-only. Agents read the last 75 lines before acting. Log Trim archives entries older than 48h into agent-log-archive-YYYY-MM.md. -->
 
+## 2026-05-11 11:39 ET REVIEWER
+- did: reviewed PR #34 (TASK-0028 — Submission Form UI — New Shortcut & Key Recorder, round 2)
+- decision: approved (posted as comment — GitHub self-review restriction)
+- standards checked: backend-standards (thin controller, service-owned checkDuplicate, Prisma queries), frontend-standards (client components correct, TanStack Query hooks own side effects, debounce in hook, API via lib/api.ts, dark mode), separation-of-concerns (all code in packages/web, no cross-package leakage), PR-policy (TRD approved, non-draft, E2E covers all acceptance criteria paths)
+- round-2 scope: verified both required changes from round 1 — (1) ESC handler useEffect added with handleClose in useCallback, dep array [open, handleClose] correct; companion E2E test present at submission-form.spec.ts:961; (2) TRD deviation documented in PR description
+- tests run: 19/19 Vitest unit tests pass (normalizeKeyCombo); integration tests env-blocked (no DB/Docker); TypeScript clean on all files introduced by this PR
+- metrics: run_type=productive | pr=PR-34 | round=2 | decision=approved | tests_run=pass
+- next: Owner merges PR #34 to main; TASK-0030 (Correction Form) unblocks on merge (depends on KeyRecorder from this task)
+
+## 2026-05-11 11:21 ET REVIEWER
+- did: reviewed PR #34 (TASK-0028 — Submission Form UI — New Shortcut & Key Recorder, round 1)
+- decision: changes-requested (posted as comment — GitHub self-review restriction)
+- standards checked: backend-standards (thin check-duplicate route, service-owned queries, Prisma ORM, Vitest integration tests with real DB fixtures), frontend-standards (client components correct, TanStack Query hooks, debounce in hook, API calls via lib/api.ts, Tailwind + dark mode, no snapshot tests), separation-of-concerns (all code in packages/web, no cross-package contamination), PR-policy (TRD approved, non-draft, E2E covers all acceptance criteria paths), TRD-match (checkDuplicate service method, GET /api/shortcuts/check-duplicate, KeyRecorder with normalizeKeyCombo pure export, useSubmitShortcut + useDuplicateCheck hooks, AppPageClient integration — all match TRD; deviation: custom div modal instead of shadcn/ui Dialog — Dialog not installed, consistent with FavoriteToggle, but undocumented)
+- tests run: 19/19 Vitest unit tests pass (normalizeKeyCombo); integration tests env-blocked (no DB); TypeScript clean on all new files
+- changes requested: (1) missing ESC key handler in SubmitShortcutModal + companion E2E test; (2) document TRD deviation in PR description (custom div vs. shadcn/ui Dialog)
+- metrics: run_type=productive | pr=PR-34 | round=1 | decision=changes-requested | tests_run=pass
+- next: Developer addresses 2 items (small fixes), re-marks PR ready → Reviewer picks up round 2
+
 ## 2026-05-11 10:59 ET TRD-WATCHER
 - did: reviewed TRD for TASK-0028 (Submission Form UI — New Shortcut & Key Recorder)
 - decision: approved
@@ -2148,3 +2166,41 @@
 - tests: green (19 KeyRecorder unit tests; DB-bound tests skipped — no docker in env)
 - metrics: run_type=productive | commits=5 | tests_added=31 | trd_cycles=0 | dev_idle=0
 - next: Reviewer picks up PR #34; top Ready is TASK-0029 (Admin Review Queue UI)
+
+## 2026-05-11 11:31 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TASK-0028 (Submission Form UI — changes-requested fix-up)
+- status: in-progress
+
+## 2026-05-11 11:31 ET DEVELOPER (completed)
+- did: addressed TASK-0028 changes-requested — wrapped handleClose in useCallback, added ESC useEffect in SubmitShortcutModal; added "modal closes on Escape key" E2E test; updated PR #34 description with TRD deviation note; left re-review comment; moved task back to In Review; REV_PAUSE cleared
+- task: TASK-0028 (Submission Form UI — New Shortcut & Key Recorder)
+- PR: #34
+- trd: approved — build complete (review feedback addressed)
+- tests: green (19/19 KeyRecorder unit tests; TS clean on modified files)
+- metrics: run_type=productive | commits=2 | tests_added=1 | trd_cycles=0 | dev_idle=0
+- next: Reviewer picks up PR #34 for round 2
+
+## 2026-05-11 11:34 ET PROJECT-MANAGER
+- did: roadmap health check + backlog audit — no changes needed, backlog healthy
+- created: none
+- moved: none
+- prd gaps: Goal 10 (goal-10-linux-support.md) still missing — blocks TASK-0039. Goal 9 (goal-09-auto-update-distribution.md) also missing but all Goal 9 tasks shipped. Both flagged in PROP-0008.
+- roadmap check: solid — Goals 1-7 shipped, Goal 8 has all 6 PRD flows covered by tasks (0027-0032), Goal 9 fully shipped, Goal 10 3/4 tasks shipped. Note: Goal 10 DoD includes "Listed on Flathub or Snap Store" which TASK-0039 explicitly excludes — will need an additional task once PRD exists. No scope creep, no stale goals, no sequencing issues.
+- proposals added: 0
+- metrics: tasks_created=0 | tasks_moved=0 | prd_gaps=2 | roadmap_issues=0
+- next: TASK-0028 in Changes Requested (Developer actively fixing, 11:31 ET). Ready at 3 (TASK-0029/0031/0032). TASK-0030 unblocks when 0028 merges. Product Manager needs to write goal-10-linux-support.md to unblock TASK-0039 and enable a Flathub/Snap task.
+
+## 2026-05-11 11:41 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TBD → TASK-0029 (Admin Review Queue UI)
+- status: in-progress (TRD phase)
+
+## 2026-05-11 11:41 ET DEVELOPER (completed)
+- did: picked TASK-0029 (Admin Review Queue UI); no Changes Requested, no In Progress, In Review empty (0 PRs); PRD confirmed at prds/goal-08-community-contributions.md; created branch goals/29-admin-review-queue-ui from main; wrote plan + TRD; pushed branch; opened draft PR #35; moved TASK-0029 to In Progress; updated backlog (TASK-0028 → Shipped, TASK-0029 in In Progress with #35); released DEV_LOCK
+- task: TASK-0029 (Admin Review Queue UI)
+- PR: #35
+- trd: written — awaiting-review
+- tests: skipped (TRD phase only)
+- metrics: run_type=productive | commits=2 | tests_added=0 | trd_cycles=0 | dev_idle=0
+- next: TRD Watcher reviews TRD at research/plans/goals/29-admin-review-queue-ui-trd.md; once approved, Developer resumes build phase (SubmissionsService.getPending extension, IAdminSubmission type, admin layout, AdminReviewQueue, SubmissionCard, CorrectionDiffView, useAdminAction, E2E tests)

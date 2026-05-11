@@ -33,29 +33,6 @@ Task IDs are monotonic. The Project Manager picks the next number.
 
 _(Project Manager keeps 2–3 tasks here at all times.)
 
-### TASK-0029: Admin Review Queue UI
-- **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
-- **PRD:** research/agents/prds/goal-08-community-contributions.md
-- **Scope:** Build the admin review queue page at `/admin/review`. Protected route accessible only to users with `isAdmin=true` on User model (from TASK-0027). Display all pending submissions sorted oldest-first. Each submission card shows: type badge (New Shortcut / Correction / App Request), submitter display name, app name, and submitted data fields. For corrections: render a diff view comparing original shortcut values vs proposed values (changed fields highlighted). For server-flagged duplicates: show a warning badge linking to the existing entry. Three actions per submission: Approve (applies submission to shortcuts table via `PATCH /api/admin/submissions/:id`), Edit & Approve (inline editing of submission fields before applying), Reject (with optional reviewer reason text field). After any action, the submission is removed from the visible queue. Paginate if pending count exceeds 100. Page must load in <500ms. NOT in scope: keyboard shortcuts for review actions (v2), batch approve/reject, spam detection, email notifications, contributor notification system, submission API routes (TASK-0027), submission form (TASK-0028).
-- **Acceptance:**
-  - `/admin/review` route exists and renders the review queue page
-  - Non-admin users receive 403 or redirect to home
-  - Pending submissions displayed sorted oldest-first
-  - Type badge visible on each card (New Shortcut, Correction, App Request)
-  - Submitter name and app name shown on each submission card
-  - Correction submissions show diff view (original vs proposed, changed fields highlighted)
-  - Duplicate warning badge shown when server flagged a duplicate
-  - Approve action calls admin API and removes submission from queue
-  - Edit & Approve allows inline field modification before applying
-  - Reject action includes optional reason text field
-  - Pagination renders when pending count exceeds 100
-  - Page loads in <500ms
-  - No regressions on existing pages
-- **PR:**
-- **Branch:**
-- **TRD:**
-- **Notes:** Unblocked by TASK-0027 merge (PR #27, 2026-05-11). Third Goal 8 task. PRD Flow 4 covers this scope.
-
 ### TASK-0031: App Request Form & "No Results" Request Button
 - **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
 - **PRD:** research/agents/prds/goal-08-community-contributions.md
@@ -93,6 +70,25 @@ _(Project Manager keeps 2–3 tasks here at all times.)
 - **TRD:**
 - **Notes:** Unblocked by TASK-0027 merge (PR #27, 2026-05-11). Sixth Goal 8 task. PRD Flow 5 covers this scope.
 
+### TASK-0030: Correction Form UI — Suggest Edit & Pre-filled Submission
+- **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
+- **PRD:** research/agents/prds/goal-08-community-contributions.md
+- **Scope:** Add a "Suggest edit" icon button on each shortcut row on per-app shortcut pages. Clicking opens a correction form pre-filled with the existing shortcut's data (command name, key combination via key recorder component from TASK-0028, platform, context/scope). User can edit any field that needs correction. Include an optional "Reason for correction" text area (e.g., "Changed in VS Code 1.96"). On submit: creates a Submission with type=CORRECTION via `POST /api/submissions` (from TASK-0027), linking to the existing shortcut via shortcutId. Show confirmation message on success. Handle rate limit (429) with user-friendly message. Requires authenticated session — show sign-in prompt for unauthenticated users. NOT in scope: admin review of corrections (TASK-0029), diff view rendering (TASK-0029 admin side), key recorder component implementation (TASK-0028 — reused here), app request form, server-side duplicate detection (TASK-0027), notification on approval/rejection, new shortcut submission form (TASK-0028).
+- **Acceptance:**
+  - "Suggest edit" icon visible on each shortcut row in per-app pages
+  - Clicking opens correction form pre-filled with current shortcut data
+  - Key recorder component (from TASK-0028) works for editing key combination
+  - Optional "Reason for correction" text area present
+  - Submit creates a CORRECTION-type Submission via `POST /api/submissions` with shortcutId
+  - Confirmation message shown on success
+  - Rate limit (429) shows user-friendly error
+  - Unauthenticated users see sign-in prompt
+  - No regressions on existing per-app shortcut pages
+- **PR:**
+- **Branch:**
+- **TRD:**
+- **Notes:** Unblocked — TASK-0028 shipped (PR #34, 2026-05-11). Fourth Goal 8 task. PRD Flow 2 covers this scope.
+
 ## In Progress
 
 _(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
@@ -101,27 +97,28 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
 
 _(Developer moves tasks here when the draft PR is marked ready.)_
 
-### TASK-0028: Submission Form UI — New Shortcut & Key Recorder
+### TASK-0029: Admin Review Queue UI
 - **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
 - **PRD:** research/agents/prds/goal-08-community-contributions.md
-- **Scope:** Add a "Submit a shortcut" button to per-app shortcut pages. Build a submission form (modal or inline) with fields: command name (required, max 100 chars), key combination (required, captured via custom key recorder input), platform (required, dropdown), context/scope (optional), notes (optional). Implement a key recorder component: captures actual keystrokes via `keydown` event listeners, normalizes modifier key names to match database conventions (Ctrl/Cmd, Shift, Alt/Option), displays formatted key combo string. Implement client-side duplicate detection: debounced API call on key combo change checking existing shortcuts for the same app + platform + key combo; show inline warning for exact matches ("This shortcut already exists — did you mean to submit a correction?") and softer hint for fuzzy matches. Form submits via `POST /api/submissions` (from TASK-0027). Show confirmation message on success. Handle rate limit errors (429) with user-friendly message. Requires authenticated session — show sign-in prompt for unauthenticated users. NOT in scope: correction form (separate task), app request form (separate task), admin review queue UI, contributor profile, server-side duplicate detection (TASK-0027), notification system, mobile key recorder.
+- **Scope:** Build the admin review queue page at `/admin/review`. Protected route accessible only to users with `isAdmin=true` on User model (from TASK-0027). Display all pending submissions sorted oldest-first. Each submission card shows: type badge (New Shortcut / Correction / App Request), submitter display name, app name, and submitted data fields. For corrections: render a diff view comparing original shortcut values vs proposed values (changed fields highlighted). For server-flagged duplicates: show a warning badge linking to the existing entry. Three actions per submission: Approve (applies submission to shortcuts table via `PATCH /api/admin/submissions/:id`), Edit & Approve (inline editing of submission fields before applying), Reject (with optional reviewer reason text field). After any action, the submission is removed from the visible queue. Paginate if pending count exceeds 100. Page must load in <500ms. NOT in scope: keyboard shortcuts for review actions (v2), batch approve/reject, spam detection, email notifications, contributor notification system, submission API routes (TASK-0027), submission form (TASK-0028).
 - **Acceptance:**
-  - "Submit a shortcut" button visible on per-app shortcut pages
-  - Form includes command name, key combo (recorder), platform, context, and notes fields
-  - Key recorder captures actual keystrokes and displays normalized key combo
-  - Key recorder handles modifier keys (Ctrl/Cmd, Shift, Alt/Option) correctly
-  - Client-side duplicate detection fires on key combo change with <200ms response
-  - Exact match warning shows existing shortcut command name
-  - Fuzzy match shows softer hint
-  - Duplicate warnings do not block submission
-  - Successful submission shows confirmation message
-  - Rate limit (429) shows user-friendly error
-  - Unauthenticated users see sign-in prompt when clicking submit button
-  - No regressions on existing per-app shortcut pages
-- **PR:** #34
-- **Branch:** goals/28-submission-form-ui
-- **TRD:** research/plans/goals/28-submission-form-ui-trd.md — approved
-- **Notes:** Unblocked by TASK-0027 merge (PR #27, 2026-05-11). Second Goal 8 task. PRD Flows 1 and 6 cover this scope. Review feedback addressed 2026-05-11: ESC handler + E2E test added; TRD deviation documented in PR description.
+  - `/admin/review` route exists and renders the review queue page
+  - Non-admin users receive 403 or redirect to home
+  - Pending submissions displayed sorted oldest-first
+  - Type badge visible on each card (New Shortcut, Correction, App Request)
+  - Submitter name and app name shown on each submission card
+  - Correction submissions show diff view (original vs proposed, changed fields highlighted)
+  - Duplicate warning badge shown when server flagged a duplicate
+  - Approve action calls admin API and removes submission from queue
+  - Edit & Approve allows inline field modification before applying
+  - Reject action includes optional reason text field
+  - Pagination renders when pending count exceeds 100
+  - Page loads in <500ms
+  - No regressions on existing pages
+- **PR:** #35
+- **Branch:** goals/29-admin-review-queue-ui
+- **TRD:** research/plans/goals/29-admin-review-queue-ui-trd.md — approved
+- **Notes:** Unblocked by TASK-0027 merge (PR #27, 2026-05-11). Third Goal 8 task. PRD Flow 4 covers this scope.
 
 ## Changes Requested
 
@@ -139,6 +136,14 @@ _(Reviewer moves tasks here after approving the PR. You merge to main, then move
 
 _(You move tasks here after merging to main.)_
 
+### TASK-0028: Submission Form UI — New Shortcut & Key Recorder
+- **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
+- **PRD:** research/agents/prds/goal-08-community-contributions.md
+- **PR:** #34
+- **Branch:** goals/28-submission-form-ui
+- **TRD:** research/plans/goals/28-submission-form-ui-trd.md — approved
+- **Approved:** 2026-05-11 (Round 2)
+- **Merged:** 2026-05-11
 ### TASK-0038: Overlay X11 Compatibility — Transparency & Click-Through
 - **Goal:** Goal 10 — Linux Support (implementation-roadmap-v2.md § Goal 10)
 - **PRD:** research/agents/prds/goal-10-linux-support.md
@@ -450,21 +455,3 @@ _(Waiting on an external dependency, a missing PRD, or owner decision.)_
 - **TRD:**
 - **Notes:** Blocked — awaiting PRD. `research/agents/prds/goal-10-linux-support.md` does not exist in the repo; Product Manager must write it before this task can start. Fourth Goal 10 task. Depends on TASK-0035 being merged (done). Independent of TASK-0037 and TASK-0038.
 
-### TASK-0030: Correction Form UI — Suggest Edit & Pre-filled Submission
-- **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
-- **PRD:** research/agents/prds/goal-08-community-contributions.md
-- **Scope:** Add a "Suggest edit" icon button on each shortcut row on per-app shortcut pages. Clicking opens a correction form pre-filled with the existing shortcut's data (command name, key combination via key recorder component from TASK-0028, platform, context/scope). User can edit any field that needs correction. Include an optional "Reason for correction" text area (e.g., "Changed in VS Code 1.96"). On submit: creates a Submission with type=CORRECTION via `POST /api/submissions` (from TASK-0027), linking to the existing shortcut via shortcutId. Show confirmation message on success. Handle rate limit (429) with user-friendly message. Requires authenticated session — show sign-in prompt for unauthenticated users. NOT in scope: admin review of corrections (TASK-0029), diff view rendering (TASK-0029 admin side), key recorder component implementation (TASK-0028 — reused here), app request form, server-side duplicate detection (TASK-0027), notification on approval/rejection, new shortcut submission form (TASK-0028).
-- **Acceptance:**
-  - "Suggest edit" icon visible on each shortcut row in per-app pages
-  - Clicking opens correction form pre-filled with current shortcut data
-  - Key recorder component (from TASK-0028) works for editing key combination
-  - Optional "Reason for correction" text area present
-  - Submit creates a CORRECTION-type Submission via `POST /api/submissions` with shortcutId
-  - Confirmation message shown on success
-  - Rate limit (429) shows user-friendly error
-  - Unauthenticated users see sign-in prompt
-  - No regressions on existing per-app shortcut pages
-- **PR:**
-- **Branch:**
-- **TRD:**
-- **Notes:** Blocked — awaiting TASK-0028 (needs key recorder component and submission form patterns). Fourth Goal 8 task. PRD Flow 2 covers this scope.

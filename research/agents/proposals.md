@@ -80,7 +80,16 @@ Off-roadmap ideas and system-improvement suggestions surfaced by the agents. The
 - **Effort:** 2
 - **Evidence:** `research/agents/prds/goal-09-auto-update-distribution.md` and `research/agents/prds/goal-10-linux-support.md` do not exist on main or any branch. Confirmed via `git log --all --diff-filter=A` — neither file was ever committed. Yet TASK-0033/0034/0035 (Goal 9) were created, approved, and merged; TASK-0036/0037/0038/0039 (Goal 10) were created with some shipped. All reference these non-existent PRDs. Prior PM runs (08:35 ET, 09:04 ET) incorrectly logged "all 10 goals have PRDs."
 - **Proposal:** (1) Product Manager should write `goal-09-auto-update-distribution.md` (retroactive — all Goal 9 tasks shipped) and `goal-10-linux-support.md` (active — TASK-0038 approved, TASK-0039 in Ready, TASK-0031/0032 in Blocked) as soon as possible. (2) Goal 10 PRD is higher priority since active tasks reference it. (3) Process check: how did prior PM runs pass the PRD gate? The agent-log claims PRDs existed — this suggests the check was against the roadmap's `PRD:` field (which lists the expected path) rather than actually verifying the file exists on disk. Future PM runs must verify file existence, not just path references.
-- **Status:** open
+- **Status:** partially resolved — Goal 10 PRD written (2026-05-11). Goal 9 PRD still missing but all Goal 9 tasks shipped; retroactive documentation only.
+
+### PROP-0009: Implement isDuplicateOf annotation for admin review queue duplicate detection
+- **Source:** Developer
+- **Date:** 2026-05-11
+- **Impact:** 2
+- **Effort:** 2
+- **Evidence:** TASK-0029 review (PR #35, round 1) identified that `DuplicateBadge` in SubmissionCard was unreachable — TASK-0027's `SubmissionsService.create()` throws `DuplicateSubmissionError` before a duplicate submission reaches PENDING status, so `submission.data.serverFlaggedDuplicate` is never true. Badge removed as dead code.
+- **Proposal:** When near-duplicate detection is needed (e.g. same app + similar keyCombo but different command), implement an `isDuplicateOf` field annotation in `getPendingAdmin()` that flags suspicious submissions without blocking creation. Re-add `DuplicateBadge` at that point with the new data source.
+- **Status:** deferred
 
 ### PROP-0001: Goal 3 work shipped without PRD or backlog tracking
 - **Source:** Project Manager

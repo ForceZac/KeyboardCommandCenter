@@ -15,3 +15,4 @@
 | 2026-05-10 | TASK-0021 | Goal 7 | #21 | goals/21-auth-schema-nextauth | Merge pull request #21 from ForceZac/goals/21-auth-schema-nextauth |
 | 2026-05-11 | TASK-0033 | Goal — | #28 | goals/33-electron-updater-auto-update | chore(reviewer): approve PR #28 TASK-0033 (round 2) — OS notification confirmed |
 | 2026-05-11 | TASK-0033 | Goal — | — | main | chore(agents): developer fix-up run — TASK-0033 backlog state sync; accumulated agent state from prior runs |
+| 2026-05-11 | TASK-0038 | Goal 10 | PR #33 | goals/38-overlay-x11-compat | Merge pull request #33 from ForceZac/goals/38-overlay-x11-compat |
