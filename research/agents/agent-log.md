@@ -1,5 +1,11 @@
 <!-- Agent log. Append-only. Agents read the last 75 lines before acting. Log Trim archives entries older than 48h into agent-log-archive-YYYY-MM.md. -->
 
+## 2026-05-11 10:59 ET TRD-WATCHER
+- did: reviewed TRD for TASK-0028 (Submission Form UI — New Shortcut & Key Recorder)
+- decision: approved
+- key finding: components fully cover PRD Flows 1 and 6; architecture sound (service layer, thin route, shadcn/ui Dialog, debounce in hook); flagged composite index on appId+platform+keyCombo as build-time risk
+- metrics: task=TASK-0028 | decision=approved
+
 ## 2026-05-11 10:36 ET REVIEWER
 - did: reviewed PR #33 (TASK-0038 — Overlay X11 Compatibility — Transparency & Click-Through, round 1)
 - decision: approved (posted as comment — GitHub self-review restriction)
@@ -2088,3 +2094,57 @@
 - proposals added: 1 (PROP-0008)
 - metrics: tasks_created=0 | tasks_moved=2 | prd_gaps=2 | roadmap_issues=1
 - next: Product Manager must write goal-10-linux-support.md urgently (active tasks reference it). goal-09 PRD is lower priority (all Goal 9 tasks shipped). Ready at 3 (TASK-0028, 0029, 0039) — healthy. TASK-0031/0032 can promote to Ready next run when slots open.
+
+## 2026-05-11 10:42 ET MERGE-WATCHER
+- did: unblocked 0 task(s), synced 0 branches (1 conflict)
+- conflict: goals/38-overlay-x11-compat — manual resolution needed (conflicts in research/agents/agent-log.md, research/agents/backlog.md)
+
+## 2026-05-11 10:43 ET DEVELOPER
+- did: backlog reconciliation — PRD gate blocked TASK-0039 (goal-10 PRD missing from repo); moved 7 tasks to Shipped, 1 to Approved, 4 from Blocked to Ready, 1 to Blocked
+- task: backlog-reconciliation
+- PR: n/a
+- trd: n/a
+- tests: skipped (no code task)
+- metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=0 | dev_idle=0
+- next: top Ready is TASK-0028 (Submission Form UI, Goal 8) — PRD exists. PM should write goal-10-linux-support.md to unblock TASK-0039. TASK-0038 (PR #33) awaiting /merge.
+
+## 2026-05-11 10:50 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TBD (update below when known)
+- status: in-progress
+
+## 2026-05-11 10:50 ET DEVELOPER (completed)
+- did: picked TASK-0028 (Submission Form UI); no Changes Requested, no In Progress, In Review empty; PRD confirmed at prds/goal-08-community-contributions.md; created branch goals/28-submission-form-ui from main; wrote plan + TRD; pushed branch; opened draft PR #34; moved TASK-0028 to In Progress; released DEV_LOCK
+- task: TASK-0028 (Submission Form UI — New Shortcut & Key Recorder)
+- PR: #34
+- trd: written — awaiting-review
+- tests: skipped (TRD phase only)
+- metrics: run_type=productive | commits=2 | tests_added=0 | trd_cycles=0 | dev_idle=0
+- next: TRD Watcher reviews TRD at research/plans/goals/28-submission-form-ui-trd.md; once approved, Developer resumes build phase (KeyRecorder, SubmitShortcutModal, check-duplicate endpoint, AppPageClient integration, E2E tests)
+
+## 2026-05-11 11:01 ET DEVELOPER
+- did: started run — claimed DEV_LOCK
+- task: TASK-0028 (Submission Form UI — New Shortcut & Key Recorder) — resuming build phase (TRD approved)
+- status: in-progress
+
+## 2026-05-11 11:04 ET PROJECT-MANAGER
+- did: moved TASK-0038 from Approved to Shipped (PR #33 merged). Updated project_context.md.
+- created: none
+- moved: TASK-0038 Approved→Shipped
+- prd gaps: Goal 10 (goal-10-linux-support.md) still missing — blocks TASK-0039. Goal 9 (goal-09-auto-update-distribution.md) also missing but low priority (all Goal 9 tasks shipped).
+- roadmap check: skipped (did last run)
+- proposals added: 0
+- metrics: tasks_created=0 | tasks_moved=1 | prd_gaps=2 | roadmap_issues=0
+- next: Ready at 3 (TASK-0029/0031/0032) — healthy. TASK-0028 actively building (PR #34). TASK-0030 unblocks when 0028 merges. Product Manager needs to write goal-10-linux-support.md to unblock TASK-0039.
+
+## 2026-05-11 11:07 ET MERGE-WATCHER
+- did: unblocked 0 task(s), synced 1 branch (0 conflicts)
+
+## 2026-05-11 11:10 ET DEVELOPER (completed)
+- did: built TASK-0028 full feature scope — checkDuplicate service method + GET /api/shortcuts/check-duplicate route, KeyRecorder component (normalizeKeyCombo pure function), useSubmitShortcut + useDuplicateCheck hooks, submitShortcut + checkDuplicate in lib/api.ts, SubmitShortcutModal, AppPageClient integration, Vitest unit tests (19 for normalizeKeyCombo, 6 for checkDuplicate service), Playwright E2E specs (12 tests); PR #34 marked ready; TASK-0028 moved to In Review; REV_PAUSE cleared
+- task: TASK-0028 (Submission Form UI — New Shortcut & Key Recorder)
+- PR: #34
+- trd: approved — build complete
+- tests: green (19 KeyRecorder unit tests; DB-bound tests skipped — no docker in env)
+- metrics: run_type=productive | commits=5 | tests_added=31 | trd_cycles=0 | dev_idle=0
+- next: Reviewer picks up PR #34; top Ready is TASK-0029 (Admin Review Queue UI)
