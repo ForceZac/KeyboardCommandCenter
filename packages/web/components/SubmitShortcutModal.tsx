@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import KeyRecorder from './KeyRecorder';
 import { useSubmitShortcut } from '@/hooks/useSubmitShortcut';
@@ -68,7 +68,7 @@ export default function SubmitShortcutModal({ appId, appName, open, onClose }: P
     setKeyModifiers([]);
   }, []);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     if (submitMutation.isPending) return;
     // Reset form
     setCommand('');
@@ -80,7 +80,15 @@ export default function SubmitShortcutModal({ appId, appName, open, onClose }: P
     setNotes('');
     submitMutation.reset();
     onClose();
-  };
+  }, [onClose, submitMutation]);
+
+  // Close on Escape key — accessibility requirement for modal dialogs
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') handleClose(); };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [open, handleClose]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

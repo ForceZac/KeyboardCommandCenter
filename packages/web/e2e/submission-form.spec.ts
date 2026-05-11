@@ -38,6 +38,14 @@ test.describe('Submission form — unauthenticated', () => {
     await expect(page.getByRole('link', { name: /sign in/i })).toBeVisible();
   });
 
+  test('modal closes on Escape key', async ({ page }) => {
+    await page.goto(`/apps/${APP_SLUG}`);
+    await page.getByRole('button', { name: /submit a shortcut/i }).click();
+    await expect(page.getByText(/sign in to submit a shortcut/i)).toBeVisible({ timeout: 3000 });
+    await page.keyboard.press('Escape');
+    await expect(page.getByText(/sign in to submit a shortcut/i)).not.toBeVisible({ timeout: 2000 });
+  });
+
   test('modal can be dismissed by clicking the backdrop', async ({ page }) => {
     await page.goto(`/apps/${APP_SLUG}`);
 
