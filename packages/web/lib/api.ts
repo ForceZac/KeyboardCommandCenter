@@ -12,6 +12,8 @@ import type {
   ISubmission,
   SubmissionCreatePayload,
   ShortcutEntry,
+  AdminSubmissionsResponse,
+  SubmissionAdminAction,
 } from '@kcc/core';
 
 const API_BASE = '/api';
@@ -167,6 +169,24 @@ export async function removeFromCollection(
 /** POST /api/submissions — create a new submission. Returns the created ISubmission. */
 export async function submitShortcut(payload: SubmissionCreatePayload): Promise<ISubmission> {
   const res = await apiMutate('/submissions', 'POST', payload);
+  return res.json() as Promise<ISubmission>;
+}
+
+// ---------------------------------------------------------------------------
+// Admin Submissions (Goal 8 — Review Queue)
+// ---------------------------------------------------------------------------
+
+/** GET /api/admin/submissions?page=N — paginated pending submissions for admin review. */
+export function getAdminSubmissions(page = 1): Promise<AdminSubmissionsResponse> {
+  return apiFetch<AdminSubmissionsResponse>(`/admin/submissions?page=${page}`);
+}
+
+/** PATCH /api/admin/submissions/:id — approve, reject, or edit-and-approve a submission. */
+export async function adminSubmissionAction(
+  id: string,
+  action: SubmissionAdminAction,
+): Promise<ISubmission> {
+  const res = await apiMutate(`/admin/submissions/${encodeURIComponent(id)}`, 'PATCH', action);
   return res.json() as Promise<ISubmission>;
 }
 
