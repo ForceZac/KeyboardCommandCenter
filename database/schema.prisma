@@ -50,6 +50,7 @@ model Shortcut {
   context       String?              // optional scope: "Global", "Editor", "Normal Mode", etc.
   bindings      ShortcutKeyBinding[]
   collections   CollectionShortcut[]
+  submissions   Submission[]
 
   @@map("shortcuts")
 }
@@ -197,6 +198,7 @@ model Submission {
   app           Application?     @relation(fields: [appId], references: [id], onDelete: SetNull)
   // Populated for CORRECTION only — the shortcut being corrected
   shortcutId    String?
+  shortcut      Shortcut?        @relation(fields: [shortcutId], references: [id], onDelete: SetNull)
   data          Json             // submitted field values; shape depends on type
   reviewerNotes String?
   reviewedBy    String?          // admin userId

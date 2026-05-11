@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '../../../../../lib/auth';
 import { SubmissionsService } from '../../../../../services/SubmissionsService';
+import { NotFoundError } from '../../../../../lib/errors';
 import { prisma } from '../../../../../lib/prisma';
 import type { SubmissionAdminAction } from '@kcc/core';
 
@@ -60,8 +61,14 @@ export async function PATCH(
     }
     return NextResponse.json(result);
   } catch (err) {
-    if (err instanceof Error && err.message === 'Submission not found') {
-      return NextResponse.json({ error: 'Submission not found' }, { status: 404 });
+    if (err instanceof NotFoundError) {
+      return NextResponse.json({ error: err.message }, { status: 404 });
+    }
+    if (err instanceof Error && err.message === 'Submission is not in PENDING status') {
+      return NextResponse.json({ error: err.message }, { status: 409 });
+    }
+    if (err instanceof Error && err.message === 'Category not found') {
+      return NextResponse.json({ error: err.message }, { status: 400 });
     }
     console.error('[PATCH /api/admin/submissions/:id] error:', err);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

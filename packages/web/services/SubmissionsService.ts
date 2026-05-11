@@ -1,5 +1,5 @@
 import { prisma } from '../lib/prisma';
-import { RateLimitError, DuplicateSubmissionError } from '../lib/errors';
+import { NotFoundError, RateLimitError, DuplicateSubmissionError } from '../lib/errors';
 import type { ISubmission, SubmissionCreatePayload } from '@kcc/core';
 
 const DAILY_SUBMISSION_LIMIT = 20;
@@ -144,7 +144,11 @@ export class SubmissionsService {
     const submission = await prisma.submission.findUnique({
       where: { id: submissionId },
     });
-    if (!submission) throw new Error('Submission not found');
+    if (!submission) throw new NotFoundError('Submission not found');
+
+    if (submission.status !== 'PENDING') {
+      throw new Error('Submission is not in PENDING status');
+    }
 
     const data = submission.data as Record<string, unknown>;
     const now = new Date();
@@ -209,6 +213,14 @@ export class SubmissionsService {
       }
     } else if (submission.type === 'APP_REQUEST') {
       // data shape: { appName, slug, website?, categoryId, platforms? }
+      if (data.categoryId) {
+        const category = await prisma.category.findUnique({
+          where: { id: data.categoryId as string },
+        });
+        if (!category) {
+          throw new Error('Category not found');
+        }
+      }
       await prisma.application.create({
         data: {
           name: data.appName as string,
@@ -242,7 +254,7 @@ export class SubmissionsService {
     const submission = await prisma.submission.findUnique({
       where: { id: submissionId },
     });
-    if (!submission) throw new Error('Submission not found');
+    if (!submission) throw new NotFoundError('Submission not found');
 
     const mergedData = {
       ...(submission.data as Record<string, unknown>),
@@ -268,7 +280,7 @@ export class SubmissionsService {
     const submission = await prisma.submission.findUnique({
       where: { id: submissionId },
     });
-    if (!submission) throw new Error('Submission not found');
+    if (!submission) throw new NotFoundError('Submission not found');
 
     const updated = await prisma.submission.update({
       where: { id: submissionId },

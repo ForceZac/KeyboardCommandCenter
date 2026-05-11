@@ -34,6 +34,9 @@ const { mockPrisma } = vi.hoisted(() => ({
     application: {
       create: vi.fn(),
     },
+    category: {
+      findUnique: vi.fn(),
+    },
   },
 }));
 vi.mock('../../lib/prisma', () => ({ prisma: mockPrisma }));
@@ -316,6 +319,7 @@ describe('PATCH /api/admin/submissions/:id', () => {
     mockAuth.mockResolvedValue(ADMIN_SESSION);
     mockPrisma.user.findUnique.mockResolvedValue(ADMIN_USER);
     mockPrisma.submission.findUnique.mockResolvedValue(appRequestSubmission);
+    mockPrisma.category.findUnique.mockResolvedValue({ id: 'cat-productivity', name: 'Productivity', slug: 'productivity' });
     mockPrisma.application.create.mockResolvedValue({ id: 'app-new', name: 'Notion', slug: 'notion' });
     mockPrisma.submission.update.mockResolvedValue(approvedAppRequest);
 
@@ -329,5 +333,35 @@ describe('PATCH /api/admin/submissions/:id', () => {
         data: expect.objectContaining({ name: 'Notion', slug: 'notion' }),
       }),
     );
+  });
+
+  it('returns 409 when approving a non-PENDING submission', async () => {
+    const approvedSubmission = { ...PENDING_SUBMISSION, status: 'APPROVED' };
+    mockAuth.mockResolvedValue(ADMIN_SESSION);
+    mockPrisma.user.findUnique.mockResolvedValue(ADMIN_USER);
+    mockPrisma.submission.findUnique.mockResolvedValue(approvedSubmission);
+    const res = await PATCH(
+      makePATCHRequest('sub-001', { action: 'approve' }),
+      makeParams('sub-001'),
+    );
+    expect(res.status).toBe(409);
+  });
+
+  it('returns 400 when APP_REQUEST approve has invalid categoryId', async () => {
+    const appRequestSubmission = {
+      ...PENDING_SUBMISSION,
+      type: 'APP_REQUEST',
+      appId: null,
+      data: { appName: 'Some App', slug: 'some-app', categoryId: 'nonexistent-cat' },
+    };
+    mockAuth.mockResolvedValue(ADMIN_SESSION);
+    mockPrisma.user.findUnique.mockResolvedValue(ADMIN_USER);
+    mockPrisma.submission.findUnique.mockResolvedValue(appRequestSubmission);
+    mockPrisma.category.findUnique.mockResolvedValue(null);
+    const res = await PATCH(
+      makePATCHRequest('sub-001', { action: 'approve' }),
+      makeParams('sub-001'),
+    );
+    expect(res.status).toBe(400);
   });
 });

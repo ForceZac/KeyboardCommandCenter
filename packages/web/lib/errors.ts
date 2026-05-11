@@ -1,3 +1,11 @@
+export class NotFoundError extends Error {
+  readonly code = 'NOT_FOUND' as const;
+  constructor(message: string) {
+    super(message);
+    this.name = 'NotFoundError';
+  }
+}
+
 export class LimitReachedError extends Error {
   readonly code = 'LIMIT_REACHED' as const;
   constructor(message: string) {

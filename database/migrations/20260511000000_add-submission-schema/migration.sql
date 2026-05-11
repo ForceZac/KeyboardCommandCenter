@@ -30,3 +30,6 @@ ALTER TABLE "submissions" ADD CONSTRAINT "submissions_submitterId_fkey" FOREIGN 
 
 -- AddForeignKey: submissions.appId → applications.id
 ALTER TABLE "submissions" ADD CONSTRAINT "submissions_appId_fkey" FOREIGN KEY ("appId") REFERENCES "applications"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey: submissions.shortcutId → shortcuts.id
+ALTER TABLE "submissions" ADD CONSTRAINT "submissions_shortcutId_fkey" FOREIGN KEY ("shortcutId") REFERENCES "shortcuts"("id") ON DELETE SET NULL ON UPDATE CASCADE;
