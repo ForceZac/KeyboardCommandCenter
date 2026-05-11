@@ -22,9 +22,14 @@ import { initSearch, applyFilter, resetFilter } from '../renderer/search';
  *         <div class="shortcut-row" data-cmd="start debugging" data-combo="f5">…</div>
  *       </div>
  *     </details>
+ *   #favorites-container (empty)  ← TASK-0026: sibling container for favorites view
  *   #no-results (hidden)          ← OUTSIDE #shortcuts-container — survives innerHTML replacement
  */
-function makeContainer(): { container: HTMLElement; noResults: HTMLElement } {
+function makeContainer(): {
+  container: HTMLElement;
+  favoritesContainer: HTMLElement;
+  noResults: HTMLElement;
+} {
   const container = document.createElement('div');
   container.id = 'shortcuts-container';
   container.innerHTML = `
@@ -44,6 +49,11 @@ function makeContainer(): { container: HTMLElement; noResults: HTMLElement } {
   `;
   document.body.appendChild(container);
 
+  // #favorites-container — empty in these tests (App Shortcuts view is active).
+  const favoritesContainer = document.createElement('div');
+  favoritesContainer.id = 'favorites-container';
+  document.body.appendChild(favoritesContainer);
+
   // #no-results lives outside #shortcuts-container so container.innerHTML = doesn't orphan it.
   const noResults = document.createElement('div');
   noResults.id = 'no-results';
@@ -51,7 +61,7 @@ function makeContainer(): { container: HTMLElement; noResults: HTMLElement } {
   noResults.textContent = 'No matching shortcuts';
   document.body.appendChild(noResults);
 
-  return { container, noResults };
+  return { container, favoritesContainer, noResults };
 }
 
 function rows(container: HTMLElement): HTMLElement[] {
@@ -65,23 +75,24 @@ function groups(container: HTMLElement): HTMLElement[] {
 // ── Test setup ────────────────────────────────────────────────────────────
 
 let container: HTMLElement;
+let favoritesContainer: HTMLElement;
 let noResults: HTMLElement;
 
 beforeEach(() => {
   document.body.innerHTML = '';
-  ({ container, noResults } = makeContainer());
+  ({ container, favoritesContainer, noResults } = makeContainer());
 });
 
-// ── applyFilter ───────────────────────────────────────────────────────────
+// ── applyFilter (App Shortcuts view) ──────────────────────────────────────
 
 describe('applyFilter', () => {
   it('shows all rows when query is empty', () => {
-    applyFilter('', container, noResults);
+    applyFilter('', container, favoritesContainer, noResults, 'app-shortcuts');
     expect(rows(container).every((r) => !r.hidden)).toBe(true);
   });
 
   it('hides non-matching rows', () => {
-    applyFilter('save', container, noResults);
+    applyFilter('save', container, favoritesContainer, noResults, 'app-shortcuts');
     const allRows = rows(container);
     expect(allRows[0]!.hidden).toBe(false); // "save file"
     expect(allRows[1]!.hidden).toBe(true);  // "find"
@@ -89,7 +100,7 @@ describe('applyFilter', () => {
   });
 
   it('shows matching rows', () => {
-    applyFilter('ctrl', container, noResults);
+    applyFilter('ctrl', container, favoritesContainer, noResults, 'app-shortcuts');
     const allRows = rows(container);
     expect(allRows[0]!.hidden).toBe(false); // combo: ctrl+s
     expect(allRows[1]!.hidden).toBe(false); // combo: ctrl+f
@@ -97,7 +108,7 @@ describe('applyFilter', () => {
   });
 
   it('matches against data-cmd (command description)', () => {
-    applyFilter('find', container, noResults);
+    applyFilter('find', container, favoritesContainer, noResults, 'app-shortcuts');
     const allRows = rows(container);
     expect(allRows[0]!.hidden).toBe(true);  // "save file" — no match
     expect(allRows[1]!.hidden).toBe(false); // "find" — match
@@ -105,7 +116,7 @@ describe('applyFilter', () => {
   });
 
   it('matches against data-combo (key combo)', () => {
-    applyFilter('f5', container, noResults);
+    applyFilter('f5', container, favoritesContainer, noResults, 'app-shortcuts');
     const allRows = rows(container);
     expect(allRows[0]!.hidden).toBe(true);  // ctrl+s — no match
     expect(allRows[1]!.hidden).toBe(true);  // ctrl+f — no match
@@ -113,7 +124,7 @@ describe('applyFilter', () => {
   });
 
   it('is case-insensitive (uppercase query vs lowercase data attribute)', () => {
-    applyFilter('CTRL', container, noResults);
+    applyFilter('CTRL', container, favoritesContainer, noResults, 'app-shortcuts');
     const allRows = rows(container);
     expect(allRows[0]!.hidden).toBe(false); // ctrl+s matches CTRL
     expect(allRows[1]!.hidden).toBe(false); // ctrl+f matches CTRL
@@ -121,37 +132,88 @@ describe('applyFilter', () => {
   });
 
   it('hides a context group when all its rows are hidden', () => {
-    // "debug" group has one row with data-cmd="start debugging", combo="f5"
-    // Filtering by "save" will hide that row → group should hide.
-    applyFilter('save', container, noResults);
+    applyFilter('save', container, favoritesContainer, noResults, 'app-shortcuts');
     const allGroups = groups(container);
     expect(allGroups[0]!.hidden).toBe(false); // Editor group — "save file" matches
     expect(allGroups[1]!.hidden).toBe(true);  // Debug group — no rows match
   });
 
   it('keeps a context group visible when at least one row matches', () => {
-    // "ctrl" matches both Editor rows; Editor group must stay visible.
-    applyFilter('ctrl', container, noResults);
+    applyFilter('ctrl', container, favoritesContainer, noResults, 'app-shortcuts');
     const allGroups = groups(container);
     expect(allGroups[0]!.hidden).toBe(false); // Editor — two matches
     expect(allGroups[1]!.hidden).toBe(true);  // Debug — no match (f5)
   });
 
   it('shows no-results message when nothing matches', () => {
-    applyFilter('zzznomatch', container, noResults);
+    applyFilter('zzznomatch', container, favoritesContainer, noResults, 'app-shortcuts');
     expect(noResults.hidden).toBe(false);
   });
 
   it('hides no-results message when at least one row matches', () => {
-    applyFilter('save', container, noResults);
+    applyFilter('save', container, favoritesContainer, noResults, 'app-shortcuts');
     expect(noResults.hidden).toBe(true);
   });
 
   it('hides no-results message when query is empty', () => {
-    // Empty query → show all — no-results should be hidden.
-    applyFilter('zzznomatch', container, noResults); // make it visible first
-    applyFilter('', container, noResults);
+    applyFilter('zzznomatch', container, favoritesContainer, noResults, 'app-shortcuts');
+    applyFilter('', container, favoritesContainer, noResults, 'app-shortcuts');
     expect(noResults.hidden).toBe(true);
+  });
+});
+
+// ── applyFilter (My Favorites view) ──────────────────────────────────────
+
+describe('applyFilter — favorites view', () => {
+  function makePopulatedFavoritesContainer(): HTMLElement {
+    favoritesContainer.innerHTML = `
+      <div class="favorites-section">
+        <div class="favorites-section-header">My Favorites</div>
+        <div class="fav-row" data-cmd="save file" data-app="vs code"></div>
+        <div class="fav-row" data-cmd="find" data-app="vs code"></div>
+        <div class="fav-row" data-cmd="start debugging" data-app="chrome"></div>
+      </div>
+    `;
+    return favoritesContainer;
+  }
+
+  it('shows all fav-rows when query is empty', () => {
+    makePopulatedFavoritesContainer();
+    applyFilter('', container, favoritesContainer, noResults, 'favorites');
+    const favRows = Array.from(favoritesContainer.querySelectorAll<HTMLElement>('.fav-row'));
+    expect(favRows.every((r) => !r.hidden)).toBe(true);
+  });
+
+  it('filters fav-rows by data-cmd', () => {
+    makePopulatedFavoritesContainer();
+    applyFilter('save', container, favoritesContainer, noResults, 'favorites');
+    const favRows = Array.from(favoritesContainer.querySelectorAll<HTMLElement>('.fav-row'));
+    expect(favRows[0]!.hidden).toBe(false); // "save file"
+    expect(favRows[1]!.hidden).toBe(true);  // "find"
+    expect(favRows[2]!.hidden).toBe(true);  // "start debugging"
+  });
+
+  it('filters fav-rows by data-app', () => {
+    makePopulatedFavoritesContainer();
+    applyFilter('chrome', container, favoritesContainer, noResults, 'favorites');
+    const favRows = Array.from(favoritesContainer.querySelectorAll<HTMLElement>('.fav-row'));
+    expect(favRows[0]!.hidden).toBe(true);  // vs code
+    expect(favRows[1]!.hidden).toBe(true);  // vs code
+    expect(favRows[2]!.hidden).toBe(false); // chrome
+  });
+
+  it('does NOT filter shortcut-rows in favorites view', () => {
+    makePopulatedFavoritesContainer();
+    applyFilter('save', container, favoritesContainer, noResults, 'favorites');
+    // shortcut rows in the shortcuts container must remain untouched
+    const shortcutRows = rows(container);
+    expect(shortcutRows.every((r) => !r.hidden)).toBe(true);
+  });
+
+  it('shows no-results when nothing matches in favorites view', () => {
+    makePopulatedFavoritesContainer();
+    applyFilter('zzznomatch', container, favoritesContainer, noResults, 'favorites');
+    expect(noResults.hidden).toBe(false);
   });
 });
 
@@ -161,27 +223,26 @@ describe('resetFilter', () => {
   it('clears the input value', () => {
     const input = document.createElement('input') as HTMLInputElement;
     input.value = 'ctrl';
-    resetFilter(input, container, noResults);
+    resetFilter(input, container, favoritesContainer, noResults, 'app-shortcuts');
     expect(input.value).toBe('');
   });
 
   it('makes all rows visible after a filter was applied', () => {
-    // First filter to hide rows.
-    applyFilter('save', container, noResults);
+    applyFilter('save', container, favoritesContainer, noResults, 'app-shortcuts');
     expect(rows(container).some((r) => r.hidden)).toBe(true);
 
     const input = document.createElement('input') as HTMLInputElement;
     input.value = 'save';
-    resetFilter(input, container, noResults);
+    resetFilter(input, container, favoritesContainer, noResults, 'app-shortcuts');
     expect(rows(container).every((r) => !r.hidden)).toBe(true);
   });
 
   it('hides the no-results message', () => {
-    applyFilter('zzznomatch', container, noResults);
+    applyFilter('zzznomatch', container, favoritesContainer, noResults, 'app-shortcuts');
     expect(noResults.hidden).toBe(false);
 
     const input = document.createElement('input') as HTMLInputElement;
-    resetFilter(input, container, noResults);
+    resetFilter(input, container, favoritesContainer, noResults, 'app-shortcuts');
     expect(noResults.hidden).toBe(true);
   });
 });
@@ -192,7 +253,7 @@ describe('initSearch', () => {
   it('attaches a filter listener that fires on input events', () => {
     const input = document.createElement('input') as HTMLInputElement;
     document.body.appendChild(input);
-    initSearch(input, container, noResults);
+    initSearch(input, container, favoritesContainer, noResults, () => 'app-shortcuts');
 
     input.value = 'save';
     input.dispatchEvent(new Event('input'));
@@ -201,23 +262,49 @@ describe('initSearch', () => {
     expect(allRows[0]!.hidden).toBe(false); // "save file" — matches
     expect(allRows[1]!.hidden).toBe(true);  // "find" — no match
   });
+
+  it('uses the active view returned by getActiveView at filter time', () => {
+    favoritesContainer.innerHTML = `
+      <div class="fav-row" data-cmd="save file" data-app="vs code"></div>
+      <div class="fav-row" data-cmd="find" data-app="vs code"></div>
+    `;
+    const input = document.createElement('input') as HTMLInputElement;
+    document.body.appendChild(input);
+
+    let activeView: 'app-shortcuts' | 'favorites' = 'favorites';
+    initSearch(input, container, favoritesContainer, noResults, () => activeView);
+
+    input.value = 'save';
+    input.dispatchEvent(new Event('input'));
+
+    // In favorites view: fav-rows are filtered, shortcut-rows are untouched.
+    const favRows = Array.from(favoritesContainer.querySelectorAll<HTMLElement>('.fav-row'));
+    expect(favRows[0]!.hidden).toBe(false); // "save file" — match
+    expect(favRows[1]!.hidden).toBe(true);  // "find" — no match
+    // shortcut-rows in App Shortcuts view must be unchanged
+    expect(rows(container).every((r) => !r.hidden)).toBe(true);
+
+    // Now switch view and fire another input event.
+    activeView = 'app-shortcuts';
+    input.value = 'save';
+    input.dispatchEvent(new Event('input'));
+
+    // Now shortcut-rows are filtered.
+    const allRows = rows(container);
+    expect(allRows[0]!.hidden).toBe(false); // "save file" — match
+    expect(allRows[1]!.hidden).toBe(true);  // "find" — no match
+  });
 });
 
 // ── regression ────────────────────────────────────────────────────────────
 
 describe('regression: #no-results survives container innerHTML replacement', () => {
   it('noResults is not a detached orphan after container.innerHTML is replaced', () => {
-    // Step 1: Apply a no-match filter — noResults becomes visible.
-    applyFilter('zzznomatch', container, noResults);
+    applyFilter('zzznomatch', container, favoritesContainer, noResults, 'app-shortcuts');
     expect(noResults.hidden).toBe(false);
 
-    // Step 2: Simulate handleAppChanged replacing the shortcut list.
-    // This is the destructive assignment that orphaned #no-results when it lived
-    // inside #shortcuts-container. With #no-results outside the container, it must
-    // survive unaffected.
     container.innerHTML = '<details class="context-group"><div class="context-rows"></div></details>';
 
-    // Step 3: noResults must still be attached to the document — not a detached orphan.
     expect(document.contains(noResults)).toBe(true);
   });
 });
