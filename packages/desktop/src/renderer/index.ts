@@ -170,12 +170,24 @@ document.addEventListener('DOMContentLoaded', () => {
     if (fallbackEl) fallbackEl.hidden = true;
   }
 
-  /** Shows the fallback container; hides shortcut UI elements. */
+  /**
+   * Shows the fallback container; hides shortcut UI elements.
+   *
+   * View-aware: when the user is on the "My Favorites" tab the fallback content
+   * is updated so it's ready if they switch back to "App Shortcuts", but the
+   * fallback overlay is kept hidden and the search bar is left visible — the
+   * favorites view is unaffected by the currently-detected app changing.
+   */
   function showFallback(html: string): void {
-    if (fallbackEl) {
-      fallbackEl.innerHTML = html;
-      fallbackEl.hidden = false;
+    // Always update content so it's ready when the user returns to App Shortcuts.
+    if (fallbackEl) fallbackEl.innerHTML = html;
+
+    if (currentView === 'favorites') {
+      // In favorites view: leave the fallback hidden and search bar visible.
+      return;
     }
+
+    if (fallbackEl) fallbackEl.hidden = false;
     if (shortcutsEl) shortcutsEl.hidden = true;
     if (searchContainerEl) searchContainerEl.hidden = true;
   }
