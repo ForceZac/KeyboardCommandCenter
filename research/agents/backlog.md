@@ -72,7 +72,6 @@ _(Project Manager keeps 2–3 tasks here at all times.)_
 - **TRD:**
 - **Notes:** Third Goal 10 task. PRD Flows 5 (X11 overlay) and 6 (Wayland degraded overlay) cover this scope. Depends on TASK-0036 being merged (needs Linux detection infrastructure). Independent of Wayland detection (TASK-0037) — overlay uses existing detection result.
 
-
 ## In Progress
 
 _(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
@@ -80,25 +79,6 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
 ## In Review
 
 _(Developer moves tasks here when the draft PR is marked ready.)_
-
-### TASK-0036: Rust Native Module — Linux X11 Active Window Detection
-- **Goal:** Goal 10 — Linux Support (implementation-roadmap-v2.md § Goal 10)
-- **PRD:** research/agents/prds/goal-10-linux-support.md
-- **Scope:** Add a `cfg(target_os = "linux")` implementation to the existing Rust native module (`packages/desktop/native/`) for active window detection on X11. Use X11 APIs (via `x11rb` or `xcb` crate) to get the focused window (`_NET_ACTIVE_WINDOW` or `XGetInputFocus`), read `_NET_WM_PID` to get the PID, then resolve the process name from `/proc/<pid>/comm` (with fallback to `/proc/<pid>/cmdline`). Return the same `ActiveWindowInfo` struct used by the Windows and macOS adapters. Add Linux-specific entries to the process-to-app mapping table (`process-map.json`) for the top 30 apps (e.g., `firefox-esr` → Firefox, `code` → VS Code, `gimp-2.10` → GIMP, handling the 15-character `/proc/comm` truncation). Include unit tests for the mapping lookups and integration test stubs for the X11 detection (guarded behind `#[cfg(target_os = "linux")]`). NOT in scope: Wayland detection (GNOME/KDE DBus — separate task), overlay changes, AppImage/deb packaging, CI pipeline, landing page updates, tray icon Linux compat.
-- **Acceptance:**
-  - `cfg(target_os = "linux")` module exists in the Rust native crate
-  - X11 active window detection returns process name and window title on an X11 session
-  - `/proc/<pid>/comm` and `/proc/<pid>/cmdline` fallback implemented
-  - `ActiveWindowInfo` struct returned matches Windows/macOS adapter shape
-  - `process-map.json` includes Linux-specific process name entries for 30+ apps
-  - 15-char `/proc/comm` truncation handled correctly in mapping lookups
-  - Unit tests for Linux process-to-app mapping lookups pass
-  - Existing Windows/macOS detection tests unaffected
-  - Crate compiles on Linux with X11 dev libraries installed
-- **PR:** #31
-- **Branch:** goals/36-linux-x11-detection
-- **TRD:** research/plans/goals/36-linux-x11-detection-trd.md — approved
-- **Notes:** First Goal 10 task. PRD Flow 3 (X11 detection) covers this scope. Does not depend on Goal 9 shipping — extends the existing Goal 4 Rust native module architecture. Requires `libx11-dev` / `libxcb1-dev` as build dependencies.
 
 ## Changes Requested
 
@@ -112,15 +92,22 @@ _(TRD Watcher moves tasks here when a TRD needs rework.)_
 
 _(Reviewer moves tasks here after approving the PR. You merge to main, then move to Shipped.)_
 
+### TASK-0036: Rust Native Module — Linux X11 Active Window Detection
+- **Goal:** Goal 10 — Linux Support
+- **PR:** #31
+- **Branch:** goals/36-linux-x11-detection
+- **TRD:** research/plans/goals/36-linux-x11-detection-trd.md — approved
+- **Approved:** 2026-05-11 (Round 2)
+
 ### TASK-0035: GitHub Actions Release Workflow — Build, Sign & Publish
-- **Goal:** Goal 9 — Auto-Update & Distribution (implementation-roadmap-v2.md § Goal 9)
+- **Goal:** Goal 9 — Auto-Update & Distribution
 - **PR:** #30
 - **Branch:** goals/35-github-actions-release-workflow
 - **TRD:** research/plans/goals/35-github-actions-release-workflow-trd.md — approved
 - **Approved:** 2026-05-11 (Round 2)
 
 ### TASK-0034: Landing Page — `/download` Route with OS Detection
-- **Goal:** Goal 9 — Auto-Update & Distribution (implementation-roadmap-v2.md § Goal 9)
+- **Goal:** Goal 9 — Auto-Update & Distribution
 - **PR:** #29
 - **Branch:** goals/34-landing-page-download
 - **TRD:** research/plans/goals/34-landing-page-download-trd.md — approved
@@ -140,16 +127,18 @@ _(Reviewer moves tasks here after approving the PR. You merge to main, then move
 - **TRD:** research/plans/goals/27-submission-data-model-api-trd.md — approved
 - **Approved:** 2026-05-11 (Round 2)
 
+## Shipped
+
+_(You move tasks here after merging to main.)_
+
 ### TASK-0026: Desktop Panel Favorites View & Favorite Toggle
 - **Goal:** Goal 7 — User Accounts & Favorites Sync
+- **PRD:** research/agents/prds/goal-07-accounts-favorites.md
 - **PR:** #26
 - **Branch:** goals/26-desktop-panel-favorites
 - **TRD:** research/plans/goals/26-desktop-panel-favorites-trd.md — approved
 - **Approved:** 2026-05-11 (Round 3)
-
-## Shipped
-
-_(You move tasks here after merging to main.)_
+- **Merged:** 2026-05-11
 
 ### TASK-0025: Desktop Favorites Sync Engine & Offline Cache
 - **Goal:** Goal 7 — User Accounts & Favorites Sync
