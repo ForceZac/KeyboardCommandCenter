@@ -157,3 +157,53 @@ jobs:
           WIN_CSC_KEY_PASSWORD: ${{ secrets.WIN_CSC_KEY_PASSWORD }}
           # GitHub publisher — appends Windows artifacts to the existing draft release.
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ---------------------------------------------------------------------------
+  # Linux — AppImage + .deb for x64, no code signing (checksums in latest-linux.yml)
+  # ---------------------------------------------------------------------------
+  build-linux:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Set up Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-unknown-linux-gnu
+
+      # X11/DBus dev libraries required by the Rust native module (x11rb, dbus crates).
+      - name: Install Linux build dependencies
+        run: sudo apt-get update && sudo apt-get install -y libx11-dev libxcb1-dev libdbus-1-dev
+
+      - name: Install dependencies
+        run: npm ci
+        env:
+          SKIP_NATIVE_BUILD: '1'
+
+      # Compile the Rust native module for Linux x64.
+      # napi-rs outputs: kcc-native.linux-x64-gnu.node
+      - name: Build native module (x86_64-unknown-linux-gnu)
+        run: cd packages/desktop/native && npx @napi-rs/cli build --release --js false --target x86_64-unknown-linux-gnu
+
+      - name: Build overlay renderer
+        run: npm run build:overlay
+
+      # Compile TypeScript/webpack via electron-forge package (populates .webpack/).
+      - name: Compile webpack via electron-forge
+        run: cd packages/desktop && npx electron-forge package --platform linux --arch x64
+
+      # electron-builder: produce AppImage + .deb, publish to the draft GitHub Release.
+      # No code signing for Linux — checksums in latest-linux.yml are sufficient.
+      - name: Build and publish Linux packages
+        run: cd packages/desktop && npm run build:linux
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

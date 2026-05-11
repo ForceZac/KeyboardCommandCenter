@@ -173,6 +173,10 @@ export class TrayManager {
       this.tray.on('click', () => {
         this.tray!.popUpContextMenu(this.buildContextMenu());
       });
+    } else if (process.platform === 'linux') {
+      // On Linux with libappindicator, click events are unreliable — use a static
+      // context menu that the indicator shows on left-click. refreshMenu() rebuilds it.
+      this.tray.setContextMenu(this.buildContextMenu());
     } else {
       // On Windows, right-click shows the menu (rebuilt fresh); left-click opens the panel.
       this.tray.on('right-click', () => {

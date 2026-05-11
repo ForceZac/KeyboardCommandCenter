@@ -33,6 +33,33 @@ Task IDs are monotonic. The Project Manager picks the next number.
 
 _(Project Manager keeps 2–3 tasks here at all times.)
 
+### TASK-0030: Correction Form UI — Suggest Edit & Pre-filled Submission
+- **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
+- **PRD:** research/agents/prds/goal-08-community-contributions.md
+- **Scope:** Add a "Suggest edit" icon button on each shortcut row on per-app shortcut pages. Clicking opens a correction form pre-filled with the existing shortcut's data (command name, key combination via key recorder component from TASK-0028, platform, context/scope). User can edit any field that needs correction. Include an optional "Reason for correction" text area (e.g., "Changed in VS Code 1.96"). On submit: creates a Submission with type=CORRECTION via `POST /api/submissions` (from TASK-0027), linking to the existing shortcut via shortcutId. Show confirmation message on success. Handle rate limit (429) with user-friendly message. Requires authenticated session — show sign-in prompt for unauthenticated users. NOT in scope: admin review of corrections (TASK-0029), diff view rendering (TASK-0029 admin side), key recorder component implementation (TASK-0028 — reused here), app request form, server-side duplicate detection (TASK-0027), notification on approval/rejection, new shortcut submission form (TASK-0028).
+- **Acceptance:**
+  - "Suggest edit" icon visible on each shortcut row in per-app pages
+  - Clicking opens correction form pre-filled with current shortcut data
+  - Key recorder component (from TASK-0028) works for editing key combination
+  - Optional "Reason for correction" text area present
+  - Submit creates a CORRECTION-type Submission via `POST /api/submissions` with shortcutId
+  - Confirmation message shown on success
+  - Rate limit (429) shows user-friendly error
+  - Unauthenticated users see sign-in prompt
+  - No regressions on existing per-app shortcut pages
+- **PR:**
+- **Branch:**
+- **TRD:**
+- **Notes:** Unblocked — TASK-0028 shipped (PR #34, 2026-05-11). Fourth Goal 8 task. PRD Flow 2 covers this scope.
+
+## In Progress
+
+_(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
+
+## In Review
+
+_(Developer moves tasks here when the draft PR is marked ready.)_
+
 ### TASK-0039: Linux Packaging — AppImage & .deb via electron-builder + CI Job
 - **Goal:** Goal 10 — Linux Support (implementation-roadmap-v2.md § Goal 10)
 - **PRD:** research/agents/prds/goal-10-linux-support.md
@@ -48,54 +75,10 @@ _(Project Manager keeps 2–3 tasks here at all times.)
   - Tray icon appears on GNOME (with libappindicator) and KDE
   - App functions via global hotkey when no system tray is detected
   - No regressions on existing Windows/macOS builds
-- **PR:**
-- **Branch:**
-- **TRD:**
-- **Notes:** Unblocked — PRD written (2026-05-11). Depends on TASK-0035 (merged). Fourth Goal 10 task. PRD Flows 1, 2, 6 cover this scope.
-
-### TASK-0040: Download Page — Linux Download Option
-- **Goal:** Goal 10 — Linux Support (implementation-roadmap-v2.md § Goal 10)
-- **PRD:** research/agents/prds/goal-10-linux-support.md
-- **Scope:** Update the existing `/download` page (built in TASK-0034 / Goal 9) to include Linux download options. Add AppImage and .deb download buttons linking to the latest GitHub Release Linux artifacts. Update the existing OS detection logic to identify Linux User-Agents and auto-highlight the Linux section. Show brief format descriptions ("Works on any Linux distro" for AppImage, "For Debian & Ubuntu" for .deb). Preserve existing Windows/macOS download flows. NOT in scope: distro-specific detection (Ubuntu vs Fedora), RPM downloads, Flathub/Snap links, new page layout or redesign, auto-update instructions, download analytics.
-- **Acceptance:**
-  - `/download` page shows Linux download section with AppImage and .deb options
-  - Linux User-Agent detection highlights the Linux section by default
-  - Download links point to correct GitHub Release assets
-  - Brief format descriptions displayed for each option
-  - Existing Windows/macOS download sections unchanged
-  - Page remains mobile-responsive
-  - No regressions on existing download page functionality
-- **PR:**
-- **Branch:**
-- **TRD:**
-- **Notes:** Fifth Goal 10 task. PRD Flow 1 covers download page scope. Depends on TASK-0039 (Linux builds must exist to link to).
-
-## In Progress
-
-_(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
-
-## In Review
-
-_(Developer moves tasks here when the draft PR is marked ready.)_
-
-### TASK-0030: Correction Form UI — Suggest Edit & Pre-filled Submission
-- **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
-- **PRD:** research/agents/prds/goal-08-community-contributions.md
-- **Scope:** Add a "Suggest edit" icon button on each shortcut row on per-app shortcut pages. Clicking opens a correction form pre-filled with the existing shortcut's data (command name, key combination via key recorder component from TASK-0028, platform, context/scope). User can edit any field that needs correction. Include an optional "Reason for correction" text area (e.g., "Changed in VS Code 1.96"). On submit: creates a Submission with type=CORRECTION via `POST /api/submissions` (from TASK-0027), linking to the existing shortcut via shortcutId. Show confirmation message on success. Handle rate limit (429) with user-friendly message. Requires authenticated session — show sign-in prompt for unauthenticated users. NOT in scope: admin review of corrections (TASK-0029), diff view rendering (TASK-0029 admin side), key recorder component implementation (TASK-0028 — reused here), app request form, server-side duplicate detection (TASK-0027), notification on approval/rejection, new shortcut submission form (TASK-0028).
-- **Acceptance:**
-  - "Suggest edit" icon visible on each shortcut row in per-app pages
-  - Clicking opens correction form pre-filled with current shortcut data
-  - Key recorder component (from TASK-0028) works for editing key combination
-  - Optional "Reason for correction" text area present
-  - Submit creates a CORRECTION-type Submission via `POST /api/submissions` with shortcutId
-  - Confirmation message shown on success
-  - Rate limit (429) shows user-friendly error
-  - Unauthenticated users see sign-in prompt
-  - No regressions on existing per-app shortcut pages
-- **PR:** #38
-- **Branch:** goals/30-correction-form-ui
-- **TRD:** research/plans/goals/30-correction-form-ui-trd.md — approved
-- **Notes:** Unblocked — TASK-0028 shipped (PR #34, 2026-05-11). Fourth Goal 8 task. PRD Flow 2 covers this scope.
+- **PR:** #39
+- **Branch:** goals/39-linux-packaging
+- **TRD:** research/plans/goals/39-linux-packaging-trd.md — approved
+- **Notes:** Fourth Goal 10 task. Depends on TASK-0035 (merged). Independent of TASK-0037 and TASK-0038.
 
 ### TASK-0032: Contributor Profile Page
 - **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
@@ -113,8 +96,49 @@ _(Developer moves tasks here when the draft PR is marked ready.)_
   - No regressions on existing pages
 - **PR:** #37
 - **Branch:** goals/32-contributor-profile-page
-- **TRD:**
-- **Notes:** Sixth Goal 8 task. PRD Flow 5 covers this scope.
+- **TRD:** research/plans/goals/32-contributor-profile-page-trd.md — approved
+- **Notes:** Unblocked by TASK-0027 merge (PR #27, 2026-05-11). Sixth Goal 8 task. PRD Flow 5 covers this scope.
+
+### TASK-0031: App Request Form & "No Results" Request Button
+- **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
+- **PRD:** research/agents/prds/goal-08-community-contributions.md
+- **Scope:** Add a "Request this app" button to the no-results page when a user searches for an app not in the database. Build a minimal form: app name (required, text input), website URL (optional, text input), category (optional, dropdown matching existing categories), platform(s) (checkboxes: Windows / macOS / Linux). On submit: create a Submission with type=APP_REQUEST via `POST /api/submissions` (from TASK-0027). Show confirmation message on success. Handle rate limit (429) with user-friendly message. Requires authenticated session — show sign-in prompt for unauthenticated users. NOT in scope: admin handling of app requests (TASK-0029 covers review queue), auto-populating shortcuts for newly approved apps, search improvements, notification on approval/rejection, mobile-optimized form.
+- **Acceptance:**
+  - "Request this app" button visible on no-results search page
+  - Form includes app name (required), website URL, category dropdown, platform checkboxes
+  - Submit creates an APP_REQUEST-type Submission via `POST /api/submissions`
+  - Confirmation message shown on success
+  - Rate limit (429) shows user-friendly error
+  - Unauthenticated users see sign-in prompt when clicking request button
+  - Form validates required field (app name) before submission
+  - No regressions on existing search/browse pages
+- **PR:** #36
+- **Branch:** goals/31-app-request-form
+- **TRD:** research/plans/goals/31-app-request-form-trd.md — approved
+- **Notes:** Unblocked by TASK-0027 merge (PR #27, 2026-05-11). Fifth Goal 8 task. PRD Flow 3 covers this scope.
+
+### TASK-0029: Admin Review Queue UI
+- **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
+- **PRD:** research/agents/prds/goal-08-community-contributions.md
+- **Scope:** Build the admin review queue page at `/admin/review`. Protected route accessible only to users with `isAdmin=true` on User model (from TASK-0027). Display all pending submissions sorted oldest-first. Each submission card shows: type badge (New Shortcut / Correction / App Request), submitter display name, app name, and submitted data fields. For corrections: render a diff view comparing original shortcut values vs proposed values (changed fields highlighted). For server-flagged duplicates: show a warning badge linking to the existing entry. Three actions per submission: Approve (applies submission to shortcuts table via `PATCH /api/admin/submissions/:id`), Edit & Approve (inline editing of submission fields before applying), Reject (with optional reviewer reason text field). After any action, the submission is removed from the visible queue. Paginate if pending count exceeds 100. Page must load in <500ms. NOT in scope: keyboard shortcuts for review actions (v2), batch approve/reject, spam detection, email notifications, contributor notification system, submission API routes (TASK-0027), submission form (TASK-0028).
+- **Acceptance:**
+  - `/admin/review` route exists and renders the review queue page
+  - Non-admin users receive 403 or redirect to home
+  - Pending submissions displayed sorted oldest-first
+  - Type badge visible on each card (New Shortcut, Correction, App Request)
+  - Submitter name and app name shown on each submission card
+  - Correction submissions show diff view (original vs proposed, changed fields highlighted)
+  - Duplicate warning badge shown when server flagged a duplicate
+  - Approve action calls admin API and removes submission from queue
+  - Edit & Approve allows inline field modification before applying
+  - Reject action includes optional reason text field
+  - Pagination renders when pending count exceeds 100
+  - Page loads in <500ms
+  - No regressions on existing pages
+- **PR:** #35
+- **Branch:** goals/29-admin-review-queue-ui
+- **TRD:** research/plans/goals/29-admin-review-queue-ui-trd.md — approved
+- **Notes:** Unblocked by TASK-0027 merge (PR #27, 2026-05-11). Third Goal 8 task. PRD Flow 4 covers this scope.
 
 ## Changes Requested
 
@@ -131,22 +155,6 @@ _(Reviewer moves tasks here after approving the PR. You merge to main, then move
 ## Shipped
 
 _(You move tasks here after merging to main.)_
-
-### TASK-0031: App Request Form & "No Results" Request Button
-- **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
-- **PRD:** research/agents/prds/goal-08-community-contributions.md
-- **PR:** #36
-- **Branch:** goals/31-app-request-form
-- **TRD:** research/plans/goals/31-app-request-form-trd.md — approved
-- **Merged:** 2026-05-11
-
-### TASK-0029: Admin Review Queue UI
-- **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
-- **PRD:** research/agents/prds/goal-08-community-contributions.md
-- **PR:** #35
-- **Branch:** goals/29-admin-review-queue-ui
-- **TRD:** research/plans/goals/29-admin-review-queue-ui-trd.md — approved
-- **Merged:** 2026-05-11
 
 ### TASK-0028: Submission Form UI — New Shortcut & Key Recorder
 - **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
@@ -446,5 +454,4 @@ _(You move tasks here after merging to main.)_
 ## Blocked
 
 _(Waiting on an external dependency, a missing PRD, or owner decision.)_
-
 
