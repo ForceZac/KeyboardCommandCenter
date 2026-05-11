@@ -33,28 +33,6 @@ Task IDs are monotonic. The Project Manager picks the next number.
 
 _(Project Manager keeps 2–3 tasks here at all times.)
 
-### TASK-0028: Submission Form UI — New Shortcut & Key Recorder
-- **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
-- **PRD:** research/agents/prds/goal-08-community-contributions.md
-- **Scope:** Add a "Submit a shortcut" button to per-app shortcut pages. Build a submission form (modal or inline) with fields: command name (required, max 100 chars), key combination (required, captured via custom key recorder input), platform (required, dropdown), context/scope (optional), notes (optional). Implement a key recorder component: captures actual keystrokes via `keydown` event listeners, normalizes modifier key names to match database conventions (Ctrl/Cmd, Shift, Alt/Option), displays formatted key combo string. Implement client-side duplicate detection: debounced API call on key combo change checking existing shortcuts for the same app + platform + key combo; show inline warning for exact matches ("This shortcut already exists — did you mean to submit a correction?") and softer hint for fuzzy matches. Form submits via `POST /api/submissions` (from TASK-0027). Show confirmation message on success. Handle rate limit errors (429) with user-friendly message. Requires authenticated session — show sign-in prompt for unauthenticated users. NOT in scope: correction form (separate task), app request form (separate task), admin review queue UI, contributor profile, server-side duplicate detection (TASK-0027), notification system, mobile key recorder.
-- **Acceptance:**
-  - "Submit a shortcut" button visible on per-app shortcut pages
-  - Form includes command name, key combo (recorder), platform, context, and notes fields
-  - Key recorder captures actual keystrokes and displays normalized key combo
-  - Key recorder handles modifier keys (Ctrl/Cmd, Shift, Alt/Option) correctly
-  - Client-side duplicate detection fires on key combo change with <200ms response
-  - Exact match warning shows existing shortcut command name
-  - Fuzzy match shows softer hint
-  - Duplicate warnings do not block submission
-  - Successful submission shows confirmation message
-  - Rate limit (429) shows user-friendly error
-  - Unauthenticated users see sign-in prompt when clicking submit button
-  - No regressions on existing per-app shortcut pages
-- **PR:**
-- **Branch:**
-- **TRD:**
-- **Notes:** Unblocked by TASK-0027 merge (PR #27, 2026-05-11). Second Goal 8 task. PRD Flows 1 and 6 cover this scope.
-
 ### TASK-0029: Admin Review Queue UI
 - **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
 - **PRD:** research/agents/prds/goal-08-community-contributions.md
@@ -118,6 +96,28 @@ _(Project Manager keeps 2–3 tasks here at all times.)
 ## In Progress
 
 _(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
+
+### TASK-0028: Submission Form UI — New Shortcut & Key Recorder
+- **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
+- **PRD:** research/agents/prds/goal-08-community-contributions.md
+- **Scope:** Add a "Submit a shortcut" button to per-app shortcut pages. Build a submission form (modal or inline) with fields: command name (required, max 100 chars), key combination (required, captured via custom key recorder input), platform (required, dropdown), context/scope (optional), notes (optional). Implement a key recorder component: captures actual keystrokes via `keydown` event listeners, normalizes modifier key names to match database conventions (Ctrl/Cmd, Shift, Alt/Option), displays formatted key combo string. Implement client-side duplicate detection: debounced API call on key combo change checking existing shortcuts for the same app + platform + key combo; show inline warning for exact matches ("This shortcut already exists — did you mean to submit a correction?") and softer hint for fuzzy matches. Form submits via `POST /api/submissions` (from TASK-0027). Show confirmation message on success. Handle rate limit errors (429) with user-friendly message. Requires authenticated session — show sign-in prompt for unauthenticated users. NOT in scope: correction form (separate task), app request form (separate task), admin review queue UI, contributor profile, server-side duplicate detection (TASK-0027), notification system, mobile key recorder.
+- **Acceptance:**
+  - "Submit a shortcut" button visible on per-app shortcut pages
+  - Form includes command name, key combo (recorder), platform, context, and notes fields
+  - Key recorder captures actual keystrokes and displays normalized key combo
+  - Key recorder handles modifier keys (Ctrl/Cmd, Shift, Alt/Option) correctly
+  - Client-side duplicate detection fires on key combo change with <200ms response
+  - Exact match warning shows existing shortcut command name
+  - Fuzzy match shows softer hint
+  - Duplicate warnings do not block submission
+  - Successful submission shows confirmation message
+  - Rate limit (429) shows user-friendly error
+  - Unauthenticated users see sign-in prompt when clicking submit button
+  - No regressions on existing per-app shortcut pages
+- **PR:** #34
+- **Branch:** goals/28-submission-form-ui
+- **TRD:** research/plans/goals/28-submission-form-ui-trd.md — awaiting-review
+- **Notes:** Unblocked by TASK-0027 merge (PR #27, 2026-05-11). Second Goal 8 task. PRD Flows 1 and 6 cover this scope.
 
 ## In Review
 
