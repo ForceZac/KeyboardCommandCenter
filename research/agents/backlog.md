@@ -33,51 +33,6 @@ Task IDs are monotonic. The Project Manager picks the next number.
 
 _(Project Manager keeps 2–3 tasks here at all times.)
 
-### TASK-0028: Submission Form UI — New Shortcut & Key Recorder
-- **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
-- **PRD:** research/agents/prds/goal-08-community-contributions.md
-- **Scope:** Add a "Submit a shortcut" button to per-app shortcut pages. Build a submission form (modal or inline) with fields: command name (required, max 100 chars), key combination (required, captured via custom key recorder input), platform (required, dropdown), context/scope (optional), notes (optional). Implement a key recorder component: captures actual keystrokes via `keydown` event listeners, normalizes modifier key names to match database conventions (Ctrl/Cmd, Shift, Alt/Option), displays formatted key combo string. Implement client-side duplicate detection: debounced API call on key combo change checking existing shortcuts for the same app + platform + key combo; show inline warning for exact matches ("This shortcut already exists — did you mean to submit a correction?") and softer hint for fuzzy matches. Form submits via `POST /api/submissions` (from TASK-0027). Show confirmation message on success. Handle rate limit errors (429) with user-friendly message. Requires authenticated session — show sign-in prompt for unauthenticated users. NOT in scope: correction form (separate task), app request form (separate task), admin review queue UI, contributor profile, server-side duplicate detection (TASK-0027), notification system, mobile key recorder.
-- **Acceptance:**
-  - "Submit a shortcut" button visible on per-app shortcut pages
-  - Form includes command name, key combo (recorder), platform, context, and notes fields
-  - Key recorder captures actual keystrokes and displays normalized key combo
-  - Key recorder handles modifier keys (Ctrl/Cmd, Shift, Alt/Option) correctly
-  - Client-side duplicate detection fires on key combo change with <200ms response
-  - Exact match warning shows existing shortcut command name
-  - Fuzzy match shows softer hint
-  - Duplicate warnings do not block submission
-  - Successful submission shows confirmation message
-  - Rate limit (429) shows user-friendly error
-  - Unauthenticated users see sign-in prompt when clicking submit button
-  - No regressions on existing per-app shortcut pages
-- **PR:**
-- **Branch:**
-- **TRD:**
-- **Notes:** Unblocked by TASK-0027 merge (PR #27, 2026-05-11). Second Goal 8 task. PRD Flows 1 and 6 cover this scope.
-
-### TASK-0029: Admin Review Queue UI
-- **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
-- **PRD:** research/agents/prds/goal-08-community-contributions.md
-- **Scope:** Build the admin review queue page at `/admin/review`. Protected route accessible only to users with `isAdmin=true` on User model (from TASK-0027). Display all pending submissions sorted oldest-first. Each submission card shows: type badge (New Shortcut / Correction / App Request), submitter display name, app name, and submitted data fields. For corrections: render a diff view comparing original shortcut values vs proposed values (changed fields highlighted). For server-flagged duplicates: show a warning badge linking to the existing entry. Three actions per submission: Approve (applies submission to shortcuts table via `PATCH /api/admin/submissions/:id`), Edit & Approve (inline editing of submission fields before applying), Reject (with optional reviewer reason text field). After any action, the submission is removed from the visible queue. Paginate if pending count exceeds 100. Page must load in <500ms. NOT in scope: keyboard shortcuts for review actions (v2), batch approve/reject, spam detection, email notifications, contributor notification system, submission API routes (TASK-0027), submission form (TASK-0028).
-- **Acceptance:**
-  - `/admin/review` route exists and renders the review queue page
-  - Non-admin users receive 403 or redirect to home
-  - Pending submissions displayed sorted oldest-first
-  - Type badge visible on each card (New Shortcut, Correction, App Request)
-  - Submitter name and app name shown on each submission card
-  - Correction submissions show diff view (original vs proposed, changed fields highlighted)
-  - Duplicate warning badge shown when server flagged a duplicate
-  - Approve action calls admin API and removes submission from queue
-  - Edit & Approve allows inline field modification before applying
-  - Reject action includes optional reason text field
-  - Pagination renders when pending count exceeds 100
-  - Page loads in <500ms
-  - No regressions on existing pages
-- **PR:**
-- **Branch:**
-- **TRD:**
-- **Notes:** Unblocked by TASK-0027 merge (PR #27, 2026-05-11). Third Goal 8 task. PRD Flow 4 covers this scope.
-
 ### TASK-0031: App Request Form & "No Results" Request Button
 - **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
 - **PRD:** research/agents/prds/goal-08-community-contributions.md
@@ -119,6 +74,29 @@ _(Project Manager keeps 2–3 tasks here at all times.)
 
 _(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
 
+### TASK-0029: Admin Review Queue UI
+- **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
+- **PRD:** research/agents/prds/goal-08-community-contributions.md
+- **Scope:** Build the admin review queue page at `/admin/review`. Protected route accessible only to users with `isAdmin=true` on User model (from TASK-0027). Display all pending submissions sorted oldest-first. Each submission card shows: type badge (New Shortcut / Correction / App Request), submitter display name, app name, and submitted data fields. For corrections: render a diff view comparing original shortcut values vs proposed values (changed fields highlighted). For server-flagged duplicates: show a warning badge linking to the existing entry. Three actions per submission: Approve (applies submission to shortcuts table via `PATCH /api/admin/submissions/:id`), Edit & Approve (inline editing of submission fields before applying), Reject (with optional reviewer reason text field). After any action, the submission is removed from the visible queue. Paginate if pending count exceeds 100. Page must load in <500ms. NOT in scope: keyboard shortcuts for review actions (v2), batch approve/reject, spam detection, email notifications, contributor notification system, submission API routes (TASK-0027), submission form (TASK-0028).
+- **Acceptance:**
+  - `/admin/review` route exists and renders the review queue page
+  - Non-admin users receive 403 or redirect to home
+  - Pending submissions displayed sorted oldest-first
+  - Type badge visible on each card (New Shortcut, Correction, App Request)
+  - Submitter name and app name shown on each submission card
+  - Correction submissions show diff view (original vs proposed, changed fields highlighted)
+  - Duplicate warning badge shown when server flagged a duplicate
+  - Approve action calls admin API and removes submission from queue
+  - Edit & Approve allows inline field modification before applying
+  - Reject action includes optional reason text field
+  - Pagination renders when pending count exceeds 100
+  - Page loads in <500ms
+  - No regressions on existing pages
+- **PR:** #35
+- **Branch:** goals/29-admin-review-queue-ui
+- **TRD:** research/plans/goals/29-admin-review-queue-ui-trd.md — awaiting-review
+- **Notes:** Unblocked by TASK-0027 merge (PR #27, 2026-05-11). Third Goal 8 task. PRD Flow 4 covers this scope.
+
 ## In Review
 
 _(Developer moves tasks here when the draft PR is marked ready.)_
@@ -135,6 +113,10 @@ _(TRD Watcher moves tasks here when a TRD needs rework.)_
 
 _(Reviewer moves tasks here after approving the PR. You merge to main, then move to Shipped.)_
 
+## Shipped
+
+_(You move tasks here after merging to main.)_
+
 ### TASK-0028: Submission Form UI — New Shortcut & Key Recorder
 - **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
 - **PRD:** research/agents/prds/goal-08-community-contributions.md
@@ -142,33 +124,16 @@ _(Reviewer moves tasks here after approving the PR. You merge to main, then move
 - **Branch:** goals/28-submission-form-ui
 - **TRD:** research/plans/goals/28-submission-form-ui-trd.md — approved
 - **Approved:** 2026-05-11 (Round 2)
-
-## Shipped
-
-_(You move tasks here after merging to main.)_
+- **Merged:** 2026-05-11
 ### TASK-0038: Overlay X11 Compatibility — Transparency & Click-Through
 - **Goal:** Goal 10 — Linux Support (implementation-roadmap-v2.md § Goal 10)
 - **PRD:** research/agents/prds/goal-10-linux-support.md
-- **Scope:** Extend the existing overlay window (`packages/overlay/` + `packages/desktop/` overlay controller) to work correctly on Linux X11 sessions. Set X11-appropriate window type hints (`_NET_WM_WINDOW_TYPE_DOCK` or `_NET_WM_WINDOW_TYPE_UTILITY`) so the overlay renders as always-on-top and click-through. Verify `setIgnoreMouseEvents(true)` and `setAlwaysOnTop(true)` work on X11 via Electron. Confirm configurable opacity, position, and size settings apply correctly on X11. Handle tray icon absence gracefully — if no system tray is detected (common on i3, Sway, etc.), log a startup message ("No system tray detected — use [hotkey] to open the shortcut panel") and continue running via global hotkey only. Add Wayland degraded overlay behavior: always-on-top window without click-through, auto-dismiss on configurable timeout or hotkey, "experimental" label in overlay settings UI. NOT in scope: wlr-layer-shell protocol integration, Wayland click-through on GNOME/KDE, packaging, CI, detection changes, new overlay UI components.
-- **Acceptance:**
-  - Overlay window renders with transparency on X11 Linux
-  - Click-through (`setIgnoreMouseEvents(true)`) works on X11
-  - Always-on-top persists across focus changes on X11
-  - Opacity, position, and size settings apply correctly on X11
-  - Tray icon absence does not crash the app — startup log message shown, hotkey still works
-  - Wayland overlay opens as always-on-top without click-through
-  - Wayland overlay auto-dismisses after configurable timeout
-  - Overlay settings UI shows "experimental" label when on Wayland
-  - Existing Windows/macOS overlay behavior unaffected
+- **Scope:** Extend the existing overlay window to work correctly on Linux X11 sessions. X11 window type hints, click-through, always-on-top, configurable opacity/position/size. Tray icon absence graceful handling. Wayland degraded overlay behavior.
 - **PR:** #33
 - **Branch:** goals/38-overlay-x11-compat
 - **TRD:** research/plans/goals/38-overlay-x11-compat-trd.md — approved
 - **Approved:** 2026-05-11 (Round 1)
-- **Notes:** Third Goal 10 task. PRD Flows 5 (X11 overlay) and 6 (Wayland degraded overlay) cover this scope. Depends on TASK-0036 being merged. Independent of Wayland detection (TASK-0037).
-
-## Shipped
-
-_(You move tasks here after merging to main.)_
+- **Merged:** 2026-05-11
 
 ### TASK-0037: Wayland Active Window Detection — GNOME & KDE DBus with Manual Fallback
 - **Goal:** Goal 10 — Linux Support (implementation-roadmap-v2.md § Goal 10)

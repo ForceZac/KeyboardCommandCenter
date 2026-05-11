@@ -1,5 +1,5 @@
 import { prisma } from '../lib/prisma';
-import type { SearchResult, PlatformBinding, KeyStepSummary } from '@kcc/core';
+import type { SearchResult, PlatformBinding, KeyStepSummary, ShortcutEntry } from '@kcc/core';
 
 export class ShortcutService {
   /**
@@ -93,5 +93,118 @@ export class ShortcutService {
             })),
           })),
       }));
+  }
+
+  /**
+   * Check for duplicate shortcuts before submission.
+   *
+   * - Exact match: same app + platform + keyCombo (case-insensitive).
+   * - Fuzzy: same app, any platform, where the last key segment of the
+   *   submitted combo appears in the stored keyCombo (excludes the exact match).
+   *
+   * @param appId - Application UUID
+   * @param platformSlug - Platform slug (e.g. "windows", "macos", "linux") or "all"
+   * @param keyCombo - Key combo string in normalized format, e.g. "Ctrl+Shift+P"
+   */
+  async checkDuplicate(
+    appId: string,
+    platformSlug: string,
+    keyCombo: string,
+  ): Promise<{ exact: ShortcutEntry | null; fuzzy: ShortcutEntry[] }> {
+    const platform =
+      platformSlug && platformSlug !== 'all'
+        ? await prisma.platform.findUnique({ where: { slug: platformSlug } })
+        : null;
+
+    // Exact match: same app + (optionally) platform + keyCombo case-insensitive
+    const exactStep = await prisma.shortcutKeyStep.findFirst({
+      where: {
+        keyCombo: { equals: keyCombo, mode: 'insensitive' },
+        binding: {
+          ...(platform ? { platformId: platform.id } : {}),
+          shortcut: { applicationId: appId },
+        },
+      },
+      include: {
+        binding: {
+          include: {
+            shortcut: true,
+            platform: true,
+            steps: { orderBy: { stepOrder: 'asc' } },
+          },
+        },
+      },
+    });
+
+    let exact: ShortcutEntry | null = null;
+    if (exactStep) {
+      const s = exactStep.binding.shortcut;
+      exact = {
+        id: s.id,
+        command: s.command,
+        platforms: [
+          {
+            platformSlug: exactStep.binding.platform.slug,
+            keyCombo: exactStep.binding.steps.map((st) => st.keyCombo).join(' → '),
+            steps: exactStep.binding.steps.map((st): KeyStepSummary => ({
+              stepOrder: st.stepOrder,
+              keyCombo: st.keyCombo,
+              key: st.key,
+              modifiers: st.modifiers as string[],
+            })),
+          },
+        ],
+      };
+    }
+
+    // Fuzzy: same app, any platform, key segment matches — exclude the exact match
+    const baseKey = keyCombo.split('+').pop() ?? keyCombo;
+    const fuzzySteps = await prisma.shortcutKeyStep.findMany({
+      where: {
+        keyCombo: { contains: baseKey, mode: 'insensitive' },
+        binding: {
+          shortcut: {
+            applicationId: appId,
+            ...(exact ? { id: { not: exact.id } } : {}),
+          },
+        },
+      },
+      include: {
+        binding: {
+          include: {
+            shortcut: true,
+            platform: true,
+            steps: { orderBy: { stepOrder: 'asc' } },
+          },
+        },
+      },
+      take: 3,
+    });
+
+    // Deduplicate by shortcut id
+    const fuzzyMap = new Map<string, ShortcutEntry>();
+    for (const step of fuzzySteps) {
+      const s = step.binding.shortcut;
+      if (!fuzzyMap.has(s.id)) {
+        fuzzyMap.set(s.id, {
+          id: s.id,
+          command: s.command,
+          platforms: [
+            {
+              platformSlug: step.binding.platform.slug,
+              keyCombo: step.binding.steps.map((st) => st.keyCombo).join(' → '),
+              steps: step.binding.steps.map((st): KeyStepSummary => ({
+                stepOrder: st.stepOrder,
+                keyCombo: st.keyCombo,
+                key: st.key,
+                modifiers: st.modifiers as string[],
+              })),
+            },
+          ],
+        });
+      }
+    }
+
+    return { exact, fuzzy: Array.from(fuzzyMap.values()) };
   }
 }
