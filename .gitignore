@@ -57,3 +57,17 @@ packages/desktop/dist/
 coverage/
 playwright-report/
 test-results/
+
+# Agent runtime state (volatile — not part of the source tree)
+research/agents/DEV_LOCK
+research/agents/DEV_IDLE
+research/agents/DEV_PAUSE
+research/agents/MERGE_WATCHER_LOCK
+research/agents/MW_IDLE
+research/agents/MW_PAUSE
+research/agents/TRD_IDLE
+research/agents/TRD_PAUSE
+research/agents/REV_IDLE
+research/agents/REV_PAUSE
+research/agents/PM_PAUSE
+research/agents/PAUSE

@@ -33,6 +33,35 @@ Task IDs are monotonic. The Project Manager picks the next number.
 
 _(Project Manager keeps 2–3 tasks here at all times.)_
 
+### TASK-0025: Desktop Favorites Sync Engine & Offline Cache
+- **Goal:** Goal 7 — User Accounts & Favorites Sync
+- **PRD:** research/agents/prds/goal-07-accounts-favorites.md
+- **Scope:** Implement a sync engine in the Electron main process that manages local caching and bidirectional sync of favorites and collections with the server API. Use electron-store (encrypted via safeStorage) to persist favorites and collections as JSON locally. On app start and network reconnection, pull remote changes from `GET /api/favorites` and `GET /api/collections` using the stored auth token from TASK-0023. When the user favorites/unfavorites a shortcut locally, queue the change with a timestamp and push to the server on next sync. Implement last-write-wins conflict resolution at the individual favorite level using timestamps. Sync interval: on app start, on reconnect, and every 15 minutes while online. Expose IPC handlers (`sync:getFavorites`, `sync:getCollections`, `sync:toggleFavorite`, `sync:addToCollection`, `sync:removeFromCollection`, `sync:forceSync`) for the renderer to query local cache. Local cache reads must complete in <10ms. Sync must not block the UI thread. NOT in scope: desktop panel favorites UI (separate task — TASK-0026), web app changes, auth flow (TASK-0023), API routes (TASK-0022), real-time WebSocket sync, collection reordering, guest favorites migration.
+- **Acceptance:**
+  - Favorites and collections stored locally in electron-store encrypted via safeStorage
+  - On app start (when signed in), sync engine pulls remote favorites/collections and updates local cache
+  - On network reconnection, sync engine automatically syncs pending changes
+  - Background sync runs every 15 minutes while online
+  - Local changes (favorite/unfavorite) are queued with timestamps and pushed on next sync
+  - Last-write-wins conflict resolution: most recent timestamp wins per shortcut
+  - IPC handlers exposed for renderer to read favorites/collections from local cache
+  - Local cache reads complete in <10ms
+  - Sync runs in the main process without blocking renderer
+  - Signed-out users: sync engine is inactive, no errors thrown
+  - No regressions on existing desktop functionality
+- **PR:**
+- **Branch:**
+- **TRD:**
+- **Notes:** Unblocked — TASK-0022 merged 2026-05-10, TASK-0023 merged 2026-05-10. Fifth Goal 7 task. PRD Flow 7 covers this scope.
+
+## In Progress
+
+_(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
+
+## In Review
+
+_(Developer moves tasks here when the draft PR is marked ready.)_
+
 ### TASK-0024: Favorites Web UI — Heart Icons, Collections Page & Optimistic Updates
 - **Goal:** Goal 7 — User Accounts & Favorites Sync
 - **PRD:** research/agents/prds/goal-07-accounts-favorites.md
@@ -49,36 +78,10 @@ _(Project Manager keeps 2–3 tasks here at all times.)_
   - Collection detail page lists shortcuts with individual remove buttons
   - Unauthenticated users see a sign-in prompt when attempting to favorite
   - No regressions on existing shortcut browse/search pages
-- **PR:**
-- **Branch:**
-- **TRD:**
-- **Notes:** Unblocked — TASK-0022 merged 2026-05-10. Fourth Goal 7 task. PRD Flows 3 and 5 cover this scope.
-
-## In Progress
-
-_(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
-
-## In Review
-
-_(Developer moves tasks here when the draft PR is marked ready.)_
-
-### TASK-0023: Desktop Auth Flow — Browser OAuth & Deep Link Callback
-- **Goal:** Goal 7 — User Accounts & Favorites Sync
-- **PRD:** research/agents/prds/goal-07-accounts-favorites.md
-- **Scope:** Register `shortcutvault://` custom protocol in Electron via `app.setAsDefaultProtocolClient()`. Add "Sign in" / "Sign out" entries to the system tray menu. When "Sign in" is clicked, open the default browser to the web app's NextAuth sign-in page with a callback parameter. Handle the `shortcutvault://auth/callback?token=...` deep link in the Electron main process. Validate and store the session token securely using Electron's safeStorage API via electron-store. Display signed-in state in the settings window (avatar, display name, sign-out button). On macOS, handle protocol via `open-url` event; on Windows, handle via `second-instance` event argv parsing. NOT in scope: favorites cache or sync engine (separate task), any web app auth changes (TASK-0021), desktop-only account creation, favorites UI in the panel.
-- **Acceptance:**
-  - `shortcutvault://` protocol registered on app start (macOS and Windows)
-  - Tray menu shows "Sign in" when unauthenticated, "Sign out" when authenticated
-  - Clicking "Sign in" opens default browser to the web app's OAuth page
-  - Deep link callback (`shortcutvault://auth/callback?token=...`) received and parsed correctly
-  - Session token stored encrypted via safeStorage in electron-store
-  - Settings window shows user avatar and display name when signed in
-  - "Sign out" clears stored token and resets tray menu and settings UI
-  - No regressions on existing desktop functionality (panel, overlay, detection)
-- **PR:** #23
-- **Branch:** goals/23-desktop-auth-flow
-- **TRD:** research/plans/goals/23-desktop-auth-flow-trd.md — approved
-- **Notes:** Unblocked by merge on 2026-05-10 (TASK-0021 shipped). Third Goal 7 task. PRD Flow 2 covers this scope.
+- **PR:** #24
+- **Branch:** goals/24-favorites-web-ui
+- **TRD:** research/plans/goals/24-favorites-web-ui-trd.md — approved
+- **Notes:** Round 2 fixes pushed — isToggling assertion replaced with rollback-complete check; explicit afterEach(cleanup) in FavoriteToggle.test.tsx; .gitignore extended for agent runtime files; vitest.unit.config.ts includes hook/component tests with @ alias. 46/46 unit tests green, tsc clean.
 
 ## Changes Requested
 
@@ -95,6 +98,15 @@ _(Reviewer moves tasks here after approving the PR. You merge to main, then move
 ## Shipped
 
 _(You move tasks here after merging to main.)_
+
+### TASK-0023: Desktop Auth Flow — Browser OAuth & Deep Link Callback
+- **Goal:** Goal 7 — User Accounts & Favorites Sync
+- **PRD:** research/agents/prds/goal-07-accounts-favorites.md
+- **PR:** #23
+- **Branch:** goals/23-desktop-auth-flow
+- **TRD:** research/plans/goals/23-desktop-auth-flow-trd.md — approved
+- **Approved:** 2026-05-11 (Round 1)
+- **Merged:** 2026-05-10
 
 ### TASK-0022: Favorites Data Model & CRUD API
 - **Goal:** Goal 7 — User Accounts & Favorites Sync
@@ -292,27 +304,6 @@ _(You move tasks here after merging to main.)_
 ## Blocked
 
 _(Waiting on an external dependency, a missing PRD, or owner decision.)_
-
-### TASK-0025: Desktop Favorites Sync Engine & Offline Cache
-- **Goal:** Goal 7 — User Accounts & Favorites Sync
-- **PRD:** research/agents/prds/goal-07-accounts-favorites.md
-- **Scope:** Implement a sync engine in the Electron main process that manages local caching and bidirectional sync of favorites and collections with the server API. Use electron-store (encrypted via safeStorage) to persist favorites and collections as JSON locally. On app start and network reconnection, pull remote changes from `GET /api/favorites` and `GET /api/collections` using the stored auth token from TASK-0023. When the user favorites/unfavorites a shortcut locally, queue the change with a timestamp and push to the server on next sync. Implement last-write-wins conflict resolution at the individual favorite level using timestamps. Sync interval: on app start, on reconnect, and every 15 minutes while online. Expose IPC handlers (`sync:getFavorites`, `sync:getCollections`, `sync:toggleFavorite`, `sync:addToCollection`, `sync:removeFromCollection`, `sync:forceSync`) for the renderer to query local cache. Local cache reads must complete in <10ms. Sync must not block the UI thread. NOT in scope: desktop panel favorites UI (separate task — TASK-0026), web app changes, auth flow (TASK-0023), API routes (TASK-0022), real-time WebSocket sync, collection reordering, guest favorites migration.
-- **Acceptance:**
-  - Favorites and collections stored locally in electron-store encrypted via safeStorage
-  - On app start (when signed in), sync engine pulls remote favorites/collections and updates local cache
-  - On network reconnection, sync engine automatically syncs pending changes
-  - Background sync runs every 15 minutes while online
-  - Local changes (favorite/unfavorite) are queued with timestamps and pushed on next sync
-  - Last-write-wins conflict resolution: most recent timestamp wins per shortcut
-  - IPC handlers exposed for renderer to read favorites/collections from local cache
-  - Local cache reads complete in <10ms
-  - Sync runs in the main process without blocking renderer
-  - Signed-out users: sync engine is inactive, no errors thrown
-  - No regressions on existing desktop functionality
-- **PR:**
-- **Branch:**
-- **TRD:**
-- **Notes:** Blocked — TASK-0022 merged 2026-05-10; still awaiting TASK-0023 (needs desktop auth to identify user). Fifth Goal 7 task. PRD Flow 7 covers this scope.
 
 ### TASK-0027: Submission Data Model, Service Layer & API Routes
 - **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
