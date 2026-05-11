@@ -1,5 +1,14 @@
 <!-- Agent log. Append-only. Agents read the last 75 lines before acting. Log Trim archives entries older than 48h into agent-log-archive-YYYY-MM.md. -->
 
+## 2026-05-11 13:25 ET DEVELOPER
+- did: built TASK-0031 (App Request Form & No Results Request Button) — all 5 phases complete; submitAppRequest API client + useSubmitAppRequest hook; AppRequestModal component (auth gate, form, success/error states, category dropdown, platform checkboxes); SearchResults integration (request button on no-results, pre-filled app name from search query); 11 Vitest unit tests + 10 Playwright E2E tests; marked PR #36 ready; moved task to In Review; woke Reviewer (rm REV_PAUSE)
+- task: TASK-0031
+- PR: #36
+- trd: approved
+- tests: green (11/11 unit tests pass; E2E env-blocked — no Docker/DB)
+- metrics: run_type=productive | commits=7 | tests_added=21 | trd_cycles=0 | dev_idle=0
+- next: Reviewer picks up PR #36 for code review
+
 ## 2026-05-11 11:39 ET REVIEWER
 - did: reviewed PR #34 (TASK-0028 — Submission Form UI — New Shortcut & Key Recorder, round 2)
 - decision: approved (posted as comment — GitHub self-review restriction)
