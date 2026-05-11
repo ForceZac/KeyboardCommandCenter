@@ -1,6 +1,7 @@
 'use client';
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useSession } from 'next-auth/react';
 import {
   fetchCollections,
   createCollection,
@@ -20,21 +21,37 @@ const QUERY_KEY = ['collections'] as const;
  */
 export function useCollections() {
   const queryClient = useQueryClient();
+  const { data: session } = useSession();
 
   const query = useQuery<CollectionSummary[]>({
     queryKey: QUERY_KEY,
     queryFn: fetchCollections,
     staleTime: 60_000,
+    enabled: !!session,
   });
 
   const createMutation = useMutation({
     mutationFn: ({ name, description }: { name: string; description?: string }) =>
       createCollection(name, description),
-    onSuccess: (newCollection) => {
+    onMutate: async ({ name, description }) => {
+      await queryClient.cancelQueries({ queryKey: QUERY_KEY });
+      const previous = queryClient.getQueryData<CollectionSummary[]>(QUERY_KEY);
       queryClient.setQueryData<CollectionSummary[]>(QUERY_KEY, (old = []) => [
         ...old,
-        newCollection,
+        {
+          id: `optimistic-${Date.now()}`,
+          name,
+          description: description ?? null,
+          isDefault: false,
+          shortcutCount: 0,
+        },
       ]);
+      return { previous };
+    },
+    onError: (_err, _vars, context) => {
+      if (context?.previous !== undefined) {
+        queryClient.setQueryData(QUERY_KEY, context.previous);
+      }
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEY });

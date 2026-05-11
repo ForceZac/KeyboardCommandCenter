@@ -1,6 +1,7 @@
 'use client';
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useSession } from 'next-auth/react';
 import { fetchFavorites, addFavorite, removeFavorite } from '@/lib/api';
 import type { FavoriteEntry } from '@kcc/core';
 
@@ -15,11 +16,13 @@ const QUERY_KEY = ['favorites'] as const;
  */
 export function useFavorites() {
   const queryClient = useQueryClient();
+  const { data: session } = useSession();
 
   const query = useQuery<FavoriteEntry[]>({
     queryKey: QUERY_KEY,
     queryFn: fetchFavorites,
     staleTime: 60_000,
+    enabled: !!session,
   });
 
   const favoritedIds = new Set((query.data ?? []).map((f) => f.shortcutId));

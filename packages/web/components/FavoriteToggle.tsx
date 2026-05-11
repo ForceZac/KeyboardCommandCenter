@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useCollections } from '@/hooks/useCollections';
-import { addToCollection, removeFromCollection } from '@/lib/api';
+import { addToCollection, removeFromCollection, fetchCollectionShortcuts } from '@/lib/api';
 import { useQueryClient } from '@tanstack/react-query';
 
 interface Props {
@@ -60,10 +60,12 @@ export default function FavoriteToggle({ shortcutId }: Props) {
         ]);
         if (cached) return { id: c.id, has: cached.some((e) => e.shortcutId === shortcutId) };
         // Minimal check: fetch collection shortcuts just to test membership
-        const res = await fetch(`/api/collections/${c.id}/shortcuts`);
-        if (!res.ok) return { id: c.id, has: false };
-        const data = (await res.json()) as { shortcutId: string }[];
-        return { id: c.id, has: data.some((e) => e.shortcutId === shortcutId) };
+        try {
+          const data = await fetchCollectionShortcuts(c.id);
+          return { id: c.id, has: data.some((e) => e.shortcutId === shortcutId) };
+        } catch {
+          return { id: c.id, has: false };
+        }
       }),
     ).then((results) => {
       const inSet = new Set(results.filter((r) => r.has).map((r) => r.id));
