@@ -2,9 +2,10 @@
 // This file is included in tsconfig.renderer.json so the renderer's TypeScript
 // knows the shape of window.kcc without importing from the main process.
 
-// AppDetail is re-declared locally in types.ts (rootDir constraint prevents
-// importing from @kcc/core directly in the renderer tsconfig context).
-import type { AppDetail } from './types';
+// AppDetail, FavoriteEntry, and CollectionSummary are re-declared locally in
+// types.ts (rootDir constraint prevents importing from @kcc/core directly in
+// the renderer tsconfig context).
+import type { AppDetail, FavoriteEntry, CollectionSummary } from './types';
 
 /** Payload received on each active-app change event. */
 interface DetectionPayload {
@@ -14,6 +15,24 @@ interface DetectionPayload {
   processName: string;
   /** Window title at time of detection. */
   windowTitle: string;
+}
+
+/** TASK-0025/0026: sync engine API exposed to the panel renderer. */
+interface SyncAPI {
+  /** Returns true when the user is currently signed in (TASK-0026). */
+  isSignedIn: () => Promise<boolean>;
+  /** Returns the locally cached favorites list. Empty array when signed out. */
+  getFavorites: () => Promise<FavoriteEntry[]>;
+  /** Returns the locally cached collections list. Empty array when signed out. */
+  getCollections: () => Promise<CollectionSummary[]>;
+  /** Toggles a shortcut in/out of the default favorites collection (optimistic). */
+  toggleFavorite: (shortcutId: string) => Promise<void>;
+  /** Adds a shortcut to a specific (non-default) collection. */
+  addToCollection: (shortcutId: string, collectionId: string) => Promise<{ ok: boolean; error?: string }>;
+  /** Removes a shortcut from a specific (non-default) collection. */
+  removeFromCollection: (shortcutId: string, collectionId: string) => Promise<{ ok: boolean; error?: string }>;
+  /** Forces an immediate sync cycle. */
+  forceSync: () => Promise<void>;
 }
 
 interface KccAPI {
@@ -39,6 +58,12 @@ interface KccAPI {
    * Added by TASK-0012.
    */
   getShortcutsForApp: (slug: string) => Promise<AppDetail | null>;
+
+  /** Notify the main process that network connectivity was restored (TASK-0025). */
+  notifyNetworkOnline: () => void;
+
+  /** TASK-0025/0026: Favorites sync engine — cache reads and toggle writes. */
+  sync: SyncAPI;
 }
 
 declare global {

@@ -249,6 +249,9 @@ app.whenReady().then(() => {
   // TASK-0025: Sync IPC handlers (panel renderer → main process).
   // Cache reads (sync:getFavorites, sync:getCollections) return synchronously from
   // memory and complete in <10ms. Sync operations are fire-and-forget.
+  // TASK-0026: thin boolean so the renderer can decide sign-in state without
+  // inferring from an ambiguous empty-favorites result.
+  ipcMain.handle('sync:isSignedIn', () => authStore.isAuthenticated());
   ipcMain.handle('sync:getFavorites', () => syncEngine.getFavorites());
   ipcMain.handle('sync:getCollections', () => syncEngine.getCollections());
   ipcMain.handle('sync:toggleFavorite', (_event, shortcutId: string) => {
