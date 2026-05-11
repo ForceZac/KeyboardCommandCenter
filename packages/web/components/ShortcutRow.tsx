@@ -12,6 +12,8 @@ interface Props {
   platform: PlatformSlug;
   /** When true, renders the FavoriteToggle heart icon on hover. Default: false. */
   showFavoriteToggle?: boolean;
+  /** When provided, renders a pencil "Suggest edit" icon on hover. */
+  onSuggestEdit?: (shortcut: ShortcutEntry) => void;
 }
 
 /**
@@ -19,7 +21,7 @@ interface Props {
  * Displays the command description and the KeyCombo for the selected platform.
  * If no binding exists for the selected platform, shows the first available with a note.
  */
-export default function ShortcutRow({ shortcut, platform, showFavoriteToggle = false }: Props) {
+export default function ShortcutRow({ shortcut, platform, showFavoriteToggle = false, onSuggestEdit }: Props) {
   const binding =
     shortcut.platforms.find((p) => p.platformSlug === platform) ??
     shortcut.platforms[0];
@@ -39,6 +41,20 @@ export default function ShortcutRow({ shortcut, platform, showFavoriteToggle = f
       </div>
 
       <div className="flex items-center gap-2 flex-shrink-0">
+        {onSuggestEdit && (
+          <span className="opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
+            <button
+              type="button"
+              onClick={() => onSuggestEdit(shortcut)}
+              aria-label="Suggest edit"
+              className="p-1 rounded text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5">
+                <path d="M2.695 14.763l-1.262 3.154a.5.5 0 00.65.65l3.155-1.262a4 4 0 001.343-.885L17.5 5.5a2.121 2.121 0 00-3-3L3.58 13.42a4 4 0 00-.885 1.343z" />
+              </svg>
+            </button>
+          </span>
+        )}
         {showFavoriteToggle && (
           <span className="opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
             <FavoriteToggle shortcutId={shortcut.id} />

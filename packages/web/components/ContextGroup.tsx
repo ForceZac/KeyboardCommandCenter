@@ -7,6 +7,8 @@ interface Props {
   platform: PlatformSlug;
   /** Pass true on per-app pages to show the FavoriteToggle heart on each row. */
   showFavoriteToggle?: boolean;
+  /** When provided, renders a "Suggest edit" pencil icon on each row. */
+  onSuggestEdit?: (shortcut: ShortcutEntry) => void;
 }
 
 /**
@@ -18,6 +20,7 @@ export default function ContextGroup({
   shortcuts,
   platform,
   showFavoriteToggle = false,
+  onSuggestEdit,
 }: Props) {
   return (
     <section className="mb-6">
@@ -31,6 +34,7 @@ export default function ContextGroup({
             shortcut={shortcut}
             platform={platform}
             showFavoriteToggle={showFavoriteToggle}
+            onSuggestEdit={onSuggestEdit}
           />
         ))}
       </div>
