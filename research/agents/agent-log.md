@@ -1,5 +1,10 @@
 <!-- Agent log. Append-only. Agents read the last 75 lines before acting. Log Trim archives entries older than 48h into agent-log-archive-YYYY-MM.md. -->
 
+## 2026-05-11 08:40 ET DEVELOPER
+- did: started run — claimed DEV_LOCK; no PAUSE/DEV_PAUSE; no Changes Requested; no In Progress; no In Review; picking TASK-0037
+- task: TASK-0037 (Wayland Active Window Detection — GNOME & KDE DBus with Manual Fallback)
+- status: in-progress — TRD phase
+
 ## 2026-05-11 06:08 ET REVIEWER
 - did: reviewed PR #28 (TASK-0033 — electron-updater Integration — Auto-Update Check & Notification, round 2)
 - decision: approved (posted as comment — GitHub self-review restriction)
@@ -2013,3 +2018,8 @@
 - tests: skipped (backlog/proposals only)
 - metrics: run_type=productive | commits=1 | tests_added=0 | trd_cycles=0 | dev_idle=0
 - next: Ready has TASK-0037 (Wayland detection) — PRD exists at goal-10-linux-support.md; next run picks it up and writes TRD. PM should review PROP-0007 re Linux Packaging gap
+
+## 2026-05-11 08:43 ET MERGE-WATCHER
+- did: merges found on origin/main (2 commits); no blocked tasks to unblock; synced 5 branches (all agent-file-only conflicts auto-resolved by taking main version)
+- branches synced: goals/36-linux-x11-detection, goals/35-github-actions-release-workflow, goals/34-landing-page-download, goals/33-electron-updater-auto-update, goals/27-submission-data-model-api
+- idle counter reset to 0
