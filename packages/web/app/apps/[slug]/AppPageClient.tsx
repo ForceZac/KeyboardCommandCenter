@@ -1,11 +1,12 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import type { AppDetail } from '@kcc/core';
+import type { AppDetail, ShortcutEntry } from '@kcc/core';
 import { usePlatform } from '@/hooks/usePlatform';
 import PlatformToggle from '@/components/PlatformToggle';
 import ContextGroup from '@/components/ContextGroup';
 import SubmitShortcutModal from '@/components/SubmitShortcutModal';
+import CorrectionModal from '@/components/CorrectionModal';
 
 interface Props {
   app: AppDetail;
@@ -20,6 +21,7 @@ export default function AppPageClient({ app }: Props) {
   const [platform, setPlatform] = usePlatform();
   const [search, setSearch] = useState('');
   const [submitOpen, setSubmitOpen] = useState(false);
+  const [correctionTarget, setCorrectionTarget] = useState<{ shortcut: ShortcutEntry; context: string } | null>(null);
   const { contexts } = app;
 
   // Filter contexts and their shortcuts client-side based on the search string.
@@ -89,6 +91,7 @@ export default function AppPageClient({ app }: Props) {
             shortcuts={shortcuts}
             platform={platform}
             showFavoriteToggle
+            onSuggestEdit={(shortcut) => setCorrectionTarget({ shortcut, context: ctx })}
           />
         ))
       )}
@@ -99,6 +102,18 @@ export default function AppPageClient({ app }: Props) {
         open={submitOpen}
         onClose={() => setSubmitOpen(false)}
       />
+
+      {correctionTarget && (
+        <CorrectionModal
+          shortcut={correctionTarget.shortcut}
+          context={correctionTarget.context}
+          appId={app.id}
+          appName={app.name}
+          platform={platform}
+          open={!!correctionTarget}
+          onClose={() => setCorrectionTarget(null)}
+        />
+      )}
     </div>
   );
 }
