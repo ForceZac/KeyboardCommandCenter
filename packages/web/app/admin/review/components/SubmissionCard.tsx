@@ -18,13 +18,13 @@ function DataFields({ data, type }: { data: Record<string, unknown>; type: strin
       <dl className="mt-2 grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
         <dt className="text-gray-500 dark:text-gray-400">App Name</dt>
         <dd className="text-gray-900 dark:text-gray-100">{String(data.appName ?? '—')}</dd>
-        {data.website && (
+        {data.website != null && (
           <>
             <dt className="text-gray-500 dark:text-gray-400">Website</dt>
             <dd className="text-gray-900 dark:text-gray-100">{String(data.website)}</dd>
           </>
         )}
-        {data.categoryId && (
+        {data.categoryId != null && (
           <>
             <dt className="text-gray-500 dark:text-gray-400">Category</dt>
             <dd className="text-gray-900 dark:text-gray-100">{String(data.categoryId)}</dd>
