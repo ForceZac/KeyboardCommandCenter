@@ -70,9 +70,32 @@ _(Project Manager keeps 2–3 tasks here at all times.)
 - **TRD:**
 - **Notes:** Unblocked by TASK-0027 merge (PR #27, 2026-05-11). Sixth Goal 8 task. PRD Flow 5 covers this scope.
 
+### TASK-0030: Correction Form UI — Suggest Edit & Pre-filled Submission
+- **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
+- **PRD:** research/agents/prds/goal-08-community-contributions.md
+- **Scope:** Add a "Suggest edit" icon button on each shortcut row on per-app shortcut pages. Clicking opens a correction form pre-filled with the existing shortcut's data (command name, key combination via key recorder component from TASK-0028, platform, context/scope). User can edit any field that needs correction. Include an optional "Reason for correction" text area (e.g., "Changed in VS Code 1.96"). On submit: creates a Submission with type=CORRECTION via `POST /api/submissions` (from TASK-0027), linking to the existing shortcut via shortcutId. Show confirmation message on success. Handle rate limit (429) with user-friendly message. Requires authenticated session — show sign-in prompt for unauthenticated users. NOT in scope: admin review of corrections (TASK-0029), diff view rendering (TASK-0029 admin side), key recorder component implementation (TASK-0028 — reused here), app request form, server-side duplicate detection (TASK-0027), notification on approval/rejection, new shortcut submission form (TASK-0028).
+- **Acceptance:**
+  - "Suggest edit" icon visible on each shortcut row in per-app pages
+  - Clicking opens correction form pre-filled with current shortcut data
+  - Key recorder component (from TASK-0028) works for editing key combination
+  - Optional "Reason for correction" text area present
+  - Submit creates a CORRECTION-type Submission via `POST /api/submissions` with shortcutId
+  - Confirmation message shown on success
+  - Rate limit (429) shows user-friendly error
+  - Unauthenticated users see sign-in prompt
+  - No regressions on existing per-app shortcut pages
+- **PR:**
+- **Branch:**
+- **TRD:**
+- **Notes:** Unblocked — TASK-0028 shipped (PR #34, 2026-05-11). Fourth Goal 8 task. PRD Flow 2 covers this scope.
+
 ## In Progress
 
 _(Developer moves tasks here. TRD phase first, then build phase after TRD approval.)_
+
+## In Review
+
+_(Developer moves tasks here when the draft PR is marked ready.)_
 
 ### TASK-0029: Admin Review Queue UI
 - **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
@@ -94,12 +117,8 @@ _(Developer moves tasks here. TRD phase first, then build phase after TRD approv
   - No regressions on existing pages
 - **PR:** #35
 - **Branch:** goals/29-admin-review-queue-ui
-- **TRD:** research/plans/goals/29-admin-review-queue-ui-trd.md — awaiting-review
+- **TRD:** research/plans/goals/29-admin-review-queue-ui-trd.md — approved
 - **Notes:** Unblocked by TASK-0027 merge (PR #27, 2026-05-11). Third Goal 8 task. PRD Flow 4 covers this scope.
-
-## In Review
-
-_(Developer moves tasks here when the draft PR is marked ready.)_
 
 ## Changes Requested
 
@@ -436,21 +455,3 @@ _(Waiting on an external dependency, a missing PRD, or owner decision.)_
 - **TRD:**
 - **Notes:** Blocked — awaiting PRD. `research/agents/prds/goal-10-linux-support.md` does not exist in the repo; Product Manager must write it before this task can start. Fourth Goal 10 task. Depends on TASK-0035 being merged (done). Independent of TASK-0037 and TASK-0038.
 
-### TASK-0030: Correction Form UI — Suggest Edit & Pre-filled Submission
-- **Goal:** Goal 8 — Community Contributions & Shortcut Submissions
-- **PRD:** research/agents/prds/goal-08-community-contributions.md
-- **Scope:** Add a "Suggest edit" icon button on each shortcut row on per-app shortcut pages. Clicking opens a correction form pre-filled with the existing shortcut's data (command name, key combination via key recorder component from TASK-0028, platform, context/scope). User can edit any field that needs correction. Include an optional "Reason for correction" text area (e.g., "Changed in VS Code 1.96"). On submit: creates a Submission with type=CORRECTION via `POST /api/submissions` (from TASK-0027), linking to the existing shortcut via shortcutId. Show confirmation message on success. Handle rate limit (429) with user-friendly message. Requires authenticated session — show sign-in prompt for unauthenticated users. NOT in scope: admin review of corrections (TASK-0029), diff view rendering (TASK-0029 admin side), key recorder component implementation (TASK-0028 — reused here), app request form, server-side duplicate detection (TASK-0027), notification on approval/rejection, new shortcut submission form (TASK-0028).
-- **Acceptance:**
-  - "Suggest edit" icon visible on each shortcut row in per-app pages
-  - Clicking opens correction form pre-filled with current shortcut data
-  - Key recorder component (from TASK-0028) works for editing key combination
-  - Optional "Reason for correction" text area present
-  - Submit creates a CORRECTION-type Submission via `POST /api/submissions` with shortcutId
-  - Confirmation message shown on success
-  - Rate limit (429) shows user-friendly error
-  - Unauthenticated users see sign-in prompt
-  - No regressions on existing per-app shortcut pages
-- **PR:**
-- **Branch:**
-- **TRD:**
-- **Notes:** Blocked — awaiting TASK-0028 (needs key recorder component and submission form patterns). Fourth Goal 8 task. PRD Flow 2 covers this scope.
